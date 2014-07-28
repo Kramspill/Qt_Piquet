@@ -34,3 +34,6 @@ Icon
 # Files that might appear on external disk
 .Spotlight-V100
 .Trashes
+
+# Additional files to ignore in QT.
+Qt_Piquet.pro.user
