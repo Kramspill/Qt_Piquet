@@ -1,0 +1,45 @@
+<RCC>
+    <qresource prefix="/Cards/Back">
+        <file>Resources/Back/Red_Back.svg</file>
+    </qresource>
+    <qresource prefix="/Cards/Clubs">
+        <file>Resources/Clubs/7C.svg</file>
+        <file>Resources/Clubs/8C.svg</file>
+        <file>Resources/Clubs/9C.svg</file>
+        <file>Resources/Clubs/10C.svg</file>
+        <file>Resources/Clubs/AC.svg</file>
+        <file>Resources/Clubs/JC.svg</file>
+        <file>Resources/Clubs/KC.svg</file>
+        <file>Resources/Clubs/QC.svg</file>
+    </qresource>
+    <qresource prefix="/Cards/Diamonds">
+        <file>Resources/Diamonds/7D.svg</file>
+        <file>Resources/Diamonds/8D.svg</file>
+        <file>Resources/Diamonds/9D.svg</file>
+        <file>Resources/Diamonds/10D.svg</file>
+        <file>Resources/Diamonds/AD.svg</file>
+        <file>Resources/Diamonds/JD.svg</file>
+        <file>Resources/Diamonds/KD.svg</file>
+        <file>Resources/Diamonds/QD.svg</file>
+    </qresource>
+    <qresource prefix="/Cards/Hearts">
+        <file>Resources/Hearts/7H.svg</file>
+        <file>Resources/Hearts/8H.svg</file>
+        <file>Resources/Hearts/9H.svg</file>
+        <file>Resources/Hearts/10H.svg</file>
+        <file>Resources/Hearts/AH.svg</file>
+        <file>Resources/Hearts/JH.svg</file>
+        <file>Resources/Hearts/KH.svg</file>
+        <file>Resources/Hearts/QH.svg</file>
+    </qresource>
+    <qresource prefix="/Cards/Spades">
+        <file>Resources/Spades/7S.svg</file>
+        <file>Resources/Spades/8S.svg</file>
+        <file>Resources/Spades/9S.svg</file>
+        <file>Resources/Spades/10S.svg</file>
+        <file>Resources/Spades/AS.svg</file>
+        <file>Resources/Spades/JS.svg</file>
+        <file>Resources/Spades/KS.svg</file>
+        <file>Resources/Spades/QS.svg</file>
+    </qresource>
+</RCC>
