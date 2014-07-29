@@ -10,11 +10,17 @@ public:
     DealPhase(DealPhase& other);
     ~DealPhase(void);
 
+    void Initialize(void);
+    void Execute(void);
+
     char* GetName(void);
-    void  Execute(void);
 
 private:
     char* name;
+    QStateMachine* dealPhaseStateMachine;
+    QState*        dealToPlayer;
+    QState*        dealToCPU;
+    QFinalState*   dealTalon;
 };
 
 #endif // DEALPHASE_H

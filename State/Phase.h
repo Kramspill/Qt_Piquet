@@ -1,6 +1,11 @@
 #ifndef PHASE_H
 #define PHASE_H
 
+#include <QStateMachine>
+#include <QState>
+#include <QFinalState>
+#include <QTimer>
+
 class Phase
 {
 public:
