@@ -16,7 +16,6 @@ SOURCES +=\
     Main.cpp \
     Managers/GameManager.cpp \
     Managers/StateManager.cpp \
-    State/Phase.cpp \
     State/DealPhase.cpp \
     State/ExchangePhase.cpp \
     State/DeclarationPhase.cpp \
