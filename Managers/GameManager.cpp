@@ -18,7 +18,7 @@ GameManager::~GameManager(void)
 // Initialize all other managers.
 void GameManager::Initialize(void)
 {
-    windowManager = new WindowManager;
+    windowManager = new WindowManager();
     windowManager->Initialize();
 }
 

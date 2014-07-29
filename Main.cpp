@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     QApplication piquetGame(argc, argv);
 
     // Manages all other managers in the application.
-    GameManager* gameManager = new GameManager;
+    GameManager* gameManager = new GameManager();
     gameManager->Initialize();
 
     // Execute the application.

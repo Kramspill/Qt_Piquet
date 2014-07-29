@@ -18,6 +18,6 @@ WindowManager::~WindowManager(void)
 // Initialize and display the main window.
 void WindowManager::Initialize(void)
 {
-    mainWindow = new MainWindow;
+    mainWindow = new MainWindow();
     mainWindow->show();
 }
