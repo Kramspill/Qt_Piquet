@@ -20,6 +20,18 @@ void GameManager::Initialize(void)
 {
     windowManager = new WindowManager();
     windowManager->Initialize();
+
+    stateManager = new StateManager();
+    stateManager->Initialize();
+
+    animationManager = new AnimationManager();
+    animationManager->Initialize();
+
+    cardManager = new CardManager();
+    cardManager->Initialize();
+
+    scoreManager = new ScoreManager();
+    scoreManager->Initialize();
 }
 
 // Accessor for GameManager's stateManager member.
