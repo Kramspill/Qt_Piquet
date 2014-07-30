@@ -1,8 +1,13 @@
 #ifndef CARD_H
 #define CARD_H
 
-class Card
+#include <QGraphicsPixmapItem>
+#include <QPixmap>
+
+class Card : public QGraphicsPixmapItem
 {
+    Q_OBJECT
+
 public:
     enum Suit
     {
@@ -27,7 +32,7 @@ public:
     };
 
 public:
-    Card(void);
+    Card(const QPixmap& pixmap, Suit theSuit, Value theValue);
     Card(Card&);
     ~Card(void);
 
@@ -35,8 +40,10 @@ public:
     Value GetValue(void);
 
 private:
-    Suit  suit;
-    Value value;
+    Suit    suit;
+    Value   value;
+    QPixmap cardImage;
+    QPixmap backImage;
 };
 
 #endif // CARD_H

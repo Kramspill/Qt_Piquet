@@ -1,7 +1,11 @@
 #include "Card.h"
 
 // Constructor.
-Card::Card(void)
+Card::Card(const QPixmap& pixmap, Suit theSuit, Value theValue) :
+    cardImage(pixmap),
+    backImage(QPixmap(":/Cards/Back/Red_Back.svg")),
+    suit(theSuit),
+    value(theValue)
 {
 }
 
