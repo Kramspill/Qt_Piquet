@@ -18,7 +18,7 @@ public:
     ~CardArray(void);
 
     void AddCard(Card newCard);
-
+    bool RemoveTopCard(void);
     void Shuffle(void);
     void Sort(void);
     void Stagger(StaggerType staggerType);
@@ -26,6 +26,7 @@ public:
     unsigned int GetSize(void);
 
 private:
+    Card* topCard;
     Card* cards;
     unsigned int size;
 };
