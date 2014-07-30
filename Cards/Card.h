@@ -33,11 +33,14 @@ public:
 
 public:
     Card(const QPixmap& pixmap, Suit theSuit, Value theValue);
+    Card(Card aCard);
     Card(Card&);
     ~Card(void);
 
-    Suit  GetSuit(void);
-    Value GetValue(void);
+    Suit    GetSuit(void);
+    Value   GetValue(void);
+    QPixmap GetCardImage(void);
+    QPixmap GetBackImage(void);
 
 private:
     Suit    suit;
