@@ -16,7 +16,7 @@ DeclarationPhaseAnimation::~DeclarationPhaseAnimation(void)
 }
 
 // Execute the animation for this phase.
-void DeclarationPhaseAnimation::ExecuteAnimation(void)
+void DeclarationPhaseAnimation::Execute(void)
 {
 
 }

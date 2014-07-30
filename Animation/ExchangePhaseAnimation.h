@@ -10,7 +10,7 @@ public:
     ExchangePhaseAnimation(ExchangePhaseAnimation&);
     ~ExchangePhaseAnimation(void);
 
-    void ExecuteAnimation(void);
+    void Execute(void);
 };
 
 #endif // EXCHANGEPHASEANIMATION_H

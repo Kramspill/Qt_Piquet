@@ -10,7 +10,8 @@ public:
     DealPhaseAnimation(DealPhaseAnimation&);
     ~DealPhaseAnimation(void);
 
-    void ExecuteAnimation(void);
+    void Initialize(void);
+    void Execute(void);
 };
 
 #endif // DEALPHASEANIMATION_H

@@ -10,7 +10,7 @@ public:
     TrickPhaseAnimation(TrickPhaseAnimation&);
     ~TrickPhaseAnimation(void);
 
-    void ExecuteAnimation(void);
+    void Execute(void);
 };
 
 #endif // TRICKPHASEANIMATION_H

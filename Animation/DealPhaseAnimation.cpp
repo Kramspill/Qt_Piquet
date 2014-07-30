@@ -15,8 +15,14 @@ DealPhaseAnimation::~DealPhaseAnimation(void)
 {
 }
 
+// Setup the parameters for the animation for this phase.
+void DealPhaseAnimation::Initialize(void)
+{
+
+}
+
 // Execute the animation for this phase.
-void DealPhaseAnimation::ExecuteAnimation()
+void DealPhaseAnimation::Execute(void)
 {
 
 }
