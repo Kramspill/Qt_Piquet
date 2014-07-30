@@ -15,10 +15,9 @@ CardArray::~CardArray()
 {
 }
 
-// Accessor for CardArray's size member.
-unsigned int CardArray::GetSize()
+void CardArray::AddCard(Card newCard)
 {
-    return size;
+
 }
 
 // Randomize this CardArray.
@@ -37,4 +36,10 @@ void CardArray::Sort()
 void CardArray::Stagger(CardArray::StaggerType staggerType)
 {
 
+}
+
+// Accessor for CardArray's size member.
+unsigned int CardArray::GetSize()
+{
+    return size;
 }

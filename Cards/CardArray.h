@@ -17,11 +17,13 @@ public:
     CardArray(CardArray&);
     ~CardArray(void);
 
-    unsigned int GetSize(void);
+    void AddCard(Card newCard);
 
     void Shuffle(void);
     void Sort(void);
     void Stagger(StaggerType staggerType);
+
+    unsigned int GetSize(void);
 
 private:
     Card* cards;
