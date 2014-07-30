@@ -15,6 +15,30 @@ StateManager::~StateManager(void)
 {
 }
 
+// Initialize the phases that represent the
+// states of the game.
+void StateManager::Initialize(void)
+{
+    // Allocate memory to the phases
+    // and initialize them.
+    dealPhase = new DealPhase();
+    dealPhase->Initialize();
+
+    exchangePhase = new ExchangePhase();
+    exchangePhase->Initialize();
+
+    declarationPhase = new DeclarationPhase();
+    declarationPhase->Initialize();
+
+    trickPhase = new TrickPhase();
+    trickPhase->Initialize();
+
+    // Set the current phase to be
+    // the deal phase.
+    currentPhase = new Phase();
+    currentPhase = dealPhase;
+}
+
 // Accessor for StateManager's currentPhase member.
 Phase* StateManager::GetCurrentPhase(void)
 {

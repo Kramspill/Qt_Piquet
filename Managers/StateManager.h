@@ -14,6 +14,8 @@ public:
     StateManager(StateManager&);
     ~StateManager(void);
 
+    void Initialize(void);
+
     Phase* GetCurrentPhase(void);
     Phase* GetDealPhase(void);
     Phase* GetExchangePhase(void);
