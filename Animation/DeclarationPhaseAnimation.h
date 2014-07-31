@@ -10,6 +10,7 @@ public:
     DeclarationPhaseAnimation(DeclarationPhaseAnimation&);
     ~DeclarationPhaseAnimation(void);
 
+    void Initialize(void);
     void Execute(void);
 };
 

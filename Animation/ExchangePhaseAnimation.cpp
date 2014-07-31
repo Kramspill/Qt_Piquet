@@ -15,6 +15,11 @@ ExchangePhaseAnimation::~ExchangePhaseAnimation(void)
 {
 }
 
+void ExchangePhaseAnimation::Initialize(void)
+{
+
+}
+
 // Execute the animation for this phase.
 void ExchangePhaseAnimation::Execute(void)
 {

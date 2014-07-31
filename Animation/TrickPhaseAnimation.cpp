@@ -15,8 +15,13 @@ TrickPhaseAnimation::~TrickPhaseAnimation(void)
 {
 }
 
+void TrickPhaseAnimation::Initialize(void)
+{
+
+}
+
 // Execute the animation for this phase.
-void TrickPhaseAnimation::Execute()
+void TrickPhaseAnimation::Execute(void)
 {
 
 }

@@ -8,6 +8,7 @@ public:
     PhaseAnimation(PhaseAnimation&);
     ~PhaseAnimation(void);
 
+    void Initialize(void);
     void Execute(void);
 };
 

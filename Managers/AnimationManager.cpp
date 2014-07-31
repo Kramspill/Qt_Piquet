@@ -17,7 +17,18 @@ AnimationManager::~AnimationManager(void)
 
 void AnimationManager::Initialize(void)
 {
+    // Allocate memory to members and initialize them.
+    dealPhaseAnimation = new DealPhaseAnimation();
+    dealPhaseAnimation->Initialize();
 
+    exchangePhaseAnimation = new ExchangePhaseAnimation();
+    exchangePhaseAnimation->Initialize();
+
+    declarationPhaseAnimation = new DeclarationPhaseAnimation();
+    declarationPhaseAnimation->Initialize();
+
+    trickPhaseAnimation = new TrickPhaseAnimation();
+    trickPhaseAnimation->Initialize();
 }
 
 // Accessor for AnimationManager's dealPhaseAnimation member.
