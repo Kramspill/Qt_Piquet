@@ -4,7 +4,7 @@
 #include <QGraphicsPixmapItem>
 #include <QPixmap>
 
-class Card : public QGraphicsPixmapItem
+class Card : public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 
@@ -21,14 +21,14 @@ public:
     enum Value
     {
         NOVALUE,
-        SEVEN,
-        EIGHT,
-        NINE,
-        TEN,
-        JACK,
-        QUEEN,
-        KING,
-        ACE
+        SEVEN   = 7,
+        EIGHT   = 8,
+        NINE    = 9,
+        TEN     = 10,
+        JACK    = 10,
+        QUEEN   = 10,
+        KING    = 10,
+        ACE     = 11
     };
 
 public:
