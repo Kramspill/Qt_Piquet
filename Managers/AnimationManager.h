@@ -14,6 +14,8 @@ public:
     AnimationManager(AnimationManager&);
     ~AnimationManager(void);
 
+    void Initialize(void);
+
     PhaseAnimation* GetDealPhaseAnimation(void);
     PhaseAnimation* GetExchangePhaseAnimation(void);
     PhaseAnimation* GetDeclarationPhaseAnimation(void);

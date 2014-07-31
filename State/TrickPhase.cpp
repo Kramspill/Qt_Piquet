@@ -15,14 +15,19 @@ TrickPhase::~TrickPhase(void)
 {
 }
 
-// Accessor for TrickPhase's name member.
-char* TrickPhase::GetName(void)
+void TrickPhase::Initialize(void)
 {
-    return name;
+
 }
 
 // Execute the phase.
 void TrickPhase::Execute(void)
 {
 
+}
+
+// Accessor for TrickPhase's name member.
+char* TrickPhase::GetName(void)
+{
+    return name;
 }

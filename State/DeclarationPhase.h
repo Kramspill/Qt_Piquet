@@ -10,8 +10,10 @@ public:
     DeclarationPhase(DeclarationPhase&);
     ~DeclarationPhase(void);
 
+    void Initialize(void);
+    void Execute(void);
+
     char* GetName(void);
-    void  Execute(void);
 
 private:
     char* name;

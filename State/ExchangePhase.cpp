@@ -15,14 +15,19 @@ ExchangePhase::~ExchangePhase(void)
 {
 }
 
-// Accessor for ExchangePhase's name member.
-char* ExchangePhase::GetName(void)
+void ExchangePhase::Initialize(void)
 {
-    return name;
+
 }
 
 // Execute the phase.
 void ExchangePhase::Execute(void)
 {
 
+}
+
+// Accessor for ExchangePhase's name member.
+char* ExchangePhase::GetName(void)
+{
+    return name;
 }

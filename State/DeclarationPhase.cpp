@@ -15,14 +15,19 @@ DeclarationPhase::~DeclarationPhase(void)
 {
 }
 
-// Accessor for DeclarationPhase's name member.
-char* DeclarationPhase::GetName(void)
+void DeclarationPhase::Initialize(void)
 {
-    return name;
+
 }
 
 // Execute the phase.
 void DeclarationPhase::Execute(void)
 {
 
+}
+
+// Accessor for DeclarationPhase's name member.
+char* DeclarationPhase::GetName(void)
+{
+    return name;
 }

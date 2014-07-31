@@ -15,6 +15,11 @@ ScoreManager::~ScoreManager(void)
 {
 }
 
+void ScoreManager::Initialize(void)
+{
+
+}
+
 // Accessor for ScoreManager's playerScore member.
 unsigned int ScoreManager::GetPlayerScore(void)
 {

@@ -15,6 +15,11 @@ AnimationManager::~AnimationManager(void)
 {
 }
 
+void AnimationManager::Initialize(void)
+{
+
+}
+
 // Accessor for AnimationManager's dealPhaseAnimation member.
 PhaseAnimation* AnimationManager::GetDealPhaseAnimation(void)
 {

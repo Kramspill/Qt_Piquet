@@ -13,8 +13,10 @@ public:
     Phase(Phase&);
     ~Phase(void);
 
+    void Initialize(void);
+    void Execute(void);
+
     char* GetName(void);
-    void  Execute(void);
 
 private:
     char* name;

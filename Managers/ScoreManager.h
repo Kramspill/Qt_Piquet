@@ -8,6 +8,8 @@ public:
     ScoreManager(ScoreManager&);
     ~ScoreManager(void);
 
+    void Initialize(void);
+
     unsigned int GetPlayerScore(void);
     unsigned int GetCPUScore(void);
 
