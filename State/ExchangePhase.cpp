@@ -6,7 +6,7 @@ ExchangePhase::ExchangePhase(void)
 }
 
 // Copy Constructor.
-ExchangePhase::ExchangePhase(ExchangePhase&)
+ExchangePhase::ExchangePhase(ExchangePhase& other) : Phase(other)
 {
 }
 

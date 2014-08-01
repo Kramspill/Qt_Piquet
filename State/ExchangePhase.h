@@ -7,7 +7,7 @@ class ExchangePhase : public Phase
 {
 public:
     ExchangePhase(void);
-    ExchangePhase(ExchangePhase&);
+    ExchangePhase(ExchangePhase& other);
     ~ExchangePhase(void);
 
     void Initialize(void);
