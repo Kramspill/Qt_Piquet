@@ -1,7 +1,10 @@
 #include "CardArray.h"
 
 // Constructor.
-CardArray::CardArray(void)
+CardArray::CardArray(void) :
+    topCard(0),
+    cards(0),
+    size(0)
 {
 }
 
@@ -18,17 +21,14 @@ CardArray::~CardArray(void)
 // Add a card to the CardArray.
 void CardArray::AddCard(Card* newCard)
 {
-    // Allocate space for the new card.
-    Card* card = newCard;
-
     // Check if the array is empty.
     if ( !cards )
     {
-        topCard = card;
+        topCard = newCard;
     }
 
     // Add the new card to the array.
-    cards = card;
+    cards = newCard;
     cards++;
     size++;
 }
@@ -59,9 +59,11 @@ bool CardArray::RemoveTopCard(void)
     return success;
 }
 
-Card* CardArray::GetCard(int /*index*/)
+// This function is pretty hacky and should be refactored later.
+Card* CardArray::GetCard(int index)
 {
-    return cards;
+    Card* selectedCard = cards + index;
+    return selectedCard;
 }
 
 // Randomize this CardArray.

@@ -19,7 +19,7 @@ public:
 
     void AddCard(Card* newCard);
     bool RemoveTopCard(void);
-    Card* GetCard(int);
+    Card* GetCard(int index);
 
     void Shuffle(void);
     void Sort(void);
