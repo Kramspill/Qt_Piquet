@@ -25,10 +25,10 @@ void DealPhase::Initialize(void)
     dealTalon             = new QFinalState();
 
     // Setup the transitions.
-    dealToPlayer->addTransition(/*object*/, /*SIGNAL()*/, dealToCPU);
-    dealToPlayer->addTransition(/*object*/, /*SIGNAL()*/, dealTalon);
-    dealToCPU->addTransition(/*object*/, /*SIGNAL()*/, dealToPlayer);
-    dealToCPU->addTransition(/*object*/, /*SIGNAL()*/, dealTalon);
+    //dealToPlayer->addTransition(/*object*/, /*SIGNAL()*/, dealToCPU);
+    //dealToPlayer->addTransition(/*object*/, /*SIGNAL()*/, dealTalon);
+    //dealToCPU->addTransition(/*object*/, /*SIGNAL()*/, dealToPlayer);
+    //dealToCPU->addTransition(/*object*/, /*SIGNAL()*/, dealTalon);
 
     // Add the states to the state machine.
     dealPhaseStateMachine->addState(dealToPlayer);
