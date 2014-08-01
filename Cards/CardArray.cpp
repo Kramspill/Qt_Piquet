@@ -61,6 +61,11 @@ bool CardArray::RemoveTopCard(void)
     return success;
 }
 
+Card CardArray::GetCard(int index)
+{
+
+}
+
 // Randomize this CardArray.
 void CardArray::Shuffle(void)
 {

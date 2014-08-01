@@ -19,6 +19,8 @@ public:
 
     void AddCard(Card newCard);
     bool RemoveTopCard(void);
+    Card GetCard(int index);
+
     void Shuffle(void);
     void Sort(void);
     void Stagger(StaggerType staggerType);
