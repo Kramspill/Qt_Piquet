@@ -26,7 +26,7 @@ public:
 
 private:
     void InitializeAllCards(void);
-    void AddAllCards(CardArray* cardArray);
+    void ResetDeck(void);
 
 private:
     CardArray* allCards;

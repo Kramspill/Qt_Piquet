@@ -32,8 +32,7 @@ void CardManager::Initialize(void)
     previousTricks = new CardArray();
 
     // Add all cards to the deck and shuffle the deck.
-    AddAllCards(deck);
-    deck->Shuffle();
+    ResetDeck();
 }
 
 // Accessor for CardManager's deck member.
@@ -126,11 +125,13 @@ void CardManager::InitializeAllCards(void)
     allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/AS.svg"), Card::SPADES, Card::ACE));
 }
 
-// Add all cards to a given CardArray.
-void CardManager::AddAllCards(CardArray* cardArray)
+// Add all cards to the deck and shuffle the deck.
+void CardManager::ResetDeck(void)
 {
     for (int index = 0; index < allCards->GetSize(); index++)
     {
-        cardArray->AddCard(allCards->GetCard(index));
+        deck->AddCard(allCards->GetCard(index));
     }
+
+    deck->Shuffle();
 }
