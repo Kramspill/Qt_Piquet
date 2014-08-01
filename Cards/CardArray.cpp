@@ -1,9 +1,7 @@
 #include "CardArray.h"
 
 // Constructor.
-CardArray::CardArray(void) :
-    size(0),
-    cards(0)
+CardArray::CardArray(void)
 {
 }
 
@@ -18,10 +16,10 @@ CardArray::~CardArray(void)
 }
 
 // Add a card to the CardArray.
-void CardArray::AddCard(Card newCard)
+void CardArray::AddCard(Card* newCard)
 {
     // Allocate space for the new card.
-    Card* card = new Card(newCard);
+    Card* card = newCard;
 
     // Check if the array is empty.
     if ( !cards )
@@ -61,9 +59,9 @@ bool CardArray::RemoveTopCard(void)
     return success;
 }
 
-Card CardArray::GetCard(int index)
+Card* CardArray::GetCard(int /*index*/)
 {
-
+    return cards;
 }
 
 // Randomize this CardArray.
@@ -79,13 +77,13 @@ void CardArray::Sort(void)
 }
 
 // Visually stagger the cards in this CardArray.
-void CardArray::Stagger(CardArray::StaggerType staggerType)
+void CardArray::Stagger(CardArray::StaggerType /*staggerType*/)
 {
 
 }
 
 // Accessor for CardArray's size member.
-unsigned int CardArray::GetSize(void)
+int CardArray::GetSize(void)
 {
     return size;
 }

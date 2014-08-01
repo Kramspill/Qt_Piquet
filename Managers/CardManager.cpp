@@ -33,7 +33,7 @@ void CardManager::Initialize(void)
 
     // Add all cards to the deck and shuffle the deck.
     AddAllCards(deck);
-    deck.Shuffle();
+    deck->Shuffle();
 }
 
 // Accessor for CardManager's deck member.
@@ -92,45 +92,45 @@ void CardManager::InitializeAllCards(void)
     allCards = new CardArray();
 
     // Add all cards to the CardArray.
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/7C.svg"), CLUBS, SEVEN));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/8C.svg"), CLUBS, EIGHT));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/9C.svg"), CLUBS, NINE));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/10C.svg"), CLUBS, TEN));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/JC.svg"), CLUBS, JACK));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/QC.svg"), CLUBS, QUEEN);
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/KC.svg"), CLUBS, KING));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/AC.svg"), CLUBS, ACE));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/7D.svg"), DIAMONDS, SEVEN);
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/8D.svg"), DIAMONDS, EIGHT));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/9D.svg"), DIAMONDS, NINE));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/10D.svg"), DIAMONDS, TEN));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/JD.svg"), DIAMONDS, JACK));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/QD.svg"), DIAMONDS, QUEEN);
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/KD.svg"), DIAMONDS, KING));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/AD.svg"), DIAMONDS, ACE));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/7H.svg"), HEARTS, SEVEN));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/8H.svg"), HEARTS, EIGHT));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/9H.svg"), HEARTS, NINE));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/10H.svg"), HEARTS, TEN));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/JH.svg"), HEARTS, JACK));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/QH.svg"), HEARTS, QUEEN);
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/KH.svg"), HEARTS, KING));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/AH.svg"), HEARTS, ACE));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/7S.svg"), SPADES, SEVEN));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/8S.svg"), SPADES, EIGHT));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/9S.svg"), SPADES, NINE));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/10S.svg"), SPADES, TEN));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/JS.svg"), SPADES, JACK));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/QS.svg"), SPADES, QUEEN);
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/KS.svg"), SPADES, KING));
-    allCards->AddCard(Card(QPixmap(":/Cards/Clubs/AS.svg"), SPADES, ACE));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/7C.svg"), Card::CLUBS, Card::SEVEN));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/8C.svg"), Card::CLUBS, Card::EIGHT));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/9C.svg"), Card::CLUBS, Card::NINE));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/10C.svg"), Card::CLUBS, Card::TEN));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/JC.svg"), Card::CLUBS, Card::JACK));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/QC.svg"), Card::CLUBS, Card::QUEEN));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/KC.svg"), Card::CLUBS, Card::KING));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/AC.svg"), Card::CLUBS, Card::ACE));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/7D.svg"), Card::DIAMONDS, Card::SEVEN));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/8D.svg"), Card::DIAMONDS, Card::EIGHT));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/9D.svg"), Card::DIAMONDS, Card::NINE));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/10D.svg"), Card::DIAMONDS, Card::TEN));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/JD.svg"), Card::DIAMONDS, Card::JACK));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/QD.svg"), Card::DIAMONDS, Card::QUEEN));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/KD.svg"), Card::DIAMONDS, Card::KING));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/AD.svg"), Card::DIAMONDS, Card::ACE));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/7H.svg"), Card::HEARTS, Card::SEVEN));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/8H.svg"), Card::HEARTS, Card::EIGHT));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/9H.svg"), Card::HEARTS, Card::NINE));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/10H.svg"), Card::HEARTS, Card::TEN));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/JH.svg"), Card::HEARTS, Card::JACK));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/QH.svg"), Card::HEARTS, Card::QUEEN));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/KH.svg"), Card::HEARTS, Card::KING));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/AH.svg"), Card::HEARTS, Card::ACE));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/7S.svg"), Card::SPADES, Card::SEVEN));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/8S.svg"), Card::SPADES, Card::EIGHT));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/9S.svg"), Card::SPADES, Card::NINE));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/10S.svg"), Card::SPADES, Card::TEN));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/JS.svg"), Card::SPADES, Card::JACK));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/QS.svg"), Card::SPADES, Card::QUEEN));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/KS.svg"), Card::SPADES, Card::KING));
+    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/AS.svg"), Card::SPADES, Card::ACE));
 }
 
 // Add all cards to a given CardArray.
-void CardManager::AddAllCards(CardArray& cardArray)
+void CardManager::AddAllCards(CardArray* cardArray)
 {
     for (int index = 0; index < allCards->GetSize(); index++)
     {
-        cardArray->AddCard(allCards->GetCards[index]);
+        cardArray->AddCard(allCards->GetCard(index));
     }
 }

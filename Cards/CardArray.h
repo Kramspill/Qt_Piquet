@@ -17,20 +17,20 @@ public:
     CardArray(CardArray&);
     ~CardArray(void);
 
-    void AddCard(Card newCard);
+    void AddCard(Card* newCard);
     bool RemoveTopCard(void);
-    Card GetCard(int index);
+    Card* GetCard(int);
 
     void Shuffle(void);
     void Sort(void);
-    void Stagger(StaggerType staggerType);
+    void Stagger(StaggerType);
 
-    unsigned int GetSize(void);
+    int GetSize(void);
 
 private:
     Card* topCard;
     Card* cards;
-    unsigned int size;
+    int size;
 };
 
 #endif // CARDARRAY_H

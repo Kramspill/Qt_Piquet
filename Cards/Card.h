@@ -32,8 +32,9 @@ public:
     };
 
 public:
+    Card(void);
     Card(const QPixmap& pixmap, Suit theSuit, Value theValue);
-    Card(Card aCard);
+    //Card(Card aCard);
     Card(Card&);
     ~Card(void);
 

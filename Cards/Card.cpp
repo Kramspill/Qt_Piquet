@@ -1,6 +1,10 @@
 #include "Card.h"
 
 // Constructor.
+Card::Card(void)
+{
+}
+
 Card::Card(const QPixmap& pixmap, Suit theSuit, Value theValue) :
     cardImage(pixmap),
     backImage(QPixmap(":/Cards/Back/Red_Back.svg")),
@@ -10,10 +14,10 @@ Card::Card(const QPixmap& pixmap, Suit theSuit, Value theValue) :
 }
 
 // Constructor that takes another card.
-Card::Card(Card aCard)
+/*Card::Card(Card aCard)
 {
     Card(aCard.GetCardImage(), aCard.GetSuit(), aCard.GetValue());
-}
+}*/
 
 // Copy Constructor.
 Card::Card(Card&)
