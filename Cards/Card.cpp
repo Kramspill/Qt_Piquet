@@ -1,26 +1,21 @@
 #include "Card.h"
 
-// Constructor.
+// Default Constructor.
 Card::Card(void)
 {
 }
 
-Card::Card(const QPixmap& pixmap, Suit theSuit, Value theValue) :
-    cardImage(pixmap),
-    backImage(QPixmap(":/Cards/Back/Red_Back.svg")),
+// Constructor.
+Card::Card(QGraphicsSvgItem* svgItem, Suit theSuit, Value theValue) :
+    cardImage(svgItem),
+    backImage(new QGraphicsSvgItem(":/Cards/Back/Red_Back.svg")),
     suit(theSuit),
     value(theValue)
 {
 }
 
-// Constructor that takes another card.
-/*Card::Card(Card aCard)
-{
-    Card(aCard.GetCardImage(), aCard.GetSuit(), aCard.GetValue());
-}*/
-
 // Copy Constructor.
-Card::Card(Card&)
+Card::Card(Card&) : QGraphicsSvgItem()
 {
 }
 
@@ -42,13 +37,13 @@ Card::Value Card::GetValue(void)
 }
 
 // Accessor for Card's cardImage member.
-QPixmap Card::GetCardImage(void)
+QGraphicsSvgItem* Card::GetCardImage(void)
 {
     return cardImage;
 }
 
 // Accessor for Card's backImage member.
-QPixmap Card::GetBackImage(void)
+QGraphicsSvgItem* Card::GetBackImage(void)
 {
     return backImage;
 }

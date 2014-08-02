@@ -1,10 +1,9 @@
 #ifndef CARD_H
 #define CARD_H
 
-#include <QGraphicsPixmapItem>
-#include <QPixmap>
+#include <QGraphicsSvgItem>
 
-class Card : public QObject, public QGraphicsPixmapItem
+class Card : public QGraphicsSvgItem
 {
     Q_OBJECT
 
@@ -33,21 +32,20 @@ public:
 
 public:
     Card(void);
-    Card(const QPixmap& pixmap, Suit theSuit, Value theValue);
-    //Card(Card aCard);
+    Card(QGraphicsSvgItem* svgItem, Suit theSuit, Value theValue);
     Card(Card&);
     ~Card(void);
 
-    Suit    GetSuit(void);
-    Value   GetValue(void);
-    QPixmap GetCardImage(void);
-    QPixmap GetBackImage(void);
+    QGraphicsSvgItem* GetCardImage(void);
+    QGraphicsSvgItem* GetBackImage(void);
+    Suit              GetSuit(void);
+    Value             GetValue(void);
 
 private:
-    Suit    suit;
-    Value   value;
-    QPixmap cardImage;
-    QPixmap backImage;
+    QGraphicsSvgItem* cardImage;
+    QGraphicsSvgItem* backImage;
+    Suit              suit;
+    Value             value;
 };
 
 #endif // CARD_H
