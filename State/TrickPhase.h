@@ -7,7 +7,7 @@ class TrickPhase : public Phase
 {
 public:
     TrickPhase(void);
-    TrickPhase(TrickPhase&);
+    TrickPhase(TrickPhase& other);
     ~TrickPhase(void);
 
     void Initialize(void);

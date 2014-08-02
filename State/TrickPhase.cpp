@@ -6,7 +6,7 @@ TrickPhase::TrickPhase(void)
 }
 
 // Copy Constructor.
-TrickPhase::TrickPhase(TrickPhase&)
+TrickPhase::TrickPhase(TrickPhase& other) : Phase(other)
 {
 }
 

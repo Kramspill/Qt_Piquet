@@ -7,7 +7,7 @@ class DeclarationPhase : public Phase
 {
 public:
     DeclarationPhase(void);
-    DeclarationPhase(DeclarationPhase&);
+    DeclarationPhase(DeclarationPhase& other);
     ~DeclarationPhase(void);
 
     void Initialize(void);

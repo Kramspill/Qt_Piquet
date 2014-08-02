@@ -6,7 +6,7 @@ DeclarationPhase::DeclarationPhase(void)
 }
 
 // Copy Constructor.
-DeclarationPhase::DeclarationPhase(DeclarationPhase&)
+DeclarationPhase::DeclarationPhase(DeclarationPhase& other) : Phase(other)
 {
 }
 
