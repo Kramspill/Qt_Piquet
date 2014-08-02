@@ -55,7 +55,7 @@ HEADERS  += \
     Cards/Card.h \
     AppWindows/MainWindow.h
 
-FORMS    += MainWindow.ui
+#FORMS    += MainWindow.ui
 
 RESOURCES += \
     PiquetResources.qrc
