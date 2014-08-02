@@ -1,7 +1,7 @@
 #ifndef CARDMANAGER_H
 #define CARDMANAGER_H
 
-#include <QPixmap>
+#include <QGraphicsSvgItem>
 
 #include "Cards/CardArray.h"
 #include "Cards/Card.h"

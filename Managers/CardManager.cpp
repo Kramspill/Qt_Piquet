@@ -90,39 +90,39 @@ void CardManager::InitializeAllCards(void)
     // Allocate space for the CardArray.
     allCards = new CardArray();
 
-    // Add all cards to the CardArray.
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/7C.svg"), Card::CLUBS, Card::SEVEN));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/8C.svg"), Card::CLUBS, Card::EIGHT));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/9C.svg"), Card::CLUBS, Card::NINE));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/10C.svg"), Card::CLUBS, Card::TEN));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/JC.svg"), Card::CLUBS, Card::JACK));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/QC.svg"), Card::CLUBS, Card::QUEEN));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/KC.svg"), Card::CLUBS, Card::KING));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/AC.svg"), Card::CLUBS, Card::ACE));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/7D.svg"), Card::DIAMONDS, Card::SEVEN));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/8D.svg"), Card::DIAMONDS, Card::EIGHT));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/9D.svg"), Card::DIAMONDS, Card::NINE));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/10D.svg"), Card::DIAMONDS, Card::TEN));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/JD.svg"), Card::DIAMONDS, Card::JACK));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/QD.svg"), Card::DIAMONDS, Card::QUEEN));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/KD.svg"), Card::DIAMONDS, Card::KING));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/AD.svg"), Card::DIAMONDS, Card::ACE));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/7H.svg"), Card::HEARTS, Card::SEVEN));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/8H.svg"), Card::HEARTS, Card::EIGHT));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/9H.svg"), Card::HEARTS, Card::NINE));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/10H.svg"), Card::HEARTS, Card::TEN));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/JH.svg"), Card::HEARTS, Card::JACK));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/QH.svg"), Card::HEARTS, Card::QUEEN));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/KH.svg"), Card::HEARTS, Card::KING));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/AH.svg"), Card::HEARTS, Card::ACE));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/7S.svg"), Card::SPADES, Card::SEVEN));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/8S.svg"), Card::SPADES, Card::EIGHT));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/9S.svg"), Card::SPADES, Card::NINE));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/10S.svg"), Card::SPADES, Card::TEN));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/JS.svg"), Card::SPADES, Card::JACK));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/QS.svg"), Card::SPADES, Card::QUEEN));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/KS.svg"), Card::SPADES, Card::KING));
-    allCards->AddCard(new Card(QPixmap(":/Cards/Clubs/AS.svg"), Card::SPADES, Card::ACE));
+    // Create and add all cards to the CardArray.
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Clubs/Resources/Clubs/7C.svg"), Card::CLUBS, Card::SEVEN));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Clubs/Resources/Clubs/8C.svg"), Card::CLUBS, Card::EIGHT));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Clubs/Resources/Clubs/9C.svg"), Card::CLUBS, Card::NINE));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Clubs/Resources/Clubs/10C.svg"), Card::CLUBS, Card::TEN));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Clubs/Resources/Clubs/JC.svg"), Card::CLUBS, Card::JACK));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Clubs/Resources/Clubs/QC.svg"), Card::CLUBS, Card::QUEEN));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Clubs/Resources/Clubs/KC.svg"), Card::CLUBS, Card::KING));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Clubs/Resources/Clubs/AC.svg"), Card::CLUBS, Card::ACE));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Diamonds/Resources/Diamonds/7D.svg"), Card::DIAMONDS, Card::SEVEN));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Diamonds/Resources/Diamonds/8D.svg"), Card::DIAMONDS, Card::EIGHT));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Diamonds/Resources/Diamonds/9D.svg"), Card::DIAMONDS, Card::NINE));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Diamonds/Resources/Diamonds/10D.svg"), Card::DIAMONDS, Card::TEN));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Diamonds/Resources/Diamonds/JD.svg"), Card::DIAMONDS, Card::JACK));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Diamonds/Resources/Diamonds/QD.svg"), Card::DIAMONDS, Card::QUEEN));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Diamonds/Resources/Diamonds/KD.svg"), Card::DIAMONDS, Card::KING));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Diamonds/Resources/Diamonds/AD.svg"), Card::DIAMONDS, Card::ACE));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Hearts/Resources/Hearts/7H.svg"), Card::HEARTS, Card::SEVEN));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Hearts/Resources/Hearts/8H.svg"), Card::HEARTS, Card::EIGHT));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Hearts/Resources/Hearts/9H.svg"), Card::HEARTS, Card::NINE));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Hearts/Resources/Hearts/10H.svg"), Card::HEARTS, Card::TEN));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Hearts/Resources/Hearts/JH.svg"), Card::HEARTS, Card::JACK));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Hearts/Resources/Hearts/QH.svg"), Card::HEARTS, Card::QUEEN));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Hearts/Resources/Hearts/KH.svg"), Card::HEARTS, Card::KING));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Hearts/Resources/Hearts/AH.svg"), Card::HEARTS, Card::ACE));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Spades/Resources/Spades/7S.svg"), Card::SPADES, Card::SEVEN));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Spades/Resources/Spades/8S.svg"), Card::SPADES, Card::EIGHT));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Spades/Resources/Spades/9S.svg"), Card::SPADES, Card::NINE));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Spades/Resources/Spades/10S.svg"), Card::SPADES, Card::TEN));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Spades/Resources/Spades/JS.svg"), Card::SPADES, Card::JACK));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Spades/Resources/Spades/QS.svg"), Card::SPADES, Card::QUEEN));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Spades/Resources/Spades/KS.svg"), Card::SPADES, Card::KING));
+    allCards->AddCard(new Card(new QGraphicsSvgItem(":/Cards/Spades/Resources/Spades/AS.svg"), Card::SPADES, Card::ACE));
 }
 
 // Add all cards to the deck and shuffle the deck.

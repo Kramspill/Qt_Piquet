@@ -21,6 +21,10 @@ void GameManager::Initialize(void)
     // Initialize the scene.
     scene = new QGraphicsScene(-350, -350, 700, 700);
 
+    // Initialize the CardManager.
+    cardManager = new CardManager();
+    cardManager->Initialize();
+
     /* Progressively add these.
     windowManager = new WindowManager();
     windowManager->Initialize();
