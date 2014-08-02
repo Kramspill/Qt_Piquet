@@ -18,6 +18,10 @@ GameManager::~GameManager(void)
 // Initialize all other managers.
 void GameManager::Initialize(void)
 {
+    // Initialize the scene.
+    scene = new QGraphicsScene(-350, -350, 700, 700);
+
+    /* Progressively add these.
     windowManager = new WindowManager();
     windowManager->Initialize();
 
@@ -32,6 +36,7 @@ void GameManager::Initialize(void)
 
     scoreManager = new ScoreManager();
     scoreManager->Initialize();
+    */
 }
 
 // Accessor for GameManager's stateManager member.
