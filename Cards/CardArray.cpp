@@ -26,10 +26,13 @@ void CardArray::AddCard(Card* newCard)
     {
         topCard = newCard;
     }
+    else
+    {
+        cards++;
+    }
 
     // Add the new card to the array.
     cards = newCard;
-    cards++;
     size++;
 }
 
