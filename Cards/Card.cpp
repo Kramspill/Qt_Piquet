@@ -8,14 +8,14 @@ Card::Card(void)
 // Constructor.
 Card::Card(QGraphicsSvgItem* svgItem, Suit theSuit, Value theValue) :
     cardImage(svgItem),
-    backImage(new QGraphicsSvgItem(":/Cards/Back/Red_Back.svg")),
+    backImage(new QGraphicsSvgItem(":/Cards/Back/Resources/Back/Red_Back.svg")),
     suit(theSuit),
     value(theValue)
 {
 }
 
 // Copy Constructor.
-Card::Card(Card&) : QGraphicsSvgItem()
+Card::Card(Card&)
 {
 }
 

@@ -3,10 +3,8 @@
 
 #include <QGraphicsSvgItem>
 
-class Card : public QGraphicsSvgItem
+class Card
 {
-    Q_OBJECT
-
 public:
     enum Suit
     {
