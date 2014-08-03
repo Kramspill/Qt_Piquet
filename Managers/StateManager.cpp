@@ -24,6 +24,7 @@ void StateManager::Initialize(void)
     dealPhase = new DealPhase();
     dealPhase->Initialize();
 
+    /* Progressively add these.
     exchangePhase = new ExchangePhase();
     exchangePhase->Initialize();
 
@@ -32,6 +33,7 @@ void StateManager::Initialize(void)
 
     trickPhase = new TrickPhase();
     trickPhase->Initialize();
+    */
 
     // Set the current phase to be
     // the deal phase.
