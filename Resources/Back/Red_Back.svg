@@ -10,8 +10,8 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="744.09448819"
-   height="1052.3622047"
+   width="223.22835"
+   height="311.81104"
    id="svg3775"
    version="1.1"
    inkscape:version="0.48.5 r10040"
@@ -24,8 +24,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="291.98723"
-     inkscape:cy="480.06462"
+     inkscape:cx="31.554164"
+     inkscape:cy="109.78904"
      inkscape:document-units="px"
      inkscape:current-layer="g15148"
      showgrid="false"
@@ -34,14 +34,20 @@
      inkscape:window-x="681"
      inkscape:window-y="96"
      inkscape:window-maximized="0"
-     showguides="false">
+     showguides="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0">
     <inkscape:grid
        type="xygrid"
        id="grid5553"
        empspacing="5"
        visible="true"
        enabled="true"
-       snapvisiblegridlinesonly="true" />
+       snapvisiblegridlinesonly="true"
+       originx="-260.43307px"
+       originy="-370.27558px" />
   </sodipodi:namedview>
   <defs
      id="defs3777">
@@ -445,7 +451,8 @@
   <g
      id="layer1"
      inkscape:groupmode="layer"
-     inkscape:label="RED_BACK">
+     inkscape:label="RED_BACK"
+     transform="translate(-260.43307,-370.27557)">
     <g
        transform="translate(811.37551,-119.72681)"
        id="g15148"
@@ -473,7 +480,7 @@
          height="278.90585"
          width="188.27672"
          id="rect13072"
-         style="fill:none;fill-opacity:1;stroke:#d40000;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+         style="fill:none;stroke:#d40000;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
       <path
          sodipodi:type="star"
          style="fill:#c90000;fill-opacity:1"

@@ -134,7 +134,7 @@ void CardManager::AddCardsToScene(QGraphicsScene* scene)
 
         cardImage->setFlag(QGraphicsItem::ItemIsMovable, true);
         cardImage->setScale(0.5);
-        cardImage->setPos(QPointF(-350 + (index*2), -530));
+        cardImage->setPos(QPointF(-300 + (index*2), -350));
 
         scene->addItem(cardImage);
     }
