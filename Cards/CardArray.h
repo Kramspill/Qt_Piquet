@@ -14,11 +14,12 @@ public:
 
 public:
     CardArray(void);
+    CardArray(int newSize);
     CardArray(CardArray&);
     ~CardArray(void);
 
     void  AddCard(Card* newCard);
-    void RemoveCard(int index);
+    void  RemoveCard(int index);
     Card* GetCard(int index);
 
     void Shuffle(void);
@@ -28,8 +29,7 @@ public:
     int  GetSize(void);
 
 private:
-    Card* cards[32];
-    int   size;
+    std::vector<Card*> cards;
 };
 
 #endif // CARDARRAY_H

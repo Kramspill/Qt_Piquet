@@ -1,8 +1,14 @@
 #include "CardArray.h"
 
-// Constructor.
+// Default Constructor.
 CardArray::CardArray(void) :
-    size(0)
+    cards(0)
+{
+}
+
+// Constructor.
+CardArray::CardArray(int newSize) :
+    cards(newSize)
 {
 }
 
@@ -20,20 +26,18 @@ CardArray::~CardArray(void)
 void CardArray::AddCard(Card* newCard)
 {
     // Add the new card to the array.
-    cards[size] = newCard;
-    size++;
+    cards.push_back(newCard);
 }
 
 // Remove the top card in this array.
 void CardArray::RemoveCard(int index)
 {
     // Make sure there are cards in the array.
-    if ( size > 0 )
+    if ( cards.size() > 0 )
     {
         // Remove the card.
         delete cards[index];
         cards[index] = 0;
-        size--;
     }
 }
 
@@ -63,5 +67,5 @@ void CardArray::Stagger(CardArray::StaggerType /*staggerType*/)
 // Accessor for CardArray's size member.
 int CardArray::GetSize(void)
 {
-    return size;
+    return cards.size();
 }
