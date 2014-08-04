@@ -2,6 +2,7 @@
 #define CARDMANAGER_H
 
 #include <QGraphicsSvgItem>
+#include <QGraphicsScene>
 
 #include "Cards/CardArray.h"
 #include "Cards/Card.h"
@@ -13,7 +14,7 @@ public:
     CardManager(CardManager&);
     ~CardManager(void);
 
-    void Initialize(void);
+    void Initialize(QGraphicsScene* scene);
 
     CardArray* GetDeck(void);
     CardArray* GetTalon(void);
@@ -25,11 +26,11 @@ public:
     Card       GetCurrentTrick(void);
 
 private:
-    void InitializeAllCards(void);
+    void InitializeDeck(void);
+    void AddCardsToScene(QGraphicsScene* scene);
     void ResetDeck(void);
 
 private:
-    CardArray* allCards;
     CardArray* deck;
     CardArray* talon;
     CardArray* playerHand;
