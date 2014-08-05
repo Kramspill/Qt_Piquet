@@ -4,6 +4,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 
+#include "View/View.h"
 #include "WindowManager.h"
 #include "StateManager.h"
 #include "AnimationManager.h"
@@ -26,7 +27,7 @@ public:
 
 private:
     QGraphicsScene*   scene;
-    QGraphicsView*    view;
+    View*             view;
     WindowManager*    windowManager;
     StateManager*     stateManager;
     AnimationManager* animationManager;

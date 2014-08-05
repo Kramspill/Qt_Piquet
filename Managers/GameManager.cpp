@@ -25,12 +25,12 @@ void GameManager::Initialize(void)
     cardManager = new CardManager();
     cardManager->Initialize(scene);
 
-    view = new QGraphicsView(scene);
-    view->show();
-
     // Initialize the StateManager.
-    //stateManager = new StateManager();
-    //stateManager->Initialize();
+    stateManager = new StateManager();
+    stateManager->Initialize();
+
+    view = new View(scene);
+    view->show();
 
     /* Progressively add these.
     windowManager = new WindowManager();

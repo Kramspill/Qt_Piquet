@@ -24,6 +24,8 @@ void DealPhase::Initialize(void)
     dealToCPU             = new QState();
     dealTalon             = new QFinalState();
 
+    // Set the position that the cards will end up for each transition.
+
     // Setup the transitions.
     //dealToPlayer->addTransition(/*object*/, /*SIGNAL()*/, dealToCPU);
     //dealToPlayer->addTransition(/*object*/, /*SIGNAL()*/, dealTalon);
@@ -34,6 +36,8 @@ void DealPhase::Initialize(void)
     dealPhaseStateMachine->addState(dealToPlayer);
     dealPhaseStateMachine->addState(dealToCPU);
     dealPhaseStateMachine->addState(dealTalon);
+
+    // Set the intial state (for now will be dealToPlayer).
 }
 
 // Execute the state machine.
