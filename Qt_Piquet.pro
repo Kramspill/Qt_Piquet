@@ -33,7 +33,8 @@ SOURCES +=\
     Managers/CardManager.cpp \
     Cards/CardArray.cpp \
     Cards/Card.cpp \
-    AppWindows/MainWindow.cpp
+    AppWindows/MainWindow.cpp \
+    View/View.cpp
 
 HEADERS  += \
     Managers/GameManager.h \
@@ -54,7 +55,8 @@ HEADERS  += \
     Managers/CardManager.h \
     Cards/CardArray.h \
     Cards/Card.h \
-    AppWindows/MainWindow.h
+    AppWindows/MainWindow.h \
+    View/View.h
 
 #FORMS    += MainWindow.ui
 
