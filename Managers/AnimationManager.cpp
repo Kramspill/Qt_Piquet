@@ -1,56 +1,42 @@
 #include "AnimationManager.h"
 
-// Constructor.
-AnimationManager::AnimationManager(void)
-{
-}
-
-// Copy Constructor.
-AnimationManager::AnimationManager(AnimationManager&)
-{
-}
-
 // Destructor.
 AnimationManager::~AnimationManager(void)
 {
 }
 
-void AnimationManager::Initialize(void)
+// Get the AnimationManager singleton.
+AnimationManager& AnimationManager::GetSingleton(void)
 {
-    // Allocate memory to members and initialize them.
-    dealPhaseAnimation = new DealPhaseAnimation();
-    dealPhaseAnimation->Initialize();
-
-    exchangePhaseAnimation = new ExchangePhaseAnimation();
-    exchangePhaseAnimation->Initialize();
-
-    declarationPhaseAnimation = new DeclarationPhaseAnimation();
-    declarationPhaseAnimation->Initialize();
-
-    trickPhaseAnimation = new TrickPhaseAnimation();
-    trickPhaseAnimation->Initialize();
+    static AnimationManager singleton;
+    return singleton;
 }
 
-// Accessor for AnimationManager's dealPhaseAnimation member.
-PhaseAnimation* AnimationManager::GetDealPhaseAnimation(void)
+// Add an animation to the list of animations held by AnimationManager.
+void AnimationManager::AddAnimation(QAbstractAnimation* animation)
 {
-    return dealPhaseAnimation;
+    QObject::connect(animation, SIGNAL(destroyed(QAbstractAnimation*)),
+                     this, SLOT(RemoveAnimation(QAbstractAnimation*)));
+
+    animations.append(animation);
 }
 
-// Accessor for AnimationManager's exchangePhaseAnimation member.
-PhaseAnimation* AnimationManager::GetExchangePhaseAnimation(void)
+// Remove all animations for the animation list.
+void AnimationManager::RemoveAllAnimations(void)
 {
-    return exchangePhaseAnimation;
+    animations.clear();
 }
 
-// Accessor for AnimationManager's declarationPhaseAnimation member.
-PhaseAnimation* AnimationManager::GetDeclarationPhaseAnimation(void)
+// Constructor (Private).
+AnimationManager::AnimationManager(void)
 {
-    return declarationPhaseAnimation;
 }
 
-// Accessor for AnimationManager's trickPhaseAnimation member.
-PhaseAnimation* AnimationManager::GetTrickPhaseAnimation(void)
+// Remove an animation from the animation list.
+void AnimationManager::RemoveAnimation(QAbstractAnimation* animation)
 {
-    return trickPhaseAnimation;
+    QObject::disconnect(animation, SIGNAL(destroyed(QAbstractAnimation*)),
+                        this, SLOT(RemoveAnimation(QAbstractAnimation*)));
+
+    animations.removeAll(animation);
 }

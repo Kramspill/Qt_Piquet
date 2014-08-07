@@ -1,31 +1,29 @@
 #ifndef ANIMATIONMANAGER_H
 #define ANIMATIONMANAGER_H
 
-#include "Animation/PhaseAnimation.h"
-#include "Animation/DealPhaseAnimation.h"
-#include "Animation/ExchangePhaseAnimation.h"
-#include "Animation/DeclarationPhaseAnimation.h"
-#include "Animation/TrickPhaseAnimation.h"
+#include <QAbstractAnimation>
 
-class AnimationManager
+class AnimationManager : public QObject
 {
+    Q_OBJECT
 public:
-    AnimationManager(void);
-    AnimationManager(AnimationManager&);
     ~AnimationManager(void);
 
-    void Initialize(void);
+    static AnimationManager& GetSingleton(void);
 
-    PhaseAnimation* GetDealPhaseAnimation(void);
-    PhaseAnimation* GetExchangePhaseAnimation(void);
-    PhaseAnimation* GetDeclarationPhaseAnimation(void);
-    PhaseAnimation* GetTrickPhaseAnimation(void);
+    void AddAnimation(QAbstractAnimation* animation);
+    void RemoveAllAnimations(void);
 
 private:
-    DealPhaseAnimation*        dealPhaseAnimation;
-    ExchangePhaseAnimation*    exchangePhaseAnimation;
-    DeclarationPhaseAnimation* declarationPhaseAnimation;
-    TrickPhaseAnimation*       trickPhaseAnimation;
+    AnimationManager(void);
+    AnimationManager(AnimationManager&);
+    void operator=(AnimationManager&);
+
+public slots:
+    void RemoveAnimation(QAbstractAnimation* animation);
+
+private:
+    QList<QAbstractAnimation*> animations;
 };
 
 #endif // ANIMATIONMANAGER_H
