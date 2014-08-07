@@ -19,18 +19,27 @@ GameManager::~GameManager(void)
 void GameManager::Initialize(void)
 {
     // Initialize the scene.
-    scene = new QGraphicsScene(-350, -350, 700, 700);
+    scene = new Scene(-350, -350, 700, 700);
+
+    // TEMP
+    QPushButton* button = new QPushButton();
+    scene->addWidget(button);
+    //
 
     // Initialize the CardManager with the scene object.
     cardManager = new CardManager();
     cardManager->Initialize(scene);
 
-    // Initialize the StateManager.
-    stateManager = new StateManager();
-    stateManager->Initialize();
+    // Initialize the StateManager with the Cards.
+    //stateManager = new StateManager();
+    //stateManager->Initialize(cardManager->GetDeck(), button);
+
+    //stateManager->GetDealPhase()->Execute();
 
     view = new View(scene);
     view->show();
+
+    //stateManager->GetDealPhase()->Execute();
 
     /* Progressively add these.
     windowManager = new WindowManager();

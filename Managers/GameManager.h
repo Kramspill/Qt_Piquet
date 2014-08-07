@@ -1,9 +1,9 @@
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
-#include <QGraphicsScene>
-#include <QGraphicsView>
+#include <QPushButton>
 
+#include "Scene/Scene.h"
 #include "View/View.h"
 #include "WindowManager.h"
 #include "StateManager.h"
@@ -26,7 +26,7 @@ public:
     ScoreManager*     GetScoreManager(void);
 
 private:
-    QGraphicsScene*   scene;
+    Scene*            scene;
     View*             view;
     WindowManager*    windowManager;
     StateManager*     stateManager;
