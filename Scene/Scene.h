@@ -3,11 +3,15 @@
 
 #include <QGraphicsScene>
 
+#include "Cards/Card.h"
+
 class Scene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    explicit Scene(QObject *parent = 0);
+    Scene(int x, int y, int width, int height);
+
+    void addItem(Card* card);
 
 signals:
 
