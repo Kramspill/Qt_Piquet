@@ -3,8 +3,9 @@
 
 #include <QGraphicsSvgItem>
 
-class Card
+class Card : public QGraphicsSvgItem
 {
+    Q_OBJECT
 public:
     enum Suit
     {
@@ -30,17 +31,15 @@ public:
 
 public:
     Card(void);
-    Card(QGraphicsSvgItem* svgItem, Suit theSuit, Value theValue);
+    Card(const QString& svgFileName, Suit theSuit, Value theValue);
     Card(Card&);
     ~Card(void);
 
-    QGraphicsSvgItem* GetCardImage(void);
     QGraphicsSvgItem* GetBackImage(void);
     Suit              GetSuit(void);
     Value             GetValue(void);
 
 private:
-    QGraphicsSvgItem* cardImage;
     QGraphicsSvgItem* backImage;
     Suit              suit;
     Value             value;

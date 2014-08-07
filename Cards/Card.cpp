@@ -6,8 +6,8 @@ Card::Card(void)
 }
 
 // Constructor.
-Card::Card(QGraphicsSvgItem* svgItem, Suit theSuit, Value theValue) :
-    cardImage(svgItem),
+Card::Card(const QString& svgFileName, Suit theSuit, Value theValue) :
+    QGraphicsSvgItem(svgFileName),
     backImage(new QGraphicsSvgItem(":/Cards/Back/Resources/Back/Red_Back.svg")),
     suit(theSuit),
     value(theValue)
@@ -15,7 +15,7 @@ Card::Card(QGraphicsSvgItem* svgItem, Suit theSuit, Value theValue) :
 }
 
 // Copy Constructor.
-Card::Card(Card&)
+Card::Card(Card&) : QGraphicsSvgItem()
 {
 }
 
@@ -34,12 +34,6 @@ Card::Suit Card::GetSuit(void)
 Card::Value Card::GetValue(void)
 {
     return value;
-}
-
-// Accessor for Card's cardImage member.
-QGraphicsSvgItem* Card::GetCardImage(void)
-{
-    return cardImage;
 }
 
 // Accessor for Card's backImage member.
