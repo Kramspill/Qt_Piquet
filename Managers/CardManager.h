@@ -1,9 +1,7 @@
 #ifndef CARDMANAGER_H
 #define CARDMANAGER_H
 
-#include <QGraphicsSvgItem>
-#include <QGraphicsScene>
-
+#include "Scene/Scene.h"
 #include "Cards/CardArray.h"
 #include "Cards/Card.h"
 
@@ -14,7 +12,7 @@ public:
     CardManager(CardManager&);
     ~CardManager(void);
 
-    void Initialize(QGraphicsScene* scene);
+    void Initialize(Scene* scene);
 
     CardArray* GetDeck(void);
     CardArray* GetTalon(void);
@@ -27,7 +25,7 @@ public:
 
 private:
     void InitializeDeck(void);
-    void AddCardsToScene(QGraphicsScene* scene);
+    void AddCardsToScene(Scene* scene);
     void ResetDeck(void);
 
 private:
