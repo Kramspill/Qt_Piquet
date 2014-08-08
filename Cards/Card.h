@@ -2,6 +2,10 @@
 #define CARD_H
 
 #include <QGraphicsSvgItem>
+#include <QStateMachine>
+#include <QPropertyAnimation>
+
+#include "State/CardStates.h"
 
 class Card : public QGraphicsSvgItem
 {
@@ -35,14 +39,20 @@ public:
     Card(Card&);
     ~Card(void);
 
+    void Initialize(void);
+
     QGraphicsSvgItem* GetBackImage(void);
     Suit              GetSuit(void);
     Value             GetValue(void);
 
 private:
-    QGraphicsSvgItem* backImage;
-    Suit              suit;
-    Value             value;
+    QGraphicsSvgItem*   backImage;
+    Suit                suit;
+    Value               value;
+
+    QStateMachine*      stateMachine;
+    QPropertyAnimation* transitionAnimation;
+    /* Transformation for flipping the card */
 };
 
 #endif // CARD_H
