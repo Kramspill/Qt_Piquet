@@ -17,11 +17,6 @@ SOURCES +=\
     Main.cpp \
     Managers/GameManager.cpp \
     Managers/StateManager.cpp \
-    State/Phase.cpp \
-    State/DealPhase.cpp \
-    State/ExchangePhase.cpp \
-    State/DeclarationPhase.cpp \
-    State/TrickPhase.cpp \
     Managers/AnimationManager.cpp \
     Animation/PhaseAnimation.cpp \
     Animation/DealPhaseAnimation.cpp \
@@ -35,16 +30,15 @@ SOURCES +=\
     Cards/Card.cpp \
     AppWindows/MainWindow.cpp \
     View/View.cpp \
-    Scene/Scene.cpp
+    Scene/Scene.cpp \
+    State/DealPhaseState.cpp \
+    State/DeclarationPhaseState.cpp \
+    State/ExchangePhaseState.cpp \
+    State/TrickPhaseState.cpp
 
 HEADERS  += \
     Managers/GameManager.h \
     Managers/StateManager.h \
-    State/Phase.h \
-    State/DealPhase.h \
-    State/ExchangePhase.h \
-    State/DeclarationPhase.h \
-    State/TrickPhase.h \
     Managers/AnimationManager.h \
     Animation/PhaseAnimation.h \
     Animation/DealPhaseAnimation.h \
@@ -58,7 +52,12 @@ HEADERS  += \
     Cards/Card.h \
     AppWindows/MainWindow.h \
     View/View.h \
-    Scene/Scene.h
+    Scene/Scene.h \
+    State/CardStates.h \
+    State/DealPhaseState.h \
+    State/DeclarationPhaseState.h \
+    State/ExchangePhaseState.h \
+    State/TrickPhaseState.h
 
 #FORMS    += MainWindow.ui
 
