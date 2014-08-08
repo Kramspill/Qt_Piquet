@@ -1,22 +1,19 @@
-#ifndef DECLARATIONPHASE_H
-#define DECLARATIONPHASE_H
+#ifndef DECLARATIONPHASESTATE_H
+#define DECLARATIONPHASESTATE_H
 
-#include "Phase.h"
+#include <QState>
+#include <QEvent>
 
-class DeclarationPhase : public Phase
+class DeclarationPhaseState : public QState
 {
 public:
-    DeclarationPhase(void);
-    DeclarationPhase(DeclarationPhase& other);
-    ~DeclarationPhase(void);
+    DeclarationPhaseState(QState* parent = 0);
+    DeclarationPhaseState(DeclarationPhaseState& other);
+    ~DeclarationPhaseState(void);
 
-    void Initialize(void);
-    void Execute(void);
-
-    char* GetName(void);
-
-private:
-    char* name;
+protected:
+    void onEntry(QEvent*);
+    void onExit(QEvent*);
 };
 
-#endif // DECLARATIONPHASE_H
+#endif // DECLARATIONPHASESTATE_H

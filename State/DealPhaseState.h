@@ -1,26 +1,19 @@
-#ifndef DEALPHASE_H
-#define DEALPHASE_H
+#ifndef DEALPHASESTATE_H
+#define DEALPHASESTATE_H
 
-#include "Phase.h"
+#include <QState>
+#include <QEvent>
 
-class DealPhase : public Phase
+class DealPhaseState : public QState
 {
 public:
-    DealPhase(void);
-    DealPhase(DealPhase& other);
-    ~DealPhase(void);
+    DealPhaseState(QState* parent = 0);
+    DealPhaseState(DealPhaseState& other);
+    ~DealPhaseState(void);
 
-    void Initialize(void);
-    void Execute(void);
-
-    char* GetName(void);
-
-private:
-    char* name;
-    QStateMachine* dealPhaseStateMachine;
-    QState*        dealToPlayer;
-    QState*        dealToCPU;
-    QFinalState*   dealTalon;
+protected:
+    void onEntry(QEvent*);
+    void onExit(QEvent*);
 };
 
-#endif // DEALPHASE_H
+#endif // DEALPHASESTATE_H

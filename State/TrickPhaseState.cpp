@@ -1,33 +1,28 @@
-#include "TrickPhase.h"
+#include "TrickPhaseState.h"
 
 // Constructor.
-TrickPhase::TrickPhase(void)
+TrickPhaseState::TrickPhaseState(QState* parent) :
+    QState(parent)
 {
 }
 
 // Copy Constructor.
-TrickPhase::TrickPhase(TrickPhase& other) : Phase(other)
+TrickPhaseState::TrickPhaseState(TrickPhaseState& other) :
+    QState(other)
 {
 }
 
 // Destructor.
-TrickPhase::~TrickPhase(void)
+TrickPhaseState::~TrickPhaseState(void)
 {
 }
 
-void TrickPhase::Initialize(void)
-{
-
-}
-
-// Execute the phase.
-void TrickPhase::Execute(void)
+void TrickPhaseState::onEntry(QEvent*)
 {
 
 }
 
-// Accessor for TrickPhase's name member.
-char* TrickPhase::GetName(void)
+void TrickPhaseState::onExit(QEvent*)
 {
-    return name;
+
 }

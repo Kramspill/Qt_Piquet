@@ -1,22 +1,19 @@
-#ifndef EXCHANGEPHASE_H
-#define EXCHANGEPHASE_H
+#ifndef EXCHANGEPHASESTATE_H
+#define EXCHANGEPHASESTATE_H
 
-#include "Phase.h"
+#include <QState>
+#include <QEvent>
 
-class ExchangePhase : public Phase
+class ExchangePhaseState : public QState
 {
 public:
-    ExchangePhase(void);
-    ExchangePhase(ExchangePhase& other);
-    ~ExchangePhase(void);
+    ExchangePhaseState(QState* parent = 0);
+    ExchangePhaseState(ExchangePhaseState& other);
+    ~ExchangePhaseState(void);
 
-    void Initialize(void);
-    void Execute(void);
-
-    char* GetName(void);
-
-private:
-    char* name;
+protected:
+    void onEntry(QEvent*);
+    void onExit(QEvent*);
 };
 
-#endif // EXCHANGEPHASE_H
+#endif // EXCHANGEPHASESTATE_H

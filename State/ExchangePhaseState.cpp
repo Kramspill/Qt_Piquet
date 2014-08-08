@@ -1,33 +1,28 @@
-#include "ExchangePhase.h"
+#include "ExchangePhaseState.h"
 
 // Constructor.
-ExchangePhase::ExchangePhase(void)
+ExchangePhaseState::ExchangePhaseState(QState* parent) :
+    QState(parent)
 {
 }
 
 // Copy Constructor.
-ExchangePhase::ExchangePhase(ExchangePhase& other) : Phase(other)
+ExchangePhaseState::ExchangePhaseState(ExchangePhaseState& other) :
+    QState(other)
 {
 }
 
 // Destructor.
-ExchangePhase::~ExchangePhase(void)
+ExchangePhaseState::~ExchangePhaseState(void)
 {
 }
 
-void ExchangePhase::Initialize(void)
-{
-
-}
-
-// Execute the phase.
-void ExchangePhase::Execute(void)
+void ExchangePhaseState::onEntry(QEvent*)
 {
 
 }
 
-// Accessor for ExchangePhase's name member.
-char* ExchangePhase::GetName(void)
+void ExchangePhaseState::onExit(QEvent*)
 {
-    return name;
+
 }

@@ -1,33 +1,28 @@
-#include "DeclarationPhase.h"
+#include "DeclarationPhaseState.h"
 
 // Constructor.
-DeclarationPhase::DeclarationPhase(void)
+DeclarationPhaseState::DeclarationPhaseState(QState* parent) :
+    QState(parent)
 {
 }
 
 // Copy Constructor.
-DeclarationPhase::DeclarationPhase(DeclarationPhase& other) : Phase(other)
+DeclarationPhaseState::DeclarationPhaseState(DeclarationPhaseState& other) :
+    QState(other)
 {
 }
 
 // Destructor.
-DeclarationPhase::~DeclarationPhase(void)
+DeclarationPhaseState::~DeclarationPhaseState(void)
 {
 }
 
-void DeclarationPhase::Initialize(void)
-{
-
-}
-
-// Execute the phase.
-void DeclarationPhase::Execute(void)
+void DeclarationPhaseState::onEntry(QEvent*)
 {
 
 }
 
-// Accessor for DeclarationPhase's name member.
-char* DeclarationPhase::GetName(void)
+void DeclarationPhaseState::onExit(QEvent*)
 {
-    return name;
+
 }

@@ -1,22 +1,19 @@
-#ifndef TRICKPHASE_H
-#define TRICKPHASE_H
+#ifndef TRICKPHASESTATE_H
+#define TRICKPHASESTATE_H
 
-#include "Phase.h"
+#include <QState>
+#include <QEvent>
 
-class TrickPhase : public Phase
+class TrickPhaseState : public QState
 {
 public:
-    TrickPhase(void);
-    TrickPhase(TrickPhase& other);
-    ~TrickPhase(void);
+    TrickPhaseState(QState* parent = 0);
+    TrickPhaseState(TrickPhaseState& other);
+    ~TrickPhaseState(void);
 
-    void Initialize(void);
-    void Execute(void);
-
-    char* GetName(void);
-
-private:
-    char* name;
+protected:
+    void onEntry(QEvent*);
+    void onExit(QEvent*);
 };
 
-#endif // TRICKPHASE_H
+#endif // TRICKPHASESTATE_H
