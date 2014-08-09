@@ -51,12 +51,10 @@ void DealPhaseState::onEntry(QEvent*)
     dealTalon->addTransition(SomeObject, SIGNAL(clicked()), finalState);
     */
 
-    /*
     // Setup the work done in each state.
     connect(dealToPlayer, SIGNAL(entered()), this, SLOT(DealToPlayer()));
     connect(dealToCpu,    SIGNAL(entered()), this, SLOT(DealToCpu()));
     connect(dealTalon,    SIGNAL(entered()), this, SLOT(DealTalon()));
-    */
 }
 
 void DealPhaseState::onExit(QEvent*)
@@ -66,15 +64,21 @@ void DealPhaseState::onExit(QEvent*)
 
 void DealPhaseState::DealToPlayer(void)
 {
+    CardManager cardManager = CardManager::GetSingleton();
 
+    cardManager.TransferCards(cardManager.GetDeck(), cardManager.GetPlayerHand(), 3);
 }
 
 void DealPhaseState::DealToCpu(void)
 {
+    CardManager cardManager = CardManager::GetSingleton();
 
+    cardManager.TransferCards(cardManager.GetDeck(), cardManager.GetCpuHand(), 3);
 }
 
 void DealPhaseState::DealTalon(void)
 {
+    CardManager cardManager = CardManager::GetSingleton();
 
+    cardManager.TransferCards(cardManager.GetDeck(), cardManager.GetTalon(), 8);
 }
