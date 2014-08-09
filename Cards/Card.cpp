@@ -36,14 +36,14 @@ void Card::Initialize(void)
     stateMachine = new QStateMachine();
 
     // Initialize the various states that a Card can be in.
-    InDeckState*           inDeckState           = new InDeckState();
-    InPlayerHandState*     inPlayerHandState     = new InPlayerHandState();
-    InCpuHandState*        inCpuHandState        = new InCpuHandState();
-    InTalonState*          inTalonState          = new InTalonState();
-    InPlayerDiscardsState* inPlayerDiscardsState = new InPlayerDiscardsState();
-    InCpuDiscardsState*    inCpuDiscardsState    = new InCpuDiscardsState();
-    InCurrentTrickState*   inCurrentTrickState   = new InCurrentTrickState();
-    InPreviousTricksState* inPreviousTricksState = new InPreviousTricksState();
+    InDeckState*           inDeckState           = new InDeckState(stateMachine);
+    InPlayerHandState*     inPlayerHandState     = new InPlayerHandState(stateMachine);
+    InCpuHandState*        inCpuHandState        = new InCpuHandState(stateMachine);
+    InTalonState*          inTalonState          = new InTalonState(stateMachine);
+    InPlayerDiscardsState* inPlayerDiscardsState = new InPlayerDiscardsState(stateMachine);
+    InCpuDiscardsState*    inCpuDiscardsState    = new InCpuDiscardsState(stateMachine);
+    InCurrentTrickState*   inCurrentTrickState   = new InCurrentTrickState(stateMachine);
+    InPreviousTricksState* inPreviousTricksState = new InPreviousTricksState(stateMachine);
 
     /*
     // Setup the transitions from the InDeck state.
