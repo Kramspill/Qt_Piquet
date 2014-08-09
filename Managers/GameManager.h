@@ -30,8 +30,6 @@ private:
     View*             view;
     WindowManager*    windowManager;
     StateManager*     stateManager;
-    AnimationManager* animationManager;
-    CardManager*      cardManager;
     ScoreManager*     scoreManager;
 };
 

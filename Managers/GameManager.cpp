@@ -27,8 +27,7 @@ void GameManager::Initialize(void)
     //
 
     // Initialize the CardManager with the scene object.
-    cardManager = new CardManager();
-    cardManager->Initialize(scene);
+    CardManager::GetSingleton().Initialize(scene);
 
     // Initialize the StateManager with the Cards.
     //stateManager = new StateManager();
@@ -47,9 +46,6 @@ void GameManager::Initialize(void)
 
     stateManager = new StateManager();
     stateManager->Initialize();
-
-    animationManager = new AnimationManager();
-    animationManager->Initialize();
 
     cardManager = new CardManager();
     cardManager->Initialize();
