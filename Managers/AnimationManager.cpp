@@ -27,11 +27,6 @@ void AnimationManager::RemoveAllAnimations(void)
     animations.clear();
 }
 
-// Constructor (Private).
-AnimationManager::AnimationManager(void)
-{
-}
-
 // Remove an animation from the animation list.
 void AnimationManager::RemoveAnimation(QAbstractAnimation* animation)
 {

@@ -15,7 +15,7 @@ public:
     void RemoveAllAnimations(void);
 
 private:
-    AnimationManager(void);
+    AnimationManager(void) {}
     AnimationManager(AnimationManager&);
     void operator=(AnimationManager&);
 
