@@ -7,8 +7,8 @@ DeclarationPhaseState::DeclarationPhaseState(QState* parent) :
 }
 
 // Copy Constructor.
-DeclarationPhaseState::DeclarationPhaseState(DeclarationPhaseState& other) :
-    QState(other)
+DeclarationPhaseState::DeclarationPhaseState(DeclarationPhaseState&) :
+    QState()
 {
 }
 

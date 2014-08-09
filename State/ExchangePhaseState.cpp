@@ -7,8 +7,8 @@ ExchangePhaseState::ExchangePhaseState(QState* parent) :
 }
 
 // Copy Constructor.
-ExchangePhaseState::ExchangePhaseState(ExchangePhaseState& other) :
-    QState(other)
+ExchangePhaseState::ExchangePhaseState(ExchangePhaseState&) :
+    QState()
 {
 }
 

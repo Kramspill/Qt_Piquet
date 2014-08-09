@@ -8,7 +8,7 @@ class ExchangePhaseState : public QState
 {
 public:
     ExchangePhaseState(QState* parent = 0);
-    ExchangePhaseState(ExchangePhaseState& other);
+    ExchangePhaseState(ExchangePhaseState&);
     ~ExchangePhaseState(void);
 
 protected:

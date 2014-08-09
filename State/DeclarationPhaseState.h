@@ -8,7 +8,7 @@ class DeclarationPhaseState : public QState
 {
 public:
     DeclarationPhaseState(QState* parent = 0);
-    DeclarationPhaseState(DeclarationPhaseState& other);
+    DeclarationPhaseState(DeclarationPhaseState&);
     ~DeclarationPhaseState(void);
 
 protected:

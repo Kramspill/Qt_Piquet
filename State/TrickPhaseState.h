@@ -8,7 +8,7 @@ class TrickPhaseState : public QState
 {
 public:
     TrickPhaseState(QState* parent = 0);
-    TrickPhaseState(TrickPhaseState& other);
+    TrickPhaseState(TrickPhaseState&);
     ~TrickPhaseState(void);
 
 protected:

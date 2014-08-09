@@ -7,8 +7,8 @@ TrickPhaseState::TrickPhaseState(QState* parent) :
 }
 
 // Copy Constructor.
-TrickPhaseState::TrickPhaseState(TrickPhaseState& other) :
-    QState(other)
+TrickPhaseState::TrickPhaseState(TrickPhaseState&) :
+    QState()
 {
 }
 
