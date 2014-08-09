@@ -1,18 +1,14 @@
 #include "CardManager.h"
 
-// Constructor.
-CardManager::CardManager(void)
-{
-}
-
-// Copy Constructor.
-CardManager::CardManager(CardManager&)
-{
-}
-
 // Destructor.
 CardManager::~CardManager(void)
 {
+}
+
+CardManager& CardManager::GetSingleton(void)
+{
+    static CardManager singleton;
+    return singleton;
 }
 
 // Allocate space for each card, initialize the deck to
@@ -35,6 +31,16 @@ void CardManager::Initialize(Scene* scene)
     previousTricks = new CardArray();
 }
 
+// Transfer a cards between one CardArray and another.
+void CardManager::TransferCards(CardArray* source, CardArray* destination, int numberOfCards)
+{
+    for (int index = 0; index < numberOfCards; index++)
+    {
+        Card* card = source->RemoveCard(index);
+        destination->AddCard(card);
+    }
+}
+
 // Accessor for CardManager's deck member.
 CardArray* CardManager::GetDeck(void)
 {
@@ -54,7 +60,7 @@ CardArray* CardManager::GetPlayerHand(void)
 }
 
 // Accessor for CardManager's cpuHand member.
-CardArray* CardManager::GetCPUHand(void)
+CardArray* CardManager::GetCpuHand(void)
 {
     return cpuHand;
 }
@@ -66,7 +72,7 @@ CardArray* CardManager::GetPlayerDiscards(void)
 }
 
 // Accessor for CardManager's cpuDiscards member.
-CardArray* CardManager::GetCPUDiscards(void)
+CardArray* CardManager::GetCpuDiscards(void)
 {
     return cpuDiscards;
 }

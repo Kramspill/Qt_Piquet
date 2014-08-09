@@ -8,22 +8,28 @@
 class CardManager
 {
 public:
-    CardManager(void);
-    CardManager(CardManager&);
     ~CardManager(void);
 
+    static CardManager& GetSingleton(void);
+
     void Initialize(Scene* scene);
+
+    void TransferCards(CardArray* source, CardArray* destination, int numberOfCards);
 
     CardArray* GetDeck(void);
     CardArray* GetTalon(void);
     CardArray* GetPlayerHand(void);
-    CardArray* GetCPUHand(void);
+    CardArray* GetCpuHand(void);
     CardArray* GetPlayerDiscards(void);
-    CardArray* GetCPUDiscards(void);
+    CardArray* GetCpuDiscards(void);
     CardArray* GetPreviousTricks(void);
     Card       GetCurrentTrick(void);
 
 private:
+    CardManager(void) {}
+    CardManager(CardManager&);
+    void operator=(CardManager&);
+
     void InitializeDeck(void);
     void AddCardsToScene(Scene* scene);
     void ResetDeck(void);
