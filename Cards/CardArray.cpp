@@ -43,7 +43,7 @@ Card* CardArray::RemoveCard(int index)
         removedCard = cards[index];
 
         // Remove the card.
-        cards.erase(index);
+        cards.erase(cards.begin() + index);
     }
 
     return removedCard;
