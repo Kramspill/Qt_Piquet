@@ -21,8 +21,6 @@ public:
     void Initialize(void);
 
     StateManager*     GetStateManager(void);
-    AnimationManager* GetAnimationManager(void);
-    CardManager*      GetCardManager(void);
     ScoreManager*     GetScoreManager(void);
 
 private:

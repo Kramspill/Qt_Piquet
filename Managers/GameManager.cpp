@@ -61,18 +61,6 @@ StateManager* GameManager::GetStateManager(void)
     return stateManager;
 }
 
-// Accessor for GameManager's animationManager member.
-AnimationManager* GameManager::GetAnimationManager(void)
-{
-    return animationManager;
-}
-
-// Accessor for GameManager's cardManager member.
-CardManager* GameManager::GetCardManager(void)
-{
-    return cardManager;
-}
-
 // Accessor for GameManager's scoreManager member.
 ScoreManager* GameManager::GetScoreManager(void)
 {
