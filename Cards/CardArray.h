@@ -19,7 +19,7 @@ public:
     ~CardArray(void);
 
     void  AddCard(Card* newCard);
-    void  RemoveCard(int index);
+    Card* RemoveCard(int index);
     Card* GetCard(int index);
 
     void Shuffle(void);

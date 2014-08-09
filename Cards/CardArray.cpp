@@ -29,16 +29,24 @@ void CardArray::AddCard(Card* newCard)
     cards.push_back(newCard);
 }
 
-// Remove the top card in this array.
-void CardArray::RemoveCard(int index)
+// Remove a card in this array.
+// Doesn't free the memory associated with the card but
+// instead returns a pointer to the removed Card.
+Card* CardArray::RemoveCard(int index)
 {
-    // Make sure there are cards in the array.
-    if ( cards.size() > 0 )
+    Card* removedCard = 0;
+
+    // Make sure there are cards in the array
+    // and a card exists at index.
+    if ( cards.size() > 0 && cards[index] )
     {
+        removedCard = cards[index];
+
         // Remove the card.
-        delete cards[index];
-        cards[index] = 0;
+        cards.erase(index);
     }
+
+    return removedCard;
 }
 
 Card* CardArray::GetCard(int index)
