@@ -6,6 +6,9 @@
 #include <QEvent>
 #include <QStateMachine>
 
+#include "Managers/CardManager.h"
+#include "Cards/CardArray.h"
+
 class DealPhaseState : public QState
 {
 public:

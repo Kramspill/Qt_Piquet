@@ -64,21 +64,24 @@ void DealPhaseState::onExit(QEvent*)
 
 void DealPhaseState::DealToPlayer(void)
 {
-    CardManager cardManager = CardManager::GetSingleton();
+    CardArray* deck       = CardManager::GetSingleton().GetDeck();
+    CardArray* playerHand = CardManager::GetSingleton().GetPlayerHand();
 
-    cardManager.TransferCards(cardManager.GetDeck(), cardManager.GetPlayerHand(), 3);
+    CardManager::GetSingleton().TransferCards(deck, playerHand, 3);
 }
 
 void DealPhaseState::DealToCpu(void)
 {
-    CardManager cardManager = CardManager::GetSingleton();
+    CardArray* deck       = CardManager::GetSingleton().GetDeck();
+    CardArray* cpuHand    = CardManager::GetSingleton().GetCpuHand();
 
-    cardManager.TransferCards(cardManager.GetDeck(), cardManager.GetCpuHand(), 3);
+    CardManager::GetSingleton().TransferCards(deck, cpuHand, 3);
 }
 
 void DealPhaseState::DealTalon(void)
 {
-    CardManager cardManager = CardManager::GetSingleton();
+    CardArray* deck       = CardManager::GetSingleton().GetDeck();
+    CardArray* talon      = CardManager::GetSingleton().GetTalon();
 
-    cardManager.TransferCards(cardManager.GetDeck(), cardManager.GetTalon(), 8);
+    CardManager::GetSingleton().TransferCards(deck, talon, 3);
 }
