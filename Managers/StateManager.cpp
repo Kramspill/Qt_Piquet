@@ -17,14 +17,16 @@ StateManager::~StateManager(void)
 
 // Initialize the phases that represent the
 // states of the game.
-void StateManager::Initialize(void)
+void StateManager::Initialize(CardArray* deck, QPushButton* button)
 {
+    // Setup the state machine of the Game.
+    stateMachine = new QStateMachine();
+
     // Allocate memory to the phases
     // and initialize them.
-    dealPhase = new DealPhase();
-    dealPhase->Initialize();
+    dealPhaseState = new DealPhaseState(stateMachine);
 
-    /* Progressively add these.
+    /*
     exchangePhase = new ExchangePhase();
     exchangePhase->Initialize();
 
@@ -35,45 +37,35 @@ void StateManager::Initialize(void)
     trickPhase->Initialize();
     */
 
-    // Set the current phase to be
-    // the deal phase.
-    currentPhase = new Phase();
-    currentPhase = dealPhase;
-}
-
-// Accessor for StateManager's currentPhase member.
-Phase* StateManager::GetCurrentPhase(void)
-{
-    return currentPhase;
+    /*
+    // Setup the transitions between the states.
+    dealPhaseState->addTransition(SomeObject, SIGNAL(SomeSignal()), exchangePhaseState);
+    exchangePhaseState->addTransition(SomeObject, SIGNAL(SomeSignal()), declarationPhaseState);
+    declarationPhaseState->addTransition(SomeObject, SIGNAL(SomeSignal()), trickPhaseState);
+    trickPhaseState->addTransition(SomeObject, SIGNAL(SomeSignal()), playSummaryState);
+    */
 }
 
 // Accessor for StateManager's dealPhase member.
-Phase* StateManager::GetDealPhase(void)
+DealPhaseState* StateManager::GetDealPhase(void)
 {
-    return dealPhase;
+    return dealPhaseState;
 }
 
 // Accessor for StateManager's exchangePhase member.
-Phase* StateManager::GetExchangePhase(void)
+ExchangePhaseState* StateManager::GetExchangePhase(void)
 {
-    return exchangePhase;
+    return exchangePhaseState;
 }
 
 // Accessor for StateManager's declarationPhase member.
-Phase* StateManager::GetDeclarationPhase(void)
+DeclarationPhaseState* StateManager::GetDeclarationPhase(void)
 {
-    return declarationPhase;
+    return declarationPhaseState;
 }
 
 // Accessor for StateManager's trickPhase member.
-Phase* StateManager::GetTrickPhase(void)
+TrickPhaseState* StateManager::GetTrickPhase(void)
 {
-    return trickPhase;
-}
-
-// Mutator for StateManager's currentPhase member.
-// Changes currentPhase to the next phase in the game.
-void StateManager::CycleCurrentPhase(void)
-{
-    //currentPhase = currentPhase->next();
+    return trickPhaseState;
 }

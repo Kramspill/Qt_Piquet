@@ -1,11 +1,14 @@
 #ifndef STATEMANAGER_H
 #define STATEMANAGER_H
 
-#include "State/Phase.h"
-#include "State/DealPhase.h"
-#include "State/ExchangePhase.h"
-#include "State/DeclarationPhase.h"
-#include "State/TrickPhase.h"
+#include <QPushButton>
+#include <QStateMachine>
+
+#include "Cards/CardArray.h"
+#include "State/DealPhaseState.h"
+#include "State/ExchangePhaseState.h"
+#include "State/DeclarationPhaseState.h"
+#include "State/TrickPhaseState.h"
 
 class StateManager
 {
@@ -14,23 +17,19 @@ public:
     StateManager(StateManager&);
     ~StateManager(void);
 
-    void Initialize(void);
+    void Initialize(CardArray* deck, QPushButton* button);
 
-    Phase* GetCurrentPhase(void);
-    Phase* GetDealPhase(void);
-    Phase* GetExchangePhase(void);
-    Phase* GetDeclarationPhase(void);
-    Phase* GetTrickPhase(void);
-
-private:
-    void   CycleCurrentPhase(void);
+    DealPhaseState*        GetDealPhase(void);
+    ExchangePhaseState*    GetExchangePhase(void);
+    DeclarationPhaseState* GetDeclarationPhase(void);
+    TrickPhaseState*       GetTrickPhase(void);
 
 private:
-    Phase*            currentPhase;
-    DealPhase*        dealPhase;
-    ExchangePhase*    exchangePhase;
-    DeclarationPhase* declarationPhase;
-    TrickPhase*       trickPhase;
+    QStateMachine*         stateMachine;
+    DealPhaseState*        dealPhaseState;
+    ExchangePhaseState*    exchangePhaseState;
+    DeclarationPhaseState* declarationPhaseState;
+    TrickPhaseState*       trickPhaseState;
 };
 
 #endif // STATEMANAGER_H
