@@ -20,14 +20,12 @@ public:
 
     void Initialize(void);
 
-    StateManager*     GetStateManager(void);
-    ScoreManager*     GetScoreManager(void);
+    ScoreManager* GetScoreManager(void);
 
 private:
     Scene*            scene;
     View*             view;
     WindowManager*    windowManager;
-    StateManager*     stateManager;
     ScoreManager*     scoreManager;
 };
 

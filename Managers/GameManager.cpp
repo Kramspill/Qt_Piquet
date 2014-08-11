@@ -30,8 +30,7 @@ void GameManager::Initialize(void)
     CardManager::GetSingleton().Initialize(scene);
 
     // Initialize the StateManager with the Cards.
-    //stateManager = new StateManager();
-    //stateManager->Initialize(cardManager->GetDeck(), button);
+    StateManager::GetSingleton().Initialize(button);
 
     //stateManager->GetDealPhase()->Execute();
 
@@ -53,12 +52,6 @@ void GameManager::Initialize(void)
     scoreManager = new ScoreManager();
     scoreManager->Initialize();
     */
-}
-
-// Accessor for GameManager's stateManager member.
-StateManager* GameManager::GetStateManager(void)
-{
-    return stateManager;
 }
 
 // Accessor for GameManager's scoreManager member.
