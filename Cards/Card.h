@@ -4,6 +4,7 @@
 #include <QGraphicsSvgItem>
 #include <QStateMachine>
 #include <QPropertyAnimation>
+#include <QPointF>
 
 #include "State/CardStates.h"
 
@@ -45,11 +46,22 @@ public:
     Suit              GetSuit(void);
     Value             GetValue(void);
 
+    void              SetPosition(QPointF newPosition);
+
+private slots:
+    void UpdateAnimation(void);
+
+signals:
+    void CardMoved(void);
+    void InPlayerHand(void);
+    void InCpuHand(void);
+    void InTalon(void);
+
 private:
     QGraphicsSvgItem*   backImage;
     Suit                suit;
     Value               value;
-
+    QPointF             position;
     QStateMachine*      stateMachine;
     QPropertyAnimation* transitionAnimation;
     /* Transformation for flipping the card */

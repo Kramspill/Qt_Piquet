@@ -45,12 +45,15 @@ void Card::Initialize(void)
     InCurrentTrickState*   inCurrentTrickState   = new InCurrentTrickState(stateMachine);
     InPreviousTricksState* inPreviousTricksState = new InPreviousTricksState(stateMachine);
 
-    /*
-    // Setup the transitions from the InDeck state.
-    inDeckState->addTransition(SomeObject, SIGNAL(inPlayerHand()), inPlayerHandState);
-    inDeckState->addTransition(SomeObject, SIGNAL(inCpuHand()), inCpuHandState);
-    inDeckState->addTransition(SomeObject, SIGNAL(inTalon()), inTalonState);
+    // Connect the signals to the slot function calls for automatic animation updates.
+    connect(this, SIGNAL(CardMoved()), this, SLOT(UpdateAnimation()));
 
+    // Setup the transitions from the InDeck state.
+    inDeckState->addTransition(this, SIGNAL(InPlayerHand()), inPlayerHandState);
+    inDeckState->addTransition(this, SIGNAL(InCpuHand()),    inCpuHandState);
+    inDeckState->addTransition(this, SIGNAL(InTalon()),      inTalonState);
+
+    /*
     // Setup the transitions from the InPlayerHand state.
     inPlayerHandState->addTransition(SomeObject, SIGNAL(inPlayerDiscards()), inPlayerDiscardsState);
     inPlayerHandState->addTransition(SomeObject, SIGNAL(inCurrentTrick()), inCurrentTrickState);
@@ -88,6 +91,18 @@ Card::Suit Card::GetSuit(void)
 Card::Value Card::GetValue(void)
 {
     return value;
+}
+
+void Card::SetPosition(QPointF newPosition)
+{
+    position = newPosition;
+}
+
+void Card::UpdateAnimation(void)
+{
+    transitionAnimation->setDuration(100);
+    transitionAnimation->setEndValue(position);
+    transitionAnimation->start();
 }
 
 // Accessor for Card's backImage member.
