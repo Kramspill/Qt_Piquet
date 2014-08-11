@@ -4,6 +4,8 @@
 DealPhaseState::DealPhaseState(QState* parent) :
     QState(parent)
 {
+    // This may get removed and called explicitly.
+    //Initialize();
 }
 
 // Copy Constructor.
@@ -18,8 +20,8 @@ DealPhaseState::~DealPhaseState(void)
 }
 
 // Initialize and execute the internal state machine of
-// the DealPhaseState.
-void DealPhaseState::onEntry(QEvent*)
+// the DealPhaseState. QPushButton* button added for now.
+void DealPhaseState::Initialize(QPushButton* button)
 {
     // Initialize the state machine.
     stateMachine = new QStateMachine();
@@ -34,6 +36,7 @@ void DealPhaseState::onEntry(QEvent*)
     // Set the initial state for the state machine.
     stateMachine->setInitialState(initialState);
 
+    initialState->addTransition(button, SIGNAL(clicked()), dealToPlayer);
     /*
     // Setup the transitions from initialState.
     initialState->addTransition(SomeObject, SIGNAL(clicked()), dealToPlayer);
@@ -52,9 +55,15 @@ void DealPhaseState::onEntry(QEvent*)
     */
 
     // Setup the work done in each state.
-    connect(dealToPlayer, SIGNAL(entered()), this, SLOT(DealToPlayer()));
-    connect(dealToCpu,    SIGNAL(entered()), this, SLOT(DealToCpu()));
-    connect(dealTalon,    SIGNAL(entered()), this, SLOT(DealTalon()));
+    connect(dealToPlayer, SIGNAL(entered()),  this, SLOT(DealToPlayer()));
+    connect(dealToCpu,    SIGNAL(entered()),  this, SLOT(DealToCpu()));
+    connect(dealTalon,    SIGNAL(entered()),  this, SLOT(DealTalon()));
+    connect(stateMachine, SIGNAL(finished()), this, SIGNAL(DealPhaseFinished()));
+}
+
+void DealPhaseState::onEntry(QEvent*)
+{
+    stateMachine->start();
 }
 
 void DealPhaseState::onExit(QEvent*)
