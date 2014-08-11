@@ -6,6 +6,11 @@ CardArray::CardArray(void) :
 {
 }
 
+CardArray::CardArray(CardArray::CardArrayType arrayType) :
+    cardArrayType(arrayType)
+{
+}
+
 // Constructor.
 CardArray::CardArray(int newSize) :
     cards(newSize)
@@ -27,6 +32,11 @@ void CardArray::AddCard(Card* newCard)
 {
     // Add the new card to the array.
     cards.push_back(newCard);
+
+    // Set the cards position and update
+    // the next position.
+    newCard->SetPosition(nextCardPosition);
+    UpdateNextPosition();
 }
 
 // Remove a card in this array.
@@ -40,10 +50,13 @@ Card* CardArray::RemoveCard(int index)
     // and a card exists at index.
     if ( cards.size() > 0 && cards[index] )
     {
-        removedCard = cards[index];
+        removedCard = cards.front();//cards[index];
 
         // Remove the card.
-        cards.erase(cards.begin() + index);
+        cards.erase(cards.begin());// + index);
+
+        // Update the next card position.
+        UpdateNextPosition();
     }
 
     return removedCard;
@@ -52,6 +65,23 @@ Card* CardArray::RemoveCard(int index)
 Card* CardArray::GetCard(int index)
 {
     return cards[index];
+}
+
+void CardArray::UpdateNextPosition(int x, int y)
+{
+    // Check if this is the initial setup.
+    if ( x != -1 && y != -1)
+    {
+        nextCardPosition = QPointF(x, y);
+    }
+    else if ( zPositionOnly )
+    {
+
+    }
+    else
+    {
+
+    }
 }
 
 // Randomize this CardArray.
@@ -76,4 +106,14 @@ void CardArray::Stagger(CardArray::StaggerType /*staggerType*/)
 int CardArray::GetSize(void)
 {
     return cards.size();
+}
+
+CardArray::CardArrayType CardArray::GetCardArrayType()
+{
+    return cardArrayType;
+}
+
+void CardArray::SetZPosOnly(bool zPosOnly)
+{
+    zPositionOnly = zPosOnly;
 }
