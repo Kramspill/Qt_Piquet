@@ -31,8 +31,10 @@ private:
     void operator=(CardManager&);
 
     void InitializeDeck(void);
+    void SetInitialCardPositions(void);
     void AddCardsToScene(Scene* scene);
     void ResetDeck(void);
+    void EmitSignal(Card* card, CardArray::CardArrayType cardArrayType);
 
 private:
     CardArray* deck;

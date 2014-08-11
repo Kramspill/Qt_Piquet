@@ -23,12 +23,15 @@ void CardManager::Initialize(Scene* scene)
     AddCardsToScene(scene);
 
     // Allocate space for other members.
-    talon          = new CardArray();
-    playerHand     = new CardArray();
-    cpuHand        = new CardArray();
-    playerDiscards = new CardArray();
-    cpuDiscards    = new CardArray();
-    previousTricks = new CardArray();
+    talon          = new CardArray(CardArray::TALON);
+    playerHand     = new CardArray(CardArray::PLAYERHAND);
+    cpuHand        = new CardArray(CardArray::CPUHAND);
+    playerDiscards = new CardArray(CardArray::PLAYERDISCARDS);
+    cpuDiscards    = new CardArray(CardArray::CPUDISCARDS);
+    previousTricks = new CardArray(CardArray::PREVIOUSTRICKS);
+
+    // Set the initial card positions for the CardArrays.
+    SetInitialCardPositions();
 }
 
 // Transfer a cards between one CardArray and another.
@@ -38,6 +41,7 @@ void CardManager::TransferCards(CardArray* source, CardArray* destination, int n
     {
         Card* card = source->RemoveCard(index);
         destination->AddCard(card);
+        EmitSignal(card, destination->GetCardArrayType());
     }
 }
 
@@ -94,7 +98,7 @@ Card CardManager::GetCurrentTrick(void)
 void CardManager::InitializeDeck(void)
 {
     // Allocate space for the CardArray.
-    deck = new CardArray();
+    deck = new CardArray(CardArray::DECK);
 
     // Create and add all cards to the CardArray.
     deck->AddCard(new Card(":/Cards/Clubs/Resources/Clubs/7C.svg", Card::CLUBS, Card::SEVEN));
@@ -131,6 +135,30 @@ void CardManager::InitializeDeck(void)
     deck->AddCard(new Card(":/Cards/Spades/Resources/Spades/AS.svg", Card::SPADES, Card::ACE));
 }
 
+void CardManager::SetInitialCardPositions(void)
+{
+    deck->SetZPosOnly(true);
+    deck->UpdateNextPosition(0, 0);
+
+    talon->SetZPosOnly(true); // Shifted if exposed.
+    talon->UpdateNextPosition(-100, -100);
+
+    playerHand->SetZPosOnly(false);
+    playerHand->UpdateNextPosition(0, 100);
+
+    cpuHand->SetZPosOnly(false);
+    cpuHand->UpdateNextPosition(0, -100);
+
+    playerDiscards->SetZPosOnly(true); // Shifted if exposed.
+    playerDiscards->UpdateNextPosition(100, 50);
+
+    cpuDiscards->SetZPosOnly(true);
+    cpuDiscards->UpdateNextPosition(100, -50);
+
+    previousTricks->SetZPosOnly(false);
+    previousTricks->UpdateNextPosition(-50, 0);
+}
+
 void CardManager::AddCardsToScene(Scene* scene)
 {
     Card* card;
@@ -150,4 +178,30 @@ void CardManager::AddCardsToScene(Scene* scene)
 void CardManager::ResetDeck(void)
 {
     deck->Shuffle();
+}
+
+// Call functions from separate class to avoid circular includes.
+void CardManager::EmitSignal(Card* card, CardArray::CardArrayType cardArrayType)
+{
+    // Emit A signal to update the animation regardless of where the card is going.
+    card->CardMoved();
+
+    // Emit a signal to tell the card to change states.
+    switch ( cardArrayType )
+    {
+        case CardArray::PLAYERHAND:
+            emit card->InPlayerHand();
+            break;
+
+        case CardArray::CPUHAND:
+            emit card->InCpuHand();
+            break;
+
+        case CardArray::TALON:
+            emit card->InTalon();
+            break;
+
+        default:
+            break;
+    }
 }
