@@ -26,6 +26,14 @@ void DealPhaseState::Initialize(QPushButton* button)
     // Initialize the state machine.
     stateMachine = new QStateMachine();
 
+    // Initialize the timers for the deals to allow animation.
+    DealToPlayerTimer = new QTimer();
+    DealToCpuTimer    = new QTimer();
+    DealTalonTimer    = new QTimer();
+
+    // Initialize the dealCounter that determines when to deal the Talon.
+    dealCounter = 8;
+
     // Initialize the states within the state machine.
     QState*      initialState = new QState(stateMachine);
     QState*      dealToPlayer = new QState(stateMachine);
@@ -36,29 +44,31 @@ void DealPhaseState::Initialize(QPushButton* button)
     // Set the initial state for the state machine.
     stateMachine->setInitialState(initialState);
 
-    initialState->addTransition(button, SIGNAL(clicked()), dealToPlayer);
-    /*
     // Setup the transitions from initialState.
-    initialState->addTransition(SomeObject, SIGNAL(clicked()), dealToPlayer);
-    initialState->addTransition(SomeObject, SIGNAL(clicked()), dealToCpu);
+    initialState->addTransition(button, SIGNAL(clicked()), dealToPlayer);
+    //initialState->addTransition(SomeObject, SIGNAL(clicked()), dealToCpu);
 
     // Setup the transitions from dealToPlayer.
-    dealToPlayer->addTransition(SomeObject, SIGNAL(clicked()), dealToCpu);
-    dealToPlayer->addTransition(SomeObject, SIGNAL(clicked()), dealTalon);
+    dealToPlayer->addTransition(this, SIGNAL(BeginDealToCpu()), dealToCpu);
+    dealToPlayer->addTransition(this, SIGNAL(BeginDealTalon()), dealTalon);
 
     // Setup the transitions from dealToCpu.
-    dealToCpu->addTransition(SomeObject, SIGNAL(clicked()), dealToPlayer);
-    dealToCpu->addTransition(SomeObject, SIGNAL(clicked()), dealTalon);
+    dealToCpu->addTransition(this, SIGNAL(BeginDealToPlayer()), dealToPlayer);
+    dealToCpu->addTransition(this, SIGNAL(BeginDealTalon()), dealTalon);
 
     // Setup the transitions from dealTalon.
-    dealTalon->addTransition(SomeObject, SIGNAL(clicked()), finalState);
-    */
+    dealTalon->addTransition(this, SIGNAL(DealTalonFinished()), finalState);
 
     // Setup the work done in each state.
     connect(dealToPlayer, SIGNAL(entered()),  this, SLOT(DealToPlayer()));
     connect(dealToCpu,    SIGNAL(entered()),  this, SLOT(DealToCpu()));
     connect(dealTalon,    SIGNAL(entered()),  this, SLOT(DealTalon()));
     connect(stateMachine, SIGNAL(finished()), this, SIGNAL(DealPhaseFinished()));
+
+    // Animation delay timer setup.
+    connect(DealToPlayerTimer, SIGNAL(timeout()), this, SIGNAL(BeginDealToCpu()));
+    connect(DealToCpuTimer,    SIGNAL(timeout()), this, SIGNAL(BeginDealToPlayer()));
+    connect(DealTalonTimer,    SIGNAL(timeout()), this, SIGNAL(DealTalonFinished()));
 }
 
 void DealPhaseState::onEntry(QEvent*)
@@ -71,20 +81,45 @@ void DealPhaseState::onExit(QEvent*)
 
 }
 
+void DealPhaseState::ResetDealCounter(void)
+{
+    dealCounter = 8;
+}
+
 void DealPhaseState::DealToPlayer(void)
 {
-    CardArray* deck       = CardManager::GetSingleton().GetDeck();
-    CardArray* playerHand = CardManager::GetSingleton().GetPlayerHand();
+    if ( dealCounter > 0 )
+    {
+        CardArray* deck       = CardManager::GetSingleton().GetDeck();
+        CardArray* playerHand = CardManager::GetSingleton().GetPlayerHand();
 
-    CardManager::GetSingleton().TransferCards(deck, playerHand, 3);
+        CardManager::GetSingleton().TransferCards(deck, playerHand, 3);
+
+        dealCounter--;
+        DealToPlayerTimer->start(100);
+    }
+    else
+    {
+        emit BeginDealTalon();
+    }
 }
 
 void DealPhaseState::DealToCpu(void)
 {
-    CardArray* deck       = CardManager::GetSingleton().GetDeck();
-    CardArray* cpuHand    = CardManager::GetSingleton().GetCpuHand();
+    if ( dealCounter > 0 )
+    {
+        CardArray* deck       = CardManager::GetSingleton().GetDeck();
+        CardArray* cpuHand    = CardManager::GetSingleton().GetCpuHand();
 
-    CardManager::GetSingleton().TransferCards(deck, cpuHand, 3);
+        CardManager::GetSingleton().TransferCards(deck, cpuHand, 3);
+
+        dealCounter--;
+        DealToCpuTimer->start(100);
+    }
+    else
+    {
+        emit BeginDealTalon();
+    }
 }
 
 void DealPhaseState::DealTalon(void)
@@ -92,5 +127,7 @@ void DealPhaseState::DealTalon(void)
     CardArray* deck       = CardManager::GetSingleton().GetDeck();
     CardArray* talon      = CardManager::GetSingleton().GetTalon();
 
-    CardManager::GetSingleton().TransferCards(deck, talon, 3);
+    CardManager::GetSingleton().TransferCards(deck, talon, 8);
+
+    DealTalonTimer->start(100);
 }
