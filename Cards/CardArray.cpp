@@ -76,11 +76,11 @@ void CardArray::UpdateNextPosition(int x, int y)
     }
     else if ( zPositionOnly )
     {
-
+        nextCardPosition = QPointF(nextCardPosition.x(), nextCardPosition.y() - 1);
     }
     else
     {
-
+        nextCardPosition = QPointF(nextCardPosition.x() + 16, nextCardPosition.y());
     }
 }
 
