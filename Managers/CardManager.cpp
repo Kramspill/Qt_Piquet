@@ -137,26 +137,26 @@ void CardManager::InitializeDeck(void)
 
 void CardManager::SetInitialCardPositions(void)
 {
-    deck->SetZPosOnly(true);
-    deck->UpdateNextPosition(0, 0);
+    //deck->SetZPosOnly(true);
+    //deck->UpdateNextPosition(0, 0);
 
     talon->SetZPosOnly(true); // Shifted if exposed.
-    talon->UpdateNextPosition(-100, -100);
+    talon->UpdateNextPosition(-300, -100);
 
     playerHand->SetZPosOnly(false);
-    playerHand->UpdateNextPosition(0, 100);
+    playerHand->UpdateNextPosition(-150, 190);
 
     cpuHand->SetZPosOnly(false);
-    cpuHand->UpdateNextPosition(0, -100);
+    cpuHand->UpdateNextPosition(-150, -350);
 
-    playerDiscards->SetZPosOnly(true); // Shifted if exposed.
-    playerDiscards->UpdateNextPosition(100, 50);
+    //playerDiscards->SetZPosOnly(true); // Shifted if exposed.
+    //playerDiscards->UpdateNextPosition(100, 50);
 
-    cpuDiscards->SetZPosOnly(true);
-    cpuDiscards->UpdateNextPosition(100, -50);
+    //cpuDiscards->SetZPosOnly(true);
+    //cpuDiscards->UpdateNextPosition(100, -50);
 
-    previousTricks->SetZPosOnly(false);
-    previousTricks->UpdateNextPosition(-50, 0);
+    //previousTricks->SetZPosOnly(false);
+    //previousTricks->UpdateNextPosition(-50, 0);
 }
 
 void CardManager::AddCardsToScene(Scene* scene)
