@@ -1,16 +1,30 @@
+//------------------------------------------------------------------------------
+// Filename: GameManager.h
+// Description: Header file for GameManager.
+//------------------------------------------------------------------------------
+
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
+//------------------------------------------------------------------------------
+// Qt Header Files
+//------------------------------------------------------------------------------
 #include <QPushButton>
 
+
+//------------------------------------------------------------------------------
+// My Header Files
+//------------------------------------------------------------------------------
 #include "Scene/Scene.h"
 #include "View/View.h"
-#include "WindowManager.h"
-#include "StateManager.h"
-#include "AnimationManager.h"
 #include "CardManager.h"
+#include "StateManager.h"
 #include "ScoreManager.h"
 
+
+//------------------------------------------------------------------------------
+// Class: GameManager
+//------------------------------------------------------------------------------
 class GameManager
 {
 public:
@@ -18,15 +32,14 @@ public:
     GameManager(GameManager&);
     ~GameManager(void);
 
-    void Initialize(void);
-
-    ScoreManager* GetScoreManager(void);
+    void          Initialize(void);
 
 private:
-    Scene*            scene;
-    View*             view;
-    WindowManager*    windowManager;
-    ScoreManager*     scoreManager;
+    Scene*        scene;
+    View*         view;
+    CardManager*  cardManager;
+    StateManager* stateManager;
+    ScoreManager* scoreManager;
 };
 
 #endif // GAMEMANAGER_H

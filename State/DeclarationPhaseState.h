@@ -1,9 +1,21 @@
+//------------------------------------------------------------------------------
+// Filename: DeclarationPhaseState.h
+// Description: Header file for DeclarationPhaseState.
+//------------------------------------------------------------------------------
+
 #ifndef DECLARATIONPHASESTATE_H
 #define DECLARATIONPHASESTATE_H
 
+//------------------------------------------------------------------------------
+// Qt Header Files
+//------------------------------------------------------------------------------
 #include <QState>
 #include <QEvent>
 
+
+//------------------------------------------------------------------------------
+// Class: DeclarationPhaseState
+//------------------------------------------------------------------------------
 class DeclarationPhaseState : public QState
 {
 public:

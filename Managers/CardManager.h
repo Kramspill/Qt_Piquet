@@ -1,20 +1,40 @@
+//------------------------------------------------------------------------------
+// Filename: CardManager.h
+// Description: Header file for CardManager.
+//------------------------------------------------------------------------------
+
 #ifndef CARDMANAGER_H
 #define CARDMANAGER_H
 
+//------------------------------------------------------------------------------
+// Qt Header Files
+//------------------------------------------------------------------------------
+#include <QObject>
+
+
+//------------------------------------------------------------------------------
+// My Header Files
+//------------------------------------------------------------------------------
 #include "Scene/Scene.h"
 #include "Cards/CardArray.h"
 #include "Cards/Card.h"
 
-class CardManager
+
+//------------------------------------------------------------------------------
+// Class: CardManager
+//------------------------------------------------------------------------------
+class CardManager : public QObject
 {
+    Q_OBJECT
 public:
+    CardManager(void);
+    CardManager(CardManager&);
     ~CardManager(void);
 
-    static CardManager& GetSingleton(void);
+    void       Initialize(Scene* scene);
 
-    void Initialize(Scene* scene);
-
-    void TransferCards(CardArray* source, CardArray* destination, int numberOfCards);
+    void       TransferCards(CardArray* source, CardArray* destination,
+                             int numberOfCards);
 
     CardArray* GetDeck(void);
     CardArray* GetTalon(void);
@@ -26,15 +46,18 @@ public:
     Card       GetCurrentTrick(void);
 
 private:
-    CardManager(void) {}
-    CardManager(CardManager&);
-    void operator=(CardManager&);
+    void       InitializeCards(void);
+    void       SetInitialCardPositions(void);
+    void       AddCardsToScene(Scene* scene);
+    void       ShuffleDeck(void);
+    void       EmitCardMovedSignal(Card* card,
+                                   CardArray::CardArrayType cardArrayType);
+    CardArray* GetDesiredCardArray(CardArray::CardArrayType cardArrayType);
 
-    void InitializeDeck(void);
-    void SetInitialCardPositions(void);
-    void AddCardsToScene(Scene* scene);
-    void ResetDeck(void);
-    void EmitSignal(Card* card, CardArray::CardArrayType cardArrayType);
+public slots:
+    void       CallTransferCards(CardArray::CardArrayType src,
+                                 CardArray::CardArrayType dest,
+                                 int numOfCards);
 
 private:
     CardArray* deck;

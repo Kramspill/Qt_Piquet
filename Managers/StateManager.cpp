@@ -1,25 +1,47 @@
+//------------------------------------------------------------------------------
+// Filename: StateManager.cpp
+// Description: Manager for the various states in the game.
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// My Header Files
+//------------------------------------------------------------------------------
 #include "StateManager.h"
 
-// Destructor.
+
+//------------------------------------------------------------------------------
+// Constructor
+//------------------------------------------------------------------------------
+StateManager::StateManager(void)
+{
+}
+
+
+//------------------------------------------------------------------------------
+// Copy Constructor
+//------------------------------------------------------------------------------
+StateManager::StateManager(StateManager&)
+{
+}
+
+
+//------------------------------------------------------------------------------
+// Destructor
+//------------------------------------------------------------------------------
 StateManager::~StateManager(void)
 {
 }
 
-StateManager&StateManager::GetSingleton(void)
-{
-    static StateManager singleton;
-    return singleton;
-}
 
-// Initialize the phases that represent the
-// states of the game.
+//------------------------------------------------------------------------------
+// Initialize - Initialize the phases that represent the states of the game.
+//------------------------------------------------------------------------------
 void StateManager::Initialize(QPushButton* button)
 {
     // Setup the state machine of the Game.
     stateMachine = new QStateMachine();
 
-    // Allocate memory to the phases
-    // and initialize them.
+    // Allocate memory to the phases and initialize them.
     dealPhaseState = new DealPhaseState(stateMachine);
     dealPhaseState->Initialize(button);
 
@@ -36,10 +58,14 @@ void StateManager::Initialize(QPushButton* button)
 
     /*
     // Setup the transitions between the states.
-    dealPhaseState->addTransition(dealPhaseState, SIGNAL(DealPhaseFinished()), exchangePhaseState);
-    exchangePhaseState->addTransition(SomeObject, SIGNAL(SomeSignal()), declarationPhaseState);
-    declarationPhaseState->addTransition(SomeObject, SIGNAL(SomeSignal()), trickPhaseState);
-    trickPhaseState->addTransition(SomeObject, SIGNAL(SomeSignal()), playSummaryState);
+    dealPhaseState->addTransition(dealPhaseState, SIGNAL(DealPhaseFinished()),
+                                  exchangePhaseState);
+    exchangePhaseState->addTransition(SomeObject, SIGNAL(SomeSignal()),
+                                      declarationPhaseState);
+    declarationPhaseState->addTransition(SomeObject, SIGNAL(SomeSignal()),
+                                         trickPhaseState);
+    trickPhaseState->addTransition(SomeObject, SIGNAL(SomeSignal()),
+                                   playSummaryState);
     */
 
     stateMachine->setInitialState(dealPhaseState);
@@ -47,26 +73,42 @@ void StateManager::Initialize(QPushButton* button)
     stateMachine->start();
 }
 
-// Accessor for StateManager's dealPhase member.
-DealPhaseState* StateManager::GetDealPhase(void)
+
+//------------------------------------------------------------------------------
+// GetDealPhaseState - Accessor for StateManager's dealPhaseState member
+//                     variable.
+//------------------------------------------------------------------------------
+DealPhaseState* StateManager::GetDealPhaseState(void)
 {
     return dealPhaseState;
 }
 
-// Accessor for StateManager's exchangePhase member.
-ExchangePhaseState* StateManager::GetExchangePhase(void)
+
+//------------------------------------------------------------------------------
+// GetExchangePhaseState - Accessor for StateManager's exchangePhaseState member
+//                         variable.
+//------------------------------------------------------------------------------
+ExchangePhaseState* StateManager::GetExchangePhaseState(void)
 {
     return exchangePhaseState;
 }
 
-// Accessor for StateManager's declarationPhase member.
-DeclarationPhaseState* StateManager::GetDeclarationPhase(void)
+
+//------------------------------------------------------------------------------
+// GetDeclarationPhaseState - Accessor for StateManager's declarationPhaseState
+//                            member variable.
+//------------------------------------------------------------------------------
+DeclarationPhaseState* StateManager::GetDeclarationPhaseState(void)
 {
     return declarationPhaseState;
 }
 
-// Accessor for StateManager's trickPhase member.
-TrickPhaseState* StateManager::GetTrickPhase(void)
+
+//------------------------------------------------------------------------------
+// GetTrickPhaseState - Accessor for StateManager's declarationPhaseState member
+//                      variable.
+//------------------------------------------------------------------------------
+TrickPhaseState* StateManager::GetTrickPhaseState(void)
 {
     return trickPhaseState;
 }

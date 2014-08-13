@@ -1,11 +1,25 @@
+//------------------------------------------------------------------------------
+// Filename: Card.cpp
+// Description: Represents a playing card that is used in this game.
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// My Header Files
+//------------------------------------------------------------------------------
 #include "Card.h"
 
-// Default Constructor.
+
+//------------------------------------------------------------------------------
+// Default Constructor
+//------------------------------------------------------------------------------
 Card::Card(void)
 {
 }
 
-// Constructor.
+
+//------------------------------------------------------------------------------
+// Constructor
+//------------------------------------------------------------------------------
 Card::Card(const QString& svgFileName, Suit theSuit, Value theValue) :
     QGraphicsSvgItem(svgFileName),
     backImage(new QGraphicsSvgItem(":/Cards/Back/Resources/Back/Red_Back.svg")),
@@ -16,16 +30,27 @@ Card::Card(const QString& svgFileName, Suit theSuit, Value theValue) :
     Initialize();
 }
 
-// Copy Constructor.
-Card::Card(Card&) : QGraphicsSvgItem()
+
+//------------------------------------------------------------------------------
+// Copy Constructor
+//------------------------------------------------------------------------------
+Card::Card(Card&) :
+    QGraphicsSvgItem()
 {
 }
 
-// Destructor.
+
+//------------------------------------------------------------------------------
+// Destructor
+//------------------------------------------------------------------------------
 Card::~Card(void)
 {
 }
 
+
+//------------------------------------------------------------------------------
+// Initialize - Initialize the states and transitions of a Card.
+//------------------------------------------------------------------------------
 void Card::Initialize(void)
 {
     // Initialize the transition animation associated with a Card
@@ -33,19 +58,30 @@ void Card::Initialize(void)
     transitionAnimation = new QPropertyAnimation(this, "pos");
 
     // Setup the internal state machine of the Card.
-    stateMachine = new QStateMachine();
+    stateMachine        = new QStateMachine();
 
     // Initialize the various states that a Card can be in.
-    InDeckState*           inDeckState           = new InDeckState(stateMachine);
-    InPlayerHandState*     inPlayerHandState     = new InPlayerHandState(stateMachine);
-    InCpuHandState*        inCpuHandState        = new InCpuHandState(stateMachine);
-    InTalonState*          inTalonState          = new InTalonState(stateMachine);
-    InPlayerDiscardsState* inPlayerDiscardsState = new InPlayerDiscardsState(stateMachine);
-    InCpuDiscardsState*    inCpuDiscardsState    = new InCpuDiscardsState(stateMachine);
-    InCurrentTrickState*   inCurrentTrickState   = new InCurrentTrickState(stateMachine);
-    InPreviousTricksState* inPreviousTricksState = new InPreviousTricksState(stateMachine);
+    InDeckState*           inDeckState           = new InDeckState();
+    InTalonState*          inTalonState          = new InTalonState();
+    InPlayerHandState*     inPlayerHandState     = new InPlayerHandState();
+    InCpuHandState*        inCpuHandState        = new InCpuHandState();
+    InPlayerDiscardsState* inPlayerDiscardsState = new InPlayerDiscardsState();
+    InCpuDiscardsState*    inCpuDiscardsState    = new InCpuDiscardsState();
+    InCurrentTrickState*   inCurrentTrickState   = new InCurrentTrickState();
+    InPreviousTricksState* inPreviousTricksState = new InPreviousTricksState();
 
-    // Connect the signals to the slot function calls for automatic animation updates.
+    // Add the states to the state machine.
+    stateMachine->addState(inDeckState);
+    stateMachine->addState(inTalonState);
+    stateMachine->addState(inPlayerHandState);
+    stateMachine->addState(inCpuHandState);
+    stateMachine->addState(inPlayerDiscardsState);
+    stateMachine->addState(inCpuDiscardsState);
+    stateMachine->addState(inCurrentTrickState);
+    stateMachine->addState(inPreviousTricksState);
+
+    // Connect the signals to the slot function calls for automatic
+    // animation updates.
     connect(this, SIGNAL(CardMoved()), this, SLOT(UpdateAnimation()));
 
     // Setup the transitions from the InDeck state.
@@ -55,49 +91,74 @@ void Card::Initialize(void)
 
     /*
     // Setup the transitions from the InPlayerHand state.
-    inPlayerHandState->addTransition(SomeObject, SIGNAL(inPlayerDiscards()), inPlayerDiscardsState);
-    inPlayerHandState->addTransition(SomeObject, SIGNAL(inCurrentTrick()), inCurrentTrickState);
+    inPlayerHandState->addTransition(SomeObject, SIGNAL(inPlayerDiscards()),
+                                     inPlayerDiscardsState);
+    inPlayerHandState->addTransition(SomeObject, SIGNAL(inCurrentTrick()),
+                                     inCurrentTrickState);
 
     // Setup the transitions from the InCpuHand state.
-    inCpuHandState->addTransition(SomeObject, SIGNAL(inCpuDiscards()), inPlayerCpuState);
-    inCpuHandState->addTransition(SomeObject, SIGNAL(inCurrentTrick()), inCurrentTrickState);
+    inCpuHandState->addTransition(SomeObject, SIGNAL(inCpuDiscards()),
+                                  inPlayerCpuState);
+    inCpuHandState->addTransition(SomeObject, SIGNAL(inCurrentTrick()),
+                                  inCurrentTrickState);
 
     // Setup the transitions from the InTalon state.
-    inTalonState->addTransition(SomeObject, SIGNAL(inPlayerHand()), inPlayerHandState);
-    inTalonState->addTransition(SomeObject, SIGNAL(inCpuHand()), inCpuHandState);
-    inTalonState->addTransition(SomeObject, SIGNAL(inDeck()), inDeckState);
+    inTalonState->addTransition(SomeObject, SIGNAL(inPlayerHand()),
+                                inPlayerHandState);
+    inTalonState->addTransition(SomeObject, SIGNAL(inCpuHand()),
+                                inCpuHandState);
+    inTalonState->addTransition(SomeObject, SIGNAL(inDeck()),
+                                inDeckState);
 
     // Setup the transitions from the InPlayerDiscards state.
-    inPlayerDiscardsState->addTransition(SomeObject, SIGNAL(inDeck()), inDeckState);
+    inPlayerDiscardsState->addTransition(SomeObject, SIGNAL(inDeck()),
+                                         inDeckState);
 
     // Setup the transitions from the InCpuDiscards state.
-    inCpuDiscardsState->addTransition(SomeObject, SIGNAL(inDeck()), inDeckState);
+    inCpuDiscardsState->addTransition(SomeObject, SIGNAL(inDeck()),
+                                      inDeckState);
 
     // Setup the transitions from the InCurrentTrick state.
-    inCurrentTrickState->addTransition(SomeObject, SIGNAL(inPreviousTricks()), inPreviousTricksState);
+    inCurrentTrickState->addTransition(SomeObject, SIGNAL(inPreviousTricks()),
+                                       inPreviousTricksState);
 
     // Setup the transitions from the InPreviousTricks state.
-    inPreviousTricksState->addTransition(SomeObject, SIGNAL(inDeck()), inDeckState);
+    inPreviousTricksState->addTransition(SomeObject, SIGNAL(inDeck()),
+                                         inDeckState);
     */
 }
 
-// Accessor for Card's suit member.
+
+//------------------------------------------------------------------------------
+// GetSuit - Accessor for Card's suit member variable.
+//------------------------------------------------------------------------------
 Card::Suit Card::GetSuit(void)
 {
     return suit;
 }
 
-// Accessor for Card's value member.
+
+//------------------------------------------------------------------------------
+// GetValue - Accessor for Card's value member variable.
+//------------------------------------------------------------------------------
 Card::Value Card::GetValue(void)
 {
     return value;
 }
 
+
+//------------------------------------------------------------------------------
+// SetPosition - Mutator for Card's position member variable.
+//------------------------------------------------------------------------------
 void Card::SetPosition(QPointF newPosition)
 {
     position = newPosition;
 }
 
+
+//------------------------------------------------------------------------------
+// UpdateAnimation - Update the position of this Card's transitionAnimation.
+//------------------------------------------------------------------------------
 void Card::UpdateAnimation(void)
 {
     transitionAnimation->setDuration(100);
@@ -105,7 +166,10 @@ void Card::UpdateAnimation(void)
     transitionAnimation->start();
 }
 
-// Accessor for Card's backImage member.
+
+//------------------------------------------------------------------------------
+// GetBackImage - Accessor for Card's backImage member variable.
+//------------------------------------------------------------------------------
 QGraphicsSvgItem* Card::GetBackImage(void)
 {
     return backImage;

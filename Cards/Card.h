@@ -1,13 +1,29 @@
+//------------------------------------------------------------------------------
+// Filename: Card.h
+// Description: Header file for Card.
+//------------------------------------------------------------------------------
+
 #ifndef CARD_H
 #define CARD_H
 
+//------------------------------------------------------------------------------
+// Qt Header Files
+//------------------------------------------------------------------------------
 #include <QGraphicsSvgItem>
 #include <QStateMachine>
 #include <QPropertyAnimation>
 #include <QPointF>
 
+
+//------------------------------------------------------------------------------
+// My Header Files
+//------------------------------------------------------------------------------
 #include "State/CardStates.h"
 
+
+//------------------------------------------------------------------------------
+// Class: Card
+//------------------------------------------------------------------------------
 class Card : public QGraphicsSvgItem
 {
     Q_OBJECT
@@ -40,22 +56,22 @@ public:
     Card(Card&);
     ~Card(void);
 
-    void Initialize(void);
+    void                Initialize(void);
 
-    QGraphicsSvgItem* GetBackImage(void);
-    Suit              GetSuit(void);
-    Value             GetValue(void);
+    QGraphicsSvgItem*   GetBackImage(void);
+    Suit                GetSuit(void);
+    Value               GetValue(void);
 
-    void              SetPosition(QPointF newPosition);
+    void                SetPosition(QPointF newPosition);
 
 private slots:
-    void UpdateAnimation(void);
+    void                UpdateAnimation(void);
 
 signals:
-    void CardMoved(void);
-    void InPlayerHand(void);
-    void InCpuHand(void);
-    void InTalon(void);
+    void                CardMoved(void);
+    void                InPlayerHand(void);
+    void                InCpuHand(void);
+    void                InTalon(void);
 
 private:
     QGraphicsSvgItem*   backImage;

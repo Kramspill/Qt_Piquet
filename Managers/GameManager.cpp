@@ -1,21 +1,41 @@
+//------------------------------------------------------------------------------
+// Filename: GameManager.cpp
+// Description: Manages the other managers in the game.
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// My Header Files
+//------------------------------------------------------------------------------
 #include "GameManager.h"
 
-// Constructor.
+
+//------------------------------------------------------------------------------
+// Constructor
+//------------------------------------------------------------------------------
 GameManager::GameManager(void)
 {
 }
 
-// Copy Constructor.
+
+//------------------------------------------------------------------------------
+// Copy Constructor
+//------------------------------------------------------------------------------
 GameManager::GameManager(GameManager&)
 {
 }
 
-// Destructor.
+
+//------------------------------------------------------------------------------
+// Destructor
+//------------------------------------------------------------------------------
 GameManager::~GameManager(void)
 {
 }
 
-// Initialize all other managers.
+
+//------------------------------------------------------------------------------
+// Initialize - Initialize all the other managers and display the scene.
+//------------------------------------------------------------------------------
 void GameManager::Initialize(void)
 {
     // Initialize the scene.
@@ -27,35 +47,36 @@ void GameManager::Initialize(void)
     //
 
     // Initialize the CardManager with the scene object.
-    CardManager::GetSingleton().Initialize(scene);
+    cardManager = new CardManager();
+    cardManager->Initialize(scene);
 
-    // Initialize the StateManager with the Cards.
-    StateManager::GetSingleton().Initialize(button);
-
-    //stateManager->GetDealPhase()->Execute();
-
-    view = new View(scene);
-    view->show();
-
-    //stateManager->GetDealPhase()->Execute();
+    // Initialize the StateManager.
+    stateManager = new StateManager();
+    stateManager->Initialize(button);
 
     /* Progressively add these.
+
+    // Initialize the ScoreManager.
+    scoreManager = new ScoreManager();
+    scoreManager->Initialize();
+
+    // Initialize the WindowManager.
     windowManager = new WindowManager();
     windowManager->Initialize();
 
-    stateManager = new StateManager();
-    stateManager->Initialize();
-
-    cardManager = new CardManager();
-    cardManager->Initialize();
-
-    scoreManager = new ScoreManager();
-    scoreManager->Initialize();
     */
-}
 
-// Accessor for GameManager's scoreManager member.
-ScoreManager* GameManager::GetScoreManager(void)
-{
-    return scoreManager;
+    // Initialize the view and display it.
+    view = new View(scene);
+    view->show();
+
+    // Connect the various signals to their managers.
+    QObject::connect(stateManager->GetDealPhaseState(),
+                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
+                                                CardArray::CardArrayType,
+                                                int)),
+                     cardManager,
+                     SLOT(CallTransferCards(CardArray::CardArrayType,
+                                            CardArray::CardArrayType,
+                                            int)));
 }

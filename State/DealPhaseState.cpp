@@ -1,26 +1,43 @@
+//------------------------------------------------------------------------------
+// Filename: DealPhaseState.cpp
+// Description: Represents the deal phase in the game.
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// My Header Files
+//------------------------------------------------------------------------------
 #include "DealPhaseState.h"
 
-// Constructor.
+
+//------------------------------------------------------------------------------
+// Constructor
+//------------------------------------------------------------------------------
 DealPhaseState::DealPhaseState(QState* parent) :
     QState(parent)
 {
-    // This may get removed and called explicitly.
-    //Initialize();
 }
 
-// Copy Constructor.
+
+//------------------------------------------------------------------------------
+// Copy Constructor
+//------------------------------------------------------------------------------
 DealPhaseState::DealPhaseState(DealPhaseState&) :
     QState()
 {
 }
 
-// Destructor.
+
+//------------------------------------------------------------------------------
+// Destructor
+//------------------------------------------------------------------------------
 DealPhaseState::~DealPhaseState(void)
 {
 }
 
-// Initialize and execute the internal state machine of
-// the DealPhaseState. QPushButton* button added for now.
+
+//------------------------------------------------------------------------------
+// Initialize - Initialize and execute the internal state machine of this class.
+//------------------------------------------------------------------------------
 void DealPhaseState::Initialize(QPushButton* button)
 {
     // Initialize the state machine.
@@ -32,7 +49,7 @@ void DealPhaseState::Initialize(QPushButton* button)
     DealTalonTimer    = new QTimer();
 
     // Initialize the dealCounter that determines when to deal the Talon.
-    dealCounter = 8;
+    ResetDealCounter();
 
     // Initialize the states within the state machine.
     QState*      initialState = new QState(stateMachine);
@@ -63,37 +80,55 @@ void DealPhaseState::Initialize(QPushButton* button)
     connect(dealToPlayer, SIGNAL(entered()),  this, SLOT(DealToPlayer()));
     connect(dealToCpu,    SIGNAL(entered()),  this, SLOT(DealToCpu()));
     connect(dealTalon,    SIGNAL(entered()),  this, SLOT(DealTalon()));
-    connect(stateMachine, SIGNAL(finished()), this, SIGNAL(DealPhaseFinished()));
+    connect(stateMachine, SIGNAL(finished()), this,
+            SIGNAL(DealPhaseFinished()));
 
     // Animation delay timer setup.
-    connect(DealToPlayerTimer, SIGNAL(timeout()), this, SIGNAL(BeginDealToCpu()));
-    connect(DealToCpuTimer,    SIGNAL(timeout()), this, SIGNAL(BeginDealToPlayer()));
-    connect(DealTalonTimer,    SIGNAL(timeout()), this, SIGNAL(DealTalonFinished()));
+    connect(DealToPlayerTimer, SIGNAL(timeout()), this,
+            SIGNAL(BeginDealToCpu()));
+    connect(DealToCpuTimer,    SIGNAL(timeout()), this,
+            SIGNAL(BeginDealToPlayer()));
+    connect(DealTalonTimer,    SIGNAL(timeout()), this,
+            SIGNAL(DealTalonFinished()));
 }
 
+
+//------------------------------------------------------------------------------
+// onEntry - Override of QState::onEntry.
+//------------------------------------------------------------------------------
 void DealPhaseState::onEntry(QEvent*)
 {
     stateMachine->start();
 }
 
+
+//------------------------------------------------------------------------------
+// onExit - Override of QState::onExit.
+//------------------------------------------------------------------------------
 void DealPhaseState::onExit(QEvent*)
 {
 
 }
 
+
+//------------------------------------------------------------------------------
+// ResetDealCounter - Reset the dealCounter member variable.
+//------------------------------------------------------------------------------
 void DealPhaseState::ResetDealCounter(void)
 {
     dealCounter = 8;
 }
 
+
+//------------------------------------------------------------------------------
+// DealToPlayer - Function that performs the required operations for the
+//                dealToPlayer state.
+//------------------------------------------------------------------------------
 void DealPhaseState::DealToPlayer(void)
 {
     if ( dealCounter > 0 )
     {
-        CardArray* deck       = CardManager::GetSingleton().GetDeck();
-        CardArray* playerHand = CardManager::GetSingleton().GetPlayerHand();
-
-        CardManager::GetSingleton().TransferCards(deck, playerHand, 3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
 
         dealCounter--;
         DealToPlayerTimer->start(100);
@@ -104,14 +139,16 @@ void DealPhaseState::DealToPlayer(void)
     }
 }
 
+
+//------------------------------------------------------------------------------
+// DealToCpu - Function that performs the required operations for the dealToCpu
+//             state.
+//------------------------------------------------------------------------------
 void DealPhaseState::DealToCpu(void)
 {
     if ( dealCounter > 0 )
     {
-        CardArray* deck       = CardManager::GetSingleton().GetDeck();
-        CardArray* cpuHand    = CardManager::GetSingleton().GetCpuHand();
-
-        CardManager::GetSingleton().TransferCards(deck, cpuHand, 3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND, 3);
 
         dealCounter--;
         DealToCpuTimer->start(100);
@@ -122,12 +159,14 @@ void DealPhaseState::DealToCpu(void)
     }
 }
 
+
+//------------------------------------------------------------------------------
+// DealTalon - Function that performs the required operations for the dealTalon
+//             state.
+//------------------------------------------------------------------------------
 void DealPhaseState::DealTalon(void)
 {
-    CardArray* deck       = CardManager::GetSingleton().GetDeck();
-    CardArray* talon      = CardManager::GetSingleton().GetTalon();
-
-    CardManager::GetSingleton().TransferCards(deck, talon, 8);
+    emit RequestCardTransfer(CardArray::DECK, CardArray::TALON, 8);
 
     DealTalonTimer->start(100);
 }
