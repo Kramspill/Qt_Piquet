@@ -63,6 +63,7 @@ public:
 private:
     void               UpdateCardProperties(Card* card, bool noAnimation);
     void               EmitCardMovedSignal(Card* card, bool noAnimation);
+    void               UpdateCardPositions(void);
 
 private:
     std::vector<Card*> cards;

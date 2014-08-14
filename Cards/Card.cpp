@@ -151,6 +151,15 @@ Card::Value Card::GetValue(void)
 
 
 //------------------------------------------------------------------------------
+// GetPosition - Mutator for Card's position member variable.
+//------------------------------------------------------------------------------
+QPointF Card::GetPosition(void)
+{
+    return position;
+}
+
+
+//------------------------------------------------------------------------------
 // SetPosition - Mutator for Card's position member variable.
 //------------------------------------------------------------------------------
 void Card::SetPosition(QPointF newPosition)

@@ -61,6 +61,7 @@ public:
     QGraphicsSvgItem*   GetBackImage(void);
     Suit                GetSuit(void);
     Value               GetValue(void);
+    QPointF             GetPosition(void);
 
     void                SetPosition(QPointF newPosition);
 

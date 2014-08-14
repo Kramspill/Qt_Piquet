@@ -174,6 +174,10 @@ void CardArray::SetZPosOnly(bool zPosOnly)
 //------------------------------------------------------------------------------
 void CardArray::UpdateCardProperties(Card* card, bool noAnimation)
 {
+    // Update the positions of the other cards in the array.
+    if ( !zPositionOnly )
+        UpdateCardPositions();
+
     // Set the cards position and update the next position.
     card->SetPosition(nextCardPosition);
     UpdateNextPosition();
@@ -210,5 +214,37 @@ void CardArray::EmitCardMovedSignal(Card* card, bool noAnimation)
 
         default:
             break;
+    }
+}
+
+
+//------------------------------------------------------------------------------
+// UpdateCardPositions - Update the positions of the other cards in the array.
+//------------------------------------------------------------------------------
+void CardArray::UpdateCardPositions(void)
+{
+    Card*   card;
+    QPointF shiftedPosition;
+
+    if ( GetSize()-1 > 0 )
+    {
+        // Loop through the array of cards and shift them.
+        for (int index = 0; index < GetSize()-1; index++)
+        {
+            card = GetCard(index);
+
+            // Get the original position of the card and shift it.
+            shiftedPosition.setX(card->GetPosition().x() - 8);
+            shiftedPosition.setY(card->GetPosition().y());
+
+            // Set the new position of the card.
+            card->SetPosition(shiftedPosition);
+
+            // Inform the card that it has moved.
+            emit card->CardMoved(false);
+        }
+
+        // Update the position of the next card.
+        UpdateNextPosition(shiftedPosition.x() + 16, shiftedPosition.y());
     }
 }

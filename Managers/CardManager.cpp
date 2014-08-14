@@ -233,10 +233,10 @@ void CardManager::SetInitialCardPositions(void)
     talon->UpdateNextPosition(-300, -100);
 
     playerHand->SetZPosOnly(false);
-    playerHand->UpdateNextPosition(-150, 190);
+    playerHand->UpdateNextPosition(-50, 190);
 
     cpuHand->SetZPosOnly(false);
-    cpuHand->UpdateNextPosition(-150, -350);
+    cpuHand->UpdateNextPosition(-50, -350);
 
     //playerDiscards->SetZPosOnly(true); // Shifted if exposed.
     //playerDiscards->UpdateNextPosition(100, 50);
