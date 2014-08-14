@@ -65,10 +65,10 @@ public:
     void                SetPosition(QPointF newPosition);
 
 private slots:
-    void                UpdateAnimation(void);
+    void                UpdatePosition(bool noAnimation);
 
 signals:
-    void                CardMoved(void);
+    void                CardMoved(bool noAnimation);
     void                InPlayerHand(void);
     void                InCpuHand(void);
     void                InTalon(void);

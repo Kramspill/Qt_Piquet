@@ -80,9 +80,12 @@ void Card::Initialize(void)
     stateMachine->addState(inCurrentTrickState);
     stateMachine->addState(inPreviousTricksState);
 
+    // Set the initial state.
+    stateMachine->setInitialState(inDeckState);
+
     // Connect the signals to the slot function calls for automatic
     // animation updates.
-    connect(this, SIGNAL(CardMoved()), this, SLOT(UpdateAnimation()));
+    connect(this, SIGNAL(CardMoved(bool)), this, SLOT(UpdatePosition(bool)));
 
     // Setup the transitions from the InDeck state.
     inDeckState->addTransition(this, SIGNAL(InPlayerHand()), inPlayerHandState);
@@ -157,11 +160,19 @@ void Card::SetPosition(QPointF newPosition)
 
 
 //------------------------------------------------------------------------------
-// UpdateAnimation - Update the position of this Card's transitionAnimation.
+// UpdatePosition - Update the position of this Card's transitionAnimation.
 //------------------------------------------------------------------------------
-void Card::UpdateAnimation(void)
+void Card::UpdatePosition(bool noAnimation)
 {
-    transitionAnimation->setDuration(100);
+    if ( noAnimation )
+    {
+        transitionAnimation->setDuration(0);
+    }
+    else
+    {
+        transitionAnimation->setDuration(100);
+    }
+
     transitionAnimation->setEndValue(position);
     transitionAnimation->start();
 }
