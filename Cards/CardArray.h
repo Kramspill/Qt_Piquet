@@ -47,7 +47,7 @@ public:
     CardArray(CardArray&);
     ~CardArray(void);
 
-    void               AddCard(Card* newCard);
+    void               AddCard(Card* newCard, bool initialCardCreation = false);
     Card*              RemoveCard(int index);
     Card*              GetCard(int index);
     void               UpdateNextPosition(int x = -1, int y = -1);
@@ -59,6 +59,10 @@ public:
     int                GetSize(void);
     CardArrayType      GetCardArrayType(void);
     void               SetZPosOnly(bool zPosOnly);
+
+private:
+    void               UpdateCardProperties(Card* card, bool noAnimation);
+    void               EmitCardMovedSignal(Card* card, bool noAnimation);
 
 private:
     std::vector<Card*> cards;

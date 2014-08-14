@@ -46,15 +46,13 @@ CardArray::~CardArray(void)
 //------------------------------------------------------------------------------
 // AddCard - Add a card to the CardArray.
 //------------------------------------------------------------------------------
-void CardArray::AddCard(Card* newCard)
+void CardArray::AddCard(Card* newCard, bool initialCardCreation)
 {
     // Add the new card to the array.
     cards.push_back(newCard);
 
-    // Set the cards position and update
-    // the next position.
-    newCard->SetPosition(nextCardPosition);
-    UpdateNextPosition();
+    // Update the position and state of the card.
+    UpdateCardProperties(newCard, initialCardCreation);
 }
 
 
@@ -168,4 +166,49 @@ CardArray::CardArrayType CardArray::GetCardArrayType(void)
 void CardArray::SetZPosOnly(bool zPosOnly)
 {
     zPositionOnly = zPosOnly;
+}
+
+
+//------------------------------------------------------------------------------
+// UpdateCardProperties - Update the properties of a card in this array.
+//------------------------------------------------------------------------------
+void CardArray::UpdateCardProperties(Card* card, bool noAnimation)
+{
+    // Set the cards position and update the next position.
+    card->SetPosition(nextCardPosition);
+    UpdateNextPosition();
+
+    // Inform the card that it's position and state has changed.
+    EmitCardMovedSignal(card, noAnimation);
+}
+
+
+//------------------------------------------------------------------------------
+// EmitCardMovedSignal - Send a signal to the card, informing it that it has
+//                       moved.
+//------------------------------------------------------------------------------
+void CardArray::EmitCardMovedSignal(Card* card, bool noAnimation)
+{
+    // Emit a signal to update the animation regardless of where the card is
+    // going.
+    emit card->CardMoved(noAnimation);
+
+    // Emit a signal to tell the card to change states.
+    switch ( cardArrayType )
+    {
+        case TALON:
+            emit card->InTalon();
+            break;
+
+        case PLAYERHAND:
+            emit card->InPlayerHand();
+            break;
+
+        case CPUHAND:
+            emit card->InCpuHand();
+            break;
+
+        default:
+            break;
+    }
 }
