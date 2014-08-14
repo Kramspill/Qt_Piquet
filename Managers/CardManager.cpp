@@ -70,9 +70,6 @@ void CardManager::TransferCards(CardArray* source, CardArray* destination,
         // Remove the card from the source array, and add it to the destination.
         Card* card = source->RemoveCard(index);
         destination->AddCard(card);
-
-        // Inform the card that it has moved.
-        EmitCardMovedSignal(card, destination->GetCardArrayType());
     }
 }
 
@@ -157,69 +154,69 @@ Card CardManager::GetCurrentTrick(void)
 void CardManager::InitializeCards(void)
 {
     deck->AddCard(new Card(":/Cards/Clubs/Resources/Clubs/7C.svg",
-                           Card::CLUBS, Card::SEVEN));
+                           Card::CLUBS, Card::SEVEN), true);
     deck->AddCard(new Card(":/Cards/Clubs/Resources/Clubs/8C.svg",
-                           Card::CLUBS, Card::EIGHT));
+                           Card::CLUBS, Card::EIGHT), true);
     deck->AddCard(new Card(":/Cards/Clubs/Resources/Clubs/9C.svg",
-                           Card::CLUBS, Card::NINE));
+                           Card::CLUBS, Card::NINE), true);
     deck->AddCard(new Card(":/Cards/Clubs/Resources/Clubs/10C.svg",
-                           Card::CLUBS, Card::TEN));
+                           Card::CLUBS, Card::TEN), true);
     deck->AddCard(new Card(":/Cards/Clubs/Resources/Clubs/JC.svg",
-                           Card::CLUBS, Card::JACK));
+                           Card::CLUBS, Card::JACK), true);
     deck->AddCard(new Card(":/Cards/Clubs/Resources/Clubs/QC.svg",
-                           Card::CLUBS, Card::QUEEN));
+                           Card::CLUBS, Card::QUEEN), true);
     deck->AddCard(new Card(":/Cards/Clubs/Resources/Clubs/KC.svg",
-                           Card::CLUBS, Card::KING));
+                           Card::CLUBS, Card::KING), true);
     deck->AddCard(new Card(":/Cards/Clubs/Resources/Clubs/AC.svg",
-                           Card::CLUBS, Card::ACE));
+                           Card::CLUBS, Card::ACE), true);
     deck->AddCard(new Card(":/Cards/Diamonds/Resources/Diamonds/7D.svg",
-                           Card::DIAMONDS, Card::SEVEN));
+                           Card::DIAMONDS, Card::SEVEN), true);
     deck->AddCard(new Card(":/Cards/Diamonds/Resources/Diamonds/8D.svg",
-                           Card::DIAMONDS, Card::EIGHT));
+                           Card::DIAMONDS, Card::EIGHT), true);
     deck->AddCard(new Card(":/Cards/Diamonds/Resources/Diamonds/9D.svg",
-                           Card::DIAMONDS, Card::NINE));
+                           Card::DIAMONDS, Card::NINE), true);
     deck->AddCard(new Card(":/Cards/Diamonds/Resources/Diamonds/10D.svg",
-                           Card::DIAMONDS, Card::TEN));
+                           Card::DIAMONDS, Card::TEN), true);
     deck->AddCard(new Card(":/Cards/Diamonds/Resources/Diamonds/JD.svg",
-                           Card::DIAMONDS, Card::JACK));
+                           Card::DIAMONDS, Card::JACK), true);
     deck->AddCard(new Card(":/Cards/Diamonds/Resources/Diamonds/QD.svg",
-                           Card::DIAMONDS, Card::QUEEN));
+                           Card::DIAMONDS, Card::QUEEN), true);
     deck->AddCard(new Card(":/Cards/Diamonds/Resources/Diamonds/KD.svg",
-                           Card::DIAMONDS, Card::KING));
+                           Card::DIAMONDS, Card::KING), true);
     deck->AddCard(new Card(":/Cards/Diamonds/Resources/Diamonds/AD.svg",
-                           Card::DIAMONDS, Card::ACE));
+                           Card::DIAMONDS, Card::ACE), true);
     deck->AddCard(new Card(":/Cards/Hearts/Resources/Hearts/7H.svg",
-                           Card::HEARTS, Card::SEVEN));
+                           Card::HEARTS, Card::SEVEN), true);
     deck->AddCard(new Card(":/Cards/Hearts/Resources/Hearts/8H.svg",
-                           Card::HEARTS, Card::EIGHT));
+                           Card::HEARTS, Card::EIGHT), true);
     deck->AddCard(new Card(":/Cards/Hearts/Resources/Hearts/9H.svg",
-                           Card::HEARTS, Card::NINE));
+                           Card::HEARTS, Card::NINE), true);
     deck->AddCard(new Card(":/Cards/Hearts/Resources/Hearts/10H.svg",
-                           Card::HEARTS, Card::TEN));
+                           Card::HEARTS, Card::TEN), true);
     deck->AddCard(new Card(":/Cards/Hearts/Resources/Hearts/JH.svg",
-                           Card::HEARTS, Card::JACK));
+                           Card::HEARTS, Card::JACK), true);
     deck->AddCard(new Card(":/Cards/Hearts/Resources/Hearts/QH.svg",
-                           Card::HEARTS, Card::QUEEN));
+                           Card::HEARTS, Card::QUEEN), true);
     deck->AddCard(new Card(":/Cards/Hearts/Resources/Hearts/KH.svg",
-                           Card::HEARTS, Card::KING));
+                           Card::HEARTS, Card::KING), true);
     deck->AddCard(new Card(":/Cards/Hearts/Resources/Hearts/AH.svg",
-                           Card::HEARTS, Card::ACE));
+                           Card::HEARTS, Card::ACE), true);
     deck->AddCard(new Card(":/Cards/Spades/Resources/Spades/7S.svg",
-                           Card::SPADES, Card::SEVEN));
+                           Card::SPADES, Card::SEVEN), true);
     deck->AddCard(new Card(":/Cards/Spades/Resources/Spades/8S.svg",
-                           Card::SPADES, Card::EIGHT));
+                           Card::SPADES, Card::EIGHT), true);
     deck->AddCard(new Card(":/Cards/Spades/Resources/Spades/9S.svg",
-                           Card::SPADES, Card::NINE));
+                           Card::SPADES, Card::NINE), true);
     deck->AddCard(new Card(":/Cards/Spades/Resources/Spades/10S.svg",
-                           Card::SPADES, Card::TEN));
+                           Card::SPADES, Card::TEN), true);
     deck->AddCard(new Card(":/Cards/Spades/Resources/Spades/JS.svg",
-                           Card::SPADES, Card::JACK));
+                           Card::SPADES, Card::JACK), true);
     deck->AddCard(new Card(":/Cards/Spades/Resources/Spades/QS.svg",
-                           Card::SPADES, Card::QUEEN));
+                           Card::SPADES, Card::QUEEN), true);
     deck->AddCard(new Card(":/Cards/Spades/Resources/Spades/KS.svg",
-                           Card::SPADES, Card::KING));
+                           Card::SPADES, Card::KING), true);
     deck->AddCard(new Card(":/Cards/Spades/Resources/Spades/AS.svg",
-                           Card::SPADES, Card::ACE));
+                           Card::SPADES, Card::ACE), true);
 }
 
 
@@ -229,8 +226,8 @@ void CardManager::InitializeCards(void)
 //------------------------------------------------------------------------------
 void CardManager::SetInitialCardPositions(void)
 {
-    //deck->SetZPosOnly(true);
-    //deck->UpdateNextPosition(0, 0);
+    deck->SetZPosOnly(true);
+    deck->UpdateNextPosition(-150, 0);
 
     talon->SetZPosOnly(true); // Shifted if exposed.
     talon->UpdateNextPosition(-300, -100);
@@ -262,9 +259,8 @@ void CardManager::AddCardsToScene(Scene* scene)
     {
         card = deck->GetCard(index);
 
-        card->setFlag(QGraphicsItem::ItemIsMovable, true);
+        //card->setFlag(QGraphicsItem::ItemIsMovable, true);
         card->setScale(0.5);
-        card->setPos(QPointF(-300 + (index*2), -350));
 
         scene->addItem(card);
     }
@@ -277,38 +273,6 @@ void CardManager::AddCardsToScene(Scene* scene)
 void CardManager::ShuffleDeck(void)
 {
     deck->Shuffle();
-}
-
-
-//------------------------------------------------------------------------------
-// EmitCardMovedSignal - Send a signal to the card, informing it that it has
-//                       moved.
-//------------------------------------------------------------------------------
-void CardManager::EmitCardMovedSignal(Card* card,
-                                      CardArray::CardArrayType cardArrayType)
-{
-    // Emit a signal to update the animation regardless of
-    // where the card is going.
-    emit card->CardMoved();
-
-    // Emit a signal to tell the card to change states.
-    switch ( cardArrayType )
-    {
-        case CardArray::PLAYERHAND:
-            emit card->InPlayerHand();
-            break;
-
-        case CardArray::CPUHAND:
-            emit card->InCpuHand();
-            break;
-
-        case CardArray::TALON:
-            emit card->InTalon();
-            break;
-
-        default:
-            break;
-    }
 }
 
 

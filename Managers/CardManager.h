@@ -50,8 +50,6 @@ private:
     void       SetInitialCardPositions(void);
     void       AddCardsToScene(Scene* scene);
     void       ShuffleDeck(void);
-    void       EmitCardMovedSignal(Card* card,
-                                   CardArray::CardArrayType cardArrayType);
     CardArray* GetDesiredCardArray(CardArray::CardArrayType cardArrayType);
 
 public slots:
