@@ -120,7 +120,19 @@ void CardArray::UpdateNextPosition(int x, int y)
 //------------------------------------------------------------------------------
 void CardArray::Shuffle(void)
 {
+    // Shuffle the cards.
+    std::srand(std::time(0));
+    std::random_shuffle(cards.begin(), cards.end());
 
+    // Reset the zPositions.
+    Card* card;
+    int   arraySize = GetSize();
+    for ( int index = 0; index < arraySize; index++ )
+    {
+        card = GetCard(index);
+
+        card->SetPosition(card->GetPosition(), arraySize - index);
+    }
 }
 
 
@@ -136,9 +148,42 @@ void CardArray::Sort(void)
 //------------------------------------------------------------------------------
 // Stagger - Visually stagger the cards in this CardArray.
 //------------------------------------------------------------------------------
-void CardArray::Stagger(CardArray::StaggerType /*staggerType*/)
+void CardArray::Stagger(CardArray::StaggerType staggerType)
 {
+    QPointF newPosition;
+    Card*   card;
 
+    switch ( staggerType )
+    {
+        case NOSTAGGER:
+            newPosition = QPointF(nextCardPosition.x(),
+                                  nextCardPosition.y() + (GetSize() - 1));
+
+            for ( int index = 0; index < GetSize(); index++ )
+            {
+                card = GetCard(index);
+
+                card->SetPosition(newPosition);
+                EmitCardMovedSignal(card, true);
+            }
+            break;
+
+        case DECKSTAGGER:
+            for ( int index = 0; index < GetSize(); index++ )
+            {
+                card = GetCard(index);
+
+                newPosition = card->GetPosition();
+                newPosition.setY(newPosition.y() + index);
+
+                card->SetPosition(newPosition);
+                EmitCardMovedSignal(card, true);
+            }
+            break;
+
+        default:
+            break;
+    }
 }
 
 
@@ -179,7 +224,7 @@ void CardArray::UpdateCardProperties(Card* card, bool noAnimation)
         UpdateCardPositions();
 
     // Set the cards position and update the next position.
-    card->SetPosition(nextCardPosition);
+    card->SetPosition(nextCardPosition, GetSize());
     UpdateNextPosition();
 
     // Inform the card that it's position and state has changed.

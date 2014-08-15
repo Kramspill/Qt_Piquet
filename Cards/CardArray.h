@@ -13,6 +13,12 @@
 
 
 //------------------------------------------------------------------------------
+// System Header Files
+//------------------------------------------------------------------------------
+#include <ctime>
+
+
+//------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
 #include "Card.h"
@@ -37,6 +43,8 @@ public:
 
     enum StaggerType
     {
+        NOSTAGGER,
+        DECKSTAGGER,
         HAND,
         PREVTRICKS
     };
@@ -54,7 +62,7 @@ public:
 
     void               Shuffle(void);
     void               Sort(void);
-    void               Stagger(StaggerType);
+    void               Stagger(StaggerType staggerType);
 
     int                GetSize(void);
     CardArrayType      GetCardArrayType(void);
