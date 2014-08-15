@@ -22,7 +22,9 @@ Card::Card(void)
 //------------------------------------------------------------------------------
 Card::Card(const QString& svgFileName, Suit theSuit, Value theValue) :
     QGraphicsSvgItem(svgFileName),
-    backImage(new QGraphicsSvgItem(":/Cards/Back/Resources/Back/Red_Back.svg")),
+    frontImage(svgFileName),
+    backImage(":/Cards/Back/Resources/Back/Red_Back.svg"),
+    facedown(false),
     suit(theSuit),
     value(theValue)
 {
@@ -53,6 +55,11 @@ Card::~Card(void)
 //------------------------------------------------------------------------------
 void Card::Initialize(void)
 {
+    // Initialize the renderer and start the card facing down.
+    renderer = new QSvgRenderer(backImage);
+    this->setSharedRenderer(renderer);
+    facedown = true;
+
     // Initialize the transition animation associated with a Card
     // moving from one place to another.
     transitionAnimation = new QPropertyAnimation(this, "pos");
@@ -129,6 +136,13 @@ void Card::Initialize(void)
     inPreviousTricksState->addTransition(SomeObject, SIGNAL(inDeck()),
                                          inDeckState);
     */
+
+    // Link the card to the signals from CardStates.
+    connect(inPlayerHandState, SIGNAL(entered()), this, SLOT(FlipCard()));
+    connect(inPlayerHandState, SIGNAL(exited()), this, SLOT(FlipCard()));
+
+    // Run the state machine.
+    stateMachine->start();
 }
 
 
@@ -162,8 +176,11 @@ QPointF Card::GetPosition(void)
 //------------------------------------------------------------------------------
 // SetPosition - Mutator for Card's position member variable.
 //------------------------------------------------------------------------------
-void Card::SetPosition(QPointF newPosition)
+void Card::SetPosition(QPointF newPosition, int zPosition)
 {
+    if ( zPosition != -1 )
+        this->setZValue(zPosition);
+
     position = newPosition;
 }
 
@@ -188,9 +205,16 @@ void Card::UpdatePosition(bool noAnimation)
 
 
 //------------------------------------------------------------------------------
-// GetBackImage - Accessor for Card's backImage member variable.
+// FlipCard - Flip this card.
 //------------------------------------------------------------------------------
-QGraphicsSvgItem* Card::GetBackImage(void)
+void Card::FlipCard(void)
 {
-    return backImage;
+    if ( facedown )
+        renderer->load(frontImage);
+    else
+        renderer->load(backImage);
+
+    // Reset the renderer to update the change and update the facedown status.
+    this->setSharedRenderer(renderer);
+    facedown = !facedown;
 }

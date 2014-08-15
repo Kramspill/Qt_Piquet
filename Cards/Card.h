@@ -10,9 +10,12 @@
 // Qt Header Files
 //------------------------------------------------------------------------------
 #include <QGraphicsSvgItem>
+#include <QSvgRenderer>
 #include <QStateMachine>
 #include <QPropertyAnimation>
 #include <QPointF>
+
+#include <QDebug>
 
 
 //------------------------------------------------------------------------------
@@ -58,15 +61,15 @@ public:
 
     void                Initialize(void);
 
-    QGraphicsSvgItem*   GetBackImage(void);
     Suit                GetSuit(void);
     Value               GetValue(void);
     QPointF             GetPosition(void);
 
-    void                SetPosition(QPointF newPosition);
+    void                SetPosition(QPointF newPosition, int zPosition = -1);
 
 private slots:
     void                UpdatePosition(bool noAnimation);
+    void                FlipCard(void);
 
 signals:
     void                CardMoved(bool noAnimation);
@@ -75,7 +78,10 @@ signals:
     void                InTalon(void);
 
 private:
-    QGraphicsSvgItem*   backImage;
+    QSvgRenderer*       renderer;
+    QString             frontImage;
+    QString             backImage;
+    bool                facedown;
     Suit                suit;
     Value               value;
     QPointF             position;
