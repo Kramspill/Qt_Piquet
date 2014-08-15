@@ -54,6 +54,9 @@ void CardManager::Initialize(Scene* scene)
     // Initialize all the cards used in the game and add them to the deck.
     InitializeCards();
 
+    // Shuffle the deck.
+    ShuffleDeck();
+
     // Add the cards (initially in the deck) to the scene.
     AddCardsToScene(scene);
 }
@@ -259,7 +262,7 @@ void CardManager::AddCardsToScene(Scene* scene)
     {
         card = deck->GetCard(index);
 
-        //card->setFlag(QGraphicsItem::ItemIsMovable, true);
+        card->setFlag(QGraphicsItem::ItemIsMovable, true);
         card->setScale(0.5);
 
         scene->addItem(card);
@@ -272,7 +275,12 @@ void CardManager::AddCardsToScene(Scene* scene)
 //------------------------------------------------------------------------------
 void CardManager::ShuffleDeck(void)
 {
+    // Line up the cards in the deck before shuffling.
+    deck->Stagger(CardArray::NOSTAGGER);
     deck->Shuffle();
+
+    // Re-stagger the deck.
+    deck->Stagger(CardArray::DECKSTAGGER);
 }
 
 
