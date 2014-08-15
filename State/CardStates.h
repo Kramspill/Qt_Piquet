@@ -41,6 +41,7 @@ public:
 
 protected:
     void onEntry(QEvent*) {}
+    void onExit(QEvent*)  {}
 };
 
 
