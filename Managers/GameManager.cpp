@@ -44,6 +44,9 @@ void GameManager::Initialize(void)
     // TEMP
     QPushButton* button = new QPushButton();
     scene->addWidget(button);
+    QPushButton* button2 = new QPushButton();
+    scene->addWidget(button2);
+    button2->setGeometry(0, -50, 50, 50);
     //
 
     // Initialize the CardManager with the scene object.
@@ -52,7 +55,7 @@ void GameManager::Initialize(void)
 
     // Initialize the StateManager.
     stateManager = new StateManager();
-    stateManager->Initialize(button);
+    stateManager->Initialize(button, button2);
 
     /* Progressively add these.
 
@@ -79,4 +82,32 @@ void GameManager::Initialize(void)
                      SLOT(CallTransferCards(CardArray::CardArrayType,
                                             CardArray::CardArrayType,
                                             int)));
+    QObject::connect(stateManager->GetExchangePhaseState(),
+                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
+                                                CardArray::CardArrayType,
+                                                int)),
+                     cardManager,
+                     SLOT(CallTransferCards(CardArray::CardArrayType,
+                                            CardArray::CardArrayType,
+                                            int)));
+    QObject::connect(stateManager->GetExchangePhaseState(),
+                     SIGNAL(RequestSelectedCardsTransfer(
+                                CardArray::CardArrayType,
+                                CardArray::CardArrayType)),
+                     cardManager,
+                     SLOT(CallTransferSelectedCards(
+                              CardArray::CardArrayType,
+                              CardArray::CardArrayType)));
+    QObject::connect(stateManager->GetExchangePhaseState(),
+                     SIGNAL(SignalEnableCardSelection()),
+                     cardManager,
+                     SLOT(EnableCardSelection()));
+    QObject::connect(stateManager->GetExchangePhaseState(),
+                     SIGNAL(SignalDisableCardSelection()),
+                     cardManager,
+                     SLOT(DisableCardSelection()));
+    QObject::connect(scene,
+                     SIGNAL(SignalCardSelectionsChanged(Card*)),
+                     cardManager,
+                     SLOT(CardSelectionsChanged(Card*)));
 }

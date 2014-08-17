@@ -99,27 +99,25 @@ void Card::Initialize(void)
     inDeckState->addTransition(this, SIGNAL(InCpuHand()),    inCpuHandState);
     inDeckState->addTransition(this, SIGNAL(InTalon()),      inTalonState);
 
-    /*
+    // Setup the transitions from the InTalon state.
+    inTalonState->addTransition(this, SIGNAL(InPlayerHand()),
+                                inPlayerHandState);
+    inTalonState->addTransition(this, SIGNAL(InCpuHand()), inCpuHandState);
+    //inTalonState->addTransition(this, SIGNAL(InDeck()),    inDeckState);
+
+
     // Setup the transitions from the InPlayerHand state.
-    inPlayerHandState->addTransition(SomeObject, SIGNAL(inPlayerDiscards()),
+    inPlayerHandState->addTransition(this, SIGNAL(InPlayerDiscards()),
                                      inPlayerDiscardsState);
-    inPlayerHandState->addTransition(SomeObject, SIGNAL(inCurrentTrick()),
-                                     inCurrentTrickState);
+    //inPlayerHandState->addTransition(SomeObject, SIGNAL(inCurrentTrick()),
+    //                                 inCurrentTrickState);
 
     // Setup the transitions from the InCpuHand state.
-    inCpuHandState->addTransition(SomeObject, SIGNAL(inCpuDiscards()),
-                                  inPlayerCpuState);
-    inCpuHandState->addTransition(SomeObject, SIGNAL(inCurrentTrick()),
-                                  inCurrentTrickState);
-
-    // Setup the transitions from the InTalon state.
-    inTalonState->addTransition(SomeObject, SIGNAL(inPlayerHand()),
-                                inPlayerHandState);
-    inTalonState->addTransition(SomeObject, SIGNAL(inCpuHand()),
-                                inCpuHandState);
-    inTalonState->addTransition(SomeObject, SIGNAL(inDeck()),
-                                inDeckState);
-
+    inCpuHandState->addTransition(this, SIGNAL(InCpuDiscards()),
+                                  inCpuDiscardsState);
+    //inCpuHandState->addTransition(SomeObject, SIGNAL(inCurrentTrick()),
+    //                              inCurrentTrickState);
+/*
     // Setup the transitions from the InPlayerDiscards state.
     inPlayerDiscardsState->addTransition(SomeObject, SIGNAL(inDeck()),
                                          inDeckState);
@@ -170,6 +168,25 @@ Card::Value Card::GetValue(void)
 QPointF Card::GetPosition(void)
 {
     return position;
+}
+
+
+//------------------------------------------------------------------------------
+// UpdateSelection - Update the position of the card based on it's selection
+//                   status.
+//------------------------------------------------------------------------------
+void Card::UpdateSelection(void)
+{
+    if ( this->isSelected() )
+    {
+        position.setY(position.y() - 30);
+    }
+    else
+    {
+        position.setY(position.y() + 30);
+    }
+
+    UpdatePosition(false);
 }
 
 

@@ -78,6 +78,24 @@ void CardManager::TransferCards(CardArray* source, CardArray* destination,
 
 
 //------------------------------------------------------------------------------
+// TransferSelectedCards - Transfer a cardArray's selected cards to another
+//                         CardArray.
+//------------------------------------------------------------------------------
+void CardManager::TransferSelectedCards(CardArray* source,
+                                        CardArray* destination)
+{
+    int size = source->GetSelectedCardsSize();
+
+    for (int index = 0; index < size; index++)
+    {
+        // Remove the card from the source array, and add it to the destination.
+        Card* card = source->RemoveSelectedCard();
+        destination->AddCard(card);
+    }
+}
+
+
+//------------------------------------------------------------------------------
 // GetDeck - Accessor for CardManager's deck member variable.
 //------------------------------------------------------------------------------
 CardArray* CardManager::GetDeck(void)
@@ -241,11 +259,11 @@ void CardManager::SetInitialCardPositions(void)
     cpuHand->SetZPosOnly(false);
     cpuHand->UpdateNextPosition(-50, -350);
 
-    //playerDiscards->SetZPosOnly(true); // Shifted if exposed.
-    //playerDiscards->UpdateNextPosition(100, 50);
+    playerDiscards->SetZPosOnly(true); // Shifted if exposed.
+    playerDiscards->UpdateNextPosition(210, 20);
 
-    //cpuDiscards->SetZPosOnly(true);
-    //cpuDiscards->UpdateNextPosition(100, -50);
+    cpuDiscards->SetZPosOnly(true);
+    cpuDiscards->UpdateNextPosition(210, -180);
 
     //previousTricks->SetZPosOnly(false);
     //previousTricks->UpdateNextPosition(-50, 0);
@@ -341,4 +359,71 @@ void CardManager::CallTransferCards(CardArray::CardArrayType src,
     CardArray* destination = GetDesiredCardArray(dest);
 
     TransferCards(source, destination, numOfCards);
+}
+
+
+//------------------------------------------------------------------------------
+// CallTransferSelectedCards - Helper function for TransferSelectedCards.
+//------------------------------------------------------------------------------
+void CardManager::CallTransferSelectedCards(CardArray::CardArrayType src,
+                                            CardArray::CardArrayType dest)
+{
+    CardArray* source      = GetDesiredCardArray(src);
+    CardArray* destination = GetDesiredCardArray(dest);
+
+    TransferSelectedCards(source, destination);
+}
+
+
+//------------------------------------------------------------------------------
+// EnableCardSelection - Enable a CardArray's cards to be selected.
+//------------------------------------------------------------------------------
+void CardManager::EnableCardSelection(CardArray::CardArrayType cardArrayType)
+{
+    Card*      card;
+    CardArray* cardArray = GetDesiredCardArray(cardArrayType);
+
+    // Loop through the array setting the ItemIsSelectable property.
+    for ( int index = 0; index < cardArray->GetSize(); index++ )
+    {
+        card = cardArray->GetCard(index);
+
+        card->setFlag(QGraphicsItem::ItemIsSelectable, true);
+    }
+}
+
+
+//------------------------------------------------------------------------------
+// DisableCardSelection - Disable a CardArray's cards to be selected.
+//------------------------------------------------------------------------------
+void CardManager::DisableCardSelection(CardArray::CardArrayType cardArrayType)
+{
+    Card*      card;
+    CardArray* cardArray = GetDesiredCardArray(cardArrayType);
+
+    // Loop through the array setting the ItemIsSelectable property.
+    for ( int index = 0; index < cardArray->GetSize(); index++ )
+    {
+        card = cardArray->GetCard(index);
+
+        card->setFlag(QGraphicsItem::ItemIsSelectable, false);
+    }
+}
+
+
+//------------------------------------------------------------------------------
+// CardSelectionsChanged - Inform the card and CardArray that it's selection has
+//                         changed.
+//------------------------------------------------------------------------------
+void CardManager::CardSelectionsChanged(Card* card,
+                                        CardArray::CardArrayType cardArrayType)
+{
+    CardArray* cardArray = GetDesiredCardArray(cardArrayType);
+
+    // Update the card selections array in the CardArray.
+    if ( cardArray->UpdateCardSelections(card) )
+    {
+        // Update the position of the card based on if it's selected or not.
+        card->UpdateSelection();
+    }
 }

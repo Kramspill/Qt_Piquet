@@ -59,12 +59,15 @@ public:
     Card*              RemoveCard(int index);
     Card*              GetCard(int index);
     void               UpdateNextPosition(int x = -1, int y = -1);
+    bool               UpdateCardSelections(Card* card);
+    Card*              RemoveSelectedCard(void);
 
     void               Shuffle(void);
     void               Sort(void);
     void               Stagger(StaggerType staggerType);
 
     int                GetSize(void);
+    int                GetSelectedCardsSize(void);
     CardArrayType      GetCardArrayType(void);
     void               SetZPosOnly(bool zPosOnly);
 
@@ -72,9 +75,11 @@ private:
     void               UpdateCardProperties(Card* card, bool noAnimation);
     void               EmitCardMovedSignal(Card* card, bool noAnimation);
     void               UpdateCardPositions(void);
+    void               ResetZPositions(void);
 
 private:
     std::vector<Card*> cards;
+    std::vector<Card*> selectedCards;
     CardArrayType      cardArrayType;
     QPointF            nextCardPosition;
     bool               zPositionOnly;

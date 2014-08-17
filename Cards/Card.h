@@ -65,6 +65,7 @@ public:
     Value               GetValue(void);
     QPointF             GetPosition(void);
 
+    void                UpdateSelection(void);
     void                SetPosition(QPointF newPosition, int zPosition = -1);
 
 private slots:
@@ -73,9 +74,11 @@ private slots:
 
 signals:
     void                CardMoved(bool noAnimation);
+    void                InTalon(void);
     void                InPlayerHand(void);
     void                InCpuHand(void);
-    void                InTalon(void);
+    void                InPlayerDiscards(void);
+    void                InCpuDiscards(void);
 
 private:
     QSvgRenderer*       renderer;

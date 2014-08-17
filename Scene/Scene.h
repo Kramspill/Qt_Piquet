@@ -10,6 +10,9 @@
 // Qt Header Files
 //------------------------------------------------------------------------------
 #include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
+#include <QGraphicsItem>
+#include <QTransform>
 
 
 //------------------------------------------------------------------------------
@@ -28,6 +31,13 @@ public:
     Scene(int x, int y, int width, int height);
 
     void addItem(Card* card);
+
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent*);
+
+signals:
+    void SignalCardSelectionsChanged(Card*);
 };
 
 #endif // SCENE_H

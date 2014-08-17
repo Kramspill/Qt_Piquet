@@ -10,11 +10,11 @@
 // Qt Header Files
 //------------------------------------------------------------------------------
 #include <QState>
+#include <QStateMachine>
 #include <QFinalState>
 #include <QEvent>
-#include <QStateMachine>
-#include <QPushButton>
 #include <QTimer>
+#include <QPushButton>
 
 
 //------------------------------------------------------------------------------

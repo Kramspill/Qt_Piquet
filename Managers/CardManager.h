@@ -10,6 +10,7 @@
 // Qt Header Files
 //------------------------------------------------------------------------------
 #include <QObject>
+#include <QDebug>
 
 
 //------------------------------------------------------------------------------
@@ -35,6 +36,7 @@ public:
 
     void       TransferCards(CardArray* source, CardArray* destination,
                              int numberOfCards);
+    void       TransferSelectedCards(CardArray* source, CardArray* destination);
 
     CardArray* GetDeck(void);
     CardArray* GetTalon(void);
@@ -56,6 +58,14 @@ public slots:
     void       CallTransferCards(CardArray::CardArrayType src,
                                  CardArray::CardArrayType dest,
                                  int numOfCards);
+    void       CallTransferSelectedCards(CardArray::CardArrayType src,
+                                         CardArray::CardArrayType dest);
+    void       EnableCardSelection(CardArray::CardArrayType
+                                   cardArrayType = CardArray::PLAYERHAND);
+    void       DisableCardSelection(CardArray::CardArrayType
+                                    cardArrayType = CardArray::PLAYERHAND);
+    void       CardSelectionsChanged(Card* card, CardArray::CardArrayType
+                                     cardArrayType = CardArray::PLAYERHAND);
 
 private:
     CardArray* deck;
