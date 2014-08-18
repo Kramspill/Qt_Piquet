@@ -51,38 +51,39 @@ public:
 
 public:
     CardArray(void);
-    CardArray(CardArrayType arrayType);
+    CardArray(CardArrayType arrayType, int x, int y);
     CardArray(CardArray&);
     ~CardArray(void);
 
     void               AddCard(Card* newCard, bool initialCardCreation = false);
-    Card*              RemoveCard(int index);
+    void               RemoveCard(Card* aCard);
+    Card*              RemoveTopCard(void);
     Card*              GetCard(int index);
-    void               UpdateNextPosition(int x = -1, int y = -1);
-    bool               UpdateCardSelections(Card* card);
-    Card*              RemoveSelectedCard(void);
 
     void               Shuffle(void);
     void               Sort(void);
     void               Stagger(StaggerType staggerType);
 
+    bool               UpdateCardSelections(Card* card);
+    Card*              RemoveSelectedCard(void);
+
     int                GetSize(void);
     int                GetSelectedCardsSize(void);
     CardArrayType      GetCardArrayType(void);
-    void               SetZPosOnly(bool zPosOnly);
 
 private:
-    void               UpdateCardProperties(Card* card, bool noAnimation);
+    void               UpdateCardPositions(Card* addedCard = 0,
+                                           bool noAnimation = false);
+    void               CleanUpCardPositions(bool newCardAdded);
     void               EmitCardMovedSignal(Card* card, bool noAnimation);
-    void               UpdateCardPositions(void);
     void               ResetZPositions(void);
 
 private:
     std::vector<Card*> cards;
     std::vector<Card*> selectedCards;
     CardArrayType      cardArrayType;
+    QPointF            initialCardPosition;
     QPointF            nextCardPosition;
-    bool               zPositionOnly;
 };
 
 #endif // CARDARRAY_H

@@ -10,7 +10,6 @@
 // Qt Header Files
 //------------------------------------------------------------------------------
 #include <QObject>
-#include <QDebug>
 
 
 //------------------------------------------------------------------------------
@@ -49,7 +48,6 @@ public:
 
 private:
     void       InitializeCards(void);
-    void       SetInitialCardPositions(void);
     void       AddCardsToScene(Scene* scene);
     void       ShuffleDeck(void);
     CardArray* GetDesiredCardArray(CardArray::CardArrayType cardArrayType);

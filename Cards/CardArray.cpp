@@ -20,9 +20,12 @@ CardArray::CardArray(void)
 //------------------------------------------------------------------------------
 // Constructor
 //------------------------------------------------------------------------------
-CardArray::CardArray(CardArray::CardArrayType arrayType) :
+CardArray::CardArray(CardArray::CardArrayType arrayType, int x, int y) :
     cards(0),
-    cardArrayType(arrayType)
+    selectedCards(0),
+    cardArrayType(arrayType),
+    initialCardPosition(QPointF(x, y)),
+    nextCardPosition(QPointF(x, y))
 {
 }
 
@@ -51,31 +54,47 @@ void CardArray::AddCard(Card* newCard, bool initialCardCreation)
     // Add the new card to the array.
     cards.push_back(newCard);
 
-    // Update the position and state of the card.
-    UpdateCardProperties(newCard, initialCardCreation);
+    // Update the position and state of the cards.
+    UpdateCardPositions(newCard, initialCardCreation);
 }
 
 
 //------------------------------------------------------------------------------
-// RemoveCard - Remove a card from this array. Doesn't free the memory
-//              associated with the card but instead returns a pointer to the
-//              removed Card.
+// RemoveCard - Remove a given card from this array. Doesn't free the memory
+//              associated with the card.
 //------------------------------------------------------------------------------
-Card* CardArray::RemoveCard(int index)
+void CardArray::RemoveCard(Card* aCard)
+{
+    std::vector<Card*>::iterator iterator;
+
+    // Locate the card and remove it.
+    iterator = std::find(cards.begin(), cards.end(), aCard);
+    cards.erase(iterator);
+
+    UpdateCardPositions();
+}
+
+
+//------------------------------------------------------------------------------
+// RemoveTopCard - Remove the last card from this array. Doesn't free the memory
+//                 associated with the card but instead returns a pointer to the
+//                 removed Card.
+//------------------------------------------------------------------------------
+Card* CardArray::RemoveTopCard(void)
 {
     Card* removedCard = 0;
 
     // Make sure there are cards in the array
     // and a card exists at the given index.
-    if ( cards.size() > 0 && cards[index] )
+    if ( cards.size() > 0 )
     {
-        removedCard = cards.front();//cards[index];
+        removedCard = cards.back();
 
         // Remove the card.
-        cards.erase(cards.begin());// + index);
+        cards.pop_back();
 
-        // Update the next card position.
-        UpdateNextPosition();
+        // Clean up the card array and update the next card position.
+        UpdateCardPositions();
     }
 
     return removedCard;
@@ -88,93 +107,6 @@ Card* CardArray::RemoveCard(int index)
 Card* CardArray::GetCard(int index)
 {
     return cards[index];
-}
-
-
-//------------------------------------------------------------------------------
-// UpdateNextPosition - Update the position that the next card added to this
-//                      array will be given.
-//------------------------------------------------------------------------------
-void CardArray::UpdateNextPosition(int x, int y)
-{
-    // Check if this is the initial setup.
-    if ( x != -1 && y != -1)
-    {
-        nextCardPosition = QPointF(x, y);
-    }
-    else if ( zPositionOnly )
-    {
-        nextCardPosition = QPointF(nextCardPosition.x(),
-                                   nextCardPosition.y() - 1);
-    }
-    else
-    {
-        nextCardPosition = QPointF(nextCardPosition.x() + 20,
-                                   nextCardPosition.y());
-    }
-}
-
-
-//------------------------------------------------------------------------------
-// UpdateCardSelections - Update the the selected cards member vector.
-//------------------------------------------------------------------------------
-bool CardArray::UpdateCardSelections(Card* card)
-{
-    bool success = false;
-
-    if ( !card->isSelected() )
-    {
-        std::vector<Card*>::iterator iterator;
-
-        iterator = std::find(selectedCards.begin(), selectedCards.end(), card);
-        selectedCards.erase(iterator);
-
-        success = true;
-    }
-    else if ( selectedCards.size() < 5 )
-    {
-        selectedCards.push_back(card);
-        success = true;
-    }
-    else
-    {
-        card->setSelected(false);
-    }
-
-    return success;
-}
-
-
-//------------------------------------------------------------------------------
-// RemoveSelectedCard - Remove the first card from the selectedCards vector.
-//------------------------------------------------------------------------------
-Card* CardArray::RemoveSelectedCard(void)
-{
-    Card* removedCard = 0;
-
-
-    if ( selectedCards.size() > 0 )
-    {
-        removedCard = selectedCards.front();
-
-        // Deselect and prevent further selection of the card.
-        removedCard->setSelected(false);
-        removedCard->setFlag(QGraphicsItem::ItemIsSelectable, false);
-
-        // Remove the card.
-        selectedCards.erase(selectedCards.begin());
-
-        // Remove the Card from the main array.
-        std::vector<Card*>::iterator iterator;
-
-        iterator = std::find(cards.begin(), cards.end(), removedCard);
-        cards.erase(iterator);
-
-        // Update the next card position.
-        //UpdateNextPosition();
-    }
-
-    return removedCard;
 }
 
 
@@ -207,14 +139,15 @@ void CardArray::Stagger(CardArray::StaggerType staggerType)
 {
     QPointF newPosition;
     Card*   card;
+    int     arraySize = GetSize();
 
     switch ( staggerType )
     {
         case NOSTAGGER:
             newPosition = QPointF(nextCardPosition.x(),
-                                  nextCardPosition.y() + (GetSize() - 1));
+                                  nextCardPosition.y() + (GetSize() + 1));
 
-            for ( int index = 0; index < GetSize(); index++ )
+            for ( int index = 0; index < arraySize; index++ )
             {
                 card = GetCard(index);
 
@@ -224,12 +157,12 @@ void CardArray::Stagger(CardArray::StaggerType staggerType)
             break;
 
         case DECKSTAGGER:
-            for ( int index = 0; index < GetSize(); index++ )
+            for ( int index = 0; index < arraySize; index++ )
             {
                 card = GetCard(index);
 
                 newPosition = card->GetPosition();
-                newPosition.setY(newPosition.y() + index);
+                newPosition.setY(newPosition.y() - index);
 
                 card->SetPosition(newPosition);
                 EmitCardMovedSignal(card, true);
@@ -239,6 +172,69 @@ void CardArray::Stagger(CardArray::StaggerType staggerType)
         default:
             break;
     }
+}
+
+
+//------------------------------------------------------------------------------
+// UpdateCardSelections - Update the the selected cards member vector.
+//------------------------------------------------------------------------------
+bool CardArray::UpdateCardSelections(Card* card)
+{
+    bool success = false;
+
+    if ( !card->isSelected() )
+    {
+        std::vector<Card*>::iterator iterator;
+
+        // The card has been deselected.
+        // Remove the card from the selectedCards vector.
+        iterator = std::find(selectedCards.begin(), selectedCards.end(), card);
+        selectedCards.erase(iterator);
+
+        success = true;
+    }
+    else if ( selectedCards.size() < 5 )
+    {
+        // The card has been selected and the limit has not yet been reached.
+        // Add the card to the selectedCards vector.
+        selectedCards.push_back(card);
+        success = true;
+    }
+    else
+    {
+        // The card has been selected but the limit has been reached.
+        // Set the card to be unselected in the scene.
+        card->setSelected(false);
+    }
+
+    return success;
+}
+
+
+//------------------------------------------------------------------------------
+// RemoveSelectedCard - Remove the first card from the selectedCards vector.
+//------------------------------------------------------------------------------
+Card* CardArray::RemoveSelectedCard(void)
+{
+    Card* removedCard = 0;
+
+
+    if ( selectedCards.size() > 0 )
+    {
+        removedCard = selectedCards.front();
+
+        // Deselect and prevent further selection of the card.
+        removedCard->setSelected(false);
+        removedCard->setFlag(QGraphicsItem::ItemIsSelectable, false);
+
+        // Remove the card froom the selectedCards vector.
+        selectedCards.erase(selectedCards.begin());
+
+        // Remove the Card from the main array.
+        RemoveCard(removedCard);
+    }
+
+    return removedCard;
 }
 
 
@@ -270,29 +266,117 @@ CardArray::CardArrayType CardArray::GetCardArrayType(void)
 
 
 //------------------------------------------------------------------------------
-// SetZPosOnly - Mutator for CardArray's zPositionOnly member variable.
+// UpdateCardPositions - Update the positions of the cards in the array.
 //------------------------------------------------------------------------------
-void CardArray::SetZPosOnly(bool zPosOnly)
+void CardArray::UpdateCardPositions(Card* addedCard, bool noAnimation)
 {
-    zPositionOnly = zPosOnly;
+    bool newCardAdded = false;
+
+    // If a new card has been added, set it's position and state.
+    if ( addedCard )
+    {
+        addedCard->SetPosition(nextCardPosition, GetSize());
+        EmitCardMovedSignal(addedCard, noAnimation);
+        newCardAdded = true;
+    }
+
+    // Clean up the positions of the cards and update the next card's position.
+    CleanUpCardPositions(newCardAdded);
 }
 
 
 //------------------------------------------------------------------------------
-// UpdateCardProperties - Update the properties of a card in this array.
+// CleanUpCardPositions - Clean up the positions of the cards and update the
+//                        next card's position.
 //------------------------------------------------------------------------------
-void CardArray::UpdateCardProperties(Card* card, bool noAnimation)
+void CardArray::CleanUpCardPositions(bool newCardAdded)
 {
-    // Update the positions of the other cards in the array.
-    if ( !zPositionOnly )
-        UpdateCardPositions();
+    Card*   card;
+    QPointF shiftedPosition;
+    int     arraySize = GetSize();
 
-    // Set the cards position and update the next position.
-    card->SetPosition(nextCardPosition, GetSize());
-    UpdateNextPosition();
+    switch ( cardArrayType )
+    {
+        case DECK:
+        case TALON:
+        case PLAYERDISCARDS:
+        case CPUDISCARDS:
+            if ( newCardAdded )
+            {
+                nextCardPosition = QPointF(nextCardPosition.x(),
+                                           nextCardPosition.y() - 1);
+            }
+            else
+            {
+                nextCardPosition = QPointF(nextCardPosition.x(),
+                                           nextCardPosition.y() + 1);
+            }
+            break;
 
-    // Inform the card that it's position and state has changed.
-    EmitCardMovedSignal(card, noAnimation);
+        case PLAYERHAND:
+        case PREVIOUSTRICKS:
+            if ( arraySize > 0 )
+            {
+                // Loop through the array of cards and shift them.
+                for (int index = 0; index < arraySize; index++)
+                {
+                    card = GetCard(index);
+
+                    // Get the original position of the card and shift it.
+                    shiftedPosition.setX(initialCardPosition.x() -
+                                         (10*arraySize) + (index*20));
+                    shiftedPosition.setY(card->GetPosition().y());
+
+                    // Set the new position of the card.
+                    card->SetPosition(shiftedPosition, index + 1);
+
+                    // Inform the card that it has moved.
+                    emit card->CardMoved(false);
+                }
+
+                // Update the position of the next card.
+                nextCardPosition = QPointF(shiftedPosition.x() + 20,
+                                           shiftedPosition.y());
+            }
+            else
+            {
+                nextCardPosition = initialCardPosition;
+            }
+            break;
+
+        case CPUHAND:
+            if ( arraySize > 0 )
+            {
+                // Loop through the array of cards and shift them.
+                for (int index = 0; index < arraySize; index++)
+                {
+                    card = GetCard(index);
+
+                    // Get the original position of the card and shift it.
+                    shiftedPosition.setX(initialCardPosition.x() +
+                                         (10*arraySize) - (index*20));
+                    shiftedPosition.setY(card->GetPosition().y());
+
+                    // Set the new position of the card.
+                    card->SetPosition(shiftedPosition, arraySize - index);
+
+                    // Inform the card that it has moved.
+                    emit card->CardMoved(false);
+                }
+
+                // Update the position of the next card.
+                nextCardPosition = QPointF(shiftedPosition.x() - 20,
+                                           shiftedPosition.y());
+            }
+            else
+            {
+                nextCardPosition = initialCardPosition;
+            }
+            break;
+
+        default:
+            break;
+    }
 }
 
 
@@ -336,38 +420,6 @@ void CardArray::EmitCardMovedSignal(Card* card, bool noAnimation)
 
 
 //------------------------------------------------------------------------------
-// UpdateCardPositions - Update the positions of the other cards in the array.
-//------------------------------------------------------------------------------
-void CardArray::UpdateCardPositions(void)
-{
-    Card*   card;
-    QPointF shiftedPosition;
-
-    if ( GetSize()-1 > 0 )
-    {
-        // Loop through the array of cards and shift them.
-        for (int index = 0; index < GetSize()-1; index++)
-        {
-            card = GetCard(index);
-
-            // Get the original position of the card and shift it.
-            shiftedPosition.setX(card->GetPosition().x() - 10);
-            shiftedPosition.setY(card->GetPosition().y());
-
-            // Set the new position of the card.
-            card->SetPosition(shiftedPosition);
-
-            // Inform the card that it has moved.
-            emit card->CardMoved(false);
-        }
-
-        // Update the position of the next card.
-        UpdateNextPosition(shiftedPosition.x() + 20, shiftedPosition.y());
-    }
-}
-
-
-//------------------------------------------------------------------------------
 // ResetZPositions - Reset the zPositions in this array.
 //------------------------------------------------------------------------------
 void CardArray::ResetZPositions(void)
@@ -378,6 +430,6 @@ void CardArray::ResetZPositions(void)
     for ( int index = 0; index < arraySize; index++ )
     {
         card = GetCard(index);
-        card->SetPosition(card->GetPosition(), arraySize - index);
+        card->SetPosition(card->GetPosition(), index + 1);
     }
 }

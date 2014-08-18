@@ -40,16 +40,13 @@ CardManager::~CardManager(void)
 void CardManager::Initialize(Scene* scene)
 {
     // Initialize the CardArray member variables.
-    deck           = new CardArray(CardArray::DECK);
-    talon          = new CardArray(CardArray::TALON);
-    playerHand     = new CardArray(CardArray::PLAYERHAND);
-    cpuHand        = new CardArray(CardArray::CPUHAND);
-    playerDiscards = new CardArray(CardArray::PLAYERDISCARDS);
-    cpuDiscards    = new CardArray(CardArray::CPUDISCARDS);
-    previousTricks = new CardArray(CardArray::PREVIOUSTRICKS);
-
-    // Set the initial card positions for the CardArrays.
-    SetInitialCardPositions();
+    deck           = new CardArray(CardArray::DECK,           -150,     0);
+    talon          = new CardArray(CardArray::TALON,          -300,  -100);
+    playerHand     = new CardArray(CardArray::PLAYERHAND,     - 50,   190);
+    cpuHand        = new CardArray(CardArray::CPUHAND,        - 50,  -350);
+    playerDiscards = new CardArray(CardArray::PLAYERDISCARDS,  210,    20);
+    cpuDiscards    = new CardArray(CardArray::CPUDISCARDS,     210,  -180);
+    previousTricks = new CardArray(CardArray::PREVIOUSTRICKS, - 50,     0);
 
     // Initialize all the cards used in the game and add them to the deck.
     InitializeCards();
@@ -71,7 +68,7 @@ void CardManager::TransferCards(CardArray* source, CardArray* destination,
     for (int index = 0; index < numberOfCards; index++)
     {
         // Remove the card from the source array, and add it to the destination.
-        Card* card = source->RemoveCard(index);
+        Card* card = source->RemoveTopCard();
         destination->AddCard(card);
     }
 }
@@ -242,35 +239,6 @@ void CardManager::InitializeCards(void)
 
 
 //------------------------------------------------------------------------------
-// SetInitialCardPositions - Set the initial positions for cards added to the
-//                           various CardArrays held by CardManager.
-//------------------------------------------------------------------------------
-void CardManager::SetInitialCardPositions(void)
-{
-    deck->SetZPosOnly(true);
-    deck->UpdateNextPosition(-150, 0);
-
-    talon->SetZPosOnly(true); // Shifted if exposed.
-    talon->UpdateNextPosition(-300, -100);
-
-    playerHand->SetZPosOnly(false);
-    playerHand->UpdateNextPosition(-50, 190);
-
-    cpuHand->SetZPosOnly(false);
-    cpuHand->UpdateNextPosition(-50, -350);
-
-    playerDiscards->SetZPosOnly(true); // Shifted if exposed.
-    playerDiscards->UpdateNextPosition(210, 20);
-
-    cpuDiscards->SetZPosOnly(true);
-    cpuDiscards->UpdateNextPosition(210, -180);
-
-    //previousTricks->SetZPosOnly(false);
-    //previousTricks->UpdateNextPosition(-50, 0);
-}
-
-
-//------------------------------------------------------------------------------
 // AddCardsToScene - Add all the cards to the scene.
 //------------------------------------------------------------------------------
 void CardManager::AddCardsToScene(Scene* scene)
@@ -280,7 +248,7 @@ void CardManager::AddCardsToScene(Scene* scene)
     {
         card = deck->GetCard(index);
 
-        card->setFlag(QGraphicsItem::ItemIsMovable, true);
+        //card->setFlag(QGraphicsItem::ItemIsMovable, true);
         card->setScale(0.5);
 
         scene->addItem(card);
