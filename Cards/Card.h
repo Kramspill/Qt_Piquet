@@ -53,6 +53,13 @@ public:
         ACE     = 11
     };
 
+    enum { Type = UserType + 1 };
+    int type(void) const
+    {
+        // Enable the use of qgraphicsitem_cast with this item.
+        return Type;
+    }
+
 public:
     Card(void);
     Card(const QString& svgFileName, Suit theSuit, Value theValue);

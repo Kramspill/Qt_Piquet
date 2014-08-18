@@ -49,7 +49,13 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent)
     }
     else if ( itemUnderMouse )
     {
-        QGraphicsScene::mousePressEvent(mouseEvent);
+        Card* itemIsACard = qgraphicsitem_cast<Card*>(itemUnderMouse);
+
+        // Call the parent class' mousePressEvent if the item isn't a Card.
+        if ( !itemIsACard )
+        {
+            QGraphicsScene::mousePressEvent(mouseEvent);
+        }
     }
 }
 
