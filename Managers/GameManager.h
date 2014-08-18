@@ -35,6 +35,9 @@ public:
     void          Initialize(void);
 
 private:
+    void          ConnectSignals(void);
+
+private:
     Scene*        scene;
     View*         view;
     CardManager*  cardManager;

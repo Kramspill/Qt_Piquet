@@ -74,6 +74,16 @@ void GameManager::Initialize(void)
     view->show();
 
     // Connect the various signals to their managers.
+    ConnectSignals();
+}
+
+
+//------------------------------------------------------------------------------
+// ConnectSignals - Connect the various signals to their managers.
+//------------------------------------------------------------------------------
+void GameManager::ConnectSignals(void)
+{
+    // Connect the signals from this object.
     QObject::connect(stateManager->GetDealPhaseState(),
                      SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
                                                 CardArray::CardArrayType,
