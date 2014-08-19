@@ -83,39 +83,35 @@ void GameManager::Initialize(void)
 //------------------------------------------------------------------------------
 void GameManager::ConnectSignals(void)
 {
-    // Connect the signals from this object.
-    QObject::connect(stateManager->GetDealPhaseState(),
-                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
-                                                CardArray::CardArrayType,
-                                                int)),
+    // Connect the signals from the card manager.
+    QObject::connect(cardManager,
+                     SIGNAL(SignalTransferComplete()),
+                     stateManager,
+                     SIGNAL(SignalTransferComplete()));
+
+    // Connect the signals from the state manager.
+    QObject::connect(stateManager,
+                     SIGNAL(SignalCardTransfer(CardArray::CardArrayType,
+                                               CardArray::CardArrayType,
+                                               int)),
                      cardManager,
                      SLOT(CallTransferCards(CardArray::CardArrayType,
                                             CardArray::CardArrayType,
                                             int)));
-    QObject::connect(stateManager->GetExchangePhaseState(),
-                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
-                                                CardArray::CardArrayType,
-                                                int)),
-                     cardManager,
-                     SLOT(CallTransferCards(CardArray::CardArrayType,
-                                            CardArray::CardArrayType,
-                                            int)));
-    QObject::connect(stateManager->GetExchangePhaseState(),
-                     SIGNAL(RequestSelectedCardsTransfer(
+    QObject::connect(stateManager,
+                     SIGNAL(SignalTransferSelectedCards(
                                 CardArray::CardArrayType,
                                 CardArray::CardArrayType)),
                      cardManager,
                      SLOT(CallTransferSelectedCards(
                               CardArray::CardArrayType,
                               CardArray::CardArrayType)));
-    QObject::connect(stateManager->GetExchangePhaseState(),
-                     SIGNAL(SignalEnableCardSelection()),
+    QObject::connect(stateManager,
+                     SIGNAL(SignalSetCardsSelectable(bool)),
                      cardManager,
-                     SLOT(EnableCardSelection()));
-    QObject::connect(stateManager->GetExchangePhaseState(),
-                     SIGNAL(SignalDisableCardSelection()),
-                     cardManager,
-                     SLOT(DisableCardSelection()));
+                     SLOT(SetCardsSelectable(bool)));
+
+    // Connect the signals from the scene.
     QObject::connect(scene,
                      SIGNAL(SignalCardSelectionsChanged(Card*)),
                      cardManager,
