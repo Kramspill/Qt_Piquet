@@ -10,10 +10,9 @@
 // Qt Header Files
 //------------------------------------------------------------------------------
 #include <QState>
-#include <QStateMachine>
 #include <QFinalState>
+#include <QStateMachine>
 #include <QEvent>
-#include <QTimer>
 #include <QPushButton>
 
 
@@ -40,30 +39,30 @@ protected:
     void           onEntry(QEvent*);
     void           onExit(QEvent*);
 
+public slots:
+    void           CallTransferComplete(void);
+    void           SetNumCardsTransferred(int numCardsTransferred);
+
 private slots:
-    void           CheckSelection(void);
-    void           TransferPlayerCards(void);
-    void           ExecuteCpuExchange(void);
-    void           TransferCpuCards(void);
+    void           SignalEnableCardsSelectable(void);
+    void           SignalDisableCardsSelectable(void);
+    void           PlayerDiscards(void);
+    void           PlayerDrawFromTalon(void);
+    void           CpuDiscards(void);
+    void           CpuDrawFromTalon(void);
 
 signals:
-    void           SignalEnableCardSelection(void);
-    void           SignalDisableCardSelection(void);
-    void           ValidSelection(void);
+    void           RequestCardsSelectable(bool);
     void           RequestCardTransfer(CardArray::CardArrayType,
                                        CardArray::CardArrayType, int);
     void           RequestSelectedCardsTransfer(CardArray::CardArrayType,
                                                 CardArray::CardArrayType);
-    void           PlayerDiscardFinished(void);
-    void           CpuExchangeFinished(void);
+    void           TransferComplete(void);
     void           ExchangePhaseFinished(void);
 
 private:
     QStateMachine* stateMachine;
-    QTimer*        playerDiscardTimer;
-    QTimer*        playerDrawTimer;
-    QTimer*        cpuDiscardTimer;
-    QTimer*        cpuDrawTimer;
+    int            cardsTransferred;
 };
 
 #endif // EXCHANGEPHASESTATE_H

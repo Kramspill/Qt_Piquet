@@ -54,6 +54,7 @@ signals:
                                                  CardArray::CardArrayType);
     void                   SignalSetCardsSelectable(bool);
     void                   SignalTransferComplete(void);
+    void                   SignalNumOfCardsTransferred(int);
 
 private:
     QStateMachine*         stateMachine;

@@ -43,55 +43,46 @@ void ExchangePhaseState::Initialize(QPushButton* button)
     // Initialize the state machine.
     stateMachine = new QStateMachine();
 
-    // Initialize the timers for the deals to allow animation.
-    playerDiscardTimer = new QTimer();
-    playerDrawTimer    = new QTimer();
-    cpuDiscardTimer    = new QTimer();
-    cpuDrawTimer       = new QTimer();
-
-    playerDiscardTimer->setSingleShot(true);
-    playerDrawTimer->setSingleShot(true);
-    cpuDiscardTimer->setSingleShot(true);
-    cpuDrawTimer->setSingleShot(true);
+    // Initialize member variable.
+    cardsTransferred = 0;
 
     // Initialize the states within the state machine.
-    QState*      playerExchange = new QState(stateMachine);
-    QState*      cpuExchange    = new QState(stateMachine);
-    QFinalState* finalState     = new QFinalState(stateMachine);
+    QState*      playerDiscard      = new QState(stateMachine);
+    QState*      playerDraw         = new QState(stateMachine);
+    QState*      cpuDiscard         = new QState(stateMachine);
+    QState*      cpuDraw            = new QState(stateMachine);
+    QFinalState* finalState         = new QFinalState(stateMachine);
 
     // Set the initial state for the state machine.
-    stateMachine->setInitialState(playerExchange);
+    stateMachine->setInitialState(playerDiscard);
 
-    // Setup the transitions from playerExchange.
-    playerExchange->addTransition(this, SIGNAL(ValidSelection()),
-                                  cpuExchange);
-    //playerExchange->addTransition(button, SIGNAL(ValidSelection()),
-    //                              finalState);
+    // Setup the transitions from playerDiscard.
+    playerDiscard->addTransition(this,  SIGNAL(TransferComplete()), playerDraw);
 
-    // Setup the transitions from cpuExchange.
-    cpuExchange->addTransition(this, SIGNAL(CpuExchangeFinished()), finalState);
-    //cpuExchange->addTransition(this, SIGNAL(CpuExchangeFinished()),
-    //                           playerExchange);
+    // Setup the transitions from playerDraw.
+    playerDraw->addTransition(   this,  SIGNAL(TransferComplete()), cpuDiscard);
+
+    // Setup the transitions from cpuDiscard.
+    cpuDiscard->addTransition(   this,  SIGNAL(TransferComplete()), cpuDraw);
+
+    // Setup the transitions from cpuDraw.
+    cpuDraw->addTransition(      this,  SIGNAL(TransferComplete()), finalState);
 
     // Setup the work done in each state.
-    connect(playerExchange, SIGNAL(entered()), this,
-            SIGNAL(SignalEnableCardSelection()));
-    connect(playerExchange, SIGNAL(exited()), this,
-            SIGNAL(SignalDisableCardSelection()));
-    connect(cpuExchange, SIGNAL(entered()), this, SLOT(ExecuteCpuExchange()));
-    connect(button, SIGNAL(clicked()), this, SLOT(CheckSelection()));
-    connect(stateMachine, SIGNAL(finished()), this,
+    connect(button,            SIGNAL(clicked()),  this,
+            SLOT(PlayerDiscards()));
+    connect(playerDiscard,     SIGNAL(entered()),  this,
+            SLOT(SignalEnableCardsSelectable()));
+    connect(playerDiscard,     SIGNAL(exited()),   this,
+            SLOT(SignalDisableCardsSelectable()));
+    connect(playerDraw,        SIGNAL(entered()),  this,
+            SLOT(PlayerDrawFromTalon()));
+    connect(cpuDiscard,        SIGNAL(entered()),  this,
+            SLOT(CpuDiscards()));
+    connect(cpuDraw,           SIGNAL(entered()),  this,
+            SLOT(CpuDrawFromTalon()));
+    connect(stateMachine,      SIGNAL(finished()), this,
             SIGNAL(ExchangePhaseFinished()));
-
-    // Animation delay timer setup.
-    connect(playerDiscardTimer, SIGNAL(timeout()), this,
-            SLOT(TransferPlayerCards()));
-    connect(playerDrawTimer,    SIGNAL(timeout()), this,
-            SIGNAL(ValidSelection()));
-    connect(cpuDiscardTimer,    SIGNAL(timeout()), this,
-            SLOT(TransferCpuCards()));
-    connect(cpuDrawTimer,    SIGNAL(timeout()), this,
-            SIGNAL(CpuExchangeFinished()));
 }
 
 
@@ -114,46 +105,75 @@ void ExchangePhaseState::onExit(QEvent*)
 
 
 //------------------------------------------------------------------------------
-// CheckSelection - Check the user's selection of cards to exchange is valid.
+// CallTransferComplete - Inform the state machine that a card transfer has been
+//                        completed.
 //------------------------------------------------------------------------------
-void ExchangePhaseState::CheckSelection(void)
+void ExchangePhaseState::CallTransferComplete(void)
 {
+    emit TransferComplete();
+}
 
+
+//------------------------------------------------------------------------------
+// SetNumCardsTransferred - Set the number of player cards discarded.
+//------------------------------------------------------------------------------
+void ExchangePhaseState::SetNumCardsTransferred(int numCardsTransferred)
+{
+    cardsTransferred = numCardsTransferred;
+}
+
+
+//------------------------------------------------------------------------------
+// SignalEnableCardsSelectable - Send a signal to enable card selection.
+//------------------------------------------------------------------------------
+void ExchangePhaseState::SignalEnableCardsSelectable(void)
+{
+    emit RequestCardsSelectable(true);
+}
+
+
+//------------------------------------------------------------------------------
+// SignalDisableCardsSelectable - Send a signal to disable card selection.
+//------------------------------------------------------------------------------
+void ExchangePhaseState::SignalDisableCardsSelectable(void)
+{
+    emit RequestCardsSelectable(false);
+}
+
+
+//------------------------------------------------------------------------------
+// PlayerDiscards - Player discards selected cards.
+//------------------------------------------------------------------------------
+void ExchangePhaseState::PlayerDiscards(void)
+{
     emit RequestSelectedCardsTransfer(CardArray::PLAYERHAND,
                                       CardArray::PLAYERDISCARDS);
-
-    playerDiscardTimer->start(100);
 }
 
 
 //------------------------------------------------------------------------------
-// TransferPlayerCards - Transfer the player's cards.
+// PlayerDrawFromTalon - Player draws new cards from the talon.
 //------------------------------------------------------------------------------
-void ExchangePhaseState::TransferPlayerCards(void)
+void ExchangePhaseState::PlayerDrawFromTalon(void)
 {
-    RequestCardTransfer(CardArray::TALON, CardArray::PLAYERHAND, 5);
-
-    playerDrawTimer->start(100);
+    emit RequestCardTransfer(CardArray::TALON, CardArray::PLAYERHAND,
+                             cardsTransferred);
 }
 
 
 //------------------------------------------------------------------------------
-// ExecuteCpuExchange - Commence the cpu's turn to exchange cards.
+// CpuDiscards - Cpu discards selected cards.
 //------------------------------------------------------------------------------
-void ExchangePhaseState::ExecuteCpuExchange(void)
+void ExchangePhaseState::CpuDiscards(void)
 {
     emit RequestCardTransfer(CardArray::CPUHAND, CardArray::CPUDISCARDS, 3);
-
-    cpuDiscardTimer->start(100);
 }
 
 
 //------------------------------------------------------------------------------
 // TransferCpuCards - Transfer the cpu's cards.
 //------------------------------------------------------------------------------
-void ExchangePhaseState::TransferCpuCards(void)
+void ExchangePhaseState::CpuDrawFromTalon(void)
 {
-    RequestCardTransfer(CardArray::TALON, CardArray::CPUHAND, 3);
-
-    cpuDrawTimer->start(100);
+    emit RequestCardTransfer(CardArray::TALON, CardArray::CPUHAND, 3);
 }

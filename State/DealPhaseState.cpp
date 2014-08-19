@@ -57,19 +57,18 @@ void DealPhaseState::Initialize(QPushButton* button)
     stateMachine->setInitialState(initialState);
 
     // Setup the transitions from initialState.
-    initialState->addTransition(button, SIGNAL(clicked()), dealToPlayer);
-    //initialState->addTransition(SomeObject, SIGNAL(clicked()), dealToCpu);
+    initialState->addTransition(button, SIGNAL(clicked()),        dealToPlayer);
 
     // Setup the transitions from dealToPlayer.
     dealToPlayer->addTransition(this, SIGNAL(TransferComplete()), dealToCpu);
-    dealToPlayer->addTransition(this, SIGNAL(BeginDealTalon()), dealTalon);
+    dealToPlayer->addTransition(this, SIGNAL(BeginDealTalon()),   dealTalon);
 
     // Setup the transitions from dealToCpu.
-    dealToCpu->addTransition(this, SIGNAL(TransferComplete()), dealToPlayer);
-    dealToCpu->addTransition(this, SIGNAL(BeginDealTalon()), dealTalon);
+    dealToCpu->addTransition(   this, SIGNAL(TransferComplete()), dealToPlayer);
+    dealToCpu->addTransition(   this, SIGNAL(BeginDealTalon()),   dealTalon);
 
     // Setup the transitions from dealTalon.
-    dealTalon->addTransition(this, SIGNAL(TransferComplete()), finalState);
+    dealTalon->addTransition(   this, SIGNAL(TransferComplete()), finalState);
 
     // Setup the work done in each state.
     connect(dealToPlayer, SIGNAL(entered()),  this, SLOT(DealToPlayer()));
@@ -126,7 +125,6 @@ void DealPhaseState::DealToPlayer(void)
     if ( dealCounter > 0 )
     {
         emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
-
         dealCounter--;
     }
     else
@@ -145,7 +143,6 @@ void DealPhaseState::DealToCpu(void)
     if ( dealCounter > 0 )
     {
         emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND, 3);
-
         dealCounter--;
     }
     else

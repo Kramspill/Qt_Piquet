@@ -10,8 +10,8 @@
 // Qt Header Files
 //------------------------------------------------------------------------------
 #include <QState>
-#include <QStateMachine>
 #include <QFinalState>
+#include <QStateMachine>
 #include <QEvent>
 #include <QPushButton>
 

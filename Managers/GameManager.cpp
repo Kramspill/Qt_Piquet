@@ -88,6 +88,10 @@ void GameManager::ConnectSignals(void)
                      SIGNAL(SignalTransferComplete()),
                      stateManager,
                      SIGNAL(SignalTransferComplete()));
+    QObject::connect(cardManager,
+                     SIGNAL(SignalNumOfCardsTransferred(int)),
+                     stateManager,
+                     SIGNAL(SignalNumOfCardsTransferred(int)));
 
     // Connect the signals from the state manager.
     QObject::connect(stateManager,

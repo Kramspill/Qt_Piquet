@@ -15,8 +15,6 @@
 #include <QPropertyAnimation>
 #include <QPointF>
 
-#include <QDebug>
-
 
 //------------------------------------------------------------------------------
 // My Header Files

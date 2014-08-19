@@ -67,6 +67,7 @@ public slots:
 
 signals:
     void       SignalTransferComplete(void);
+    void       SignalNumOfCardsTransferred(int);
 
 private:
     CardArray* deck;

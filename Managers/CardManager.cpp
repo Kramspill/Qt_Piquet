@@ -51,6 +51,7 @@ void CardManager::Initialize(Scene* scene)
     // Initialize the timer to allow animation to finish before informing of
     // state changes.
     transitionTimer = new QTimer();
+    transitionTimer->setSingleShot(true);
     connect(transitionTimer, SIGNAL(timeout()), this,
             SIGNAL(SignalTransferComplete()));
 
@@ -92,15 +93,22 @@ void CardManager::TransferSelectedCards(CardArray* source,
 {
     int size = source->GetSelectedCardsSize();
 
-    for (int index = 0; index < size; index++)
+    if ( size > 0 )
     {
-        // Remove the card from the source array, and add it to the destination.
-        Card* card = source->RemoveSelectedCard();
-        destination->AddCard(card);
-    }
+        for (int index = 0; index < size; index++)
+        {
+            // Remove the card from the source array, and add it to the
+            // destination.
+            Card* card = source->RemoveSelectedCard();
+            destination->AddCard(card);
+        }
 
-    // Delay the signal of transfer completion for animation purposes.
-    transitionTimer->start(100);
+        // Delay the signal of transfer completion for animation purposes.
+        transitionTimer->start(100);
+
+        // Report back how many cards were transferred.
+        emit SignalNumOfCardsTransferred(size);
+    }
 }
 
 
@@ -260,9 +268,7 @@ void CardManager::AddCardsToScene(Scene* scene)
     {
         card = deck->GetCard(index);
 
-        //card->setFlag(QGraphicsItem::ItemIsMovable, true);
         card->setScale(0.5);
-
         scene->addItem(card);
     }
 }

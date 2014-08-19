@@ -12,7 +12,6 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsItem>
-#include <QTransform>
 
 
 //------------------------------------------------------------------------------

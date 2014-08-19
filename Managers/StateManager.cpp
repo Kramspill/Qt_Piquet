@@ -120,7 +120,7 @@ TrickPhaseState* StateManager::GetTrickPhaseState(void)
 
 
 //------------------------------------------------------------------------------
-// ConnectSignals - Connect the signals.
+// ConnectSignals - Connect the signals to/from this class.
 //------------------------------------------------------------------------------
 void StateManager::ConnectSignals(void)
 {
@@ -155,12 +155,17 @@ void StateManager::ConnectSignals(void)
                      SIGNAL(SignalTransferSelectedCards(
                                 CardArray::CardArrayType,
                                 CardArray::CardArrayType)));
-    QObject::connect(this,
-                     SIGNAL(SignalTransferComplete()),
-                     exchangePhaseState,
-                     SLOT(CallTransferComplete()));
+
     QObject::connect(exchangePhaseState,
                      SIGNAL(RequestCardsSelectable(bool)),
                      this,
                      SIGNAL(SignalSetCardsSelectable(bool)));
+    QObject::connect(this,
+                     SIGNAL(SignalTransferComplete()),
+                     exchangePhaseState,
+                     SLOT(CallTransferComplete()));
+    QObject::connect(this,
+                     SIGNAL(SignalNumOfCardsTransferred(int)),
+                     exchangePhaseState,
+                     SLOT(SetNumCardsTransferred(int)));
 }
