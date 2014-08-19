@@ -13,7 +13,6 @@
 #include <QStateMachine>
 #include <QFinalState>
 #include <QEvent>
-#include <QTimer>
 #include <QPushButton>
 
 
@@ -43,6 +42,9 @@ protected:
 private:
     void           ResetDealCounter(void);
 
+public slots:
+    void           CallTransferComplete(void);
+
 private slots:
     void           DealToPlayer(void);
     void           DealToCpu(void);
@@ -51,17 +53,12 @@ private slots:
 signals:
     void           RequestCardTransfer(CardArray::CardArrayType,
                                        CardArray::CardArrayType, int);
-    void           BeginDealToPlayer(void);
-    void           BeginDealToCpu(void);
+    void           TransferComplete(void);
     void           BeginDealTalon(void);
-    void           DealTalonFinished(void);
     void           DealPhaseFinished(void);
 
 private:
     QStateMachine* stateMachine;
-    QTimer*        DealToPlayerTimer;
-    QTimer*        DealToCpuTimer;
-    QTimer*        DealTalonTimer;
     int            dealCounter;
 };
 
