@@ -48,6 +48,12 @@ void CardManager::Initialize(Scene* scene)
     cpuDiscards    = new CardArray(CardArray::CPUDISCARDS,     210,  -180);
     previousTricks = new CardArray(CardArray::PREVIOUSTRICKS, - 50,     0);
 
+    // Initialize the timer to allow animation to finish before informing of
+    // state changes.
+    transitionTimer = new QTimer();
+    connect(transitionTimer, SIGNAL(timeout()), this,
+            SIGNAL(SignalTransferComplete()));
+
     // Initialize all the cards used in the game and add them to the deck.
     InitializeCards();
 
@@ -71,6 +77,9 @@ void CardManager::TransferCards(CardArray* source, CardArray* destination,
         Card* card = source->RemoveTopCard();
         destination->AddCard(card);
     }
+
+    // Delay the signal of transfer completion for animation purposes.
+    transitionTimer->start(100);
 }
 
 
@@ -89,6 +98,9 @@ void CardManager::TransferSelectedCards(CardArray* source,
         Card* card = source->RemoveSelectedCard();
         destination->AddCard(card);
     }
+
+    // Delay the signal of transfer completion for animation purposes.
+    transitionTimer->start(100);
 }
 
 
@@ -344,9 +356,10 @@ void CardManager::CallTransferSelectedCards(CardArray::CardArrayType src,
 
 
 //------------------------------------------------------------------------------
-// EnableCardSelection - Enable a CardArray's cards to be selected.
+// SetCardsSelectable - Enable/Disable a CardArray's cards to be selected.
 //------------------------------------------------------------------------------
-void CardManager::EnableCardSelection(CardArray::CardArrayType cardArrayType)
+void CardManager::SetCardsSelectable(bool setSelectable,
+                                     CardArray::CardArrayType cardArrayType)
 {
     Card*      card;
     CardArray* cardArray = GetDesiredCardArray(cardArrayType);
@@ -356,25 +369,10 @@ void CardManager::EnableCardSelection(CardArray::CardArrayType cardArrayType)
     {
         card = cardArray->GetCard(index);
 
-        card->setFlag(QGraphicsItem::ItemIsSelectable, true);
-    }
-}
-
-
-//------------------------------------------------------------------------------
-// DisableCardSelection - Disable a CardArray's cards to be selected.
-//------------------------------------------------------------------------------
-void CardManager::DisableCardSelection(CardArray::CardArrayType cardArrayType)
-{
-    Card*      card;
-    CardArray* cardArray = GetDesiredCardArray(cardArrayType);
-
-    // Loop through the array setting the ItemIsSelectable property.
-    for ( int index = 0; index < cardArray->GetSize(); index++ )
-    {
-        card = cardArray->GetCard(index);
-
-        card->setFlag(QGraphicsItem::ItemIsSelectable, false);
+        if ( setSelectable )
+            card->setFlag(QGraphicsItem::ItemIsSelectable, true);
+        else
+            card->setFlag(QGraphicsItem::ItemIsSelectable, false);
     }
 }
 

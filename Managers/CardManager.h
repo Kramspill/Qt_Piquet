@@ -10,6 +10,7 @@
 // Qt Header Files
 //------------------------------------------------------------------------------
 #include <QObject>
+#include <QTimer>
 
 
 //------------------------------------------------------------------------------
@@ -58,12 +59,14 @@ public slots:
                                  int numOfCards);
     void       CallTransferSelectedCards(CardArray::CardArrayType src,
                                          CardArray::CardArrayType dest);
-    void       EnableCardSelection(CardArray::CardArrayType
-                                   cardArrayType = CardArray::PLAYERHAND);
-    void       DisableCardSelection(CardArray::CardArrayType
-                                    cardArrayType = CardArray::PLAYERHAND);
+    void       SetCardsSelectable(bool setSelectable,
+                                  CardArray::CardArrayType
+                                  cardArrayType = CardArray::PLAYERHAND);
     void       CardSelectionsChanged(Card* card, CardArray::CardArrayType
                                      cardArrayType = CardArray::PLAYERHAND);
+
+signals:
+    void       SignalTransferComplete(void);
 
 private:
     CardArray* deck;
@@ -74,6 +77,7 @@ private:
     CardArray* cpuDiscards;
     CardArray* previousTricks;
     Card       currentTrick;
+    QTimer*    transitionTimer;
 };
 
 #endif // CARDMANAGER_H
