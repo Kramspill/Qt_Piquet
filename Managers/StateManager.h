@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 // Qt Header Files
 //------------------------------------------------------------------------------
+#include <QObject>
 #include <QPushButton>
 #include <QStateMachine>
 
@@ -25,19 +26,34 @@
 //------------------------------------------------------------------------------
 // Class: StateManager
 //------------------------------------------------------------------------------
-class StateManager
+class StateManager : public QObject
 {
+    Q_OBJECT
 public:
     StateManager(void);
     StateManager(StateManager&);
     ~StateManager(void);
 
-    void                   Initialize(QPushButton* button, QPushButton* button2);
+    void                   Initialize(QPushButton* button,
+                                      QPushButton* button2);
 
     DealPhaseState*        GetDealPhaseState(void);
     ExchangePhaseState*    GetExchangePhaseState(void);
     DeclarationPhaseState* GetDeclarationPhaseState(void);
     TrickPhaseState*       GetTrickPhaseState(void);
+
+private:
+    void                   ConnectSignals(void);
+
+signals:
+    void                   SignalCardTransfer(CardArray::CardArrayType,
+                                              CardArray::CardArrayType,
+                                              int);
+    void                   SignalTransferSelectedCards(
+                                                 CardArray::CardArrayType,
+                                                 CardArray::CardArrayType);
+    void                   SignalSetCardsSelectable(bool);
+    void                   SignalTransferComplete(void);
 
 private:
     QStateMachine*         stateMachine;
