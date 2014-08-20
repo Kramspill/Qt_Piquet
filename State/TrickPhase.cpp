@@ -1,18 +1,18 @@
 //------------------------------------------------------------------------------
-// Filename: TrickPhaseState.cpp
+// Filename: TrickPhase.cpp
 // Description: Represents the trick phase in the game.
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
-#include "TrickPhaseState.h"
+#include "TrickPhase.h"
 
 
 //------------------------------------------------------------------------------
 // Constructor
 //------------------------------------------------------------------------------
-TrickPhaseState::TrickPhaseState(QState* parent) :
+TrickPhase::TrickPhase(QState* parent) :
     QState(parent)
 {
 }
@@ -21,7 +21,7 @@ TrickPhaseState::TrickPhaseState(QState* parent) :
 //------------------------------------------------------------------------------
 // Copy Constructor
 //------------------------------------------------------------------------------
-TrickPhaseState::TrickPhaseState(TrickPhaseState&) :
+TrickPhase::TrickPhase(TrickPhase&) :
     QState()
 {
 }
@@ -30,7 +30,7 @@ TrickPhaseState::TrickPhaseState(TrickPhaseState&) :
 //------------------------------------------------------------------------------
 // Destructor
 //------------------------------------------------------------------------------
-TrickPhaseState::~TrickPhaseState(void)
+TrickPhase::~TrickPhase(void)
 {
 }
 
@@ -38,7 +38,7 @@ TrickPhaseState::~TrickPhaseState(void)
 //------------------------------------------------------------------------------
 // onEntry - Override of QState::onEntry.
 //------------------------------------------------------------------------------
-void TrickPhaseState::onEntry(QEvent*)
+void TrickPhase::onEntry(QEvent*)
 {
 
 }
@@ -47,7 +47,7 @@ void TrickPhaseState::onEntry(QEvent*)
 //------------------------------------------------------------------------------
 // onExit - Override of QState::onExit.
 //------------------------------------------------------------------------------
-void TrickPhaseState::onExit(QEvent*)
+void TrickPhase::onExit(QEvent*)
 {
 
 }

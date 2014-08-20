@@ -1,10 +1,10 @@
 //------------------------------------------------------------------------------
-// Filename: TrickPhaseState.h
-// Description: Header file for TrickPhaseState.
+// Filename: TrickPhase.h
+// Description: Header file for TrickPhase.
 //------------------------------------------------------------------------------
 
-#ifndef TRICKPHASESTATE_H
-#define TRICKPHASESTATE_H
+#ifndef TRICKPHASE_H
+#define TRICKPHASE_H
 
 //------------------------------------------------------------------------------
 // Qt Header Files
@@ -16,16 +16,16 @@
 //------------------------------------------------------------------------------
 // Class: DealPhase
 //------------------------------------------------------------------------------
-class TrickPhaseState : public QState
+class TrickPhase : public QState
 {
 public:
-    TrickPhaseState(QState* parent = 0);
-    TrickPhaseState(TrickPhaseState&);
-    ~TrickPhaseState(void);
+    TrickPhase(QState* parent = 0);
+    TrickPhase(TrickPhase&);
+    ~TrickPhase(void);
 
 protected:
     void onEntry(QEvent*);
     void onExit(QEvent*);
 };
 
-#endif // TRICKPHASESTATE_H
+#endif // TRICKPHASE_H

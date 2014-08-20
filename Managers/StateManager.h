@@ -20,7 +20,7 @@
 #include "State/DealPhase.h"
 #include "State/ExchangePhase.h"
 #include "State/DeclarationPhase.h"
-#include "State/TrickPhaseState.h"
+#include "State/TrickPhase.h"
 
 
 //------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ public:
     DealPhase*        GetDealPhase(void);
     ExchangePhase*    GetExchangePhase(void);
     DeclarationPhase* GetDeclarationPhase(void);
-    TrickPhaseState*       GetTrickPhaseState(void);
+    TrickPhase*       GetTrickPhase(void);
 
 private:
     void                   ConnectSignals(void);
@@ -61,7 +61,7 @@ private:
     DealPhase*        dealPhase;
     ExchangePhase*    exchangePhase;
     DeclarationPhase* declarationPhase;
-    TrickPhaseState*       trickPhaseState;
+    TrickPhase*       trickPhase;
 };
 
 #endif // STATEMANAGER_H
