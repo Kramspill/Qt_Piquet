@@ -43,8 +43,8 @@ void StateManager::Initialize(QPushButton* button, QPushButton* button2)
     stateMachine = new QStateMachine();
 
     // Allocate memory to the phases and initialize them.
-    dealPhaseState = new DealPhaseState(stateMachine);
-    dealPhaseState->Initialize(button);
+    dealPhase = new DealPhase(stateMachine);
+    dealPhase->Initialize(button);
 
     exchangePhaseState = new ExchangePhaseState(stateMachine);
     exchangePhaseState->Initialize(button2);
@@ -58,10 +58,10 @@ void StateManager::Initialize(QPushButton* button, QPushButton* button2)
     */
 
     // Set the initial state for the state machine.
-    stateMachine->setInitialState(dealPhaseState);
+    stateMachine->setInitialState(dealPhase);
 
     // Setup the transitions between the states.
-    dealPhaseState->addTransition(dealPhaseState, SIGNAL(DealPhaseFinished()),
+    dealPhase->addTransition(dealPhase, SIGNAL(DealPhaseFinished()),
                                   exchangePhaseState);
     /*
     exchangePhaseState->addTransition(SomeObject, SIGNAL(SomeSignal()),
@@ -80,12 +80,12 @@ void StateManager::Initialize(QPushButton* button, QPushButton* button2)
 
 
 //------------------------------------------------------------------------------
-// GetDealPhaseState - Accessor for StateManager's dealPhaseState member
+// GetDealPhase - Accessor for StateManager's dealPhase member
 //                     variable.
 //------------------------------------------------------------------------------
-DealPhaseState* StateManager::GetDealPhaseState(void)
+DealPhase* StateManager::GetDealPhase(void)
 {
-    return dealPhaseState;
+    return dealPhase;
 }
 
 
@@ -125,7 +125,7 @@ TrickPhaseState* StateManager::GetTrickPhaseState(void)
 void StateManager::ConnectSignals(void)
 {
     // Connect signals to/from the deal phase state.
-    QObject::connect(dealPhaseState,
+    QObject::connect(dealPhase,
                      SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
                                                 CardArray::CardArrayType,
                                                 int)),
@@ -135,7 +135,7 @@ void StateManager::ConnectSignals(void)
                                                int)));
     QObject::connect(this,
                      SIGNAL(SignalTransferComplete()),
-                     dealPhaseState,
+                     dealPhase,
                      SLOT(CallTransferComplete()));
 
     // Connect signals to/fom the exchange phase state.

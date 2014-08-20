@@ -1,18 +1,18 @@
 //------------------------------------------------------------------------------
-// Filename: DealPhaseState.cpp
+// Filename: DealPhase.cpp
 // Description: Represents the deal phase in the game.
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
-#include "DealPhaseState.h"
+#include "DealPhase.h"
 
 
 //------------------------------------------------------------------------------
 // Constructor
 //------------------------------------------------------------------------------
-DealPhaseState::DealPhaseState(QState* parent) :
+DealPhase::DealPhase(QState* parent) :
     QState(parent)
 {
 }
@@ -21,7 +21,7 @@ DealPhaseState::DealPhaseState(QState* parent) :
 //------------------------------------------------------------------------------
 // Copy Constructor
 //------------------------------------------------------------------------------
-DealPhaseState::DealPhaseState(DealPhaseState&) :
+DealPhase::DealPhase(DealPhase&) :
     QState()
 {
 }
@@ -30,7 +30,7 @@ DealPhaseState::DealPhaseState(DealPhaseState&) :
 //------------------------------------------------------------------------------
 // Destructor
 //------------------------------------------------------------------------------
-DealPhaseState::~DealPhaseState(void)
+DealPhase::~DealPhase(void)
 {
 }
 
@@ -38,7 +38,7 @@ DealPhaseState::~DealPhaseState(void)
 //------------------------------------------------------------------------------
 // Initialize - Initialize and execute the internal state machine of this class.
 //------------------------------------------------------------------------------
-void DealPhaseState::Initialize(QPushButton* button)
+void DealPhase::Initialize(QPushButton* button)
 {
     // Initialize the state machine.
     stateMachine = new QStateMachine();
@@ -82,7 +82,7 @@ void DealPhaseState::Initialize(QPushButton* button)
 //------------------------------------------------------------------------------
 // onEntry - Override of QState::onEntry.
 //------------------------------------------------------------------------------
-void DealPhaseState::onEntry(QEvent*)
+void DealPhase::onEntry(QEvent*)
 {
     stateMachine->start();
 }
@@ -91,7 +91,7 @@ void DealPhaseState::onEntry(QEvent*)
 //------------------------------------------------------------------------------
 // onExit - Override of QState::onExit.
 //------------------------------------------------------------------------------
-void DealPhaseState::onExit(QEvent*)
+void DealPhase::onExit(QEvent*)
 {
 
 }
@@ -100,7 +100,7 @@ void DealPhaseState::onExit(QEvent*)
 //------------------------------------------------------------------------------
 // ResetDealCounter - Reset the dealCounter member variable.
 //------------------------------------------------------------------------------
-void DealPhaseState::ResetDealCounter(void)
+void DealPhase::ResetDealCounter(void)
 {
     dealCounter = 8;
 }
@@ -110,7 +110,7 @@ void DealPhaseState::ResetDealCounter(void)
 // CallTransferComplete - Inform the state machine that a card transfer has been
 //                        completed.
 //------------------------------------------------------------------------------
-void DealPhaseState::CallTransferComplete(void)
+void DealPhase::CallTransferComplete(void)
 {
     emit TransferComplete();
 }
@@ -120,7 +120,7 @@ void DealPhaseState::CallTransferComplete(void)
 // DealToPlayer - Function that performs the required operations for the
 //                dealToPlayer state.
 //------------------------------------------------------------------------------
-void DealPhaseState::DealToPlayer(void)
+void DealPhase::DealToPlayer(void)
 {
     if ( dealCounter > 0 )
     {
@@ -138,7 +138,7 @@ void DealPhaseState::DealToPlayer(void)
 // DealToCpu - Function that performs the required operations for the dealToCpu
 //             state.
 //------------------------------------------------------------------------------
-void DealPhaseState::DealToCpu(void)
+void DealPhase::DealToCpu(void)
 {
     if ( dealCounter > 0 )
     {
@@ -156,7 +156,7 @@ void DealPhaseState::DealToCpu(void)
 // DealTalon - Function that performs the required operations for the dealTalon
 //             state.
 //------------------------------------------------------------------------------
-void DealPhaseState::DealTalon(void)
+void DealPhase::DealTalon(void)
 {
     emit RequestCardTransfer(CardArray::DECK, CardArray::TALON, 8);
 }

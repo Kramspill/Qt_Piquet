@@ -17,7 +17,7 @@
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
-#include "State/DealPhaseState.h"
+#include "State/DealPhase.h"
 #include "State/ExchangePhaseState.h"
 #include "State/DeclarationPhaseState.h"
 #include "State/TrickPhaseState.h"
@@ -37,7 +37,7 @@ public:
     void                   Initialize(QPushButton* button,
                                       QPushButton* button2);
 
-    DealPhaseState*        GetDealPhaseState(void);
+    DealPhase*        GetDealPhase(void);
     ExchangePhaseState*    GetExchangePhaseState(void);
     DeclarationPhaseState* GetDeclarationPhaseState(void);
     TrickPhaseState*       GetTrickPhaseState(void);
@@ -58,7 +58,7 @@ signals:
 
 private:
     QStateMachine*         stateMachine;
-    DealPhaseState*        dealPhaseState;
+    DealPhase*        dealPhase;
     ExchangePhaseState*    exchangePhaseState;
     DeclarationPhaseState* declarationPhaseState;
     TrickPhaseState*       trickPhaseState;

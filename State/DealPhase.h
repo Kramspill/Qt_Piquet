@@ -1,10 +1,10 @@
 //------------------------------------------------------------------------------
-// Filename: DealPhaseState.h
-// Description: Header file for DealPhaseState.
+// Filename: DealPhase.h
+// Description: Header file for DealPhase.
 //------------------------------------------------------------------------------
 
-#ifndef DEALPHASESTATE_H
-#define DEALPHASESTATE_H
+#ifndef DEALPHASE_H
+#define DEALPHASE_H
 
 //------------------------------------------------------------------------------
 // Qt Header Files
@@ -23,15 +23,15 @@
 
 
 //------------------------------------------------------------------------------
-// Class: DealPhaseState
+// Class: DealPhase
 //------------------------------------------------------------------------------
-class DealPhaseState : public QState
+class DealPhase : public QState
 {
     Q_OBJECT
 public:
-    DealPhaseState(QState* parent = 0);
-    DealPhaseState(DealPhaseState&);
-    ~DealPhaseState(void);
+    DealPhase(QState* parent = 0);
+    DealPhase(DealPhase&);
+    ~DealPhase(void);
 
     void           Initialize(QPushButton* button);
 
@@ -62,4 +62,4 @@ private:
     int            dealCounter;
 };
 
-#endif // DEALPHASESTATE_H
+#endif // DEALPHASE_H
