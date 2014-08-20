@@ -1,18 +1,18 @@
 //------------------------------------------------------------------------------
-// Filename: ExchangePhaseState.cpp
+// Filename: ExchangePhase.cpp
 // Description: Represents the exchange phase in the game.
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
-#include "ExchangePhaseState.h"
+#include "ExchangePhase.h"
 
 
 //------------------------------------------------------------------------------
 // Constructor
 //------------------------------------------------------------------------------
-ExchangePhaseState::ExchangePhaseState(QState* parent) :
+ExchangePhase::ExchangePhase(QState* parent) :
     QState(parent)
 {
 }
@@ -21,7 +21,7 @@ ExchangePhaseState::ExchangePhaseState(QState* parent) :
 //------------------------------------------------------------------------------
 // Copy Constructor
 //------------------------------------------------------------------------------
-ExchangePhaseState::ExchangePhaseState(ExchangePhaseState&) :
+ExchangePhase::ExchangePhase(ExchangePhase&) :
     QState()
 {
 }
@@ -30,7 +30,7 @@ ExchangePhaseState::ExchangePhaseState(ExchangePhaseState&) :
 //------------------------------------------------------------------------------
 // Destructor
 //------------------------------------------------------------------------------
-ExchangePhaseState::~ExchangePhaseState(void)
+ExchangePhase::~ExchangePhase(void)
 {
 }
 
@@ -38,7 +38,7 @@ ExchangePhaseState::~ExchangePhaseState(void)
 //------------------------------------------------------------------------------
 // Initialize - Initialize and execute the internal state machine of this class.
 //------------------------------------------------------------------------------
-void ExchangePhaseState::Initialize(QPushButton* button)
+void ExchangePhase::Initialize(QPushButton* button)
 {
     // Initialize the state machine.
     stateMachine = new QStateMachine();
@@ -89,7 +89,7 @@ void ExchangePhaseState::Initialize(QPushButton* button)
 //------------------------------------------------------------------------------
 // onEntry - Override of QState::onEntry.
 //------------------------------------------------------------------------------
-void ExchangePhaseState::onEntry(QEvent*)
+void ExchangePhase::onEntry(QEvent*)
 {
     stateMachine->start();
 }
@@ -98,7 +98,7 @@ void ExchangePhaseState::onEntry(QEvent*)
 //------------------------------------------------------------------------------
 // onExit - Override of QState::onExit.
 //------------------------------------------------------------------------------
-void ExchangePhaseState::onExit(QEvent*)
+void ExchangePhase::onExit(QEvent*)
 {
 
 }
@@ -108,7 +108,7 @@ void ExchangePhaseState::onExit(QEvent*)
 // CallTransferComplete - Inform the state machine that a card transfer has been
 //                        completed.
 //------------------------------------------------------------------------------
-void ExchangePhaseState::CallTransferComplete(void)
+void ExchangePhase::CallTransferComplete(void)
 {
     emit TransferComplete();
 }
@@ -117,7 +117,7 @@ void ExchangePhaseState::CallTransferComplete(void)
 //------------------------------------------------------------------------------
 // SetNumCardsTransferred - Set the number of player cards discarded.
 //------------------------------------------------------------------------------
-void ExchangePhaseState::SetNumCardsTransferred(int numCardsTransferred)
+void ExchangePhase::SetNumCardsTransferred(int numCardsTransferred)
 {
     cardsTransferred = numCardsTransferred;
 }
@@ -126,7 +126,7 @@ void ExchangePhaseState::SetNumCardsTransferred(int numCardsTransferred)
 //------------------------------------------------------------------------------
 // SignalEnableCardsSelectable - Send a signal to enable card selection.
 //------------------------------------------------------------------------------
-void ExchangePhaseState::SignalEnableCardsSelectable(void)
+void ExchangePhase::SignalEnableCardsSelectable(void)
 {
     emit RequestCardsSelectable(true);
 }
@@ -135,7 +135,7 @@ void ExchangePhaseState::SignalEnableCardsSelectable(void)
 //------------------------------------------------------------------------------
 // SignalDisableCardsSelectable - Send a signal to disable card selection.
 //------------------------------------------------------------------------------
-void ExchangePhaseState::SignalDisableCardsSelectable(void)
+void ExchangePhase::SignalDisableCardsSelectable(void)
 {
     emit RequestCardsSelectable(false);
 }
@@ -144,7 +144,7 @@ void ExchangePhaseState::SignalDisableCardsSelectable(void)
 //------------------------------------------------------------------------------
 // PlayerDiscards - Player discards selected cards.
 //------------------------------------------------------------------------------
-void ExchangePhaseState::PlayerDiscards(void)
+void ExchangePhase::PlayerDiscards(void)
 {
     emit RequestSelectedCardsTransfer(CardArray::PLAYERHAND,
                                       CardArray::PLAYERDISCARDS);
@@ -154,7 +154,7 @@ void ExchangePhaseState::PlayerDiscards(void)
 //------------------------------------------------------------------------------
 // PlayerDrawFromTalon - Player draws new cards from the talon.
 //------------------------------------------------------------------------------
-void ExchangePhaseState::PlayerDrawFromTalon(void)
+void ExchangePhase::PlayerDrawFromTalon(void)
 {
     emit RequestCardTransfer(CardArray::TALON, CardArray::PLAYERHAND,
                              cardsTransferred);
@@ -164,7 +164,7 @@ void ExchangePhaseState::PlayerDrawFromTalon(void)
 //------------------------------------------------------------------------------
 // CpuDiscards - Cpu discards selected cards.
 //------------------------------------------------------------------------------
-void ExchangePhaseState::CpuDiscards(void)
+void ExchangePhase::CpuDiscards(void)
 {
     emit RequestCardTransfer(CardArray::CPUHAND, CardArray::CPUDISCARDS, 3);
 }
@@ -173,7 +173,7 @@ void ExchangePhaseState::CpuDiscards(void)
 //------------------------------------------------------------------------------
 // TransferCpuCards - Transfer the cpu's cards.
 //------------------------------------------------------------------------------
-void ExchangePhaseState::CpuDrawFromTalon(void)
+void ExchangePhase::CpuDrawFromTalon(void)
 {
     emit RequestCardTransfer(CardArray::TALON, CardArray::CPUHAND, 3);
 }

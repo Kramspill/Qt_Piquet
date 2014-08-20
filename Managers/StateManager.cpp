@@ -46,8 +46,8 @@ void StateManager::Initialize(QPushButton* button, QPushButton* button2)
     dealPhase = new DealPhase(stateMachine);
     dealPhase->Initialize(button);
 
-    exchangePhaseState = new ExchangePhaseState(stateMachine);
-    exchangePhaseState->Initialize(button2);
+    exchangePhase = new ExchangePhase(stateMachine);
+    exchangePhase->Initialize(button2);
 
     /*
     declarationPhase = new DeclarationPhase();
@@ -62,9 +62,9 @@ void StateManager::Initialize(QPushButton* button, QPushButton* button2)
 
     // Setup the transitions between the states.
     dealPhase->addTransition(dealPhase, SIGNAL(DealPhaseFinished()),
-                                  exchangePhaseState);
+                                  exchangePhase);
     /*
-    exchangePhaseState->addTransition(SomeObject, SIGNAL(SomeSignal()),
+    exchangePhase->addTransition(SomeObject, SIGNAL(SomeSignal()),
                                       declarationPhase);
     declarationPhase->addTransition(SomeObject, SIGNAL(SomeSignal()),
                                          trickPhaseState);
@@ -90,12 +90,12 @@ DealPhase* StateManager::GetDealPhase(void)
 
 
 //------------------------------------------------------------------------------
-// GetExchangePhaseState - Accessor for StateManager's exchangePhaseState member
+// GetExchangePhase - Accessor for StateManager's exchangePhase member
 //                         variable.
 //------------------------------------------------------------------------------
-ExchangePhaseState* StateManager::GetExchangePhaseState(void)
+ExchangePhase* StateManager::GetExchangePhase(void)
 {
-    return exchangePhaseState;
+    return exchangePhase;
 }
 
 
@@ -139,7 +139,7 @@ void StateManager::ConnectSignals(void)
                      SLOT(CallTransferComplete()));
 
     // Connect signals to/fom the exchange phase state.
-    QObject::connect(exchangePhaseState,
+    QObject::connect(exchangePhase,
                      SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
                                                 CardArray::CardArrayType,
                                                 int)),
@@ -147,7 +147,7 @@ void StateManager::ConnectSignals(void)
                      SIGNAL(SignalCardTransfer(CardArray::CardArrayType,
                                                CardArray::CardArrayType,
                                                int)));
-    QObject::connect(exchangePhaseState,
+    QObject::connect(exchangePhase,
                      SIGNAL(RequestSelectedCardsTransfer(
                                 CardArray::CardArrayType,
                                 CardArray::CardArrayType)),
@@ -156,16 +156,16 @@ void StateManager::ConnectSignals(void)
                                 CardArray::CardArrayType,
                                 CardArray::CardArrayType)));
 
-    QObject::connect(exchangePhaseState,
+    QObject::connect(exchangePhase,
                      SIGNAL(RequestCardsSelectable(bool)),
                      this,
                      SIGNAL(SignalSetCardsSelectable(bool)));
     QObject::connect(this,
                      SIGNAL(SignalTransferComplete()),
-                     exchangePhaseState,
+                     exchangePhase,
                      SLOT(CallTransferComplete()));
     QObject::connect(this,
                      SIGNAL(SignalNumOfCardsTransferred(int)),
-                     exchangePhaseState,
+                     exchangePhase,
                      SLOT(SetNumCardsTransferred(int)));
 }

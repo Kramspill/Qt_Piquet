@@ -1,10 +1,10 @@
 //------------------------------------------------------------------------------
-// Filename: ExchangePhaseState.h
-// Description: Header file for ExchangePhaseState.
+// Filename: ExchangePhase.h
+// Description: Header file for ExchangePhase.
 //------------------------------------------------------------------------------
 
-#ifndef EXCHANGEPHASESTATE_H
-#define EXCHANGEPHASESTATE_H
+#ifndef EXCHANGEPHASE_H
+#define EXCHANGEPHASE_H
 
 //------------------------------------------------------------------------------
 // Qt Header Files
@@ -23,15 +23,15 @@
 
 
 //------------------------------------------------------------------------------
-// Class: ExchangePhaseState
+// Class: ExchangePhase
 //------------------------------------------------------------------------------
-class ExchangePhaseState : public QState
+class ExchangePhase : public QState
 {
     Q_OBJECT
 public:
-    ExchangePhaseState(QState* parent = 0);
-    ExchangePhaseState(ExchangePhaseState&);
-    ~ExchangePhaseState(void);
+    ExchangePhase(QState* parent = 0);
+    ExchangePhase(ExchangePhase&);
+    ~ExchangePhase(void);
 
     void           Initialize(QPushButton* button);
 
@@ -65,4 +65,4 @@ private:
     int            cardsTransferred;
 };
 
-#endif // EXCHANGEPHASESTATE_H
+#endif // EXCHANGEPHASE_H

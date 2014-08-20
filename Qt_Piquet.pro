@@ -23,10 +23,10 @@ SOURCES +=\
     Cards/Card.cpp \
     View/View.cpp \
     Scene/Scene.cpp \
-    State/ExchangePhaseState.cpp \
     State/TrickPhaseState.cpp \
     State/DealPhase.cpp \
-    State/DeclarationPhase.cpp
+    State/DeclarationPhase.cpp \
+    State/ExchangePhase.cpp
 
 HEADERS  += \
     Managers/GameManager.h \
@@ -38,10 +38,10 @@ HEADERS  += \
     View/View.h \
     Scene/Scene.h \
     State/CardStates.h \
-    State/ExchangePhaseState.h \
     State/TrickPhaseState.h \
     State/DealPhase.h \
-    State/DeclarationPhase.h
+    State/DeclarationPhase.h \
+    State/ExchangePhase.h
 
 #FORMS    += MainWindow.ui
 
