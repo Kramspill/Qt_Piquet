@@ -62,14 +62,14 @@ void StateManager::Initialize(QPushButton* button, QPushButton* button2)
 
     // Setup the transitions between the states.
     dealPhase->addTransition(dealPhase, SIGNAL(DealPhaseFinished()),
-                                  exchangePhase);
+                             exchangePhase);
     /*
     exchangePhase->addTransition(SomeObject, SIGNAL(SomeSignal()),
-                                      declarationPhase);
+                                 declarationPhase);
     declarationPhase->addTransition(SomeObject, SIGNAL(SomeSignal()),
-                                         trickPhase);
+                                    trickPhase);
     trickPhase->addTransition(SomeObject, SIGNAL(SomeSignal()),
-                                   playSummaryState);
+                              playSummaryState);
     */
 
     // Connect the various signals.

@@ -34,8 +34,7 @@ public:
     StateManager(StateManager&);
     ~StateManager(void);
 
-    void                   Initialize(QPushButton* button,
-                                      QPushButton* button2);
+    void              Initialize(QPushButton* button, QPushButton* button2);
 
     DealPhase*        GetDealPhase(void);
     ExchangePhase*    GetExchangePhase(void);
@@ -43,21 +42,19 @@ public:
     TrickPhase*       GetTrickPhase(void);
 
 private:
-    void                   ConnectSignals(void);
+    void              ConnectSignals(void);
 
 signals:
-    void                   SignalCardTransfer(CardArray::CardArrayType,
-                                              CardArray::CardArrayType,
-                                              int);
-    void                   SignalTransferSelectedCards(
-                                                 CardArray::CardArrayType,
-                                                 CardArray::CardArrayType);
-    void                   SignalSetCardsSelectable(bool);
-    void                   SignalTransferComplete(void);
-    void                   SignalNumOfCardsTransferred(int);
+    void              SignalCardTransfer(CardArray::CardArrayType,
+                                         CardArray::CardArrayType, int);
+    void              SignalTransferSelectedCards(CardArray::CardArrayType,
+                                                  CardArray::CardArrayType);
+    void              SignalSetCardsSelectable(bool);
+    void              SignalTransferComplete(void);
+    void              SignalNumOfCardsTransferred(int);
 
 private:
-    QStateMachine*         stateMachine;
+    QStateMachine*    stateMachine;
     DealPhase*        dealPhase;
     ExchangePhase*    exchangePhase;
     DeclarationPhase* declarationPhase;
