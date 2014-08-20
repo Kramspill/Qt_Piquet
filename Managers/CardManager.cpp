@@ -294,7 +294,7 @@ void CardManager::ShuffleDeck(void)
 CardArray* CardManager::GetDesiredCardArray(
         CardArray::CardArrayType cardArrayType)
 {
-    CardArray* returnedArray;
+    CardArray* returnedArray = 0;
 
     switch ( cardArrayType )
     {
