@@ -17,18 +17,10 @@ SOURCES +=\
     Main.cpp \
     Managers/GameManager.cpp \
     Managers/StateManager.cpp \
-    Managers/AnimationManager.cpp \
-    Animation/PhaseAnimation.cpp \
-    Animation/DealPhaseAnimation.cpp \
-    Animation/ExchangePhaseAnimation.cpp \
-    Animation/DeclarationPhaseAnimation.cpp \
-    Animation/TrickPhaseAnimation.cpp \
-    Managers/WindowManager.cpp \
     Managers/ScoreManager.cpp \
     Managers/CardManager.cpp \
     Cards/CardArray.cpp \
     Cards/Card.cpp \
-    AppWindows/MainWindow.cpp \
     View/View.cpp \
     Scene/Scene.cpp \
     State/DealPhaseState.cpp \
@@ -39,18 +31,10 @@ SOURCES +=\
 HEADERS  += \
     Managers/GameManager.h \
     Managers/StateManager.h \
-    Managers/AnimationManager.h \
-    Animation/PhaseAnimation.h \
-    Animation/DealPhaseAnimation.h \
-    Animation/ExchangePhaseAnimation.h \
-    Animation/DeclarationPhaseAnimation.h \
-    Animation/TrickPhaseAnimation.h \
-    Managers/WindowManager.h \
     Managers/ScoreManager.h \
     Managers/CardManager.h \
     Cards/CardArray.h \
     Cards/Card.h \
-    AppWindows/MainWindow.h \
     View/View.h \
     Scene/Scene.h \
     State/CardStates.h \
