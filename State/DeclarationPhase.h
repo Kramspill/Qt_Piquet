@@ -1,10 +1,10 @@
 //------------------------------------------------------------------------------
-// Filename: DeclarationPhaseState.h
-// Description: Header file for DeclarationPhaseState.
+// Filename: DeclarationPhase.h
+// Description: Header file for DeclarationPhase.
 //------------------------------------------------------------------------------
 
-#ifndef DECLARATIONPHASESTATE_H
-#define DECLARATIONPHASESTATE_H
+#ifndef DECLARATIONPHASE_H
+#define DECLARATIONPHASE_H
 
 //------------------------------------------------------------------------------
 // Qt Header Files
@@ -14,18 +14,18 @@
 
 
 //------------------------------------------------------------------------------
-// Class: DeclarationPhaseState
+// Class: DeclarationPhase
 //------------------------------------------------------------------------------
-class DeclarationPhaseState : public QState
+class DeclarationPhase : public QState
 {
 public:
-    DeclarationPhaseState(QState* parent = 0);
-    DeclarationPhaseState(DeclarationPhaseState&);
-    ~DeclarationPhaseState(void);
+    DeclarationPhase(QState* parent = 0);
+    DeclarationPhase(DeclarationPhase&);
+    ~DeclarationPhase(void);
 
 protected:
     void onEntry(QEvent*);
     void onExit(QEvent*);
 };
 
-#endif // DECLARATIONPHASESTATE_H
+#endif // DECLARATIONPHASE_H

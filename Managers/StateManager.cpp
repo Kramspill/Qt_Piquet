@@ -65,8 +65,8 @@ void StateManager::Initialize(QPushButton* button, QPushButton* button2)
                                   exchangePhaseState);
     /*
     exchangePhaseState->addTransition(SomeObject, SIGNAL(SomeSignal()),
-                                      declarationPhaseState);
-    declarationPhaseState->addTransition(SomeObject, SIGNAL(SomeSignal()),
+                                      declarationPhase);
+    declarationPhase->addTransition(SomeObject, SIGNAL(SomeSignal()),
                                          trickPhaseState);
     trickPhaseState->addTransition(SomeObject, SIGNAL(SomeSignal()),
                                    playSummaryState);
@@ -100,17 +100,17 @@ ExchangePhaseState* StateManager::GetExchangePhaseState(void)
 
 
 //------------------------------------------------------------------------------
-// GetDeclarationPhaseState - Accessor for StateManager's declarationPhaseState
+// GetDeclarationPhase - Accessor for StateManager's declarationPhase
 //                            member variable.
 //------------------------------------------------------------------------------
-DeclarationPhaseState* StateManager::GetDeclarationPhaseState(void)
+DeclarationPhase* StateManager::GetDeclarationPhase(void)
 {
-    return declarationPhaseState;
+    return declarationPhase;
 }
 
 
 //------------------------------------------------------------------------------
-// GetTrickPhaseState - Accessor for StateManager's declarationPhaseState member
+// GetTrickPhaseState - Accessor for StateManager's declarationPhase member
 //                      variable.
 //------------------------------------------------------------------------------
 TrickPhaseState* StateManager::GetTrickPhaseState(void)

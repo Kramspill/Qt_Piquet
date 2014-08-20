@@ -1,18 +1,18 @@
 //------------------------------------------------------------------------------
-// Filename: DeclarationPhaseState.cpp
+// Filename: DeclarationPhase.cpp
 // Description: Represents the declaration phase in the game.
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
-#include "DeclarationPhaseState.h"
+#include "DeclarationPhase.h"
 
 
 //------------------------------------------------------------------------------
 // Constructor
 //------------------------------------------------------------------------------
-DeclarationPhaseState::DeclarationPhaseState(QState* parent) :
+DeclarationPhase::DeclarationPhase(QState* parent) :
     QState(parent)
 {
 }
@@ -21,7 +21,7 @@ DeclarationPhaseState::DeclarationPhaseState(QState* parent) :
 //------------------------------------------------------------------------------
 // Copy Constructor
 //------------------------------------------------------------------------------
-DeclarationPhaseState::DeclarationPhaseState(DeclarationPhaseState&) :
+DeclarationPhase::DeclarationPhase(DeclarationPhase&) :
     QState()
 {
 }
@@ -30,7 +30,7 @@ DeclarationPhaseState::DeclarationPhaseState(DeclarationPhaseState&) :
 //------------------------------------------------------------------------------
 // Destructor
 //------------------------------------------------------------------------------
-DeclarationPhaseState::~DeclarationPhaseState(void)
+DeclarationPhase::~DeclarationPhase(void)
 {
 }
 
@@ -38,7 +38,7 @@ DeclarationPhaseState::~DeclarationPhaseState(void)
 //------------------------------------------------------------------------------
 // onEntry - Override of QState::onEntry.
 //------------------------------------------------------------------------------
-void DeclarationPhaseState::onEntry(QEvent*)
+void DeclarationPhase::onEntry(QEvent*)
 {
 
 }
@@ -47,7 +47,7 @@ void DeclarationPhaseState::onEntry(QEvent*)
 //------------------------------------------------------------------------------
 // onExit - Override of QState::onExit.
 //------------------------------------------------------------------------------
-void DeclarationPhaseState::onExit(QEvent*)
+void DeclarationPhase::onExit(QEvent*)
 {
 
 }

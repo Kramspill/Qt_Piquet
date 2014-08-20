@@ -19,7 +19,7 @@
 //------------------------------------------------------------------------------
 #include "State/DealPhase.h"
 #include "State/ExchangePhaseState.h"
-#include "State/DeclarationPhaseState.h"
+#include "State/DeclarationPhase.h"
 #include "State/TrickPhaseState.h"
 
 
@@ -39,7 +39,7 @@ public:
 
     DealPhase*        GetDealPhase(void);
     ExchangePhaseState*    GetExchangePhaseState(void);
-    DeclarationPhaseState* GetDeclarationPhaseState(void);
+    DeclarationPhase* GetDeclarationPhase(void);
     TrickPhaseState*       GetTrickPhaseState(void);
 
 private:
@@ -60,7 +60,7 @@ private:
     QStateMachine*         stateMachine;
     DealPhase*        dealPhase;
     ExchangePhaseState*    exchangePhaseState;
-    DeclarationPhaseState* declarationPhaseState;
+    DeclarationPhase* declarationPhase;
     TrickPhaseState*       trickPhaseState;
 };
 
