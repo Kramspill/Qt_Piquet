@@ -39,6 +39,15 @@ protected:
     void           onEntry(QEvent*);
     void           onExit(QEvent*);
 
+private slots:
+    void           PlayerPoint(void);
+    void           PlayerSequence(void);
+    void           PlayerSet(void);
+    void           CpuPoint(void);
+    void           CpuSequence(void);
+    void           CpuSet(void);
+    void           InitialTrick(void);
+
 signals:
     void           DeclarationPhaseFinished(void);
 

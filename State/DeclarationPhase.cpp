@@ -116,3 +116,72 @@ void DeclarationPhase::onExit(QEvent*)
 {
 
 }
+
+
+//------------------------------------------------------------------------------
+// PlayerPoint - Function that performs the required operations for the
+//               playerPoint state.
+//------------------------------------------------------------------------------
+void DeclarationPhase::PlayerPoint(void)
+{
+
+}
+
+
+//------------------------------------------------------------------------------
+// PlayerSequence - Function that performs the required operations for the
+//                  playerSequence state.
+//------------------------------------------------------------------------------
+void DeclarationPhase::PlayerSequence(void)
+{
+
+}
+
+
+//------------------------------------------------------------------------------
+// PlayerSet - Function that performs the required operations for the playerSet
+//             state.
+//------------------------------------------------------------------------------
+void DeclarationPhase::PlayerSet(void)
+{
+
+}
+
+
+//------------------------------------------------------------------------------
+// CpuPoint - Function that performs the required operations for the cpuPoint
+//            state.
+//------------------------------------------------------------------------------
+void DeclarationPhase::CpuPoint(void)
+{
+
+}
+
+
+//------------------------------------------------------------------------------
+// CpuSequence - Function that performs the required operations for the
+//               cpuSequence state.
+//------------------------------------------------------------------------------
+void DeclarationPhase::CpuSequence(void)
+{
+
+}
+
+
+//------------------------------------------------------------------------------
+// CpuSet - Function that performs the required operations for the cpuSet state.
+//------------------------------------------------------------------------------
+void DeclarationPhase::CpuSet(void)
+{
+
+}
+
+
+//------------------------------------------------------------------------------
+// InitialTrick - Function that performs the required operations for the
+//                initialTrick state.
+//------------------------------------------------------------------------------
+void DeclarationPhase::InitialTrick(void)
+{
+
+}
