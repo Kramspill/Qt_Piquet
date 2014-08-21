@@ -34,7 +34,8 @@ public:
     StateManager(StateManager&);
     ~StateManager(void);
 
-    void              Initialize(QPushButton* button, QPushButton* button2);
+    void              Initialize(QPushButton* button, QPushButton* button2,
+                                 QPushButton* button3);
 
     DealPhase*        GetDealPhase(void);
     ExchangePhase*    GetExchangePhase(void);

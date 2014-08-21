@@ -74,6 +74,7 @@ void DealPhase::Initialize(QPushButton* button)
     connect(dealToPlayer, SIGNAL(entered()),  this, SLOT(DealToPlayer()));
     connect(dealToCpu,    SIGNAL(entered()),  this, SLOT(DealToCpu()));
     connect(dealTalon,    SIGNAL(entered()),  this, SLOT(DealTalon()));
+
     connect(stateMachine, SIGNAL(finished()), this,
             SIGNAL(DealPhaseFinished()));
 }

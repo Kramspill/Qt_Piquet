@@ -37,7 +37,8 @@ StateManager::~StateManager(void)
 //------------------------------------------------------------------------------
 // Initialize - Initialize the phases that represent the states of the game.
 //------------------------------------------------------------------------------
-void StateManager::Initialize(QPushButton* button, QPushButton* button2)
+void StateManager::Initialize(QPushButton* button, QPushButton* button2,
+                              QPushButton* button3)
 {
     // Setup the state machine of the Game.
     stateMachine = new QStateMachine();
@@ -49,10 +50,10 @@ void StateManager::Initialize(QPushButton* button, QPushButton* button2)
     exchangePhase = new ExchangePhase(stateMachine);
     exchangePhase->Initialize(button2);
 
-    /*
-    declarationPhase = new DeclarationPhase();
-    declarationPhase->Initialize();
+    declarationPhase = new DeclarationPhase(stateMachine);
+    declarationPhase->Initialize(button3);
 
+    /*
     trickPhase = new TrickPhase();
     trickPhase->Initialize();
     */
@@ -63,9 +64,10 @@ void StateManager::Initialize(QPushButton* button, QPushButton* button2)
     // Setup the transitions between the states.
     dealPhase->addTransition(dealPhase, SIGNAL(DealPhaseFinished()),
                              exchangePhase);
-    /*
-    exchangePhase->addTransition(SomeObject, SIGNAL(SomeSignal()),
+    exchangePhase->addTransition(exchangePhase,
+                                 SIGNAL(ExchangePhaseFinished()),
                                  declarationPhase);
+    /*
     declarationPhase->addTransition(SomeObject, SIGNAL(SomeSignal()),
                                     trickPhase);
     trickPhase->addTransition(SomeObject, SIGNAL(SomeSignal()),

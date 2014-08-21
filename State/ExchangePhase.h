@@ -46,10 +46,10 @@ public slots:
 private slots:
     void           SignalEnableCardsSelectable(void);
     void           SignalDisableCardsSelectable(void);
-    void           PlayerDiscards(void);
-    void           PlayerDrawFromTalon(void);
-    void           CpuDiscards(void);
-    void           CpuDrawFromTalon(void);
+    void           PlayerDiscard(void);
+    void           PlayerDraw(void);
+    void           CpuDiscard(void);
+    void           CpuDraw(void);
 
 signals:
     void           RequestCardsSelectable(bool);

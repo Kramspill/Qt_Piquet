@@ -68,20 +68,19 @@ void ExchangePhase::Initialize(QPushButton* button)
     // Setup the transitions from cpuDraw.
     cpuDraw->addTransition(      this,  SIGNAL(TransferComplete()), finalState);
 
-    // Setup the work done in each state.
-    connect(button,            SIGNAL(clicked()),  this,
-            SLOT(PlayerDiscards()));
+    // Set the cards to be selectable when required.
     connect(playerDiscard,     SIGNAL(entered()),  this,
             SLOT(SignalEnableCardsSelectable()));
     connect(playerDiscard,     SIGNAL(exited()),   this,
             SLOT(SignalDisableCardsSelectable()));
-    connect(playerDraw,        SIGNAL(entered()),  this,
-            SLOT(PlayerDrawFromTalon()));
-    connect(cpuDiscard,        SIGNAL(entered()),  this,
-            SLOT(CpuDiscards()));
-    connect(cpuDraw,           SIGNAL(entered()),  this,
-            SLOT(CpuDrawFromTalon()));
-    connect(stateMachine,      SIGNAL(finished()), this,
+
+    // Setup the work done in each state.
+    connect(button,     SIGNAL(clicked()), this, SLOT(PlayerDiscard()));
+    connect(playerDraw, SIGNAL(entered()), this, SLOT(PlayerDraw()));
+    connect(cpuDiscard, SIGNAL(entered()), this, SLOT(CpuDiscard()));
+    connect(cpuDraw,    SIGNAL(entered()), this, SLOT(CpuDraw()));
+
+    connect(stateMachine, SIGNAL(finished()), this,
             SIGNAL(ExchangePhaseFinished()));
 }
 
@@ -142,9 +141,9 @@ void ExchangePhase::SignalDisableCardsSelectable(void)
 
 
 //------------------------------------------------------------------------------
-// PlayerDiscards - Player discards selected cards.
+// PlayerDiscard - Player discards selected cards.
 //------------------------------------------------------------------------------
-void ExchangePhase::PlayerDiscards(void)
+void ExchangePhase::PlayerDiscard(void)
 {
     emit RequestSelectedCardsTransfer(CardArray::PLAYERHAND,
                                       CardArray::PLAYERDISCARDS);
@@ -152,9 +151,9 @@ void ExchangePhase::PlayerDiscards(void)
 
 
 //------------------------------------------------------------------------------
-// PlayerDrawFromTalon - Player draws new cards from the talon.
+// PlayerDraw - Player draws new cards from the talon.
 //------------------------------------------------------------------------------
-void ExchangePhase::PlayerDrawFromTalon(void)
+void ExchangePhase::PlayerDraw(void)
 {
     emit RequestCardTransfer(CardArray::TALON, CardArray::PLAYERHAND,
                              cardsTransferred);
@@ -162,18 +161,18 @@ void ExchangePhase::PlayerDrawFromTalon(void)
 
 
 //------------------------------------------------------------------------------
-// CpuDiscards - Cpu discards selected cards.
+// CpuDiscard - Cpu discards selected cards.
 //------------------------------------------------------------------------------
-void ExchangePhase::CpuDiscards(void)
+void ExchangePhase::CpuDiscard(void)
 {
     emit RequestCardTransfer(CardArray::CPUHAND, CardArray::CPUDISCARDS, 3);
 }
 
 
 //------------------------------------------------------------------------------
-// TransferCpuCards - Transfer the cpu's cards.
+// CpuDraw - Cpu draws new cards from the talon.
 //------------------------------------------------------------------------------
-void ExchangePhase::CpuDrawFromTalon(void)
+void ExchangePhase::CpuDraw(void)
 {
     emit RequestCardTransfer(CardArray::TALON, CardArray::CPUHAND, 3);
 }

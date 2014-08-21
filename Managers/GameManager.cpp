@@ -47,6 +47,9 @@ void GameManager::Initialize(void)
     QPushButton* button2 = new QPushButton("Exchange");
     scene->addWidget(button2);
     button2->setGeometry(0, -50, 75, 30);
+    QPushButton* button3 = new QPushButton("Declare");
+    scene->addWidget(button3);
+    button3->setGeometry(75, -50, 75, 30);
     //-----------------------
 
     // Initialize the CardManager with the scene object.
@@ -55,7 +58,7 @@ void GameManager::Initialize(void)
 
     // Initialize the StateManager.
     stateManager = new StateManager();
-    stateManager->Initialize(button, button2);
+    stateManager->Initialize(button, button2, button3);
 
     /*
     // Initialize the ScoreManager.
