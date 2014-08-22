@@ -38,10 +38,13 @@ DeclarationPhase::~DeclarationPhase(void)
 //------------------------------------------------------------------------------
 // Initialize - Initialize and execute the internal state machine of this class.
 //------------------------------------------------------------------------------
-void DeclarationPhase::Initialize(QPushButton* button)
+void DeclarationPhase::Initialize(QPushButton* button, QPushButton* button2)
 {
     // Initialize the state machine.
     stateMachine = new QStateMachine();
+
+    // Assign this state's declareButton for easy access.
+    declareButton = button;
 
     // Initialize the states within the state machine.
     QState*      playerPoint    = new QState(stateMachine);
@@ -106,6 +109,7 @@ void DeclarationPhase::Initialize(QPushButton* button)
 void DeclarationPhase::onEntry(QEvent*)
 {
     stateMachine->start();
+    emit RequestCardsSelectable(true, 12);
 }
 
 
@@ -114,7 +118,7 @@ void DeclarationPhase::onEntry(QEvent*)
 //------------------------------------------------------------------------------
 void DeclarationPhase::onExit(QEvent*)
 {
-
+    emit RequestCardsSelectable(false, 0);
 }
 
 
@@ -124,6 +128,11 @@ void DeclarationPhase::onExit(QEvent*)
 //------------------------------------------------------------------------------
 void DeclarationPhase::PlayerPoint(void)
 {
+    // Ensure the declare button is disconnected from all signals.
+    disconnect(declareButton, 0, 0, 0);
+
+    // Reconnect the button to perform the desired checks when in this state.
+    connect(declareButton, SIGNAL(clicked()), this, SLOT(CheckPoint()));
 
 }
 
@@ -182,6 +191,15 @@ void DeclarationPhase::CpuSet(void)
 //                initialTrick state.
 //------------------------------------------------------------------------------
 void DeclarationPhase::InitialTrick(void)
+{
+
+}
+
+
+//------------------------------------------------------------------------------
+// CheckPoint - Ensure the declaration of the point by the user is valid.
+//------------------------------------------------------------------------------
+void DeclarationPhase::CheckPoint(void)
 {
 
 }

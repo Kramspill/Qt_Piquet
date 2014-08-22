@@ -33,7 +33,7 @@ public:
     DeclarationPhase(DeclarationPhase&);
     ~DeclarationPhase(void);
 
-    void           Initialize(QPushButton* button);
+    void           Initialize(QPushButton* button, QPushButton* button2);
 
 protected:
     void           onEntry(QEvent*);
@@ -48,11 +48,15 @@ private slots:
     void           CpuSet(void);
     void           InitialTrick(void);
 
+    void           CheckPoint(void);
+
 signals:
+    void           RequestCardsSelectable(bool, int);
     void           DeclarationPhaseFinished(void);
 
 private:
     QStateMachine* stateMachine;
+    QPushButton*   declareButton;
 };
 
 #endif // DECLARATIONPHASE_H
