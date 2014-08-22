@@ -48,8 +48,6 @@ private slots:
     void           CpuSet(void);
     void           InitialTrick(void);
 
-    void           CheckPoint(void);
-
 signals:
     void           RequestCardsSelectable(bool, int);
     void           RequestCheckPoint(void);
