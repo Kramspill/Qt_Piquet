@@ -63,11 +63,9 @@ void GameManager::Initialize(void)
     stateManager = new StateManager();
     stateManager->Initialize(button, button2, button3, button4);
 
-    /*
     // Initialize the ScoreManager.
     scoreManager = new ScoreManager();
     scoreManager->Initialize();
-    */
 
     // Initialize the view and display it.
     view = new View(scene);
