@@ -70,6 +70,7 @@ public:
     int                GetSize(void);
     int                GetSelectedCardsSize(void);
     CardArrayType      GetCardArrayType(void);
+    void               SetSelectionLimit(int newLimit);
 
 private:
     void               UpdateCardPositions(Card* addedCard = 0,
@@ -81,6 +82,7 @@ private:
 private:
     std::vector<Card*> cards;
     std::vector<Card*> selectedCards;
+    int                selectionLimit;
     CardArrayType      cardArrayType;
     QPointF            initialCardPosition;
     QPointF            nextCardPosition;

@@ -23,6 +23,7 @@ CardArray::CardArray(void)
 CardArray::CardArray(CardArray::CardArrayType arrayType, int x, int y) :
     cards(0),
     selectedCards(0),
+    selectionLimit(0),
     cardArrayType(arrayType),
     initialCardPosition(QPointF(x, y)),
     nextCardPosition(QPointF(x, y))
@@ -193,7 +194,7 @@ bool CardArray::UpdateCardSelections(Card* card)
 
         success = true;
     }
-    else if ( selectedCards.size() < 5 )
+    else if ( selectedCards.size() < selectionLimit )
     {
         // The card has been selected and the limit has not yet been reached.
         // Add the card to the selectedCards vector.
@@ -262,6 +263,16 @@ int CardArray::GetSelectedCardsSize(void)
 CardArray::CardArrayType CardArray::GetCardArrayType(void)
 {
     return cardArrayType;
+}
+
+
+//------------------------------------------------------------------------------
+// SetSelectionLimit - Set the limit of how many cards can be selected in this
+//                     array at once.
+//------------------------------------------------------------------------------
+void CardArray::SetSelectionLimit(int newLimit)
+{
+    selectionLimit = newLimit;
 }
 
 
