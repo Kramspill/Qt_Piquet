@@ -52,7 +52,7 @@ private slots:
     void           CpuDraw(void);
 
 signals:
-    void           RequestCardsSelectable(bool);
+    void           RequestCardsSelectable(bool, int);
     void           RequestCardTransfer(CardArray::CardArrayType,
                                        CardArray::CardArrayType, int);
     void           RequestSelectedCardsTransfer(CardArray::CardArrayType,

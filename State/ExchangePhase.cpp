@@ -127,7 +127,7 @@ void ExchangePhase::SetNumCardsTransferred(int numCardsTransferred)
 //------------------------------------------------------------------------------
 void ExchangePhase::SignalEnableCardsSelectable(void)
 {
-    emit RequestCardsSelectable(true);
+    emit RequestCardsSelectable(true, 5);
 }
 
 
@@ -136,7 +136,7 @@ void ExchangePhase::SignalEnableCardsSelectable(void)
 //------------------------------------------------------------------------------
 void ExchangePhase::SignalDisableCardsSelectable(void)
 {
-    emit RequestCardsSelectable(false);
+    emit RequestCardsSelectable(false, 0);
 }
 
 
