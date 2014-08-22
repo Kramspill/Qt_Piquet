@@ -46,10 +46,13 @@ void GameManager::Initialize(void)
     scene->addWidget(button);
     QPushButton* button2 = new QPushButton("Exchange");
     scene->addWidget(button2);
-    button2->setGeometry(0, -50, 75, 30);
+    button2->setGeometry(0, -30, 75, 23);
     QPushButton* button3 = new QPushButton("Declare");
     scene->addWidget(button3);
-    button3->setGeometry(75, -50, 75, 30);
+    button3->setGeometry(75, -30, 75, 23);
+    QPushButton* button4 = new QPushButton("Sink");
+    scene->addWidget(button4);
+    button4->setGeometry(75, 0, 75, 23);
     //-----------------------
 
     // Initialize the CardManager with the scene object.
@@ -58,7 +61,7 @@ void GameManager::Initialize(void)
 
     // Initialize the StateManager.
     stateManager = new StateManager();
-    stateManager->Initialize(button, button2, button3);
+    stateManager->Initialize(button, button2, button3, button4);
 
     /*
     // Initialize the ScoreManager.
@@ -108,9 +111,9 @@ void GameManager::ConnectSignals(void)
                               CardArray::CardArrayType,
                               CardArray::CardArrayType)));
     QObject::connect(stateManager,
-                     SIGNAL(SignalSetCardsSelectable(bool)),
+                     SIGNAL(SignalSetCardsSelectable(bool, int)),
                      cardManager,
-                     SLOT(SetCardsSelectable(bool)));
+                     SLOT(SetCardsSelectable(bool, int)));
 
     // Connect the signals from the scene.
     QObject::connect(scene,
