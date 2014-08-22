@@ -132,7 +132,8 @@ void DeclarationPhase::PlayerPoint(void)
     disconnect(declareButton, 0, 0, 0);
 
     // Reconnect the button to perform the desired checks when in this state.
-    connect(declareButton, SIGNAL(clicked()), this, SLOT(CheckPoint()));
+    connect(declareButton, SIGNAL(clicked()), this,
+            SIGNAL(RequestCheckPoint()));
 
 }
 
@@ -143,7 +144,12 @@ void DeclarationPhase::PlayerPoint(void)
 //------------------------------------------------------------------------------
 void DeclarationPhase::PlayerSequence(void)
 {
+    // Ensure the declare button is disconnected from all signals.
+    disconnect(declareButton, 0, 0, 0);
 
+    // Reconnect the button to perform the desired checks when in this state.
+    connect(declareButton, SIGNAL(clicked()), this,
+            SIGNAL(RequestCheckSequence()));
 }
 
 
@@ -153,7 +159,11 @@ void DeclarationPhase::PlayerSequence(void)
 //------------------------------------------------------------------------------
 void DeclarationPhase::PlayerSet(void)
 {
+    // Ensure the declare button is disconnected from all signals.
+    disconnect(declareButton, 0, 0, 0);
 
+    // Reconnect the button to perform the desired checks when in this state.
+    connect(declareButton, SIGNAL(clicked()), this, SIGNAL(RequestCheckSet()));
 }
 
 
@@ -191,15 +201,6 @@ void DeclarationPhase::CpuSet(void)
 //                initialTrick state.
 //------------------------------------------------------------------------------
 void DeclarationPhase::InitialTrick(void)
-{
-
-}
-
-
-//------------------------------------------------------------------------------
-// CheckPoint - Ensure the declaration of the point by the user is valid.
-//------------------------------------------------------------------------------
-void DeclarationPhase::CheckPoint(void)
 {
 
 }

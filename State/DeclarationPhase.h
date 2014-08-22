@@ -52,6 +52,9 @@ private slots:
 
 signals:
     void           RequestCardsSelectable(bool, int);
+    void           RequestCheckPoint(void);
+    void           RequestCheckSequence(void);
+    void           RequestCheckSet(void);
     void           DeclarationPhaseFinished(void);
 
 private:
