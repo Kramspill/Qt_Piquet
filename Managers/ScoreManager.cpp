@@ -1,33 +1,91 @@
+//------------------------------------------------------------------------------
+// Filename: ScoreManager.cpp
+// Description: Manager that keeps track of the game score.
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// My Header Files
+//------------------------------------------------------------------------------
 #include "ScoreManager.h"
 
-// Constructor.
+
+//------------------------------------------------------------------------------
+// Constructor
+//------------------------------------------------------------------------------
 ScoreManager::ScoreManager(void)
 {
 }
 
-// Copy Constructor.
-ScoreManager::ScoreManager(ScoreManager&)
+
+//------------------------------------------------------------------------------
+// Copy Constructor
+//------------------------------------------------------------------------------
+ScoreManager::ScoreManager(ScoreManager&) :
+    QObject()
 {
 }
 
-// Destructor.
+
+//------------------------------------------------------------------------------
+// Destructor
+//------------------------------------------------------------------------------
 ScoreManager::~ScoreManager(void)
 {
 }
 
+
+//------------------------------------------------------------------------------
+// Initialize - Does stuff.
+//------------------------------------------------------------------------------
 void ScoreManager::Initialize(void)
 {
 
 }
 
+
+//------------------------------------------------------------------------------
 // Accessor for ScoreManager's playerScore member.
-unsigned int ScoreManager::GetPlayerScore(void)
+//------------------------------------------------------------------------------
+int ScoreManager::GetPlayerScore(void)
 {
     return playerScore;
 }
 
+
+//------------------------------------------------------------------------------
 // Accessor for ScoreManager's cpuScore member.
-unsigned int ScoreManager::GetCPUScore(void)
+//------------------------------------------------------------------------------
+int ScoreManager::GetCPUScore(void)
 {
     return cpuScore;
+}
+
+
+//------------------------------------------------------------------------------
+// CheckPoint - Check's if the user's Point selection is valid and compares with
+//              the cpu's.
+//------------------------------------------------------------------------------
+void ScoreManager::CheckPoint(void)
+{
+
+}
+
+
+//------------------------------------------------------------------------------
+// CheckSequence - Check's if the user's Sequence selection is valid and
+//                 compares with the cpu's.
+//------------------------------------------------------------------------------
+void ScoreManager::CheckSequence(void)
+{
+
+}
+
+
+//------------------------------------------------------------------------------
+// CheckSet - Check's if the user's Set selection is valid and compares with the
+//            cpu's.
+//------------------------------------------------------------------------------
+void ScoreManager::CheckSet(void)
+{
+
 }
