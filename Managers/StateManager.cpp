@@ -176,4 +176,16 @@ void StateManager::ConnectSignals(void)
                      SIGNAL(RequestCardsSelectable(bool, int)),
                      this,
                      SIGNAL(SignalSetCardsSelectable(bool, int)));
+    QObject::connect(declarationPhase,
+                     SIGNAL(RequestCheckPoint()),
+                     this,
+                     SIGNAL(SignalCheckPoint()));
+    QObject::connect(declarationPhase,
+                     SIGNAL(RequestCheckSequence()),
+                     this,
+                     SIGNAL(SignalCheckSequence()));
+    QObject::connect(declarationPhase,
+                     SIGNAL(RequestCheckSet()),
+                     this,
+                     SIGNAL(SignalCheckSet()));
 }

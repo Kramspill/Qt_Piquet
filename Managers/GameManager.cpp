@@ -114,6 +114,18 @@ void GameManager::ConnectSignals(void)
                      SIGNAL(SignalSetCardsSelectable(bool, int)),
                      cardManager,
                      SLOT(SetCardsSelectable(bool, int)));
+    QObject::connect(stateManager,
+                     SIGNAL(SignalCheckPoint()),
+                     scoreManager,
+                     SLOT(CheckPoint()));
+    QObject::connect(stateManager,
+                     SIGNAL(SignalCheckSequence()),
+                     scoreManager,
+                     SLOT(CheckSequence()));
+    QObject::connect(stateManager,
+                     SIGNAL(SignalCheckSet()),
+                     scoreManager,
+                     SLOT(CheckSet()));
 
     // Connect the signals from the scene.
     QObject::connect(scene,
