@@ -59,7 +59,7 @@ public slots:
                                  int numOfCards);
     void       CallTransferSelectedCards(CardArray::CardArrayType src,
                                          CardArray::CardArrayType dest);
-    void       SetCardsSelectable(bool setSelectable,
+    void       SetCardsSelectable(bool setSelectable, int limit,
                                   CardArray::CardArrayType
                                   cardArrayType = CardArray::PLAYERHAND);
     void       CardSelectionsChanged(Card* card, CardArray::CardArrayType

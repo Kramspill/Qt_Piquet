@@ -364,11 +364,14 @@ void CardManager::CallTransferSelectedCards(CardArray::CardArrayType src,
 //------------------------------------------------------------------------------
 // SetCardsSelectable - Enable/Disable a CardArray's cards to be selected.
 //------------------------------------------------------------------------------
-void CardManager::SetCardsSelectable(bool setSelectable,
+void CardManager::SetCardsSelectable(bool setSelectable, int limit,
                                      CardArray::CardArrayType cardArrayType)
 {
     Card*      card;
     CardArray* cardArray = GetDesiredCardArray(cardArrayType);
+
+    // Set the limit of how many cards can be selected at once.
+    cardArray->SetSelectionLimit(limit);
 
     // Loop through the array setting the ItemIsSelectable property.
     for ( int index = 0; index < cardArray->GetSize(); index++ )
