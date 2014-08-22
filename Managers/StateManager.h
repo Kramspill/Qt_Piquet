@@ -35,7 +35,7 @@ public:
     ~StateManager(void);
 
     void              Initialize(QPushButton* button, QPushButton* button2,
-                                 QPushButton* button3);
+                                 QPushButton* button3, QPushButton* button4);
 
     DealPhase*        GetDealPhase(void);
     ExchangePhase*    GetExchangePhase(void);
@@ -50,7 +50,7 @@ signals:
                                          CardArray::CardArrayType, int);
     void              SignalTransferSelectedCards(CardArray::CardArrayType,
                                                   CardArray::CardArrayType);
-    void              SignalSetCardsSelectable(bool);
+    void              SignalSetCardsSelectable(bool, int);
     void              SignalTransferComplete(void);
     void              SignalNumOfCardsTransferred(int);
 

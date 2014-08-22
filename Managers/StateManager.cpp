@@ -38,7 +38,7 @@ StateManager::~StateManager(void)
 // Initialize - Initialize the phases that represent the states of the game.
 //------------------------------------------------------------------------------
 void StateManager::Initialize(QPushButton* button, QPushButton* button2,
-                              QPushButton* button3)
+                              QPushButton* button3, QPushButton* button4)
 {
     // Setup the state machine of the Game.
     stateMachine = new QStateMachine();
@@ -51,7 +51,7 @@ void StateManager::Initialize(QPushButton* button, QPushButton* button2,
     exchangePhase->Initialize(button2);
 
     declarationPhase = new DeclarationPhase(stateMachine);
-    declarationPhase->Initialize(button3);
+    declarationPhase->Initialize(button3, button4);
 
     /*
     trickPhase = new TrickPhase();
@@ -159,9 +159,9 @@ void StateManager::ConnectSignals(void)
                                 CardArray::CardArrayType)));
 
     QObject::connect(exchangePhase,
-                     SIGNAL(RequestCardsSelectable(bool)),
+                     SIGNAL(RequestCardsSelectable(bool, int)),
                      this,
-                     SIGNAL(SignalSetCardsSelectable(bool)));
+                     SIGNAL(SignalSetCardsSelectable(bool, int)));
     QObject::connect(this,
                      SIGNAL(SignalTransferComplete()),
                      exchangePhase,
@@ -170,4 +170,10 @@ void StateManager::ConnectSignals(void)
                      SIGNAL(SignalNumOfCardsTransferred(int)),
                      exchangePhase,
                      SLOT(SetNumCardsTransferred(int)));
+
+    // Connect signals to/fom the declaration phase state.
+    QObject::connect(declarationPhase,
+                     SIGNAL(RequestCardsSelectable(bool, int)),
+                     this,
+                     SIGNAL(SignalSetCardsSelectable(bool, int)));
 }
