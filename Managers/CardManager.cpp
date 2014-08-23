@@ -54,6 +54,8 @@ void CardManager::Initialize(Scene* scene)
     transitionTimer->setSingleShot(true);
     connect(transitionTimer, SIGNAL(timeout()), this,
             SIGNAL(SignalTransferComplete()));
+    connect(playerHand, SIGNAL(SignalValidSelection()), this,
+            SIGNAL(SignalValidSelection()));
 
     // Initialize all the cards used in the game and add them to the deck.
     InitializeCards();
@@ -358,6 +360,17 @@ void CardManager::CallTransferSelectedCards(CardArray::CardArrayType src,
     CardArray* destination = GetDesiredCardArray(dest);
 
     TransferSelectedCards(source, destination);
+}
+
+
+//------------------------------------------------------------------------------
+// CallCheckSelection - Check the selection in the CardArray is correct for
+//                      the phase the game is in.
+//------------------------------------------------------------------------------
+void CardManager::CallCheckSelection(CardArray::SelectionType phase,
+                                     CardArray::CardArrayType cardArrayType)
+{
+    CardArray* cardArray = GetDesiredCardArray(cardArrayType);
 }
 
 

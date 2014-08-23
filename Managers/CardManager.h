@@ -36,7 +36,8 @@ public:
 
     void       TransferCards(CardArray* source, CardArray* destination,
                              int numberOfCards);
-    void       TransferSelectedCards(CardArray* source, CardArray* destination);
+    void       TransferSelectedCards(CardArray* source,
+                                     CardArray* destination);
 
     CardArray* GetDeck(void);
     CardArray* GetTalon(void);
@@ -59,6 +60,9 @@ public slots:
                                  int numOfCards);
     void       CallTransferSelectedCards(CardArray::CardArrayType src,
                                          CardArray::CardArrayType dest);
+    void       CallCheckSelection(CardArray::SelectionType phase,
+                                  CardArray::CardArrayType
+                                  cardArrayType = CardArray::PLAYERHAND);
     void       SetCardsSelectable(bool setSelectable, int limit,
                                   CardArray::CardArrayType
                                   cardArrayType = CardArray::PLAYERHAND);
@@ -68,6 +72,7 @@ public slots:
 signals:
     void       SignalTransferComplete(void);
     void       SignalNumOfCardsTransferred(int);
+    void       SignalValidSelection(void);
 
 private:
     CardArray* deck;
