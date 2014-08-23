@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 // Qt Header Files
 //------------------------------------------------------------------------------
+#include <QObject>
 #include <QPointF>
 
 
@@ -27,8 +28,9 @@
 //------------------------------------------------------------------------------
 // Class: CardArray
 //------------------------------------------------------------------------------
-class CardArray
+class CardArray : public QObject
 {
+    Q_OBJECT
 public:
     enum CardArrayType
     {
@@ -49,6 +51,13 @@ public:
         PREVTRICKS
     };
 
+    enum SelectionType
+    {
+        POINT,
+        SEQUENCE,
+        SET
+    };
+
 public:
     CardArray(void);
     CardArray(CardArrayType arrayType, int x, int y);
@@ -65,6 +74,7 @@ public:
     void               Stagger(StaggerType staggerType);
 
     bool               UpdateCardSelections(Card* card);
+    void               CheckSelection(SelectionType phase);
     Card*              RemoveSelectedCard(void);
 
     int                GetSize(void);
@@ -78,6 +88,12 @@ private:
     void               CleanUpCardPositions(bool newCardAdded);
     void               EmitCardMovedSignal(Card* card, bool noAnimation);
     void               ResetZPositions(void);
+
+public slots:
+    void               DeselectAll(void);
+
+signals:
+    void               SignalValidSelection(void);
 
 private:
     std::vector<Card*> cards;

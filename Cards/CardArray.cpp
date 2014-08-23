@@ -213,6 +213,51 @@ bool CardArray::UpdateCardSelections(Card* card)
 
 
 //------------------------------------------------------------------------------
+// CheckSelection - Check selectedCards contains valid Cards for the phase.
+//------------------------------------------------------------------------------
+void CardArray::CheckSelection(CardArray::SelectionType phase)
+{
+    Card*      aCard;
+    Card::Suit theSuit = Card::NOSUIT;
+    int        numOfSelectedCards = selectedCards.size();
+    bool       valid = true;
+
+    switch ( phase )
+    {
+        case POINT:
+            // Get the first card to verify which suit to compare the other
+            // cards to.
+            aCard   = selectedCards[0];
+            theSuit = aCard->GetSuit();
+
+            for ( int index = 1; index < numOfSelectedCards; index++ )
+            {
+                aCard = selectedCards[index];
+
+                if ( aCard->GetSuit() != theSuit )
+                {
+                    valid = false;
+                    index = numOfSelectedCards;
+                }
+            }
+            break;
+
+        case SEQUENCE:
+            break;
+
+        case SET:
+            break;
+
+        default:
+            break;
+    }
+
+    if ( valid )
+        emit SignalValidSelection();
+}
+
+
+//------------------------------------------------------------------------------
 // RemoveSelectedCard - Remove the first card from the selectedCards vector.
 //------------------------------------------------------------------------------
 Card* CardArray::RemoveSelectedCard(void)
@@ -329,7 +374,7 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
             if ( arraySize > 0 )
             {
                 // Loop through the array of cards and shift them.
-                for (int index = 0; index < arraySize; index++)
+                for ( int index = 0; index < arraySize; index++ )
                 {
                     card = GetCard(index);
 
@@ -359,7 +404,7 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
             if ( arraySize > 0 )
             {
                 // Loop through the array of cards and shift them.
-                for (int index = 0; index < arraySize; index++)
+                for ( int index = 0; index < arraySize; index++ )
                 {
                     card = GetCard(index);
 
@@ -442,5 +487,21 @@ void CardArray::ResetZPositions(void)
     {
         card = GetCard(index);
         card->SetPosition(card->GetPosition(), index + 1);
+    }
+}
+
+
+//------------------------------------------------------------------------------
+// DeselectAll - Deselect all cards in this array.
+//------------------------------------------------------------------------------
+void CardArray::DeselectAll(void)
+{
+    Card* card;
+    int   numOfSelectedCards = selectedCards.size();
+
+    for ( int index = 0; index < numOfSelectedCards; index++ )
+    {
+        card = selectedCards[index];
+        card->setSelected(false);
     }
 }
