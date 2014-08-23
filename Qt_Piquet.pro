@@ -26,7 +26,8 @@ SOURCES +=\
     State/DealPhase.cpp \
     State/DeclarationPhase.cpp \
     State/ExchangePhase.cpp \
-    State/TrickPhase.cpp
+    State/TrickPhase.cpp \
+    AI/AI.cpp
 
 HEADERS  += \
     Managers/GameManager.h \
@@ -41,7 +42,8 @@ HEADERS  += \
     State/DealPhase.h \
     State/DeclarationPhase.h \
     State/ExchangePhase.h \
-    State/TrickPhase.h
+    State/TrickPhase.h \
+    AI/AI.h
 
 #FORMS    += MainWindow.ui
 
