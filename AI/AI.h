@@ -13,11 +13,26 @@
 
 
 //------------------------------------------------------------------------------
+// My Header Files
+//------------------------------------------------------------------------------
+#include "Cards/CardArray.h"
+
+
+//------------------------------------------------------------------------------
 // Class: AI
 //------------------------------------------------------------------------------
 class AI : public QObject
 {
     Q_OBJECT
+public:
+    enum AIAction
+    {
+        DISCARD,
+        POINT,
+        SEQUENCE,
+        SET
+    };
+
 public:
     AI(void);
     AI(AI&);
@@ -25,11 +40,14 @@ public:
 
     void Initialize(void);
 
-public slots:
+private:
     void SelectCardsToDiscard(void);
     void DeclarePoint(void);
     void DeclareSequence(void);
     void DeclareSet(void);
+
+public slots:
+    void SelectAIAction(AIAction action);
 };
 
 #endif // AI_H

@@ -78,3 +78,32 @@ void AI::DeclareSet(void)
 {
 
 }
+
+
+//------------------------------------------------------------------------------
+// SelectAIAction - Select the appropriate action to perform.
+//------------------------------------------------------------------------------
+void AI::SelectAIAction(AI::AIAction action)
+{
+    switch ( action )
+    {
+        case DISCARD:
+            SelectCardsToDiscard();
+            break;
+
+        case POINT:
+            DeclarePoint();
+            break;
+
+        case SEQUENCE:
+            DeclareSequence();
+            break;
+
+        case SET:
+            DeclareSet();
+            break;
+
+        default:
+            break;
+    }
+}
