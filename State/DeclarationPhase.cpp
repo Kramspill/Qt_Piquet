@@ -123,6 +123,18 @@ void DeclarationPhase::onExit(QEvent*)
 
 
 //------------------------------------------------------------------------------
+// ValidSelection - Called in response to a correct selection being made.
+//------------------------------------------------------------------------------
+void DeclarationPhase::ValidSelection(void)
+{
+    // NOTE: either at this point, will check with the AI, OR
+    // when this signal goes up the chain and reaches GameManager, we'll call
+    // the AI check there and have the AI respond.
+    emit ValidSelection();
+}
+
+
+//------------------------------------------------------------------------------
 // PlayerPoint - Function that performs the required operations for the
 //               playerPoint state.
 //------------------------------------------------------------------------------
@@ -133,7 +145,7 @@ void DeclarationPhase::PlayerPoint(void)
 
     // Reconnect the button to perform the desired checks when in this state.
     connect(declareButton, SIGNAL(clicked()), this,
-            SIGNAL(RequestCheckPoint()));
+            SIGNAL(RequestCheckSelection(CardArray::POINT)));
 
 }
 
@@ -149,7 +161,7 @@ void DeclarationPhase::PlayerSequence(void)
 
     // Reconnect the button to perform the desired checks when in this state.
     connect(declareButton, SIGNAL(clicked()), this,
-            SIGNAL(RequestCheckSequence()));
+            SIGNAL(RequestCheckSelection(CardArray::SEQUENCE)));
 }
 
 
@@ -163,7 +175,8 @@ void DeclarationPhase::PlayerSet(void)
     disconnect(declareButton, 0, 0, 0);
 
     // Reconnect the button to perform the desired checks when in this state.
-    connect(declareButton, SIGNAL(clicked()), this, SIGNAL(RequestCheckSet()));
+    connect(declareButton, SIGNAL(clicked()), this,
+            SIGNAL(RequestCheckSelection(CardArray::SET)));
 }
 
 

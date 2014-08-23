@@ -39,6 +39,9 @@ protected:
     void           onEntry(QEvent*);
     void           onExit(QEvent*);
 
+public slots:
+    void           ValidSelection(void);
+
 private slots:
     void           PlayerPoint(void);
     void           PlayerSequence(void);
@@ -50,9 +53,8 @@ private slots:
 
 signals:
     void           RequestCardsSelectable(bool, int);
-    void           RequestCheckPoint(void);
-    void           RequestCheckSequence(void);
-    void           RequestCheckSet(void);
+    void           RequestCheckSelection(CardArray::SelectionType);
+    void           ValidSelection(void);
     void           DeclarationPhaseFinished(void);
 
 private:
