@@ -54,7 +54,7 @@ private slots:
 signals:
     void           RequestCardsSelectable(bool, int);
     void           RequestCheckSelection(CardArray::SelectionType);
-    void           ValidSelection(void);
+    void           SignalValidSelection(void);
     void           DeclarationPhaseFinished(void);
 
 private:

@@ -130,7 +130,7 @@ void DeclarationPhase::ValidSelection(void)
     // NOTE: either at this point, will check with the AI, OR
     // when this signal goes up the chain and reaches GameManager, we'll call
     // the AI check there and have the AI respond.
-    emit ValidSelection();
+    emit SignalValidSelection();
 }
 
 
