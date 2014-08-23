@@ -127,6 +127,10 @@ TrickPhase* StateManager::GetTrickPhase(void)
 void StateManager::ConnectSignals(void)
 {
     // Connect signals to/from the deal phase state.
+    QObject::connect(this,
+                     SIGNAL(SignalTransferComplete()),
+                     dealPhase,
+                     SLOT(CallTransferComplete()));
     QObject::connect(dealPhase,
                      SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
                                                 CardArray::CardArrayType,
@@ -135,12 +139,16 @@ void StateManager::ConnectSignals(void)
                      SIGNAL(SignalCardTransfer(CardArray::CardArrayType,
                                                CardArray::CardArrayType,
                                                int)));
-    QObject::connect(this,
-                     SIGNAL(SignalTransferComplete()),
-                     dealPhase,
-                     SLOT(CallTransferComplete()));
 
     // Connect signals to/fom the exchange phase state.
+    QObject::connect(this,
+                     SIGNAL(SignalTransferComplete()),
+                     exchangePhase,
+                     SLOT(CallTransferComplete()));
+    QObject::connect(this,
+                     SIGNAL(SignalNumOfCardsTransferred(int)),
+                     exchangePhase,
+                     SLOT(SetNumCardsTransferred(int)));
     QObject::connect(exchangePhase,
                      SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
                                                 CardArray::CardArrayType,
@@ -162,30 +170,18 @@ void StateManager::ConnectSignals(void)
                      SIGNAL(RequestCardsSelectable(bool, int)),
                      this,
                      SIGNAL(SignalSetCardsSelectable(bool, int)));
-    QObject::connect(this,
-                     SIGNAL(SignalTransferComplete()),
-                     exchangePhase,
-                     SLOT(CallTransferComplete()));
-    QObject::connect(this,
-                     SIGNAL(SignalNumOfCardsTransferred(int)),
-                     exchangePhase,
-                     SLOT(SetNumCardsTransferred(int)));
 
     // Connect signals to/fom the declaration phase state.
+    QObject::connect(this,
+                     SIGNAL(SignalValidSelection()),
+                     declarationPhase,
+                     SLOT(ValidSelection()));
     QObject::connect(declarationPhase,
                      SIGNAL(RequestCardsSelectable(bool, int)),
                      this,
                      SIGNAL(SignalSetCardsSelectable(bool, int)));
     QObject::connect(declarationPhase,
-                     SIGNAL(RequestCheckPoint()),
+                     SIGNAL(RequestCheckSelection(CardArray::SelectionType)),
                      this,
-                     SIGNAL(SignalCheckPoint()));
-    QObject::connect(declarationPhase,
-                     SIGNAL(RequestCheckSequence()),
-                     this,
-                     SIGNAL(SignalCheckSequence()));
-    QObject::connect(declarationPhase,
-                     SIGNAL(RequestCheckSet()),
-                     this,
-                     SIGNAL(SignalCheckSet()));
+                     SIGNAL(SignalCheckSelection(CardArray::SelectionType)));
 }

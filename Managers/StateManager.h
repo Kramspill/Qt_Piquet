@@ -53,9 +53,7 @@ signals:
     void              SignalSetCardsSelectable(bool, int);
     void              SignalTransferComplete(void);
     void              SignalNumOfCardsTransferred(int);
-    void              SignalCheckPoint(void);
-    void              SignalCheckSequence(void);
-    void              SignalCheckSet(void);
+    void              SignalCheckSelection(CardArray::SelectionType);
 
 private:
     QStateMachine*    stateMachine;
