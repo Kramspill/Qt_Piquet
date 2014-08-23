@@ -90,6 +90,10 @@ void GameManager::ConnectSignals(void)
                      SIGNAL(SignalNumOfCardsTransferred(int)),
                      stateManager,
                      SIGNAL(SignalNumOfCardsTransferred(int)));
+    QObject::connect(cardManager,
+                     SIGNAL(SignalValidSelection()),
+                     stateManager,
+                     SIGNAL(SignalValidSelection()));
 
     // Connect the signals from the state manager.
     QObject::connect(stateManager,
@@ -113,17 +117,9 @@ void GameManager::ConnectSignals(void)
                      cardManager,
                      SLOT(SetCardsSelectable(bool, int)));
     QObject::connect(stateManager,
-                     SIGNAL(SignalCheckPoint()),
-                     scoreManager,
-                     SLOT(CheckPoint()));
-    QObject::connect(stateManager,
-                     SIGNAL(SignalCheckSequence()),
-                     scoreManager,
-                     SLOT(CheckSequence()));
-    QObject::connect(stateManager,
-                     SIGNAL(SignalCheckSet()),
-                     scoreManager,
-                     SLOT(CheckSet()));
+                     SIGNAL(SignalCheckSelection(CardArray::SelectionType)),
+                     cardManager,
+                     SLOT(CallCheckSelection(CardArray::SelectionType)));
 
     // Connect the signals from the scene.
     QObject::connect(scene,
