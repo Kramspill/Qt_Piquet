@@ -59,6 +59,10 @@ void GameManager::Initialize(void)
     cardManager = new CardManager();
     cardManager->Initialize(scene);
 
+    // Initialize the AI.
+    ai = new AI();
+    ai->Initialize();
+
     // Initialize the StateManager.
     stateManager = new StateManager();
     stateManager->Initialize(button, button2, button3, button4);

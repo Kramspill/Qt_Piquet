@@ -17,6 +17,7 @@
 //------------------------------------------------------------------------------
 #include "Scene/Scene.h"
 #include "View/View.h"
+#include "AI/AI.h"
 #include "CardManager.h"
 #include "StateManager.h"
 #include "ScoreManager.h"
@@ -40,6 +41,7 @@ private:
 private:
     Scene*        scene;
     View*         view;
+    AI*           ai;
     CardManager*  cardManager;
     StateManager* stateManager;
     ScoreManager* scoreManager;
