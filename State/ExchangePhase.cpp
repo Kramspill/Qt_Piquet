@@ -165,6 +165,7 @@ void ExchangePhase::PlayerDraw(void)
 //------------------------------------------------------------------------------
 void ExchangePhase::CpuDiscard(void)
 {
+    emit SignalAI(AI::DISCARD);
     emit RequestCardTransfer(CardArray::CPUHAND, CardArray::CPUDISCARDS, 3);
 }
 

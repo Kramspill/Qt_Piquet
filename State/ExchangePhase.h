@@ -20,6 +20,7 @@
 // My Header Files
 //------------------------------------------------------------------------------
 #include "Cards/CardArray.h"
+#include "AI/AI.h"
 
 
 //------------------------------------------------------------------------------
@@ -58,6 +59,7 @@ signals:
     void           RequestSelectedCardsTransfer(CardArray::CardArrayType,
                                                 CardArray::CardArrayType);
     void           TransferComplete(void);
+    void           SignalAI(AI::AIAction);
     void           ExchangePhaseFinished(void);
 
 private:
