@@ -146,7 +146,6 @@ void DeclarationPhase::PlayerPoint(void)
     // Reconnect the button to perform the desired checks when in this state.
     connect(declareButton, SIGNAL(clicked()), this,
             SIGNAL(RequestCheckSelection(CardArray::POINT)));
-
 }
 
 
