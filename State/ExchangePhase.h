@@ -49,6 +49,7 @@ private slots:
     void           SignalDisableCardsSelectable(void);
     void           PlayerDiscard(void);
     void           PlayerDraw(void);
+    void           CpuProcessing(void);
     void           CpuDiscard(void);
     void           CpuDraw(void);
 
@@ -60,6 +61,7 @@ signals:
                                                 CardArray::CardArrayType);
     void           TransferComplete(void);
     void           SignalAI(AI::AIAction);
+    void           AIProcessingComplete(void);
     void           ExchangePhaseFinished(void);
 
 private:
