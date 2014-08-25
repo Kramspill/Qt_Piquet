@@ -170,6 +170,10 @@ void StateManager::ConnectSignals(void)
                      SIGNAL(RequestCardsSelectable(bool, int)),
                      this,
                      SIGNAL(SignalSetCardsSelectable(bool, int)));
+    QObject::connect(exchangePhase,
+                     SIGNAL(SignalAI(AI::AIAction)),
+                     this,
+                     SIGNAL(SignalAI(AI::AIAction)));
 
     // Connect signals to/fom the declaration phase state.
     QObject::connect(this,

@@ -54,6 +54,7 @@ signals:
     void              SignalTransferComplete(void);
     void              SignalNumOfCardsTransferred(int);
     void              SignalCheckSelection(CardArray::SelectionType);
+    void              SignalAI(AI::AIAction);
 
 private:
     QStateMachine*    stateMachine;
