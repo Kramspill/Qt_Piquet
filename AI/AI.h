@@ -27,6 +27,7 @@ class AI : public QObject
 public:
     enum AIAction
     {
+        UPDATE,
         DISCARD,
         POINT,
         SEQUENCE,
@@ -40,14 +41,29 @@ public:
 
     void Initialize(void);
 
+    void UpdateKnowledgeBase(Card* card, CardArray::CardArrayType location);
+
 private:
     void SelectCardsToDiscard(void);
+    void RankCards(void);
+    void CalculateSuitValues(void);
+    void RankStoppers(void);
+    void RankSets(void);
+    void RankSequences(void);
+    void FinishRanking(void);
+
     void DeclarePoint(void);
     void DeclareSequence(void);
     void DeclareSet(void);
 
 public slots:
     void SelectAIAction(AIAction action);
+
+private:
+    int  knowledgeBase[4][8];
+    int  cardRanks[12];
+    int  suitValues[4];
+    int  pointValues[8];
 };
 
 #endif // AI_H
