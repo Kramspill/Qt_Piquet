@@ -218,7 +218,7 @@ bool CardArray::UpdateCardSelections(Card* card)
 void CardArray::CheckSelection(CardArray::SelectionType phase)
 {
     Card*      aCard;
-    Card::Suit theSuit = Card::NOSUIT;
+    Card::Suit theSuit;
     int        numOfSelectedCards = selectedCards.size();
     bool       valid = true;
 
