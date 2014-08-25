@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 // Qt Header Files
 //------------------------------------------------------------------------------
+#include <QObject>
 #include <QPushButton>
 
 
@@ -26,8 +27,9 @@
 //------------------------------------------------------------------------------
 // Class: GameManager
 //------------------------------------------------------------------------------
-class GameManager
+class GameManager : public QObject
 {
+    Q_OBJECT
 public:
     GameManager(void);
     GameManager(GameManager&);
@@ -37,6 +39,9 @@ public:
 
 private:
     void          ConnectSignals(void);
+
+private slots:
+    void          UpdateAI(void);
 
 private:
     Scene*        scene;

@@ -124,10 +124,55 @@ void GameManager::ConnectSignals(void)
                      SIGNAL(SignalCheckSelection(CardArray::SelectionType)),
                      cardManager,
                      SLOT(CallCheckSelection(CardArray::SelectionType)));
+    QObject::connect(stateManager,
+                     SIGNAL(SignalAI(AI::AIAction)),
+                     ai,
+                     SLOT(SelectAIAction(AI::AIAction)));
 
     // Connect the signals from the scene.
     QObject::connect(scene,
                      SIGNAL(SignalCardSelectionsChanged(Card*)),
                      cardManager,
                      SLOT(CardSelectionsChanged(Card*)));
+}
+
+
+//------------------------------------------------------------------------------
+// UpdateAI - Update the game's ai with current knowledge.
+//------------------------------------------------------------------------------
+void GameManager::UpdateAI(void)
+{
+    Card*      card;
+    CardArray* cardArray;
+    int        size = 0;
+
+    // Retrieve the cpu's hand and update the ai's knowledge base.
+    cardArray = cardManager->GetCpuHand();
+    size      = cardArray->GetSize();
+
+    for ( int index = 0; index < size; index++ )
+    {
+        card = cardArray->GetCard(index);
+        ai->UpdateKnowledgeBase(card, CardArray::CPUHAND);
+    }
+
+    // Retrieve the cpu's discards and update the ai's knowledge base.
+    cardArray = cardManager->GetCpuDiscards();
+    size      = cardArray->GetSize();
+
+    for ( int index = 0; index < size; index++ )
+    {
+        card = cardArray->GetCard(index);
+        ai->UpdateKnowledgeBase(card, CardArray::CPUDISCARDS);
+    }
+
+    // Retrieve the previous tricks and update the ai's knowledge base.
+    cardArray = cardManager->GetPreviousTricks();
+    size      = cardArray->GetSize();
+
+    for ( int index = 0; index < size; index++ )
+    {
+        card = cardArray->GetCard(index);
+        ai->UpdateKnowledgeBase(card, CardArray::PREVIOUSTRICKS);
+    }
 }
