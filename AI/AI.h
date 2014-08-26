@@ -34,36 +34,47 @@ public:
         SET
     };
 
+    struct KnowledgeItem
+    {
+        CardArray::CardArrayType location;
+        int index;
+    };
+
 public:
     AI(void);
     AI(AI&);
     ~AI(void);
 
-    void Initialize(void);
+    void          Initialize(void);
 
-    void UpdateKnowledgeBase(Card* card, CardArray::CardArrayType location);
+    void          UpdateKnowledgeBase(Card* card, int index,
+                                      CardArray::CardArrayType location);
+    void          UpdateHand(CardArray* newCpuHand);
 
 private:
-    void SelectCardsToDiscard(void);
-    void RankCards(void);
-    void CalculateSuitValues(void);
-    void RankStoppers(void);
-    void RankSets(void);
-    void RankSequences(void);
-    void FinishRanking(void);
+    void          SelectCardsToDiscard(void);
+    void          RankCards(void);
+    void          CalculateSuitValues(void);
+    void          RankStoppers(void);
+    void          RankSets(void);
+    void          RankSequences(void);
+    void          FinishRanking(void);
 
-    void DeclarePoint(void);
-    void DeclareSequence(void);
-    void DeclareSet(void);
+    void          DeclarePoint(void);
+    void          DeclareSequence(void);
+    void          DeclareSet(void);
 
 public slots:
-    void SelectAIAction(AIAction action);
+    void          SelectAIAction(AIAction action);
 
 private:
-    int  knowledgeBase[4][8];
-    int  cardRanks[12];
-    int  suitValues[4];
-    int  pointValues[8];
+    KnowledgeItem knowledgeBase[4][8];
+    CardArray*    cpuHand;
+    int           cardRanks[12];
+    int           currentRank;
+    int           suitValues[4];
+    int           suitRanks[4];
+    int           pointValues[8];
 };
 
 #endif // AI_H
