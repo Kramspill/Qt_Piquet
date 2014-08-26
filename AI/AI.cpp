@@ -72,9 +72,10 @@ void AI::UpdateKnowledgeBase(Card* card, int index,
     Card::Value value = card->GetValue();
 
     // Create a knowledge item and add it to the knowledge base.
-    KnowledgeItem item;
-    item.location = location;
-    item.index    = index;
+    KnowledgeItem* item = new KnowledgeItem;
+    item->location      = location;
+    item->index         = index;
+    item->rank          = -1;
 
     knowledgeBase[suit][value-7] = item;
 }
@@ -169,17 +170,21 @@ void AI::RankStoppers(void)
 {
     bool stopperNotFound = true;
 
+    // Check each suit.
     for ( int index = 0; index < 4; index++ )
     {
         int cardValue       = 7;
         int additionalCards = 0;
         while ( stopperNotFound && cardValue > 4 )
         {
-            KnowledgeItem item = knowledgeBase[suitRanks[index]][cardValue];
+            KnowledgeItem* item = knowledgeBase[suitRanks[index]][cardValue];
 
-            if ( item.location == CardArray::CPUHAND )
+            // If the item at this location is in the cpuHand then a stopper
+            // has been found.
+            if ( item->location == CardArray::CPUHAND )
             {
-                cardRanks[currentRank--] = item.index;
+                item->rank               = currentRank;
+                cardRanks[currentRank--] = item->index;
                 stopperNotFound          = false;
             }
 
@@ -189,15 +194,19 @@ void AI::RankStoppers(void)
 
         additionalCards--;
 
+        // If we couldn't find a stopper or we require additional cards for the
+        // stopper, then we'll add up to two cards to the ranked cards.
         if ( stopperNotFound || additionalCards > 0 )
         {
             while ( additionalCards > 0 && cardValue > 0 )
             {
-                KnowledgeItem item = knowledgeBase[suitRanks[index]][cardValue];
+                KnowledgeItem* item =
+                        knowledgeBase[suitRanks[index]][cardValue];
 
-                if ( item.location == CardArray::CPUHAND )
+                if ( item->location == CardArray::CPUHAND )
                 {
-                    cardRanks[currentRank--] = item.index;
+                    item->rank               = currentRank;
+                    cardRanks[currentRank--] = item->index;
                 }
             }
         }
@@ -215,7 +224,37 @@ void AI::RankSets(void)
     // Make sure that there are still cards to rank.
     if ( currentRank >= 0 )
     {
+        // Only check down to tens.
+        for ( int valueIndex = 7; valueIndex > 2; valueIndex-- )
+        {
+            int cardCount = 0;
 
+            KnowledgeItem* item;
+            for ( int suitIndex = 0; suitIndex < 4; suitIndex++ )
+            {
+                item = knowledgeBase[suitRanks[suitIndex]][valueIndex];
+
+                if ( item->location == CardArray::CPUHAND )
+                {
+                    cardCount++;
+                }
+            }
+
+            // If we found a set, add the cards to the ranking.
+            if ( cardCount > 2 )
+            {
+                for ( int suitIndex = 0; suitIndex < 4; suitIndex++ )
+                {
+                    item = knowledgeBase[suitRanks[suitIndex]][valueIndex];
+
+                    if ( item->location == CardArray::CPUHAND )
+                    {
+                        item->rank               = currentRank;
+                        cardRanks[currentRank--] = item->index;
+                    }
+                }
+            }
+        }
     }
 }
 
