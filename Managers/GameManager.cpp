@@ -20,7 +20,8 @@ GameManager::GameManager(void)
 //------------------------------------------------------------------------------
 // Copy Constructor
 //------------------------------------------------------------------------------
-GameManager::GameManager(GameManager&)
+GameManager::GameManager(GameManager&) :
+    QObject()
 {
 }
 
@@ -153,8 +154,11 @@ void GameManager::UpdateAI(void)
     for ( int index = 0; index < size; index++ )
     {
         card = cardArray->GetCard(index);
-        ai->UpdateKnowledgeBase(card, CardArray::CPUHAND);
+        ai->UpdateKnowledgeBase(card, index, CardArray::CPUHAND);
     }
+
+    // Provide the ai with a pointer to the cpu's hand.
+    ai->UpdateHand(cardArray);
 
     // Retrieve the cpu's discards and update the ai's knowledge base.
     cardArray = cardManager->GetCpuDiscards();
@@ -163,7 +167,7 @@ void GameManager::UpdateAI(void)
     for ( int index = 0; index < size; index++ )
     {
         card = cardArray->GetCard(index);
-        ai->UpdateKnowledgeBase(card, CardArray::CPUDISCARDS);
+        ai->UpdateKnowledgeBase(card, index, CardArray::CPUDISCARDS);
     }
 
     // Retrieve the previous tricks and update the ai's knowledge base.
@@ -173,6 +177,6 @@ void GameManager::UpdateAI(void)
     for ( int index = 0; index < size; index++ )
     {
         card = cardArray->GetCard(index);
-        ai->UpdateKnowledgeBase(card, CardArray::PREVIOUSTRICKS);
+        ai->UpdateKnowledgeBase(card, index, CardArray::PREVIOUSTRICKS);
     }
 }
