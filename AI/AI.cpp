@@ -139,7 +139,7 @@ void AI::SelectCardsToDiscard(void)
     RankCards();
 
     // Select 3 cards for now.
-    for ( int index = 11; index > 8; index-- )
+    for ( int index = 2; index > 0; index-- )
     {
         card = cpuHand->GetCard(cardRanks[index]);
         cpuHand->SetSelectionLimit(12);
