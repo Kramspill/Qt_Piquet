@@ -51,6 +51,7 @@ public:
     void           UpdateKnowledgeBase(Card* card, int index,
                                        CardArray::CardArrayType location);
     void           UpdateHand(CardArray* newCpuHand);
+    void           SelectAIAction(AIAction action);
 
 private:
     void           SelectCardsToDiscard(void);
@@ -65,8 +66,9 @@ private:
     void           DeclareSequence(void);
     void           DeclareSet(void);
 
-public slots:
-    void           SelectAIAction(AIAction action);
+signals:
+    void           SignalCardSelectionsChanged(Card*, CardArray::CardArrayType);
+    void           AIProcessingComplete(void);
 
 private:
     KnowledgeItem* knowledgeBase[4][8];

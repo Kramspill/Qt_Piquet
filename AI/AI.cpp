@@ -57,8 +57,17 @@ void AI::Initialize(void)
     suitRanks[2] = 2;
     suitRanks[3] = 3;
 
-    // Initialize the cuurentRank.
+    // Initialize the currentRank.
     currentRank = 11;
+
+    // Initialize the member array.
+    for ( int outerIndex = 0; outerIndex < 4; outerIndex++ )
+    {
+        for ( int innerIndex = 0; innerIndex < 8; innerIndex++ )
+        {
+            knowledgeBase[outerIndex][innerIndex] = 0;
+        }
+    }
 }
 
 
@@ -91,12 +100,56 @@ void AI::UpdateHand(CardArray* newCpuHand)
 
 
 //------------------------------------------------------------------------------
+// SelectAIAction - Select the appropriate action to perform.
+//------------------------------------------------------------------------------
+void AI::SelectAIAction(AI::AIAction action)
+{
+    switch ( action )
+    {
+        case DISCARD:
+            SelectCardsToDiscard();
+            break;
+
+        case POINT:
+            DeclarePoint();
+            break;
+
+        case SEQUENCE:
+            DeclareSequence();
+            break;
+
+        case SET:
+            DeclareSet();
+            break;
+
+        default:
+            break;
+    }
+}
+
+
+//------------------------------------------------------------------------------
 // SelectCardsToDiscard - Select cards to discard for the Exchange phase.
 //------------------------------------------------------------------------------
 void AI::SelectCardsToDiscard(void)
 {
+    Card* card;
+
     // Rank the cards.
     RankCards();
+
+    // Select 3 cards for now.
+    for ( int index = 11; index > 8; index-- )
+    {
+        card = cpuHand->GetCard(cardRanks[index]);
+        cpuHand->SetSelectionLimit(12);
+
+        card->setFlag(QGraphicsItem::ItemIsSelectable, true);
+        card->setSelected(true);
+        emit SignalCardSelectionsChanged(card, CardArray::CPUHAND);
+    }
+
+    emit AIProcessingComplete();
 }
 
 
@@ -181,7 +234,7 @@ void AI::RankStoppers(void)
 
             // If the item at this location is in the cpuHand then a stopper
             // has been found.
-            if ( item->location == CardArray::CPUHAND )
+            if ( item && item->location == CardArray::CPUHAND )
             {
                 item->rank               = currentRank;
                 cardRanks[currentRank--] = item->index;
@@ -203,11 +256,13 @@ void AI::RankStoppers(void)
                 KnowledgeItem* item =
                         knowledgeBase[suitRanks[index]][cardValue];
 
-                if ( item->location == CardArray::CPUHAND )
+                if ( item && item->location == CardArray::CPUHAND )
                 {
                     item->rank               = currentRank;
                     cardRanks[currentRank--] = item->index;
                 }
+
+                cardValue--;
             }
         }
 
@@ -234,7 +289,7 @@ void AI::RankSets(void)
             {
                 item = knowledgeBase[suitRanks[suitIndex]][valueIndex];
 
-                if ( item->location == CardArray::CPUHAND )
+                if ( item && item->location == CardArray::CPUHAND )
                 {
                     cardCount++;
                 }
@@ -247,10 +302,13 @@ void AI::RankSets(void)
                 {
                     item = knowledgeBase[suitRanks[suitIndex]][valueIndex];
 
-                    if ( item->location == CardArray::CPUHAND )
+                    if ( item && item->location == CardArray::CPUHAND )
                     {
-                        item->rank               = currentRank;
-                        cardRanks[currentRank--] = item->index;
+                        if ( item->rank == -1)
+                        {
+                            item->rank               = currentRank;
+                            cardRanks[currentRank--] = item->index;
+                        }
                     }
                 }
             }
@@ -267,7 +325,44 @@ void AI::RankSequences(void)
     // Make sure that there are still cards to rank.
     if ( currentRank >= 0 )
     {
+        int sequenceCount = 0;
+        KnowledgeItem* item;
 
+        // Check for sequences in the best two suits.
+        for ( int suitIndex = 0; suitIndex < 2; suitIndex++ )
+        {
+            sequenceCount = 0;
+
+            for ( int valueIndex = 7; valueIndex >= 0; valueIndex-- )
+            {
+                item = knowledgeBase[suitRanks[suitIndex]][valueIndex];
+
+                if ( item && item->location == CardArray::CPUHAND )
+                {
+                    sequenceCount++;
+                }
+                else if ( sequenceCount >= 3 )
+                {
+                    // Go back up the cards ranking the unranked ones.
+                    int highestCardInSequence = valueIndex + sequenceCount + 1;
+                    for ( int index = valueIndex + 1;
+                          index < highestCardInSequence; index++ )
+                    {
+                        item = knowledgeBase[suitRanks[suitIndex]][index];
+
+                        if ( item->rank == -1 )
+                        {
+                            item->rank               = currentRank;
+                            cardRanks[currentRank--] = item->index;
+                        }
+                    }
+                }
+                else
+                {
+                    sequenceCount = 0;
+                }
+            }
+        }
     }
 }
 
@@ -280,7 +375,23 @@ void AI::FinishRanking(void)
     // Make sure that there are still cards to rank.
     if ( currentRank >= 0 )
     {
+        KnowledgeItem* item;
 
+        // Rank the rest based on their Point contribution.
+        for ( int suitIndex = 0; suitIndex < 4; suitIndex++ )
+        {
+            for ( int valueIndex = 7; valueIndex <= 0; valueIndex++ )
+            {
+                item = knowledgeBase[suitRanks[suitIndex]][valueIndex];
+
+                if ( item && item->location == CardArray::CPUHAND &&
+                     item->rank == -1 )
+                {
+                    item->rank               = currentRank;
+                    cardRanks[currentRank--] = item->index;
+                }
+            }
+        }
     }
 }
 
@@ -309,33 +420,4 @@ void AI::DeclareSequence(void)
 void AI::DeclareSet(void)
 {
 
-}
-
-
-//------------------------------------------------------------------------------
-// SelectAIAction - Select the appropriate action to perform.
-//------------------------------------------------------------------------------
-void AI::SelectAIAction(AI::AIAction action)
-{
-    switch ( action )
-    {
-        case DISCARD:
-            SelectCardsToDiscard();
-            break;
-
-        case POINT:
-            DeclarePoint();
-            break;
-
-        case SEQUENCE:
-            DeclareSequence();
-            break;
-
-        case SET:
-            DeclareSet();
-            break;
-
-        default:
-            break;
-    }
 }
