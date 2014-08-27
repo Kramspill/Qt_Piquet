@@ -34,7 +34,8 @@ CardArray::CardArray(CardArray::CardArrayType arrayType, int x, int y) :
 //------------------------------------------------------------------------------
 // Copy Constructor
 //------------------------------------------------------------------------------
-CardArray::CardArray(CardArray&)
+CardArray::CardArray(CardArray&) :
+    QObject()
 {
 }
 
