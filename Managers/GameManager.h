@@ -41,6 +41,7 @@ private:
     void          ConnectSignals(void);
 
 private slots:
+    void          CallSelectAIAction(AI::AIAction action);
     void          UpdateAI(void);
 
 private:

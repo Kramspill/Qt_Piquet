@@ -127,14 +127,39 @@ void GameManager::ConnectSignals(void)
                      SLOT(CallCheckSelection(CardArray::SelectionType)));
     QObject::connect(stateManager,
                      SIGNAL(SignalAI(AI::AIAction)),
-                     ai,
-                     SLOT(SelectAIAction(AI::AIAction)));
+                     this,
+                     SLOT(CallSelectAIAction(AI::AIAction)));
+    QObject::connect(stateManager,
+                     SIGNAL(UpdateAI()),
+                     this,
+                     SLOT(UpdateAI()));
+
+    // Connect the signals from the ai.
+    QObject::connect(ai,
+                     SIGNAL(AIProcessingComplete()),
+                     stateManager,
+                     SIGNAL(AIProcessingComplete()));
+    QObject::connect(ai,
+                     SIGNAL(SignalCardSelectionsChanged(Card*,
+                                                     CardArray::CardArrayType)),
+                     cardManager,
+                     SLOT(CardSelectionsChanged(Card*,
+                                                CardArray::CardArrayType)));
 
     // Connect the signals from the scene.
     QObject::connect(scene,
                      SIGNAL(SignalCardSelectionsChanged(Card*)),
                      cardManager,
                      SLOT(CardSelectionsChanged(Card*)));
+}
+
+
+//------------------------------------------------------------------------------
+// CallSelectAIAction - Call an action within the ai class.
+//------------------------------------------------------------------------------
+void GameManager::CallSelectAIAction(AI::AIAction action)
+{
+    ai->SelectAIAction(action);
 }
 
 
