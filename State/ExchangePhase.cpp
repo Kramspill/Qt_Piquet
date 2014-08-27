@@ -98,6 +98,8 @@ void ExchangePhase::Initialize(QPushButton* button)
 void ExchangePhase::onEntry(QEvent*)
 {
     stateMachine->start();
+
+    emit UpdateAI();
 }
 
 
@@ -144,6 +146,16 @@ void ExchangePhase::SignalEnableCardsSelectable(void)
 void ExchangePhase::SignalDisableCardsSelectable(void)
 {
     emit RequestCardsSelectable(false, 0);
+}
+
+
+//------------------------------------------------------------------------------
+// CallAIProcessingComplete - Informs this class to emit an AIProcessingComplete
+//                            signal.
+//------------------------------------------------------------------------------
+void ExchangePhase::CallAIProcessingComplete(void)
+{
+    emit AIProcessingComplete();
 }
 
 
