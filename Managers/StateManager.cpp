@@ -149,6 +149,10 @@ void StateManager::ConnectSignals(void)
                      SIGNAL(SignalNumOfCardsTransferred(int)),
                      exchangePhase,
                      SLOT(SetNumCardsTransferred(int)));
+    QObject::connect(this,
+                     SIGNAL(AIProcessingComplete()),
+                     exchangePhase,
+                     SLOT(CallAIProcessingComplete()));
     QObject::connect(exchangePhase,
                      SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
                                                 CardArray::CardArrayType,
@@ -174,6 +178,10 @@ void StateManager::ConnectSignals(void)
                      SIGNAL(SignalAI(AI::AIAction)),
                      this,
                      SIGNAL(SignalAI(AI::AIAction)));
+    QObject::connect(exchangePhase,
+                     SIGNAL(UpdateAI()),
+                     this,
+                     SIGNAL(UpdateAI()));
 
     // Connect signals to/fom the declaration phase state.
     QObject::connect(this,
