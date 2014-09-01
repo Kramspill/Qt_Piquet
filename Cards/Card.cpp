@@ -138,6 +138,8 @@ void Card::Initialize(void)
     // Link the card to the signals from CardStates.
     connect(inPlayerHandState, SIGNAL(entered()), this, SLOT(FlipCard()));
     connect(inPlayerHandState, SIGNAL(exited()), this, SLOT(FlipCard()));
+    connect(inCpuHandState, SIGNAL(entered()), this, SLOT(FlipCard()));
+    connect(inCpuHandState, SIGNAL(exited()), this, SLOT(FlipCard()));
 
     // Run the state machine.
     stateMachine->start();
