@@ -34,6 +34,7 @@ class CardArray : public QObject
 public:
     enum CardArrayType
     {
+        UNKNOWN,
         DECK,
         PLAYERHAND,
         CPUHAND,
