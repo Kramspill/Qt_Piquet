@@ -60,12 +60,18 @@ void AI::Initialize(void)
     // Initialize the currentRank.
     currentRank = 11;
 
-    // Initialize the member array.
+    // Initialize the knowledge base.
     for ( int outerIndex = 0; outerIndex < 4; outerIndex++ )
     {
         for ( int innerIndex = 0; innerIndex < 8; innerIndex++ )
         {
-            knowledgeBase[outerIndex][innerIndex] = 0;
+            KnowledgeItem* item = new KnowledgeItem();
+
+            item->location = CardArray::UNKNOWN;
+            item->index    = 0;
+            item->rank     = -1;
+
+            knowledgeBase[outerIndex][innerIndex] = item;
         }
     }
 }
@@ -80,13 +86,9 @@ void AI::UpdateKnowledgeBase(Card* card, int index,
     Card::Suit  suit  = card->GetSuit();
     Card::Value value = card->GetValue();
 
-    // Create a knowledge item and add it to the knowledge base.
-    KnowledgeItem* item = new KnowledgeItem;
-    item->location      = location;
-    item->index         = index;
-    item->rank          = -1;
-
-    knowledgeBase[suit][value-7] = item;
+    // Add the information to the knowledge base.
+    knowledgeBase[suit][value-7]->location = location;
+    knowledgeBase[suit][value-7]->index    = index;
 }
 
 
@@ -139,7 +141,7 @@ void AI::SelectCardsToDiscard(void)
     RankCards();
 
     // Select 3 cards for now.
-    for ( int index = 2; index > 0; index-- )
+    for ( int index = 2; index >= 0; index-- )
     {
         card = cpuHand->GetCard(cardRanks[index]);
         cpuHand->SetSelectionLimit(12);
@@ -260,6 +262,8 @@ void AI::RankStoppers(void)
                 {
                     item->rank               = currentRank;
                     cardRanks[currentRank--] = item->index;
+
+                    additionalCards--;
                 }
 
                 cardValue--;
@@ -344,9 +348,9 @@ void AI::RankSequences(void)
                 else if ( sequenceCount >= 3 )
                 {
                     // Go back up the cards ranking the unranked ones.
-                    int highestCardInSequence = valueIndex + sequenceCount + 1;
+                    int highestCardInSequence = valueIndex + sequenceCount;
                     for ( int index = valueIndex + 1;
-                          index < highestCardInSequence; index++ )
+                          index <= highestCardInSequence; index++ )
                     {
                         item = knowledgeBase[suitRanks[suitIndex]][index];
 
@@ -356,6 +360,8 @@ void AI::RankSequences(void)
                             cardRanks[currentRank--] = item->index;
                         }
                     }
+
+                    sequenceCount = 0;
                 }
                 else
                 {
@@ -380,7 +386,7 @@ void AI::FinishRanking(void)
         // Rank the rest based on their Point contribution.
         for ( int suitIndex = 0; suitIndex < 4; suitIndex++ )
         {
-            for ( int valueIndex = 7; valueIndex <= 0; valueIndex++ )
+            for ( int valueIndex = 7; valueIndex >= 0; valueIndex-- )
             {
                 item = knowledgeBase[suitRanks[suitIndex]][valueIndex];
 
