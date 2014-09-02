@@ -16,6 +16,7 @@
 // My Header Files
 //------------------------------------------------------------------------------
 #include "Cards/CardArray.h"
+#include "KnowledgeBase.h"
 
 
 //------------------------------------------------------------------------------
@@ -34,13 +35,6 @@ public:
         SET
     };
 
-    struct KnowledgeItem
-    {
-        CardArray::CardArrayType location;
-        int index;
-        int rank;
-    };
-
 public:
     AI(void);
     AI(AI&);
@@ -55,13 +49,6 @@ public:
 
 private:
     void           SelectCardsToDiscard(void);
-    void           RankCards(void);
-    void           CalculateSuitValues(void);
-    void           RankStoppers(void);
-    void           RankSets(void);
-    void           RankSequences(void);
-    void           FinishRanking(void);
-
     void           DeclarePoint(void);
     void           DeclareSequence(void);
     void           DeclareSet(void);
@@ -71,13 +58,8 @@ signals:
     void           AIProcessingComplete(void);
 
 private:
-    KnowledgeItem* knowledgeBase[4][8];
+    KnowledgeBase* knowledgeBase;
     CardArray*     cpuHand;
-    int            cardRanks[12];
-    int            currentRank;
-    int            suitValues[4];
-    int            suitRanks[4];
-    int            pointValues[8];
 };
 
 #endif // AI_H
