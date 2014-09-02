@@ -46,6 +46,12 @@ void DeclarationPhase::Initialize(QPushButton* button, QPushButton* button2)
     // Assign this state's declareButton for easy access.
     declareButton = button;
 
+    // Initialize the status of each phase.
+    for ( int index = 0; index < 3; index++ )
+    {
+        phaseStatus[index] = PENDING;
+    }
+
     // Initialize the states within the state machine.
     QState*      playerPoint    = new QState(stateMachine);
     QState*      playerSequence = new QState(stateMachine);

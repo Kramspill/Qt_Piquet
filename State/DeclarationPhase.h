@@ -29,6 +29,15 @@ class DeclarationPhase : public QState
 {
     Q_OBJECT
 public:
+    enum PhaseOutcome
+    {
+        PENDING,
+        PLAYERWIN,
+        CPUWIN,
+        DRAW
+    };
+
+public:
     DeclarationPhase(QState* parent = 0);
     DeclarationPhase(DeclarationPhase&);
     ~DeclarationPhase(void);
@@ -59,6 +68,7 @@ signals:
 
 private:
     QStateMachine* stateMachine;
+    PhaseOutcome   phaseStatus[3];
     QPushButton*   declareButton;
 };
 
