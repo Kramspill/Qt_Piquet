@@ -154,7 +154,7 @@ void CardArray::Stagger(CardArray::StaggerType staggerType)
                 card = GetCard(index);
 
                 card->SetPosition(newPosition);
-                EmitCardMovedSignal(card, true);
+                UpdateCardState(card, true);
             }
             break;
 
@@ -167,7 +167,7 @@ void CardArray::Stagger(CardArray::StaggerType staggerType)
                 newPosition.setY(newPosition.y() - index);
 
                 card->SetPosition(newPosition);
-                EmitCardMovedSignal(card, true);
+                UpdateCardState(card, true);
             }
             break;
 
@@ -286,6 +286,22 @@ Card* CardArray::RemoveSelectedCard(void)
 
 
 //------------------------------------------------------------------------------
+// DeselectAll - Deselect all cards in this array.
+//------------------------------------------------------------------------------
+void CardArray::DeselectAll(void)
+{
+    Card* card;
+    int   numOfSelectedCards = selectedCards.size();
+
+    for ( int index = 0; index < numOfSelectedCards; index++ )
+    {
+        card = selectedCards[index];
+        card->setSelected(false);
+    }
+}
+
+
+//------------------------------------------------------------------------------
 // GetSize - Return the size of the cards vector.
 //------------------------------------------------------------------------------
 int CardArray::GetSize(void)
@@ -333,7 +349,7 @@ void CardArray::UpdateCardPositions(Card* addedCard, bool noAnimation)
     if ( addedCard )
     {
         addedCard->SetPosition(nextCardPosition, GetSize());
-        EmitCardMovedSignal(addedCard, noAnimation);
+        UpdateCardState(addedCard, noAnimation);
         newCardAdded = true;
     }
 
@@ -387,8 +403,8 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
                     // Set the new position of the card.
                     card->SetPosition(shiftedPosition, index + 1);
 
-                    // Inform the card that it has moved.
-                    emit card->CardMoved(false);
+                    // Update the card's animation.
+                    card->UpdateAnimation(false);
                 }
 
                 // Update the position of the next card.
@@ -417,8 +433,8 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
                     // Set the new position of the card.
                     card->SetPosition(shiftedPosition, arraySize - index);
 
-                    // Inform the card that it has moved.
-                    emit card->CardMoved(false);
+                    // Update the card's animation.
+                    card->UpdateAnimation(false);
                 }
 
                 // Update the position of the next card.
@@ -438,14 +454,12 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
 
 
 //------------------------------------------------------------------------------
-// EmitCardMovedSignal - Send a signal to the card, informing it that it has
-//                       moved.
+// UpdateCardState - Update the state and animation of a card.
 //------------------------------------------------------------------------------
-void CardArray::EmitCardMovedSignal(Card* card, bool noAnimation)
+void CardArray::UpdateCardState(Card* card, bool noAnimation)
 {
-    // Emit a signal to update the animation regardless of where the card is
-    // going.
-    emit card->CardMoved(noAnimation);
+    // Update the card's animation regardless of where the card is going.
+    card->UpdateAnimation(noAnimation);
 
     // Emit a signal to tell the card to change states.
     switch ( cardArrayType )
@@ -488,21 +502,5 @@ void CardArray::ResetZPositions(void)
     {
         card = GetCard(index);
         card->SetPosition(card->GetPosition(), index + 1);
-    }
-}
-
-
-//------------------------------------------------------------------------------
-// DeselectAll - Deselect all cards in this array.
-//------------------------------------------------------------------------------
-void CardArray::DeselectAll(void)
-{
-    Card* card;
-    int   numOfSelectedCards = selectedCards.size();
-
-    for ( int index = 0; index < numOfSelectedCards; index++ )
-    {
-        card = selectedCards[index];
-        card->setSelected(false);
     }
 }

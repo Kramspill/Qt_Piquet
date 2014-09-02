@@ -77,6 +77,7 @@ public:
     bool               UpdateCardSelections(Card* card);
     void               CheckSelection(SelectionType phase);
     Card*              RemoveSelectedCard(void);
+    void               DeselectAll(void);
 
     int                GetSize(void);
     int                GetSelectedCardsSize(void);
@@ -87,11 +88,8 @@ private:
     void               UpdateCardPositions(Card* addedCard = 0,
                                            bool noAnimation = false);
     void               CleanUpCardPositions(bool newCardAdded);
-    void               EmitCardMovedSignal(Card* card, bool noAnimation);
+    void               UpdateCardState(Card* card, bool noAnimation);
     void               ResetZPositions(void);
-
-public slots:
-    void               DeselectAll(void);
 
 signals:
     void               SignalValidSelection(void);
