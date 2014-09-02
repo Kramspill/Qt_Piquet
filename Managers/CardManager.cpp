@@ -371,6 +371,7 @@ void CardManager::CallCheckSelection(CardArray::SelectionType phase,
                                      CardArray::CardArrayType cardArrayType)
 {
     CardArray* cardArray = GetDesiredCardArray(cardArrayType);
+    cardArray->CheckSelection(phase);
 }
 
 
