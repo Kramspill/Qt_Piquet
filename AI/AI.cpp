@@ -56,7 +56,7 @@ void AI::Initialize(void)
 
 
 //------------------------------------------------------------------------------
-// UpdateCard - Update the status of a card in the knowledge base.
+// UpdateKnowledgeBase - Update the status of a card in the knowledge base.
 //------------------------------------------------------------------------------
 void AI::UpdateKnowledgeBase(Card* card, int index,
                              CardArray::CardArrayType location)
