@@ -70,13 +70,12 @@ public:
 
     void                UpdateSelection(void);
     void                SetPosition(QPointF newPosition, int zPosition = -1);
+    void                UpdateAnimation(bool noAnimation);
 
 private slots:
-    void                UpdatePosition(bool noAnimation);
     void                FlipCard(void);
 
 signals:
-    void                CardMoved(bool noAnimation);
     void                InTalon(void);
     void                InPlayerHand(void);
     void                InCpuHand(void);
