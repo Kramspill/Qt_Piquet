@@ -62,8 +62,6 @@ public:
     Card(Card&);
     ~Card(void);
 
-    void                Initialize(void);
-
     Suit                GetSuit(void);
     Value               GetValue(void);
     QPointF             GetPosition(void);
@@ -71,6 +69,9 @@ public:
     void                UpdateSelection(void);
     void                SetPosition(QPointF newPosition, int zPosition = -1);
     void                UpdateAnimation(bool noAnimation);
+
+private:
+    void                Initialize(void);
 
 private slots:
     void                FlipCard(void);

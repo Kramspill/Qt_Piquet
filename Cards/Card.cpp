@@ -28,7 +28,6 @@ Card::Card(const QString& svgFileName, Suit theSuit, Value theValue) :
     suit(theSuit),
     value(theValue)
 {
-    // This'll probably be removed and get explicitely called.
     Initialize();
 }
 
@@ -47,6 +46,83 @@ Card::Card(Card&) :
 //------------------------------------------------------------------------------
 Card::~Card(void)
 {
+}
+
+
+//------------------------------------------------------------------------------
+// GetSuit - Accessor for Card's suit member variable.
+//------------------------------------------------------------------------------
+Card::Suit Card::GetSuit(void)
+{
+    return suit;
+}
+
+
+//------------------------------------------------------------------------------
+// GetValue - Accessor for Card's value member variable.
+//------------------------------------------------------------------------------
+Card::Value Card::GetValue(void)
+{
+    return value;
+}
+
+
+//------------------------------------------------------------------------------
+// GetPosition - Mutator for Card's position member variable.
+//------------------------------------------------------------------------------
+QPointF Card::GetPosition(void)
+{
+    return position;
+}
+
+
+//------------------------------------------------------------------------------
+// UpdateSelection - Update the position of the card based on it's selection
+//                   status.
+//------------------------------------------------------------------------------
+void Card::UpdateSelection(void)
+{
+    if ( this->isSelected() )
+    {
+        position.setY(position.y() - 30);
+    }
+    else
+    {
+        position.setY(position.y() + 30);
+    }
+
+    UpdateAnimation(false);
+}
+
+
+//------------------------------------------------------------------------------
+// SetPosition - Mutator for Card's position member variable.
+//------------------------------------------------------------------------------
+void Card::SetPosition(QPointF newPosition, int zPosition)
+{
+    if ( zPosition != -1 )
+        this->setZValue(zPosition);
+
+    position = newPosition;
+}
+
+
+//------------------------------------------------------------------------------
+// UpdatePosition - Update the position of this Card's transitionAnimation.
+//------------------------------------------------------------------------------
+void Card::UpdateAnimation(bool noAnimation)
+{
+    if ( noAnimation )
+    {
+        transitionAnimation->setDuration(0);
+    }
+    else
+    {
+        transitionAnimation->setDuration(100);
+    }
+
+    transitionAnimation->setEndValue(position);
+    transitionAnimation->start();
 }
 
 
@@ -139,83 +215,6 @@ void Card::Initialize(void)
 
     // Run the state machine.
     stateMachine->start();
-}
-
-
-//------------------------------------------------------------------------------
-// GetSuit - Accessor for Card's suit member variable.
-//------------------------------------------------------------------------------
-Card::Suit Card::GetSuit(void)
-{
-    return suit;
-}
-
-
-//------------------------------------------------------------------------------
-// GetValue - Accessor for Card's value member variable.
-//------------------------------------------------------------------------------
-Card::Value Card::GetValue(void)
-{
-    return value;
-}
-
-
-//------------------------------------------------------------------------------
-// GetPosition - Mutator for Card's position member variable.
-//------------------------------------------------------------------------------
-QPointF Card::GetPosition(void)
-{
-    return position;
-}
-
-
-//------------------------------------------------------------------------------
-// UpdateSelection - Update the position of the card based on it's selection
-//                   status.
-//------------------------------------------------------------------------------
-void Card::UpdateSelection(void)
-{
-    if ( this->isSelected() )
-    {
-        position.setY(position.y() - 30);
-    }
-    else
-    {
-        position.setY(position.y() + 30);
-    }
-
-    UpdateAnimation(false);
-}
-
-
-//------------------------------------------------------------------------------
-// SetPosition - Mutator for Card's position member variable.
-//------------------------------------------------------------------------------
-void Card::SetPosition(QPointF newPosition, int zPosition)
-{
-    if ( zPosition != -1 )
-        this->setZValue(zPosition);
-
-    position = newPosition;
-}
-
-
-//------------------------------------------------------------------------------
-// UpdatePosition - Update the position of this Card's transitionAnimation.
-//------------------------------------------------------------------------------
-void Card::UpdateAnimation(bool noAnimation)
-{
-    if ( noAnimation )
-    {
-        transitionAnimation->setDuration(0);
-    }
-    else
-    {
-        transitionAnimation->setDuration(100);
-    }
-
-    transitionAnimation->setEndValue(position);
-    transitionAnimation->start();
 }
 
 
