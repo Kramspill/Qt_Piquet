@@ -28,6 +28,8 @@ class Scene : public QGraphicsScene
     Q_OBJECT
 public:
     Scene(int x, int y, int width, int height);
+    Scene(Scene&);
+    ~Scene(void);
 
     void addItem(Card* card);
 
