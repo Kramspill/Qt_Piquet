@@ -25,6 +25,7 @@ public:
 
 protected:
     void onEntry(QEvent*) {}
+    void onExit(QEvent*)  {}
 };
 
 
@@ -58,6 +59,7 @@ public:
 
 protected:
     void onEntry(QEvent*) {}
+    void onExit(QEvent*)  {}
 };
 
 
@@ -74,6 +76,7 @@ public:
 
 protected:
     void onEntry(QEvent*) {}
+    void onExit(QEvent*)  {}
 };
 
 
@@ -90,6 +93,7 @@ public:
 
 protected:
     void onEntry(QEvent*) {}
+    void onExit(QEvent*)  {}
 };
 
 
@@ -106,6 +110,7 @@ public:
 
 protected:
     void onEntry(QEvent*) {}
+    void onExit(QEvent*)  {}
 };
 
 
@@ -122,6 +127,7 @@ public:
 
 protected:
     void onEntry(QEvent*) {}
+    void onExit(QEvent*)  {}
 };
 
 
@@ -138,6 +144,7 @@ public:
 
 protected:
     void onEntry(QEvent*) {}
+    void onExit(QEvent*)  {}
 };
 
 #endif // CARDSTATES_H
