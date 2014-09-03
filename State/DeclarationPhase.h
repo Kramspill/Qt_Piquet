@@ -61,7 +61,7 @@ private slots:
     void           InitialTrick(void);
 
 signals:
-    void           RequestCardsSelectable(bool, int);
+    void           SetCardsSelectable(bool, int);
     void           RequestCheckSelection(CardArray::SelectionType);
     void           SignalValidSelection(void);
     void           DeclarationPhaseFinished(void);

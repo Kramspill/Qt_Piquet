@@ -115,7 +115,7 @@ void DeclarationPhase::Initialize(QPushButton* button, QPushButton* button2)
 void DeclarationPhase::onEntry(QEvent*)
 {
     stateMachine->start();
-    emit RequestCardsSelectable(true, 12);
+    emit SetCardsSelectable(true, 12);
 }
 
 
@@ -124,7 +124,7 @@ void DeclarationPhase::onEntry(QEvent*)
 //------------------------------------------------------------------------------
 void DeclarationPhase::onExit(QEvent*)
 {
-    emit RequestCardsSelectable(false, 0);
+    emit SetCardsSelectable(false, 0);
 }
 
 
