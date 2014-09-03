@@ -41,6 +41,7 @@ protected:
 
 private:
     void           ResetDealCounter(void);
+    void           ConnectSignals(void);
 
 private slots:
     void           DealToPlayer(void);
@@ -49,13 +50,21 @@ private slots:
 
 signals:
     void           RequestCardTransfer(CardArray::CardArrayType,
-                                       CardArray::CardArrayType, int);
+                                       CardArray::CardArrayType,
+                                       int, bool);
     void           TransferComplete(void);
+
     void           BeginDealTalon(void);
+
     void           DealPhaseFinished(void);
 
 private:
     QStateMachine* stateMachine;
+    QState*        initialState;
+    QState*        dealToPlayer;
+    QState*        dealToCpu;
+    QState*        dealTalon;
+    QFinalState*   finalState;
     int            dealCounter;
 };
 

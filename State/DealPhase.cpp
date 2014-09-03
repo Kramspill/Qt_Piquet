@@ -47,11 +47,11 @@ void DealPhase::Initialize(QPushButton* button)
     stateMachine = new QStateMachine();
 
     // Initialize the states within the state machine.
-    QState*      initialState = new QState(stateMachine);
-    QState*      dealToPlayer = new QState(stateMachine);
-    QState*      dealToCpu    = new QState(stateMachine);
-    QState*      dealTalon    = new QState(stateMachine);
-    QFinalState* finalState   = new QFinalState(stateMachine);
+    initialState = new QState(stateMachine);
+    dealToPlayer = new QState(stateMachine);
+    dealToCpu    = new QState(stateMachine);
+    dealTalon    = new QState(stateMachine);
+    finalState   = new QFinalState(stateMachine);
 
     // Set the initial state for the state machine.
     stateMachine->setInitialState(initialState);
@@ -71,12 +71,7 @@ void DealPhase::Initialize(QPushButton* button)
     dealTalon->addTransition(   this, SIGNAL(TransferComplete()), finalState);
 
     // Setup the work done in each state.
-    connect(dealToPlayer, SIGNAL(entered()),  this, SLOT(DealToPlayer()));
-    connect(dealToCpu,    SIGNAL(entered()),  this, SLOT(DealToCpu()));
-    connect(dealTalon,    SIGNAL(entered()),  this, SLOT(DealTalon()));
-
-    connect(stateMachine, SIGNAL(finished()), this,
-            SIGNAL(DealPhaseFinished()));
+    ConnectSignals();
 }
 
 
@@ -108,6 +103,21 @@ void DealPhase::ResetDealCounter(void)
 
 
 //------------------------------------------------------------------------------
+// ConnectSignals - Setup the work done in each state along with aadditional
+//                  necessary signals.
+//------------------------------------------------------------------------------
+void DealPhase::ConnectSignals(void)
+{
+    connect(dealToPlayer, SIGNAL(entered()),  this, SLOT(DealToPlayer()));
+    connect(dealToCpu,    SIGNAL(entered()),  this, SLOT(DealToCpu()));
+    connect(dealTalon,    SIGNAL(entered()),  this, SLOT(DealTalon()));
+
+    connect(stateMachine, SIGNAL(finished()), this,
+            SIGNAL(DealPhaseFinished()));
+}
+
+
+//------------------------------------------------------------------------------
 // DealToPlayer - Function that performs the required operations for the
 //                dealToPlayer state.
 //------------------------------------------------------------------------------
@@ -115,7 +125,8 @@ void DealPhase::DealToPlayer(void)
 {
     if ( dealCounter > 0 )
     {
-        emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3,
+                                 false);
         dealCounter--;
     }
     else
@@ -133,7 +144,7 @@ void DealPhase::DealToCpu(void)
 {
     if ( dealCounter > 0 )
     {
-        emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND, 3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND, 3, false);
         dealCounter--;
     }
     else
@@ -149,5 +160,5 @@ void DealPhase::DealToCpu(void)
 //------------------------------------------------------------------------------
 void DealPhase::DealTalon(void)
 {
-    emit RequestCardTransfer(CardArray::DECK, CardArray::TALON, 8);
+    emit RequestCardTransfer(CardArray::DECK, CardArray::TALON, 8, false);
 }
