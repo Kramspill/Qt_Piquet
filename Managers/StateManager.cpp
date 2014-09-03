@@ -82,6 +82,23 @@ void StateManager::Initialize(QPushButton* button, QPushButton* button2,
 
 
 //------------------------------------------------------------------------------
+// TransferComplete - Inform the current state that a transfer request has
+//                    finished.
+//------------------------------------------------------------------------------
+void StateManager::TransferComplete(void)
+{
+    if ( stateMachine->configuration().contains(dealPhase) )
+    {
+        emit dealPhase->TransferComplete();
+    }
+    else if ( stateMachine->configuration().contains(exchangePhase) )
+    {
+        emit exchangePhase->TransferComplete();
+    }
+}
+
+
+//------------------------------------------------------------------------------
 // GetDealPhase - Accessor for StateManager's dealPhase member
 //                     variable.
 //------------------------------------------------------------------------------
@@ -127,24 +144,16 @@ TrickPhase* StateManager::GetTrickPhase(void)
 void StateManager::ConnectSignals(void)
 {
     // Connect signals to/from the deal phase state.
-    QObject::connect(this,
-                     SIGNAL(SignalTransferComplete()),
-                     dealPhase,
-                     SLOT(CallTransferComplete()));
     QObject::connect(dealPhase,
                      SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
                                                 CardArray::CardArrayType,
                                                 int)),
                      this,
-                     SIGNAL(SignalCardTransfer(CardArray::CardArrayType,
-                                               CardArray::CardArrayType,
-                                               int)));
+                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
+                                                CardArray::CardArrayType,
+                                                int)));
 
     // Connect signals to/fom the exchange phase state.
-    QObject::connect(this,
-                     SIGNAL(SignalTransferComplete()),
-                     exchangePhase,
-                     SLOT(CallTransferComplete()));
     QObject::connect(this,
                      SIGNAL(SignalNumOfCardsTransferred(int)),
                      exchangePhase,

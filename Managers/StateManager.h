@@ -37,6 +37,8 @@ public:
     void              Initialize(QPushButton* button, QPushButton* button2,
                                  QPushButton* button3, QPushButton* button4);
 
+    void              TransferComplete(void);
+
     DealPhase*        GetDealPhase(void);
     ExchangePhase*    GetExchangePhase(void);
     DeclarationPhase* GetDeclarationPhase(void);
@@ -46,8 +48,8 @@ private:
     void              ConnectSignals(void);
 
 signals:
-    void              SignalCardTransfer(CardArray::CardArrayType,
-                                         CardArray::CardArrayType, int);
+    void              RequestCardTransfer(CardArray::CardArrayType,
+                                          CardArray::CardArrayType, int);
     void              SignalTransferSelectedCards(CardArray::CardArrayType,
                                                   CardArray::CardArrayType);
     void              SignalSetCardsSelectable(bool, int);
