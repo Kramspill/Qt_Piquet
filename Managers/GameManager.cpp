@@ -88,9 +88,9 @@ void GameManager::ConnectSignals(void)
 {
     // Connect the signals from the card manager.
     QObject::connect(cardManager,
-                     SIGNAL(SignalTransferComplete()),
-                     stateManager,
-                     SIGNAL(SignalTransferComplete()));
+                     SIGNAL(TransferComplete()),
+                     this,
+                     SLOT(TransferComplete()));
     QObject::connect(cardManager,
                      SIGNAL(SignalNumOfCardsTransferred(int)),
                      stateManager,
@@ -102,13 +102,14 @@ void GameManager::ConnectSignals(void)
 
     // Connect the signals from the state manager.
     QObject::connect(stateManager,
-                     SIGNAL(SignalCardTransfer(CardArray::CardArrayType,
-                                               CardArray::CardArrayType,
-                                               int)),
-                     cardManager,
-                     SLOT(CallTransferCards(CardArray::CardArrayType,
-                                            CardArray::CardArrayType,
-                                            int)));
+                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
+                                                CardArray::CardArrayType,
+                                                int)),
+                     this,
+                     SLOT(RequestCardTransfer(CardArray::CardArrayType,
+                                              CardArray::CardArrayType,
+                                              int)));
+
     QObject::connect(stateManager,
                      SIGNAL(SignalTransferSelectedCards(
                                 CardArray::CardArrayType,
@@ -151,6 +152,31 @@ void GameManager::ConnectSignals(void)
                      SIGNAL(SignalCardSelectionsChanged(Card*)),
                      cardManager,
                      SLOT(CardSelectionsChanged(Card*)));
+}
+
+
+//------------------------------------------------------------------------------
+// RequestCardTransfer - Request a number of cards be transferred to a different
+//                       CardArray.
+//------------------------------------------------------------------------------
+void GameManager::RequestCardTransfer(CardArray::CardArrayType src,
+                                      CardArray::CardArrayType dest,
+                                      int numOfCards)
+{
+    CardArray* source      = cardManager->GetDesiredCardArray(src);
+    CardArray* destination = cardManager->GetDesiredCardArray(dest);
+
+    cardManager->TransferCards(source, destination, numOfCards);
+}
+
+
+//------------------------------------------------------------------------------
+// TransferComplete - Inform the stateManager that a transfer request has
+//                    finished.
+//------------------------------------------------------------------------------
+void GameManager::TransferComplete(void)
+{
+    stateManager->TransferComplete();
 }
 
 

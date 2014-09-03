@@ -41,6 +41,10 @@ private:
     void          ConnectSignals(void);
 
 private slots:
+    void          RequestCardTransfer(CardArray::CardArrayType src,
+                                      CardArray::CardArrayType dest,
+                                      int numOfCards);
+    void          TransferComplete(void);
     void          CallSelectAIAction(AI::AIAction action);
     void          UpdateAI(void);
 
