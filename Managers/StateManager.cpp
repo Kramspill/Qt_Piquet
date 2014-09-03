@@ -37,7 +37,7 @@ StateManager::~StateManager(void)
 //------------------------------------------------------------------------------
 // Initialize - Initialize the phases that represent the states of the game.
 //------------------------------------------------------------------------------
-void StateManager::Initialize(QPushButton* button, QPushButton* button2,
+void StateManager::Initialize(QPushButton* button,  QPushButton* button2,
                               QPushButton* button3, QPushButton* button4)
 {
     // Setup the state machine of the Game.
@@ -82,63 +82,6 @@ void StateManager::Initialize(QPushButton* button, QPushButton* button2,
 
 
 //------------------------------------------------------------------------------
-// TransferComplete - Inform the current state that a transfer request has
-//                    finished.
-//------------------------------------------------------------------------------
-void StateManager::TransferComplete(void)
-{
-    if ( stateMachine->configuration().contains(dealPhase) )
-    {
-        emit dealPhase->TransferComplete();
-    }
-    else if ( stateMachine->configuration().contains(exchangePhase) )
-    {
-        emit exchangePhase->TransferComplete();
-    }
-}
-
-
-//------------------------------------------------------------------------------
-// GetDealPhase - Accessor for StateManager's dealPhase member
-//                     variable.
-//------------------------------------------------------------------------------
-DealPhase* StateManager::GetDealPhase(void)
-{
-    return dealPhase;
-}
-
-
-//------------------------------------------------------------------------------
-// GetExchangePhase - Accessor for StateManager's exchangePhase member
-//                         variable.
-//------------------------------------------------------------------------------
-ExchangePhase* StateManager::GetExchangePhase(void)
-{
-    return exchangePhase;
-}
-
-
-//------------------------------------------------------------------------------
-// GetDeclarationPhase - Accessor for StateManager's declarationPhase
-//                            member variable.
-//------------------------------------------------------------------------------
-DeclarationPhase* StateManager::GetDeclarationPhase(void)
-{
-    return declarationPhase;
-}
-
-
-//------------------------------------------------------------------------------
-// GetTrickPhase - Accessor for StateManager's declarationPhase member
-//                      variable.
-//------------------------------------------------------------------------------
-TrickPhase* StateManager::GetTrickPhase(void)
-{
-    return trickPhase;
-}
-
-
-//------------------------------------------------------------------------------
 // ConnectSignals - Connect the signals to/from this class.
 //------------------------------------------------------------------------------
 void StateManager::ConnectSignals(void)
@@ -147,42 +90,25 @@ void StateManager::ConnectSignals(void)
     QObject::connect(dealPhase,
                      SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
                                                 CardArray::CardArrayType,
-                                                int)),
+                                                int, bool)),
                      this,
                      SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
                                                 CardArray::CardArrayType,
-                                                int)));
+                                                int, bool)));
 
     // Connect signals to/fom the exchange phase state.
-    QObject::connect(this,
-                     SIGNAL(SignalNumOfCardsTransferred(int)),
-                     exchangePhase,
-                     SLOT(SetNumCardsTransferred(int)));
-    QObject::connect(this,
-                     SIGNAL(AIProcessingComplete()),
-                     exchangePhase,
-                     SLOT(CallAIProcessingComplete()));
     QObject::connect(exchangePhase,
                      SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
                                                 CardArray::CardArrayType,
-                                                int)),
+                                                int, bool)),
                      this,
-                     SIGNAL(SignalCardTransfer(CardArray::CardArrayType,
-                                               CardArray::CardArrayType,
-                                               int)));
+                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
+                                                CardArray::CardArrayType,
+                                                int, bool)));
     QObject::connect(exchangePhase,
-                     SIGNAL(RequestSelectedCardsTransfer(
-                                CardArray::CardArrayType,
-                                CardArray::CardArrayType)),
+                     SIGNAL(SetCardsSelectable(bool, int)),
                      this,
-                     SIGNAL(SignalTransferSelectedCards(
-                                CardArray::CardArrayType,
-                                CardArray::CardArrayType)));
-
-    QObject::connect(exchangePhase,
-                     SIGNAL(RequestCardsSelectable(bool, int)),
-                     this,
-                     SIGNAL(SignalSetCardsSelectable(bool, int)));
+                     SIGNAL(SetCardsSelectable(bool, int)));
     QObject::connect(exchangePhase,
                      SIGNAL(SignalAI(AI::AIAction)),
                      this,
@@ -193,16 +119,46 @@ void StateManager::ConnectSignals(void)
                      SIGNAL(UpdateAI()));
 
     // Connect signals to/fom the declaration phase state.
-    QObject::connect(this,
+    /*QObject::connect(this,
                      SIGNAL(SignalValidSelection()),
                      declarationPhase,
                      SLOT(ValidSelection()));
     QObject::connect(declarationPhase,
-                     SIGNAL(RequestCardsSelectable(bool, int)),
+                     SIGNAL(SetCardsSelectable(bool, int)),
                      this,
-                     SIGNAL(SignalSetCardsSelectable(bool, int)));
+                     SIGNAL(SetCardsSelectable(bool, int)));
     QObject::connect(declarationPhase,
                      SIGNAL(RequestCheckSelection(CardArray::SelectionType)),
                      this,
-                     SIGNAL(SignalCheckSelection(CardArray::SelectionType)));
+                     SIGNAL(SignalCheckSelection(CardArray::SelectionType)));*/
+}
+
+
+//------------------------------------------------------------------------------
+// SignalTransferComplete - Inform the current state that a transfer request has
+//                          finished.
+//------------------------------------------------------------------------------
+void StateManager::SignalTransferComplete(int numOfCardsTransferred)
+{
+    if ( stateMachine->configuration().contains(dealPhase) )
+    {
+        emit dealPhase->TransferComplete();
+    }
+    else if ( stateMachine->configuration().contains(exchangePhase) )
+    {
+        emit exchangePhase->TransferComplete(numOfCardsTransferred);
+    }
+}
+
+
+//------------------------------------------------------------------------------
+// AIProcessingComplete - Inform the current state that the ai has finished
+//                        processing a request.
+//------------------------------------------------------------------------------
+void StateManager::AIProcessingComplete(void)
+{
+     if ( stateMachine->configuration().contains(exchangePhase) )
+    {
+        emit exchangePhase->AIProcessingComplete();
+    }
 }

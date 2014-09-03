@@ -37,28 +37,24 @@ public:
     void              Initialize(QPushButton* button, QPushButton* button2,
                                  QPushButton* button3, QPushButton* button4);
 
-    void              TransferComplete(void);
-
-    DealPhase*        GetDealPhase(void);
-    ExchangePhase*    GetExchangePhase(void);
-    DeclarationPhase* GetDeclarationPhase(void);
-    TrickPhase*       GetTrickPhase(void);
-
 private:
     void              ConnectSignals(void);
 
+private slots:
+    void              SignalTransferComplete(int numOfCardsTransferred);
+    void              AIProcessingComplete(void);
+
 signals:
     void              RequestCardTransfer(CardArray::CardArrayType,
-                                          CardArray::CardArrayType, int);
-    void              SignalTransferSelectedCards(CardArray::CardArrayType,
-                                                  CardArray::CardArrayType);
-    void              SignalSetCardsSelectable(bool, int);
-    void              SignalTransferComplete(void);
-    void              SignalNumOfCardsTransferred(int);
-    void              SignalCheckSelection(CardArray::SelectionType);
+                                          CardArray::CardArrayType,
+                                          int, bool);
+    void              TransferComplete(int);
+
+    void              SetCardsSelectable(bool, int);
+    //void              SignalCheckSelection(CardArray::SelectionType);
+
     void              SignalAI(AI::AIAction);
     void              UpdateAI(void);
-    void              AIProcessingComplete(void);
 
 private:
     QStateMachine*    stateMachine;
