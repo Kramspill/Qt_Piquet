@@ -43,8 +43,8 @@ private:
 private slots:
     void          RequestCardTransfer(CardArray::CardArrayType src,
                                       CardArray::CardArrayType dest,
-                                      int numOfCards);
-    void          TransferComplete(void);
+                                      int  numOfCards,
+                                      bool transferSelectedCards);
     void          CallSelectAIAction(AI::AIAction action);
     void          UpdateAI(void);
 

@@ -88,48 +88,40 @@ void GameManager::ConnectSignals(void)
 {
     // Connect the signals from the card manager.
     QObject::connect(cardManager,
-                     SIGNAL(TransferComplete()),
-                     this,
-                     SLOT(TransferComplete()));
-    QObject::connect(cardManager,
-                     SIGNAL(SignalNumOfCardsTransferred(int)),
+                     SIGNAL(TransferComplete(int)),
                      stateManager,
-                     SIGNAL(SignalNumOfCardsTransferred(int)));
-    QObject::connect(cardManager,
+                     SLOT(SignalTransferComplete(int)));
+
+   /* QObject::connect(cardManager,
                      SIGNAL(SignalValidSelection()),
                      stateManager,
-                     SIGNAL(SignalValidSelection()));
+                     SIGNAL(SignalValidSelection()));*/
 
     // Connect the signals from the state manager.
     QObject::connect(stateManager,
                      SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
                                                 CardArray::CardArrayType,
-                                                int)),
+                                                int, bool)),
                      this,
                      SLOT(RequestCardTransfer(CardArray::CardArrayType,
                                               CardArray::CardArrayType,
-                                              int)));
+                                              int, bool)));
 
     QObject::connect(stateManager,
-                     SIGNAL(SignalTransferSelectedCards(
-                                CardArray::CardArrayType,
-                                CardArray::CardArrayType)),
-                     cardManager,
-                     SLOT(CallTransferSelectedCards(
-                              CardArray::CardArrayType,
-                              CardArray::CardArrayType)));
-    QObject::connect(stateManager,
-                     SIGNAL(SignalSetCardsSelectable(bool, int)),
+                     SIGNAL(SetCardsSelectable(bool, int)),
                      cardManager,
                      SLOT(SetCardsSelectable(bool, int)));
-    QObject::connect(stateManager,
+
+    /*QObject::connect(stateManager,
                      SIGNAL(SignalCheckSelection(CardArray::SelectionType)),
                      cardManager,
-                     SLOT(CallCheckSelection(CardArray::SelectionType)));
+                     SLOT(CallCheckSelection(CardArray::SelectionType)));*/
+
     QObject::connect(stateManager,
                      SIGNAL(SignalAI(AI::AIAction)),
                      this,
                      SLOT(CallSelectAIAction(AI::AIAction)));
+
     QObject::connect(stateManager,
                      SIGNAL(UpdateAI()),
                      this,
@@ -139,7 +131,8 @@ void GameManager::ConnectSignals(void)
     QObject::connect(ai,
                      SIGNAL(AIProcessingComplete()),
                      stateManager,
-                     SIGNAL(AIProcessingComplete()));
+                     SLOT(AIProcessingComplete()));
+
     QObject::connect(ai,
                      SIGNAL(SignalCardSelectionsChanged(Card*,
                                                      CardArray::CardArrayType)),
@@ -161,22 +154,16 @@ void GameManager::ConnectSignals(void)
 //------------------------------------------------------------------------------
 void GameManager::RequestCardTransfer(CardArray::CardArrayType src,
                                       CardArray::CardArrayType dest,
-                                      int numOfCards)
+                                      int  numOfCards,
+                                      bool transferSelectedCards)
 {
     CardArray* source      = cardManager->GetDesiredCardArray(src);
     CardArray* destination = cardManager->GetDesiredCardArray(dest);
 
-    cardManager->TransferCards(source, destination, numOfCards);
-}
-
-
-//------------------------------------------------------------------------------
-// TransferComplete - Inform the stateManager that a transfer request has
-//                    finished.
-//------------------------------------------------------------------------------
-void GameManager::TransferComplete(void)
-{
-    stateManager->TransferComplete();
+    if ( transferSelectedCards )
+        cardManager->TransferSelectedCards(source, destination);
+    else
+        cardManager->TransferCards(source, destination, numOfCards);
 }
 
 
@@ -199,7 +186,7 @@ void GameManager::UpdateAI(void)
     int        size = 0;
 
     // Retrieve the cpu's hand and update the ai's knowledge base.
-    cardArray = cardManager->GetCpuHand();
+    cardArray = cardManager->GetDesiredCardArray(CardArray::CPUHAND);
     size      = cardArray->GetSize();
 
     for ( int index = 0; index < size; index++ )
@@ -212,7 +199,7 @@ void GameManager::UpdateAI(void)
     ai->UpdateHand(cardArray);
 
     // Retrieve the cpu's discards and update the ai's knowledge base.
-    cardArray = cardManager->GetCpuDiscards();
+    cardArray = cardManager->GetDesiredCardArray(CardArray::CPUDISCARDS);
     size      = cardArray->GetSize();
 
     for ( int index = 0; index < size; index++ )
@@ -222,7 +209,7 @@ void GameManager::UpdateAI(void)
     }
 
     // Retrieve the previous tricks and update the ai's knowledge base.
-    cardArray = cardManager->GetPreviousTricks();
+    cardArray = cardManager->GetDesiredCardArray(CardArray::PREVIOUSTRICKS);
     size      = cardArray->GetSize();
 
     for ( int index = 0; index < size; index++ )
