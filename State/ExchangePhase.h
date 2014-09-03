@@ -40,14 +40,15 @@ protected:
     void           onEntry(QEvent*);
     void           onExit(QEvent*);
 
-public slots:
-    void           CallTransferComplete(void);
-    void           SetNumCardsTransferred(int numCardsTransferred);
+private:
+    void           ConnectSignals(void);
 
 private slots:
     void           SignalEnableCardsSelectable(void);
     void           SignalDisableCardsSelectable(void);
-    void           CallAIProcessingComplete(void);
+
+    void           InformTransferComplete(int numOfCardsTransferred);
+
     void           PlayerDiscard(void);
     void           PlayerDraw(void);
     void           CpuProcessing(void);
@@ -55,19 +56,29 @@ private slots:
     void           CpuDraw(void);
 
 signals:
-    void           RequestCardsSelectable(bool, int);
+    void           SetCardsSelectable(bool, int);
     void           RequestCardTransfer(CardArray::CardArrayType,
-                                       CardArray::CardArrayType, int);
-    void           RequestSelectedCardsTransfer(CardArray::CardArrayType,
-                                                CardArray::CardArrayType);
-    void           TransferComplete(void);
-    void           SignalAI(AI::AIAction);
+                                       CardArray::CardArrayType,
+                                       int, bool);
+    void           TransferComplete(int);
+
+    void           TransitionState(void);
+
     void           UpdateAI(void);
+    void           SignalAI(AI::AIAction);
     void           AIProcessingComplete(void);
+
     void           ExchangePhaseFinished(void);
 
 private:
     QStateMachine* stateMachine;
+    QState*        playerDiscard;
+    QState*        playerDraw;
+    QState*        cpuProcessing;
+    QState*        cpuDiscard;
+    QState*        cpuDraw;
+    QFinalState*   finalState;
+    QPushButton*   exchangeButton;
     int            cardsTransferred;
 };
 

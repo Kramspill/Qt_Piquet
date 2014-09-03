@@ -40,55 +40,43 @@ ExchangePhase::~ExchangePhase(void)
 //------------------------------------------------------------------------------
 void ExchangePhase::Initialize(QPushButton* button)
 {
-    // Initialize the state machine.
-    stateMachine = new QStateMachine();
-
-    // Initialize member variable.
+    // Initialize member variables.
     cardsTransferred = 0;
+    exchangeButton   = button;
+
+    // Initialize the state machine.
+    stateMachine  = new QStateMachine();
 
     // Initialize the states within the state machine.
-    QState*      playerDiscard      = new QState(stateMachine);
-    QState*      playerDraw         = new QState(stateMachine);
-    QState*      cpuProcessing      = new QState(stateMachine);
-    QState*      cpuDiscard         = new QState(stateMachine);
-    QState*      cpuDraw            = new QState(stateMachine);
-    QFinalState* finalState         = new QFinalState(stateMachine);
+    playerDiscard = new QState(stateMachine);
+    playerDraw    = new QState(stateMachine);
+    cpuProcessing = new QState(stateMachine);
+    cpuDiscard    = new QState(stateMachine);
+    cpuDraw       = new QState(stateMachine);
+    finalState    = new QFinalState(stateMachine);
 
     // Set the initial state for the state machine.
     stateMachine->setInitialState(playerDiscard);
 
     // Setup the transitions from playerDiscard.
-    playerDiscard->addTransition(this,  SIGNAL(TransferComplete()), playerDraw);
+    playerDiscard->addTransition(this,  SIGNAL(TransitionState()), playerDraw);
 
     // Setup the transitions from playerDraw.
-    playerDraw->addTransition(   this, SIGNAL(TransferComplete()),
+    playerDraw->addTransition(   this, SIGNAL(TransitionState()),
                                  cpuProcessing);
 
-    // Setup the transitions from cpuDiscard.
+    // Setup the transitions from cpuProcessing.
     cpuProcessing->addTransition(this,  SIGNAL(AIProcessingComplete()),
                                  cpuDiscard);
 
     // Setup the transitions from cpuDiscard.
-    cpuDiscard->addTransition(   this,  SIGNAL(TransferComplete()), cpuDraw);
+    cpuDiscard->addTransition(   this,  SIGNAL(TransitionState()), cpuDraw);
 
     // Setup the transitions from cpuDraw.
-    cpuDraw->addTransition(      this,  SIGNAL(TransferComplete()), finalState);
-
-    // Set the cards to be selectable when required.
-    connect(playerDiscard,     SIGNAL(entered()),  this,
-            SLOT(SignalEnableCardsSelectable()));
-    connect(playerDiscard,     SIGNAL(exited()),   this,
-            SLOT(SignalDisableCardsSelectable()));
+    cpuDraw->addTransition(      this,  SIGNAL(TransitionState()), finalState);
 
     // Setup the work done in each state.
-    connect(button,        SIGNAL(clicked()), this, SLOT(PlayerDiscard()));
-    connect(playerDraw,    SIGNAL(entered()), this, SLOT(PlayerDraw()));
-    connect(cpuProcessing, SIGNAL(entered()), this, SLOT(CpuProcessing()));
-    connect(cpuDiscard,    SIGNAL(entered()), this, SLOT(CpuDiscard()));
-    connect(cpuDraw,       SIGNAL(entered()), this, SLOT(CpuDraw()));
-
-    connect(stateMachine, SIGNAL(finished()), this,
-            SIGNAL(ExchangePhaseFinished()));
+    ConnectSignals();
 }
 
 
@@ -113,21 +101,29 @@ void ExchangePhase::onExit(QEvent*)
 
 
 //------------------------------------------------------------------------------
-// CallTransferComplete - Inform the state machine that a card transfer has been
-//                        completed.
+// ConnectSignals - Setup the work done in each state along with aadditional
+//                  necessary signals.
 //------------------------------------------------------------------------------
-void ExchangePhase::CallTransferComplete(void)
+void ExchangePhase::ConnectSignals(void)
 {
-    emit TransferComplete();
-}
+    // Set the cards to be selectable when required.
+    connect(playerDiscard,  SIGNAL(entered()), this,
+            SLOT(SignalEnableCardsSelectable()));
+    connect(playerDiscard,  SIGNAL(exited()),  this,
+            SLOT(SignalDisableCardsSelectable()));
 
+    connect(this, SIGNAL(TransferComplete(int)),
+            this, SLOT(InformTransferComplete(int)));
 
-//------------------------------------------------------------------------------
-// SetNumCardsTransferred - Set the number of cards discarded last.
-//------------------------------------------------------------------------------
-void ExchangePhase::SetNumCardsTransferred(int numCardsTransferred)
-{
-    cardsTransferred = numCardsTransferred;
+    // Setup the work done in each state.
+    connect(exchangeButton, SIGNAL(clicked()), this, SLOT(PlayerDiscard()));
+    connect(playerDraw,     SIGNAL(entered()), this, SLOT(PlayerDraw()));
+    connect(cpuProcessing,  SIGNAL(entered()), this, SLOT(CpuProcessing()));
+    connect(cpuDiscard,     SIGNAL(entered()), this, SLOT(CpuDiscard()));
+    connect(cpuDraw,        SIGNAL(entered()), this, SLOT(CpuDraw()));
+
+    connect(stateMachine,   SIGNAL(finished()), this,
+            SIGNAL(ExchangePhaseFinished()));
 }
 
 
@@ -136,7 +132,7 @@ void ExchangePhase::SetNumCardsTransferred(int numCardsTransferred)
 //------------------------------------------------------------------------------
 void ExchangePhase::SignalEnableCardsSelectable(void)
 {
-    emit RequestCardsSelectable(true, 5);
+    emit SetCardsSelectable(true, 5);
 }
 
 
@@ -145,17 +141,18 @@ void ExchangePhase::SignalEnableCardsSelectable(void)
 //------------------------------------------------------------------------------
 void ExchangePhase::SignalDisableCardsSelectable(void)
 {
-    emit RequestCardsSelectable(false, 0);
+    emit SetCardsSelectable(false, 0);
 }
 
 
 //------------------------------------------------------------------------------
-// CallAIProcessingComplete - Informs this class to emit an AIProcessingComplete
-//                            signal.
+// InformTransferComplete - Set the number of cards discarded last and inform
+//                          this state that a card transfer has finished.
 //------------------------------------------------------------------------------
-void ExchangePhase::CallAIProcessingComplete(void)
+void ExchangePhase::InformTransferComplete(int numOfCardsTransferred)
 {
-    emit AIProcessingComplete();
+    cardsTransferred = numOfCardsTransferred;
+    emit TransitionState();
 }
 
 
@@ -164,8 +161,8 @@ void ExchangePhase::CallAIProcessingComplete(void)
 //------------------------------------------------------------------------------
 void ExchangePhase::PlayerDiscard(void)
 {
-    emit RequestSelectedCardsTransfer(CardArray::PLAYERHAND,
-                                      CardArray::PLAYERDISCARDS);
+    emit RequestCardTransfer(CardArray::PLAYERHAND, CardArray::PLAYERDISCARDS,
+                             0, true);
 }
 
 
@@ -175,7 +172,7 @@ void ExchangePhase::PlayerDiscard(void)
 void ExchangePhase::PlayerDraw(void)
 {
     emit RequestCardTransfer(CardArray::TALON, CardArray::PLAYERHAND,
-                             cardsTransferred);
+                             cardsTransferred, false);
 }
 
 
@@ -193,8 +190,8 @@ void ExchangePhase::CpuProcessing(void)
 //------------------------------------------------------------------------------
 void ExchangePhase::CpuDiscard(void)
 {
-    emit RequestSelectedCardsTransfer(CardArray::CPUHAND,
-                                      CardArray::CPUDISCARDS);
+    emit RequestCardTransfer(CardArray::CPUHAND, CardArray::CPUDISCARDS,
+                             0, true);
 }
 
 
@@ -204,5 +201,5 @@ void ExchangePhase::CpuDiscard(void)
 void ExchangePhase::CpuDraw(void)
 {
     emit RequestCardTransfer(CardArray::TALON, CardArray::CPUHAND,
-                             cardsTransferred);
+                             cardsTransferred, false);
 }
