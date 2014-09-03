@@ -19,6 +19,8 @@ class View : public QGraphicsView
 {
 public:
     View(QGraphicsScene* scene);
+    View(View&);
+    ~View(void);
 
 protected:
     void resizeEvent(QResizeEvent* event);
