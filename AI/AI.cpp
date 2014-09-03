@@ -45,13 +45,8 @@ void AI::Initialize(void)
     knowledgeBase = new KnowledgeBase();
     knowledgeBase->Initialize();
 
-    // Connect signals.
-    connect(knowledgeBase,
-            SIGNAL(SignalCardSelectionsChanged(Card*,
-                                               CardArray::CardArrayType)),
-            this,
-            SIGNAL(SignalCardSelectionsChanged(Card*,
-                                               CardArray::CardArrayType)));
+    // Connect the signals.
+    ConnectSignals();
 }
 
 
@@ -104,6 +99,22 @@ void AI::SelectAIAction(AI::AIAction action)
         default:
             break;
     }
+
+    emit AIProcessingComplete();
+}
+
+
+//------------------------------------------------------------------------------
+// ConnectSignals - Connect the signals to/from this class.
+//------------------------------------------------------------------------------
+void AI::ConnectSignals(void)
+{
+    connect(knowledgeBase,
+            SIGNAL(SignalCardSelectionsChanged(Card*,
+                                               CardArray::CardArrayType)),
+            this,
+            SIGNAL(SignalCardSelectionsChanged(Card*,
+                                               CardArray::CardArrayType)));
 }
 
 
@@ -113,8 +124,6 @@ void AI::SelectAIAction(AI::AIAction action)
 void AI::SelectCardsToDiscard(void)
 {
     knowledgeBase->FlagDispensableCards(cpuHand);
-
-    emit AIProcessingComplete();
 }
 
 

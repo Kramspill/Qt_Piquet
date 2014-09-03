@@ -45,9 +45,11 @@ public:
     void           UpdateKnowledgeBase(Card* card, int index,
                                        CardArray::CardArrayType location);
     void           UpdateHand(CardArray* newCpuHand);
+
     void           SelectAIAction(AIAction action);
 
 private:
+    void           ConnectSignals(void);
     void           SelectCardsToDiscard(void);
     void           DeclarePoint(void);
     void           DeclareSequence(void);
