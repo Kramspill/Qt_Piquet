@@ -42,9 +42,6 @@ protected:
 private:
     void           ResetDealCounter(void);
 
-public slots:
-    void           CallTransferComplete(void);
-
 private slots:
     void           DealToPlayer(void);
     void           DealToCpu(void);

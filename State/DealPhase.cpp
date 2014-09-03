@@ -40,11 +40,11 @@ DealPhase::~DealPhase(void)
 //------------------------------------------------------------------------------
 void DealPhase::Initialize(QPushButton* button)
 {
-    // Initialize the state machine.
-    stateMachine = new QStateMachine();
-
     // Initialize the dealCounter that determines when to deal the Talon.
     ResetDealCounter();
+
+    // Initialize the state machine.
+    stateMachine = new QStateMachine();
 
     // Initialize the states within the state machine.
     QState*      initialState = new QState(stateMachine);
@@ -104,16 +104,6 @@ void DealPhase::onExit(QEvent*)
 void DealPhase::ResetDealCounter(void)
 {
     dealCounter = 8;
-}
-
-
-//------------------------------------------------------------------------------
-// CallTransferComplete - Inform the state machine that a card transfer has been
-//                        completed.
-//------------------------------------------------------------------------------
-void DealPhase::CallTransferComplete(void)
-{
-    emit TransferComplete();
 }
 
 
