@@ -48,16 +48,15 @@ public:
     CardArray* GetPreviousTricks(void);
     Card       GetCurrentTrick(void);
 
+    CardArray* GetDesiredCardArray(CardArray::CardArrayType cardArrayType);
+
 private:
+    void       ConnectSignals(void);
     void       InitializeCards(void);
     void       AddCardsToScene(Scene* scene);
     void       ShuffleDeck(void);
-    CardArray* GetDesiredCardArray(CardArray::CardArrayType cardArrayType);
 
 public slots:
-    void       CallTransferCards(CardArray::CardArrayType src,
-                                 CardArray::CardArrayType dest,
-                                 int numOfCards);
     void       CallTransferSelectedCards(CardArray::CardArrayType src,
                                          CardArray::CardArrayType dest);
     void       CallCheckSelection(CardArray::SelectionType phase,
@@ -70,7 +69,7 @@ public slots:
                                      cardArrayType = CardArray::PLAYERHAND);
 
 signals:
-    void       SignalTransferComplete(void);
+    void       TransferComplete(void);
     void       SignalNumOfCardsTransferred(int);
     void       SignalValidSelection(void);
 

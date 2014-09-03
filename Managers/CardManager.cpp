@@ -52,10 +52,9 @@ void CardManager::Initialize(Scene* scene)
     // state changes.
     transitionTimer = new QTimer();
     transitionTimer->setSingleShot(true);
-    connect(transitionTimer, SIGNAL(timeout()), this,
-            SIGNAL(SignalTransferComplete()));
-    connect(playerHand, SIGNAL(SignalValidSelection()), this,
-            SIGNAL(SignalValidSelection()));
+
+    // Connect signals to/from this class.
+    ConnectSignals();
 
     // Initialize all the cards used in the game and add them to the deck.
     InitializeCards();
@@ -337,16 +336,15 @@ CardArray* CardManager::GetDesiredCardArray(
 
 
 //------------------------------------------------------------------------------
-// CallTransferCards - Helper function for TransferCards.
+// ConnectSignals - Connect the various signals to/from this class.
 //------------------------------------------------------------------------------
-void CardManager::CallTransferCards(CardArray::CardArrayType src,
-                                    CardArray::CardArrayType dest,
-                                    int numOfCards)
+void CardManager::ConnectSignals(void)
 {
-    CardArray* source      = GetDesiredCardArray(src);
-    CardArray* destination = GetDesiredCardArray(dest);
+    connect(transitionTimer, SIGNAL(timeout()), this,
+            SIGNAL(TransferComplete()));
 
-    TransferCards(source, destination, numOfCards);
+    connect(playerHand, SIGNAL(SignalValidSelection()), this,
+            SIGNAL(SignalValidSelection()));
 }
 
 
