@@ -53,6 +53,10 @@ void CardManager::Initialize(Scene* scene)
     transitionTimer = new QTimer();
     transitionTimer->setSingleShot(true);
 
+    // Initialize the member that keeps track of the number of cards transferred
+    // from the most recent card transaction.
+    numOfCardsTransferred = 0;
+
     // Connect signals to/from this class.
     ConnectSignals();
 
@@ -80,6 +84,9 @@ void CardManager::TransferCards(CardArray* source, CardArray* destination,
         destination->AddCard(card);
     }
 
+    // Update the number of cards transferred.
+    numOfCardsTransferred = numberOfCards;
+
     // Delay the signal of transfer completion for animation purposes.
     transitionTimer->start(100);
 }
@@ -92,11 +99,11 @@ void CardManager::TransferCards(CardArray* source, CardArray* destination,
 void CardManager::TransferSelectedCards(CardArray* source,
                                         CardArray* destination)
 {
-    int size = source->GetSelectedCardsSize();
+    int numberOfCards = source->GetSelectedCardsSize();
 
-    if ( size > 0 )
+    if ( numberOfCards > 0 )
     {
-        for (int index = 0; index < size; index++)
+        for (int index = 0; index < numberOfCards; index++)
         {
             // Remove the card from the source array, and add it to the
             // destination.
@@ -104,77 +111,58 @@ void CardManager::TransferSelectedCards(CardArray* source,
             destination->AddCard(card);
         }
 
+        // Update the number of cards transferred.
+        numOfCardsTransferred = numberOfCards;
+
         // Delay the signal of transfer completion for animation purposes.
         transitionTimer->start(100);
-
-        // Report back how many cards were transferred.
-        emit SignalNumOfCardsTransferred(size);
     }
 }
 
 
 //------------------------------------------------------------------------------
-// GetDeck - Accessor for CardManager's deck member variable.
+// GetDesiredCardArray - Return the CardArray associated with a given type.
 //------------------------------------------------------------------------------
-CardArray* CardManager::GetDeck(void)
+CardArray* CardManager::GetDesiredCardArray(
+        CardArray::CardArrayType cardArrayType)
 {
-   return deck;
-}
+    CardArray* returnedArray = 0;
 
+    switch ( cardArrayType )
+    {
+        case CardArray::DECK:
+            returnedArray = deck;
+            break;
 
-//------------------------------------------------------------------------------
-// GetTalon - Accessor for CardManager's talon member variable.
-//------------------------------------------------------------------------------
-CardArray* CardManager::GetTalon(void)
-{
-    return talon;
-}
+        case CardArray::TALON:
+            returnedArray = talon;
+            break;
 
+        case CardArray::PLAYERHAND:
+            returnedArray = playerHand;
+            break;
 
-//------------------------------------------------------------------------------
-// GetPlayerHand - Accessor for CardManager's playerHand member variable.
-//------------------------------------------------------------------------------
-CardArray* CardManager::GetPlayerHand(void)
-{
-    return playerHand;
-}
+        case CardArray::CPUHAND:
+            returnedArray = cpuHand;
+            break;
 
+        case CardArray::PLAYERDISCARDS:
+            returnedArray = playerDiscards;
+            break;
 
-//------------------------------------------------------------------------------
-// GetCpuHand - Accessor for CardManager's cpuHand member variable.
-//------------------------------------------------------------------------------
-CardArray* CardManager::GetCpuHand(void)
-{
-    return cpuHand;
-}
+        case CardArray::CPUDISCARDS:
+            returnedArray = cpuDiscards;
+            break;
 
+        case CardArray::PREVIOUSTRICKS:
+            returnedArray = previousTricks;
+            break;
 
-//------------------------------------------------------------------------------
-// GetPlayerDiscards - Accessor for CardManager's playerDiscards member
-//                     variable.
-//------------------------------------------------------------------------------
-CardArray* CardManager::GetPlayerDiscards(void)
-{
-    return playerDiscards;
-}
+        default:
+            break;
+    }
 
-
-//------------------------------------------------------------------------------
-// GetCpuDiscards - Accessor for CardManager's cpuDiscards member variable.
-//------------------------------------------------------------------------------
-CardArray* CardManager::GetCpuDiscards(void)
-{
-    return cpuDiscards;
-}
-
-
-//------------------------------------------------------------------------------
-// GetPreviousTricks - Accessor for CardManager's previousTricks member
-//                     variable.
-//------------------------------------------------------------------------------
-CardArray* CardManager::GetPreviousTricks(void)
-{
-    return previousTricks;
+    return returnedArray;
 }
 
 
@@ -184,6 +172,19 @@ CardArray* CardManager::GetPreviousTricks(void)
 Card CardManager::GetCurrentTrick(void)
 {
     return currentTrick;
+}
+
+
+//------------------------------------------------------------------------------
+// ConnectSignals - Connect the various signals to/from this class.
+//------------------------------------------------------------------------------
+void CardManager::ConnectSignals(void)
+{
+    connect(transitionTimer, SIGNAL(timeout()), this,
+            SLOT(SignalTransferComplete()));
+
+    /*connect(playerHand, SIGNAL(SignalValidSelection()), this,
+            SIGNAL(SignalValidSelection()));*/
 }
 
 
@@ -290,90 +291,6 @@ void CardManager::ShuffleDeck(void)
 
 
 //------------------------------------------------------------------------------
-// GetDesiredCardArray - Return the CardArray associated with a given type.
-//------------------------------------------------------------------------------
-CardArray* CardManager::GetDesiredCardArray(
-        CardArray::CardArrayType cardArrayType)
-{
-    CardArray* returnedArray = 0;
-
-    switch ( cardArrayType )
-    {
-        case CardArray::DECK:
-            returnedArray = GetDeck();
-            break;
-
-        case CardArray::TALON:
-            returnedArray = GetTalon();
-            break;
-
-        case CardArray::PLAYERHAND:
-            returnedArray = GetPlayerHand();
-            break;
-
-        case CardArray::CPUHAND:
-            returnedArray = GetCpuHand();
-            break;
-
-        case CardArray::PLAYERDISCARDS:
-            returnedArray = GetPlayerDiscards();
-            break;
-
-        case CardArray::CPUDISCARDS:
-            returnedArray = GetCpuDiscards();
-            break;
-
-        case CardArray::PREVIOUSTRICKS:
-            returnedArray = GetPreviousTricks();
-            break;
-
-        default:
-            break;
-    }
-
-    return returnedArray;
-}
-
-
-//------------------------------------------------------------------------------
-// ConnectSignals - Connect the various signals to/from this class.
-//------------------------------------------------------------------------------
-void CardManager::ConnectSignals(void)
-{
-    connect(transitionTimer, SIGNAL(timeout()), this,
-            SIGNAL(TransferComplete()));
-
-    connect(playerHand, SIGNAL(SignalValidSelection()), this,
-            SIGNAL(SignalValidSelection()));
-}
-
-
-//------------------------------------------------------------------------------
-// CallTransferSelectedCards - Helper function for TransferSelectedCards.
-//------------------------------------------------------------------------------
-void CardManager::CallTransferSelectedCards(CardArray::CardArrayType src,
-                                            CardArray::CardArrayType dest)
-{
-    CardArray* source      = GetDesiredCardArray(src);
-    CardArray* destination = GetDesiredCardArray(dest);
-
-    TransferSelectedCards(source, destination);
-}
-
-
-//------------------------------------------------------------------------------
-// CallCheckSelection - Check the selection in the CardArray is correct for
-//                      the phase the game is in.
-//------------------------------------------------------------------------------
-void CardManager::CallCheckSelection(CardArray::SelectionType phase,
-                                     CardArray::CardArrayType cardArrayType)
-{
-    CardArray* cardArray = GetDesiredCardArray(cardArrayType);
-    cardArray->CheckSelection(phase);
-}
-
-
-//------------------------------------------------------------------------------
 // SetCardsSelectable - Enable/Disable a CardArray's cards to be selected.
 //------------------------------------------------------------------------------
 void CardManager::SetCardsSelectable(bool setSelectable, int limit,
@@ -413,4 +330,26 @@ void CardManager::CardSelectionsChanged(Card* card,
         // Update the position of the card based on if it's selected or not.
         card->UpdateSelection();
     }
+}
+
+
+//------------------------------------------------------------------------------
+// CallCheckSelection - Check the selection in the CardArray is correct for
+//                      the phase the game is in.
+//------------------------------------------------------------------------------
+/*void CardManager::CallCheckSelection(CardArray::SelectionType phase,
+                                     CardArray::CardArrayType cardArrayType)
+{
+    CardArray* cardArray = GetDesiredCardArray(cardArrayType);
+    cardArray->CheckSelection(phase);
+}*/
+
+
+//------------------------------------------------------------------------------
+// SignalTransferComplete - Inform the gameManager that a card transfer has
+//                          finished.
+//------------------------------------------------------------------------------
+void CardManager::SignalTransferComplete(void)
+{
+    emit TransferComplete(numOfCardsTransferred);
 }

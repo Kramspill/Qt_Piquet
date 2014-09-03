@@ -39,16 +39,8 @@ public:
     void       TransferSelectedCards(CardArray* source,
                                      CardArray* destination);
 
-    CardArray* GetDeck(void);
-    CardArray* GetTalon(void);
-    CardArray* GetPlayerHand(void);
-    CardArray* GetCpuHand(void);
-    CardArray* GetPlayerDiscards(void);
-    CardArray* GetCpuDiscards(void);
-    CardArray* GetPreviousTricks(void);
-    Card       GetCurrentTrick(void);
-
     CardArray* GetDesiredCardArray(CardArray::CardArrayType cardArrayType);
+    Card       GetCurrentTrick(void);
 
 private:
     void       ConnectSignals(void);
@@ -57,21 +49,21 @@ private:
     void       ShuffleDeck(void);
 
 public slots:
-    void       CallTransferSelectedCards(CardArray::CardArrayType src,
-                                         CardArray::CardArrayType dest);
-    void       CallCheckSelection(CardArray::SelectionType phase,
-                                  CardArray::CardArrayType
-                                  cardArrayType = CardArray::PLAYERHAND);
     void       SetCardsSelectable(bool setSelectable, int limit,
                                   CardArray::CardArrayType
                                   cardArrayType = CardArray::PLAYERHAND);
     void       CardSelectionsChanged(Card* card, CardArray::CardArrayType
                                      cardArrayType = CardArray::PLAYERHAND);
+    /*void       CallCheckSelection(CardArray::SelectionType phase,
+                                  CardArray::CardArrayType
+                                  cardArrayType = CardArray::PLAYERHAND);*/
+
+private slots:
+    void       SignalTransferComplete(void);
 
 signals:
-    void       TransferComplete(void);
-    void       SignalNumOfCardsTransferred(int);
-    void       SignalValidSelection(void);
+    void       TransferComplete(int);
+    //void       SignalValidSelection(void);
 
 private:
     CardArray* deck;
@@ -83,6 +75,7 @@ private:
     CardArray* previousTricks;
     Card       currentTrick;
     QTimer*    transitionTimer;
+    int        numOfCardsTransferred;
 };
 
 #endif // CARDMANAGER_H
