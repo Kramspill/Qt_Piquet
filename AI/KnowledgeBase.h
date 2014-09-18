@@ -15,6 +15,7 @@
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
+#include "Managers/ScoreManager.h"
 #include "Cards/CardArray.h"
 
 
@@ -37,29 +38,35 @@ public:
     KnowledgeBase(KnowledgeBase&);
     ~KnowledgeBase(void);
 
-    void           Initialize(void);
-    void           UpdateCard(Card::Suit suit, Card::Value value, int index,
-                              CardArray::CardArrayType location);
-    void           FlagDispensableCards(CardArray* cpuHand);
+    void                     Initialize(void);
+    void                     UpdateCard(Card::Suit suit, Card::Rank rank,
+                                        int index,
+                                        CardArray::CardArrayType location);
+    void                     FlagDispensableCards(CardArray* cpuHand);
+
+    ScoreManager::PhaseScore CalculatePoint(void);
+    ScoreManager::PhaseScore CalculateSequence(void);
+    ScoreManager::PhaseScore CalculateSet(void);
 
 private:
-    void           RankCards(CardArray* cpuHand);
-    void           CalculateSuitValues(CardArray* cpuHand);
-    void           RankStoppers(void);
-    void           RankSets(void);
-    void           RankSequences(void);
-    void           FinishRanking(void);
+    void                     RankCards(CardArray* cpuHand);
+    void                     CalculateSuitValues(CardArray* cpuHand);
+    void                     RankStoppers(void);
+    void                     RankSets(void);
+    void                     RankSequences(void);
+    void                     FinishRanking(void);
 
 signals:
-    void           SignalCardSelectionsChanged(Card*, CardArray::CardArrayType);
+    void                     SignalCardSelectionsChanged(Card*,
+                                                      CardArray::CardArrayType);
 
 private:
-    KnowledgeItem* cardStatus[4][8];
-    int            cardRanks[12];
-    int            currentRank;
-    int            suitValues[4];
-    int            suitRanks[4];
-    int            pointValues[8];
+    KnowledgeItem*           cardStatus[4][8];
+    int                      cardRanks[12];
+    int                      currentRank;
+    int                      suitValues[4];
+    int                      suitRanks[4];
+    int                      pointValues[8];
 };
 
 #endif // KNOWLEDGEBASE_H

@@ -81,11 +81,11 @@ void KnowledgeBase::Initialize(void)
 //------------------------------------------------------------------------------
 // UpdateCard - Update the status of a card.
 //------------------------------------------------------------------------------
-void KnowledgeBase::UpdateCard(Card::Suit suit, Card::Value value, int index,
+void KnowledgeBase::UpdateCard(Card::Suit suit, Card::Rank rank, int index,
                                CardArray::CardArrayType location)
 {
-    cardStatus[suit][value-7]->location = location;
-    cardStatus[suit][value-7]->index    = index;
+    cardStatus[suit][rank-7]->location = location;
+    cardStatus[suit][rank-7]->index    = index;
 }
 
 
@@ -110,6 +110,69 @@ void KnowledgeBase::FlagDispensableCards(CardArray* cpuHand)
         card->setSelected(true);
         emit SignalCardSelectionsChanged(card, CardArray::CPUHAND);
     }
+}
+
+
+//------------------------------------------------------------------------------
+// CalculatePoint - Calculate the cpu's best Point.
+//------------------------------------------------------------------------------
+ScoreManager::PhaseScore KnowledgeBase::CalculatePoint(void)
+{
+    ScoreManager::PhaseScore currentScore;
+    ScoreManager::PhaseScore maxScore;
+
+    for ( int suitIndex = 0; suitIndex < 4; suitIndex++ )
+    {
+        // Initialize the current score to 0.
+        currentScore.numOfCards = 0;
+        currentScore.totalValue = 0;
+
+        for ( int valueIndex = 0; valueIndex < 8; valueIndex++ )
+        {
+            KnowledgeItem* item = cardStatus[suitIndex][valueIndex];
+
+            if ( item->location == CardArray::CPUHAND )
+            {
+                currentScore.numOfCards++;
+                currentScore.totalValue += pointValues[valueIndex];
+            }
+        }
+
+        // Check if this is now the max Point.
+        if ( currentScore.numOfCards >= maxScore.numOfCards )
+        {
+            if ( currentScore.numOfCards > maxScore.numOfCards )
+            {
+                maxScore.numOfCards = currentScore.numOfCards;
+                maxScore.totalValue = currentScore.totalValue;
+            }
+            else if ( currentScore.totalValue > maxScore.totalValue )
+            {
+                maxScore.numOfCards = currentScore.numOfCards;
+                maxScore.totalValue = currentScore.totalValue;
+            }
+        }
+    }
+
+    return maxScore;
+}
+
+
+//------------------------------------------------------------------------------
+// CalculateSequence - Calculate the cpu's best Sequence.
+//------------------------------------------------------------------------------
+ScoreManager::PhaseScore KnowledgeBase::CalculateSequence(void)
+{
+
+}
+
+
+//------------------------------------------------------------------------------
+// CalculateSet - Calculate the cpu's best Set.
+//------------------------------------------------------------------------------
+ScoreManager::PhaseScore KnowledgeBase::CalculateSet(void)
+{
+
 }
 
 
@@ -148,7 +211,7 @@ void KnowledgeBase::CalculateSuitValues(CardArray* cpuHand)
     {
         card = cpuHand->GetCard(index);
 
-        suitValues[card->GetSuit()] += pointValues[card->GetValue()-7];
+        suitValues[card->GetSuit()] += pointValues[card->GetRank()-7];
     }
 
     // Sort them from highest to lowest (insertion sort).
