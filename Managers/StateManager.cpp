@@ -122,15 +122,15 @@ void StateManager::ConnectSignals(void)
     /*QObject::connect(this,
                      SIGNAL(SignalValidSelection()),
                      declarationPhase,
-                     SLOT(ValidSelection()));
+                     SLOT(ValidSelection()));*/
     QObject::connect(declarationPhase,
                      SIGNAL(SetCardsSelectable(bool, int)),
                      this,
                      SIGNAL(SetCardsSelectable(bool, int)));
     QObject::connect(declarationPhase,
-                     SIGNAL(RequestCheckSelection(CardArray::SelectionType)),
+                     SIGNAL(DeclareSelection(CardArray::SelectionType)),
                      this,
-                     SIGNAL(SignalCheckSelection(CardArray::SelectionType)));*/
+                     SIGNAL(DeclareSelection(CardArray::SelectionType)));
 }
 
 

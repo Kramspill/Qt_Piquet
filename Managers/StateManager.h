@@ -51,7 +51,7 @@ signals:
     void              TransferComplete(int);
 
     void              SetCardsSelectable(bool, int);
-    //void              SignalCheckSelection(CardArray::SelectionType);
+    void              DeclareSelection(CardArray::SelectionType);
 
     void              SignalAI(AI::AIAction);
     void              UpdateAI(void);
