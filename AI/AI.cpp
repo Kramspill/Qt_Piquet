@@ -57,10 +57,10 @@ void AI::UpdateKnowledgeBase(Card* card, int index,
                              CardArray::CardArrayType location)
 {
     Card::Suit  suit  = card->GetSuit();
-    Card::Value value = card->GetValue();
+    Card::Rank rank = card->GetRank();
 
     // Add the information to the knowledge base.
-    knowledgeBase->UpdateCard(suit, value, index, location);
+    knowledgeBase->UpdateCard(suit, rank, index, location);
 }
 
 
@@ -74,33 +74,61 @@ void AI::UpdateHand(CardArray* newCpuHand)
 
 
 //------------------------------------------------------------------------------
-// SelectAIAction - Select the appropriate action to perform.
+// SelectCardsToDiscard - Select cards to discard for the Exchange phase.
 //------------------------------------------------------------------------------
-void AI::SelectAIAction(AI::AIAction action)
+void AI::SelectCardsToDiscard(void)
 {
-    switch ( action )
-    {
-        case DISCARD:
-            SelectCardsToDiscard();
-            break;
-
-        case POINT:
-            DeclarePoint();
-            break;
-
-        case SEQUENCE:
-            DeclareSequence();
-            break;
-
-        case SET:
-            DeclareSet();
-            break;
-
-        default:
-            break;
-    }
+    knowledgeBase->FlagDispensableCards(cpuHand);
 
     emit AIProcessingComplete();
+}
+
+
+//------------------------------------------------------------------------------
+// DeclarePoint - Select cards for the Point declaration.
+//------------------------------------------------------------------------------
+ScoreManager::Response AI::DeclarePoint(ScoreManager::PhaseScore userScore)
+{
+    if ( /*elderHand*/ 0 )
+    {
+
+    }
+    else
+    {
+        ScoreManager::PhaseScore score = knowledgeBase->CalculatePoint();
+    }
+}
+
+
+//------------------------------------------------------------------------------
+// DeclareSequence - Select cards for the Sequence declaration.
+//------------------------------------------------------------------------------
+ScoreManager::Response AI::DeclareSequence(ScoreManager::PhaseScore userScore)
+{
+    if ( /*elderHand*/ 0 )
+    {
+
+    }
+    else
+    {
+        ScoreManager::PhaseScore score = knowledgeBase->CalculateSequence();
+    }
+}
+
+
+//------------------------------------------------------------------------------
+// DeclareSet - Select cards for the Set declaration.
+//------------------------------------------------------------------------------
+ScoreManager::Response AI::DeclareSet(ScoreManager::PhaseScore userScore)
+{
+    if ( /*elderHand*/ 0 )
+    {
+
+    }
+    else
+    {
+        ScoreManager::PhaseScore score = knowledgeBase->CalculateSet();
+    }
 }
 
 
@@ -115,40 +143,4 @@ void AI::ConnectSignals(void)
             this,
             SIGNAL(SignalCardSelectionsChanged(Card*,
                                                CardArray::CardArrayType)));
-}
-
-
-//------------------------------------------------------------------------------
-// SelectCardsToDiscard - Select cards to discard for the Exchange phase.
-//------------------------------------------------------------------------------
-void AI::SelectCardsToDiscard(void)
-{
-    knowledgeBase->FlagDispensableCards(cpuHand);
-}
-
-
-//------------------------------------------------------------------------------
-// DeclarePoint - Select cards for the Point declaration.
-//------------------------------------------------------------------------------
-void AI::DeclarePoint(void)
-{
-
-}
-
-
-//------------------------------------------------------------------------------
-// DeclareSequence - Select cards for the Sequence declaration.
-//------------------------------------------------------------------------------
-void AI::DeclareSequence(void)
-{
-
-}
-
-
-//------------------------------------------------------------------------------
-// DeclareSet - Select cards for the Set declaration.
-//------------------------------------------------------------------------------
-void AI::DeclareSet(void)
-{
-
 }

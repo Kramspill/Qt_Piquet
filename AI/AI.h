@@ -15,6 +15,7 @@
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
+#include "Managers/ScoreManager.h"
 #include "Cards/CardArray.h"
 #include "KnowledgeBase.h"
 
@@ -28,11 +29,8 @@ class AI : public QObject
 public:
     enum AIAction
     {
-        UPDATE,
         DISCARD,
-        POINT,
-        SEQUENCE,
-        SET
+        TRICK
     };
 
 public:
@@ -40,28 +38,28 @@ public:
     AI(AI&);
     ~AI(void);
 
-    void           Initialize(void);
+    void                   Initialize(void);
 
-    void           UpdateKnowledgeBase(Card* card, int index,
-                                       CardArray::CardArrayType location);
-    void           UpdateHand(CardArray* newCpuHand);
+    void                   UpdateKnowledgeBase(Card* card, int index,
+                                             CardArray::CardArrayType location);
+    void                   UpdateHand(CardArray* newCpuHand);
 
-    void           SelectAIAction(AIAction action);
+    void                   SelectCardsToDiscard(void);
+    ScoreManager::Response DeclarePoint(ScoreManager::PhaseScore userScore);
+    ScoreManager::Response DeclareSequence(ScoreManager::PhaseScore userScore);
+    ScoreManager::Response DeclareSet(ScoreManager::PhaseScore userScore);
 
 private:
-    void           ConnectSignals(void);
-    void           SelectCardsToDiscard(void);
-    void           DeclarePoint(void);
-    void           DeclareSequence(void);
-    void           DeclareSet(void);
+    void                   ConnectSignals(void);
 
 signals:
-    void           SignalCardSelectionsChanged(Card*, CardArray::CardArrayType);
-    void           AIProcessingComplete(void);
+    void                   SignalCardSelectionsChanged(Card*,
+                                                      CardArray::CardArrayType);
+    void                   AIProcessingComplete(void);
 
 private:
-    KnowledgeBase* knowledgeBase;
-    CardArray*     cpuHand;
+    KnowledgeBase*         knowledgeBase;
+    CardArray*             cpuHand;
 };
 
 #endif // AI_H
