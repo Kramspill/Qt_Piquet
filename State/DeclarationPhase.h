@@ -48,6 +48,9 @@ protected:
     void           onEntry(QEvent*);
     void           onExit(QEvent*);
 
+private:
+    void           ConnectSignals(void);
+
 public slots:
     void           ValidSelection(void);
 
@@ -62,12 +65,20 @@ private slots:
 
 signals:
     void           SetCardsSelectable(bool, int);
-    void           RequestCheckSelection(CardArray::SelectionType);
+    void           DeclareSelection(CardArray::SelectionType);
     void           SignalValidSelection(void);
     void           DeclarationPhaseFinished(void);
 
 private:
     QStateMachine* stateMachine;
+    QState*        playerPoint;
+    QState*        playerSequence;
+    QState*        playerSet;
+    QState*        cpuPoint;
+    QState*        cpuSequence;
+    QState*        cpuSet;
+    QState*        initialTrick;
+    QFinalState*   finalState;
     PhaseOutcome   phaseStatus[3];
     QPushButton*   declareButton;
 };
