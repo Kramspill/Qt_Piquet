@@ -20,13 +20,13 @@ Card::Card(void)
 //------------------------------------------------------------------------------
 // Constructor
 //------------------------------------------------------------------------------
-Card::Card(const QString& svgFileName, Suit theSuit, Value theValue) :
+Card::Card(const QString& svgFileName, Suit theSuit, Rank theRank) :
     QGraphicsSvgItem(svgFileName),
     frontImage(svgFileName),
     backImage(":/Cards/Back/Resources/Back/Red_Back.svg"),
     facedown(false),
     suit(theSuit),
-    value(theValue)
+    rank(theRank)
 {
     Initialize();
 }
@@ -59,9 +59,18 @@ Card::Suit Card::GetSuit(void)
 
 
 //------------------------------------------------------------------------------
+// GetRank - Accessor for Card's rank member variable.
+//------------------------------------------------------------------------------
+Card::Rank Card::GetRank(void)
+{
+    return rank;
+}
+
+
+//------------------------------------------------------------------------------
 // GetValue - Accessor for Card's value member variable.
 //------------------------------------------------------------------------------
-Card::Value Card::GetValue(void)
+int Card::GetValue(void)
 {
     return value;
 }
@@ -131,6 +140,9 @@ void Card::UpdateAnimation(bool noAnimation)
 //------------------------------------------------------------------------------
 void Card::Initialize(void)
 {
+    // Set the Point value of the card.
+    SetValue();
+
     // Initialize the renderer and start the card facing down.
     renderer = new QSvgRenderer(backImage);
     this->setSharedRenderer(renderer);
@@ -215,6 +227,36 @@ void Card::Initialize(void)
 
     // Run the state machine.
     stateMachine->start();
+}
+
+
+//------------------------------------------------------------------------------
+// SetValue - Set the point value of this card.
+//------------------------------------------------------------------------------
+void Card::SetValue(void)
+{
+    switch ( rank )
+    {
+        case SEVEN:
+        case EIGHT:
+        case NINE:
+        case TEN:
+            value = rank;
+            break;
+
+        case JACK:
+        case QUEEN:
+        case KING:
+            value = 10;
+            break;
+
+        case ACE:
+            value = 11;
+            break;
+
+        default:
+            break;
+    }
 }
 
 

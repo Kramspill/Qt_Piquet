@@ -37,7 +37,7 @@ public:
         SPADES   = 3
     };
 
-    enum Value
+    enum Rank
     {
         SEVEN   = 7,
         EIGHT   = 8,
@@ -58,12 +58,13 @@ public:
 
 public:
     Card(void);
-    Card(const QString& svgFileName, Suit theSuit, Value theValue);
+    Card(const QString& svgFileName, Suit theSuit, Rank theRank);
     Card(Card&);
     ~Card(void);
 
     Suit                GetSuit(void);
-    Value               GetValue(void);
+    Rank                GetRank(void);
+    int                 GetValue(void);
     QPointF             GetPosition(void);
 
     void                UpdateSelection(void);
@@ -72,6 +73,7 @@ public:
 
 private:
     void                Initialize(void);
+    void                SetValue(void);
 
 private slots:
     void                FlipCard(void);
@@ -89,7 +91,8 @@ private:
     QString             backImage;
     bool                facedown;
     Suit                suit;
-    Value               value;
+    Rank                rank;
+    int                 value;
     QPointF             position;
     QStateMachine*      stateMachine;
     QPropertyAnimation* transitionAnimation;
