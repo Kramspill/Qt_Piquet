@@ -112,15 +112,15 @@ void GameManager::ConnectSignals(void)
                      cardManager,
                      SLOT(SetCardsSelectable(bool, int)));
 
-    /*QObject::connect(stateManager,
-                     SIGNAL(SignalCheckSelection(CardArray::SelectionType)),
-                     cardManager,
-                     SLOT(CallCheckSelection(CardArray::SelectionType)));*/
+    QObject::connect(stateManager,
+                     SIGNAL(DeclareSelection(CardArray::SelectionType)),
+                     this,
+                     SLOT(DeclareSelection(CardArray::SelectionType)));
 
     QObject::connect(stateManager,
                      SIGNAL(SignalAI(AI::AIAction)),
                      this,
-                     SLOT(CallSelectAIAction(AI::AIAction)));
+                     SLOT(SelectAIAction(AI::AIAction)));
 
     QObject::connect(stateManager,
                      SIGNAL(UpdateAI()),
@@ -168,11 +168,57 @@ void GameManager::RequestCardTransfer(CardArray::CardArrayType src,
 
 
 //------------------------------------------------------------------------------
+// DeclareSelection - Check the card selection and inform the younger hand to
+//                    respond.
+//------------------------------------------------------------------------------
+void GameManager::DeclareSelection(CardArray::SelectionType phase)
+{
+    if ( cardManager->CheckSelection(phase) )
+    {
+        ScoreManager::PhaseScore userScore;
+        ScoreManager::Response   response;
+
+        switch ( phase )
+        {
+            case CardArray::POINT:
+                userScore = cardManager->GetSelectionScore(phase);
+                response  = ai->DeclarePoint(userScore);
+                break;
+
+            case CardArray::SEQUENCE:
+                userScore = cardManager->GetSelectionScore(phase);
+                response  = ai->DeclareSequence(userScore);
+                break;
+
+            case CardArray::SET:
+                userScore = cardManager->GetSelectionScore(phase);
+                response  = ai->DeclareSet(userScore);
+                break;
+
+            default:
+                break;
+        }
+    }
+}
+
+
+//------------------------------------------------------------------------------
 // CallSelectAIAction - Call an action within the ai class.
 //------------------------------------------------------------------------------
-void GameManager::CallSelectAIAction(AI::AIAction action)
+void GameManager::SelectAIAction(AI::AIAction action)
 {
-    ai->SelectAIAction(action);
+    switch ( action )
+    {
+        case AI::DISCARD:
+            ai->SelectCardsToDiscard();
+            break;
+
+        case AI::TRICK:
+            break;
+
+        default:
+            break;
+    }
 }
 
 
