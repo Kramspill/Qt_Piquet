@@ -216,7 +216,7 @@ bool CardArray::UpdateCardSelections(Card* card)
 //------------------------------------------------------------------------------
 // CheckSelection - Check selectedCards contains valid Cards for the phase.
 //------------------------------------------------------------------------------
-void CardArray::CheckSelection(CardArray::SelectionType phase)
+bool CardArray::CheckSelection(CardArray::SelectionType phase)
 {
     Card*      aCard;
     Card::Suit theSuit;
@@ -253,8 +253,40 @@ void CardArray::CheckSelection(CardArray::SelectionType phase)
             break;
     }
 
-    if ( valid )
-        emit SignalValidSelection();
+    return valid;
+}
+
+
+//------------------------------------------------------------------------------
+// GetSelectionScore - Get the score of the current selection.
+//------------------------------------------------------------------------------
+ScoreManager::PhaseScore CardArray::GetSelectionScore(CardArray::SelectionType
+                                                      phase)
+{
+    ScoreManager::PhaseScore score;
+
+    score.numOfCards = GetSelectedCardsSize();
+    score.totalValue = 0;
+
+    // The selection has already been verified so we can make some assumptions
+    // in the calculations to speed things up.
+    switch ( phase )
+    {
+        case POINT:
+            for ( int index = 0; index < score.numOfCards; index++ )
+            {
+                score.totalValue += selectedCards[index]->GetValue();
+            }
+            break;
+
+        case SEQUENCE:
+            break;
+
+        case SET:
+            break;
+    }
+
+    return score;
 }
 
 
