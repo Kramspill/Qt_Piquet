@@ -17,6 +17,7 @@
 // My Header Files
 //------------------------------------------------------------------------------
 #include "Scene/Scene.h"
+#include "ScoreManager.h"
 #include "Cards/CardArray.h"
 #include "Cards/Card.h"
 
@@ -32,50 +33,55 @@ public:
     CardManager(CardManager&);
     ~CardManager(void);
 
-    void       Initialize(Scene* scene);
+    void                     Initialize(Scene* scene);
 
-    void       TransferCards(CardArray* source, CardArray* destination,
-                             int numberOfCards);
-    void       TransferSelectedCards(CardArray* source,
-                                     CardArray* destination);
+    void                     TransferCards(CardArray* source,
+                                           CardArray* destination,
+                                           int numberOfCards);
+    void                     TransferSelectedCards(CardArray* source,
+                                                   CardArray* destination);
 
-    CardArray* GetDesiredCardArray(CardArray::CardArrayType cardArrayType);
-    Card       GetCurrentTrick(void);
+    CardArray*               GetDesiredCardArray(
+                                        CardArray::CardArrayType cardArrayType);
+    Card                     GetCurrentTrick(void);
+
+    ScoreManager::PhaseScore GetSelectionScore(CardArray::SelectionType phase);
 
 private:
-    void       ConnectSignals(void);
-    void       InitializeCards(void);
-    void       AddCardsToScene(Scene* scene);
-    void       ShuffleDeck(void);
+    void                     ConnectSignals(void);
+    void                     InitializeCards(void);
+    void                     AddCardsToScene(Scene* scene);
+    void                     ShuffleDeck(void);
 
 public slots:
-    void       SetCardsSelectable(bool setSelectable, int limit,
-                                  CardArray::CardArrayType
-                                  cardArrayType = CardArray::PLAYERHAND);
-    void       CardSelectionsChanged(Card* card, CardArray::CardArrayType
-                                     cardArrayType = CardArray::PLAYERHAND);
-    /*void       CallCheckSelection(CardArray::SelectionType phase,
-                                  CardArray::CardArrayType
-                                  cardArrayType = CardArray::PLAYERHAND);*/
+    void                     SetCardsSelectable(bool setSelectable, int limit,
+                                                CardArray::CardArrayType
+                                         cardArrayType = CardArray::PLAYERHAND);
+    void                     CardSelectionsChanged(Card* card,
+                                                   CardArray::CardArrayType
+                                         cardArrayType = CardArray::PLAYERHAND);
+    bool                     CheckSelection(CardArray::SelectionType phase,
+                                            CardArray::CardArrayType
+                                         cardArrayType = CardArray::PLAYERHAND);
 
 private slots:
-    void       SignalTransferComplete(void);
+    void                     SignalTransferComplete(void);
 
 signals:
-    void       TransferComplete(int);
+    void                     TransferComplete(int);
     //void       SignalValidSelection(void);
 
 private:
-    CardArray* deck;
-    CardArray* talon;
-    CardArray* playerHand;
-    CardArray* cpuHand;
-    CardArray* playerDiscards;
-    CardArray* cpuDiscards;
-    CardArray* previousTricks;
-    Card       currentTrick;
-    QTimer*    transitionTimer;
-    int        numOfCardsTransferred;
+    CardArray*               deck;
+    CardArray*               talon;
+    CardArray*               playerHand;
+    CardArray*               cpuHand;
+    CardArray*               playerDiscards;
+    CardArray*               cpuDiscards;
+    CardArray*               previousTricks;
+    Card                     currentTrick;
+    QTimer*                  transitionTimer;
+    int                      numOfCardsTransferred;
 };
 
 #endif // CARDMANAGER_H

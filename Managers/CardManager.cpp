@@ -176,6 +176,16 @@ Card CardManager::GetCurrentTrick(void)
 
 
 //------------------------------------------------------------------------------
+// GetSelectionScore - Get the score of the user's current selection.
+//------------------------------------------------------------------------------
+ScoreManager::PhaseScore CardManager::GetSelectionScore(CardArray::SelectionType
+                                                        phase)
+{
+    return playerHand->GetSelectionScore(phase);
+}
+
+
+//------------------------------------------------------------------------------
 // ConnectSignals - Connect the various signals to/from this class.
 //------------------------------------------------------------------------------
 void CardManager::ConnectSignals(void)
@@ -337,12 +347,13 @@ void CardManager::CardSelectionsChanged(Card* card,
 // CallCheckSelection - Check the selection in the CardArray is correct for
 //                      the phase the game is in.
 //------------------------------------------------------------------------------
-/*void CardManager::CallCheckSelection(CardArray::SelectionType phase,
-                                     CardArray::CardArrayType cardArrayType)
+bool CardManager::CheckSelection(CardArray::SelectionType phase,
+                                 CardArray::CardArrayType cardArrayType)
 {
     CardArray* cardArray = GetDesiredCardArray(cardArrayType);
-    cardArray->CheckSelection(phase);
-}*/
+
+    return cardArray->CheckSelection(phase);
+}
 
 
 //------------------------------------------------------------------------------
