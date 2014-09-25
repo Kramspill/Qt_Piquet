@@ -54,6 +54,13 @@ void GameManager::Initialize(void)
     QPushButton* button4 = new QPushButton("Sink");
     scene->addWidget(button4);
     button4->setGeometry(75, 0, 75, 23);
+    QMessageBox msgBox;
+    msgBox.addButton(QMessageBox::Yes);
+    //msgBox.addButton(QMessageBox::No);
+    msgBox.setText("The document has been modified.");
+    msgBox.setWindowFlags(msgBox.windowFlags() ^ Qt::WindowCloseButtonHint);
+    msgBox.exec();
+
     //-----------------------
 
     // Initialize the CardManager with the scene object.
