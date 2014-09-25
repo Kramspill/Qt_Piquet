@@ -28,7 +28,8 @@ SOURCES +=\
     State/ExchangePhase.cpp \
     State/TrickPhase.cpp \
     AI/AI.cpp \
-    AI/KnowledgeBase.cpp
+    AI/KnowledgeBase.cpp \
+    Scene/Dialog.cpp
 
 HEADERS  += \
     Managers/GameManager.h \
@@ -45,7 +46,8 @@ HEADERS  += \
     State/ExchangePhase.h \
     State/TrickPhase.h \
     AI/AI.h \
-    AI/KnowledgeBase.h
+    AI/KnowledgeBase.h \
+    Scene/Dialog.h
 
 #FORMS    += MainWindow.ui
 
