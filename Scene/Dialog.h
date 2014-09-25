@@ -19,7 +19,7 @@ class Dialog : public QDialog
 {
     Q_OBJECT
 public:
-    enum ButtonTypes
+    enum ButtonType
     {
         DEAL,
         EXCHANGE,
