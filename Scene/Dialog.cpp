@@ -38,8 +38,22 @@ Dialog::~Dialog(void)
 //------------------------------------------------------------------------------
 // Initialize - Initialize the contents of this dialog.
 //------------------------------------------------------------------------------
-void Dialog::Initialize(char* title, char* message, int numOfBtns,
+void Dialog::Initialize(char* title, char* msg, int numOfBtns,
                         ButtonType* buttonTypes)
 {
+    // Set the title of the dialog.
+    setWindowTitle(title);
 
+    // Initialize the message and set to read only.
+    message = new QTextEdit(msg);
+    message->setReadOnly(true);
+
+    layout = new QGridLayout();
+    layout->addWidget(message);
+
+    setLayout(layout);
+    setFixedHeight(sizeHint().height());
+
+    // Remove the help button in the top right corner of the dialog.
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }

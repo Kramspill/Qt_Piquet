@@ -56,7 +56,9 @@ void GameManager::Initialize(void)
     button4->setGeometry(75, 0, 75, 23);
 
     //= Dialog Test =//
-
+    Dialog* dialog = new Dialog();
+    dialog->Initialize("Title", "This is a message", 1, 0);
+    dialog->exec();
     //===============//
 
     //-----------------------

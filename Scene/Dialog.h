@@ -10,6 +10,8 @@
 // Qt Header Files
 //------------------------------------------------------------------------------
 #include <QDialog>
+#include <QTextEdit>
+#include <QGridLayout>
 
 
 //------------------------------------------------------------------------------
@@ -35,13 +37,12 @@ public:
     Dialog(Dialog&);
     ~Dialog(void);
 
-    void Initialize(char* title, char* message, int numOfBtns,
+    void Initialize(char* title, char* msg, int numOfBtns,
                     ButtonType* buttonTypes);
 
-signals:
-
-public slots:
-
+private:
+    QGridLayout* layout;
+    QTextEdit* message;
 };
 
 #endif // DIALOG_H
