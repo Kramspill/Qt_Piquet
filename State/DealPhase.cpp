@@ -57,7 +57,8 @@ void DealPhase::Initialize(QPushButton* button)
     stateMachine->setInitialState(initialState);
 
     // Setup the transitions from initialState.
-    initialState->addTransition(button, SIGNAL(clicked()),        dealToPlayer);
+    //initialState->addTransition(button, SIGNAL(clicked()),      dealToPlayer);
+    initialState->addTransition(this, SIGNAL(ExecuteDeal()),      dealToPlayer);
 
     // Setup the transitions from dealToPlayer.
     dealToPlayer->addTransition(this, SIGNAL(TransferComplete()), dealToCpu);
@@ -81,6 +82,7 @@ void DealPhase::Initialize(QPushButton* button)
 void DealPhase::onEntry(QEvent*)
 {
     stateMachine->start();
+    emit RequestDialog(Dialog::DEAL);
 }
 
 

@@ -20,6 +20,7 @@
 // My Header Files
 //------------------------------------------------------------------------------
 #include "Cards/CardArray.h"
+#include "Scene/Dialog.h"
 
 
 //------------------------------------------------------------------------------
@@ -49,6 +50,8 @@ private slots:
     void           DealTalon(void);
 
 signals:
+    void           ExecuteDeal(void);
+    void           RequestDialog(Dialog::DialogType);
     void           RequestCardTransfer(CardArray::CardArrayType,
                                        CardArray::CardArrayType,
                                        int, bool);
