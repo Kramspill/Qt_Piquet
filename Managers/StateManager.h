@@ -53,6 +53,9 @@ signals:
     void              SetCardsSelectable(bool, int);
     void              DeclareSelection(CardArray::SelectionType);
 
+    void              RequestDialog(Dialog::DialogType);
+    void              ExecuteDeal(void);
+
     void              SignalAI(AI::AIAction);
     void              UpdateAI(void);
 

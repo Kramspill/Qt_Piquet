@@ -87,6 +87,16 @@ void StateManager::Initialize(QPushButton* button,  QPushButton* button2,
 void StateManager::ConnectSignals(void)
 {
     // Connect signals to/from the deal phase state.
+    QObject::connect(this,
+                     SIGNAL(ExecuteDeal()),
+                     dealPhase,
+                     SIGNAL(ExecuteDeal()));
+
+    QObject::connect(dealPhase,
+                     SIGNAL(RequestDialog(Dialog::DialogType)),
+                     this,
+                     SIGNAL(RequestDialog(Dialog::DialogType)));
+
     QObject::connect(dealPhase,
                      SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
                                                 CardArray::CardArrayType,
