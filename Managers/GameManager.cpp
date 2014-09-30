@@ -40,25 +40,34 @@ GameManager::~GameManager(void)
 void GameManager::Initialize(void)
 {
     // Initialize the scene.
-    scene = new Scene(-350, -350, 700, 700);
+    QDesktopWidget* desktop = QApplication::desktop();
+
+    int width  = 800;
+    int height = 600;
+    int xPos   = (desktop->width()  - width)  / 2;
+    int yPos   = (desktop->height() - height) / 2;
+
+    scene = new Scene(xPos, yPos, width, height);
 
     // TEMP -----------------
     QPushButton* button = new QPushButton("Deal");
     scene->addWidget(button);
+    button->setGeometry(xPos+500, yPos+300, 75, 23);
     QPushButton* button2 = new QPushButton("Exchange");
     scene->addWidget(button2);
-    button2->setGeometry(0, -30, 75, 23);
+    button2->setGeometry(xPos+500, yPos+277, 75, 23);
     QPushButton* button3 = new QPushButton("Declare");
     scene->addWidget(button3);
-    button3->setGeometry(75, -30, 75, 23);
+    button3->setGeometry(xPos+575, yPos+300, 75, 23);
     QPushButton* button4 = new QPushButton("Sink");
     scene->addWidget(button4);
-    button4->setGeometry(75, 0, 75, 23);
+    button4->setGeometry(xPos+575, yPos+277, 75, 23);
 
     //= Dialog Test =//
-    Dialog* dialog = new Dialog();
-    dialog->Initialize("Title", "This is a message", 1, 0);
-    dialog->exec();
+    /*Dialog* dialog = new Dialog();
+    Dialog::ButtonType buttonType = Dialog::DEAL;
+    dialog->Initialize("Title", "This is a message", 1, &buttonType);
+    dialog->exec();*/
     //===============//
 
     //-----------------------
@@ -106,6 +115,11 @@ void GameManager::ConnectSignals(void)
 
     // Connect the signals from the state manager.
     QObject::connect(stateManager,
+                     SIGNAL(RequestDialog(Dialog::DialogType)),
+                     scene,
+                     SLOT(CreateDialog(Dialog::DialogType)));
+
+    QObject::connect(stateManager,
                      SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
                                                 CardArray::CardArrayType,
                                                 int, bool)),
@@ -152,6 +166,11 @@ void GameManager::ConnectSignals(void)
                      SIGNAL(SignalCardSelectionsChanged(Card*)),
                      cardManager,
                      SLOT(CardSelectionsChanged(Card*)));
+
+    QObject::connect(scene,
+                     SIGNAL(ExecuteDeal()),
+                     stateManager,
+                     SIGNAL(ExecuteDeal()));
 }
 
 
