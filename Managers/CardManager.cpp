@@ -40,13 +40,13 @@ CardManager::~CardManager(void)
 void CardManager::Initialize(Scene* scene)
 {
     // Initialize the CardArray member variables.
-    deck           = new CardArray(CardArray::DECK,           -150,     0);
-    talon          = new CardArray(CardArray::TALON,          -300,  -100);
-    playerHand     = new CardArray(CardArray::PLAYERHAND,     - 50,   190);
-    cpuHand        = new CardArray(CardArray::CPUHAND,        - 50,  -350);
-    playerDiscards = new CardArray(CardArray::PLAYERDISCARDS,  210,    20);
-    cpuDiscards    = new CardArray(CardArray::CPUDISCARDS,     210,  -180);
-    previousTricks = new CardArray(CardArray::PREVIOUSTRICKS, - 50,     0);
+    deck           = new CardArray(CardArray::DECK,            1900,     500);
+    talon          = new CardArray(CardArray::TALON,           1600,     500);
+    playerHand     = new CardArray(CardArray::PLAYERHAND,      1900,     670);
+    cpuHand        = new CardArray(CardArray::CPUHAND,         1870,     250);
+    playerDiscards = new CardArray(CardArray::PLAYERDISCARDS,  1900,     500);
+    cpuDiscards    = new CardArray(CardArray::CPUDISCARDS,     1900,     500);
+    previousTricks = new CardArray(CardArray::PREVIOUSTRICKS,  1900,     500);
 
     // Initialize the timer to allow animation to finish before informing of
     // state changes.
