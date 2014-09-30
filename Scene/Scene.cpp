@@ -13,7 +13,8 @@
 // Constructor
 //------------------------------------------------------------------------------
 Scene::Scene(int x, int y, int width, int height) :
-    QGraphicsScene(x, y, width, height)
+    QGraphicsScene(x, y, width, height),
+    dialog(0)
 {
 }
 
@@ -32,6 +33,16 @@ Scene::Scene(Scene&) :
 //------------------------------------------------------------------------------
 Scene::~Scene(void)
 {
+}
+
+
+//------------------------------------------------------------------------------
+// Initialize - Initialize the scene by connecting the appropriate signals.
+//------------------------------------------------------------------------------
+void Scene::Initialize(void)
+{
+    QObject::connect(dialog, SIGNAL(ExecuteDeal()),
+                     this,   SIGNAL(ExecuteDeal()));
 }
 
 
@@ -83,4 +94,22 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent)
 //------------------------------------------------------------------------------
 void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent*)
 {
+}
+
+
+//------------------------------------------------------------------------------
+// CreateDialog - Create and display a dialog to allow user interaction.
+//------------------------------------------------------------------------------
+void Scene::CreateDialog(Dialog::DialogType dialogType)
+{
+    dialog = new Dialog();
+    dialog->Initialize(dialogType);
+
+    int result = dialog->exec();
+
+    if ( result == 1 )
+    {
+        emit ExecuteDeal();
+        //emit DialogAccepted(dialogType);
+    }
 }

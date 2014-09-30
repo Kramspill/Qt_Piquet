@@ -18,6 +18,7 @@
 // My Header Files
 //------------------------------------------------------------------------------
 #include "Cards/Card.h"
+#include "Dialog.h"
 
 
 //------------------------------------------------------------------------------
@@ -31,14 +32,22 @@ public:
     Scene(Scene&);
     ~Scene(void);
 
-    void addItem(Card* card);
+    void    Initialize(void);
+    void    addItem(Card* card);
 
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent*);
+    void    mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
+    void    mouseDoubleClickEvent(QGraphicsSceneMouseEvent*);
+
+public slots:
+    void    CreateDialog(Dialog::DialogType dialogType);
 
 signals:
-    void SignalCardSelectionsChanged(Card*);
+    void    SignalCardSelectionsChanged(Card*);
+    void    ExecuteDeal(void);
+
+private:
+    Dialog* dialog;
 };
 
 #endif // SCENE_H
