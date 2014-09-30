@@ -12,6 +12,7 @@
 #include <QDialog>
 #include <QTextEdit>
 #include <QGridLayout>
+#include <QPushButton>
 
 
 //------------------------------------------------------------------------------
@@ -21,7 +22,7 @@ class Dialog : public QDialog
 {
     Q_OBJECT
 public:
-    enum ButtonType
+    enum DialogType
     {
         DEAL,
         EXCHANGE,
@@ -37,12 +38,21 @@ public:
     Dialog(Dialog&);
     ~Dialog(void);
 
-    void Initialize(char* title, char* msg, int numOfBtns,
-                    ButtonType* buttonTypes);
+    void                      Initialize(DialogType dialogType);
 
 private:
-    QGridLayout* layout;
-    QTextEdit* message;
+    void                      InitializeButtons(void);
+    void                      SetDialogTitle(void);
+    void                      SetInitialMessage(void);
+
+signals:
+    void                      ExecuteDeal(void);
+
+private:
+    DialogType                type;
+    QGridLayout*              layout;
+    QTextEdit*                message;
+    std::vector<QPushButton*> buttons;
 };
 
 #endif // DIALOG_H
