@@ -43,7 +43,7 @@ void CardLayout::Destroy(void)
 {
     QLayoutItem *item;
 
-    while ( item = takeAt(0) )
+    while ( (item = takeAt(0)) )
         delete item;
 }
 
@@ -79,7 +79,7 @@ void CardLayout::setGeometry(const QRect& rect)
                        width,
                        height);
 
-        items->setGeometry(geometry);
+        item->setGeometry(geometry);
         index++;
     }
 }
