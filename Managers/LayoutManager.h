@@ -15,7 +15,7 @@
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
-#include "Layout/CardLayout.h"
+#include "Layouts/CardLayout.h"
 
 
 //------------------------------------------------------------------------------
@@ -28,16 +28,22 @@ public:
     LayoutManager(LayoutManager&);
     ~LayoutManager(void);
 
+    void                   Initialize(void);
+
+private:
+    void                   PositionLayouts(void);
+
 private:
     QGraphicsAnchorLayout* mainLayout;
-    CardLayout*            deckCards;
-    CardLayout*            playerCards;
-    CardLayout*            cpuCards;
-    CardLayout*            talonCards;
-    CardLayout*            playerDiscardCards;
-    CardLayout*            cpuDiscardCards;
-    CardLayout*            previousTricksCards;
-    CardLayout*            currentTrickCard;
+    QGraphicsAnchorLayout* playingField;
+    CardLayout*            deckLayout;
+    CardLayout*            playerCardsLayout;
+    CardLayout*            cpuCardsLayout;
+    CardLayout*            talonLayout;
+    CardLayout*            playerDiscardLayout;
+    CardLayout*            cpuDiscardLayout;
+    CardLayout*            previousTricksLayout;
+    CardLayout*            currentTrickLayout;
 };
 
 #endif // LAYOUTMANAGER_H
