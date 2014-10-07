@@ -72,6 +72,10 @@ void GameManager::Initialize(void)
 
     //-----------------------
 
+    // Initialize the LayoutManager.
+    layoutManager = new LayoutManager();
+    layoutManager->Initialize();
+
     // Initialize the CardManager with the scene object.
     cardManager = new CardManager();
     cardManager->Initialize(scene);
