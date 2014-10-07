@@ -24,11 +24,28 @@
 class LayoutManager
 {
 public:
+    enum Location
+    {
+        DECK,
+        PLAYERHAND,
+        CPUHAND,
+        TALON,
+        PLAYERDISCARDS,
+        CPUDISCARDS,
+        PREVTRICKS,
+        CURRENTTRICK
+    };
+
+public:
     LayoutManager(void);
     LayoutManager(LayoutManager&);
     ~LayoutManager(void);
 
     void                   Initialize(void);
+
+    void                   Transfer(QGraphicsLayoutItem* item,
+                                    Location src, Location dest);
+    CardLayout*            GetLayout(Location layout);
 
 private:
     void                   PositionLayouts(void);
@@ -36,6 +53,8 @@ private:
 private:
     QGraphicsAnchorLayout* mainLayout;
     QGraphicsAnchorLayout* playingField;
+    QGraphicsAnchorLayout* scoreLayout;
+    QGraphicsAnchorLayout* dialogLayout;
     CardLayout*            deckLayout;
     CardLayout*            playerCardsLayout;
     CardLayout*            cpuCardsLayout;
