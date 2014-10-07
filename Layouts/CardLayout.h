@@ -9,29 +9,32 @@
 //------------------------------------------------------------------------------
 // Qt Header Files
 //------------------------------------------------------------------------------
-#include <QLayout>
+#include <QGraphicsLayout>
 
 
 //------------------------------------------------------------------------------
 // Class: CardLayout
 //------------------------------------------------------------------------------
-class CardLayout : public QLayout
+class CardLayout : public QGraphicsLayout
 {
 public:
-    CardLayout(QWidget* parent);
+    CardLayout(QGraphicsLayoutItem* parent = 0);
     CardLayout(CardLayout&);
     ~CardLayout(void);
 
-    void                      Destroy(void);
+    void                        AddItem(QGraphicsLayoutItem* layoutItem);
+    int                         GetItemIndex(QGraphicsLayoutItem* item);
 
-    void                      addItem(QLayoutItem* item);
-    void                      setGeometry(const QRect& rect);
-    QSize                     sizeHint(void) const;
-    QLayoutItem*              itemAt(int index) const;
-    QLayoutItem*              takeAt(int index);
+    void                        setGeometry(const QRect& rect);
+    QSizeF                      sizeHint(Qt::SizeHint which,
+                                         const QSizeF& constraint = QSizeF()
+                                         ) const;
+    int                         count(void) const;
+    QGraphicsLayoutItem*        itemAt(int index) const;
+    void                        removeAt(int index);
 
 private:
-    QList<QLayoutItem*> items;
+    QList<QGraphicsLayoutItem*> items;
 };
 
 #endif // CARDLAYOUT_H
