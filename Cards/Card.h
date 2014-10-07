@@ -10,6 +10,7 @@
 // Qt Header Files
 //------------------------------------------------------------------------------
 #include <QGraphicsSvgItem>
+#include <QGraphicsLayout>
 #include <QSvgRenderer>
 #include <QStateMachine>
 #include <QPropertyAnimation>
@@ -25,7 +26,7 @@
 //------------------------------------------------------------------------------
 // Class: Card
 //------------------------------------------------------------------------------
-class Card : public QGraphicsSvgItem
+class Card : public QGraphicsSvgItem, public QGraphicsLayoutItem
 {
     Q_OBJECT
 public:
@@ -70,6 +71,11 @@ public:
     void                UpdateSelection(void);
     void                SetPosition(QPointF newPosition, int zPosition = -1);
     void                UpdateAnimation(bool noAnimation);
+
+protected:
+    QSizeF              sizeHint(Qt::SizeHint which,
+                                 const QSizeF & constraint = QSizeF()) const;
+    void                setGeometry(const QRectF & rect);
 
 private:
     void                Initialize(void);
