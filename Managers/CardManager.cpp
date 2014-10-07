@@ -42,7 +42,7 @@ void CardManager::Initialize(Scene* scene)
     // Initialize the CardArray member variables.
     deck           = new CardArray(CardArray::DECK,            1900,     500);
     talon          = new CardArray(CardArray::TALON,           1600,     500);
-    playerHand     = new CardArray(CardArray::PLAYERHAND,      1900,     670);
+    playerHand     = new CardArray(CardArray::PLAYERHAND,      1900,     690);
     cpuHand        = new CardArray(CardArray::CPUHAND,         1870,     250);
     playerDiscards = new CardArray(CardArray::PLAYERDISCARDS,  1900,     500);
     cpuDiscards    = new CardArray(CardArray::CPUDISCARDS,     1900,     500);
