@@ -45,17 +45,14 @@ Scene::~Scene(void)
 //------------------------------------------------------------------------------
 void Scene::Initialize(void)
 {
-    QObject::connect(dialog, SIGNAL(ExecuteDeal()),
-                     this,   SIGNAL(ExecuteDeal()));
-}
+    // Allocate space for member variables.
+    primaryAction   = new QPushButton();
+    secondaryAction = new QPushButton();
+    title           = new QLabel();
+    text            = new QLabel();
 
-
-//------------------------------------------------------------------------------
-// addItem - Override of QGraphicsScene::addItem to accept a Card object.
-//------------------------------------------------------------------------------
-void Scene::addItem(Card* card)
-{
-    QGraphicsScene::addItem(card);
+    // Connect the signals.
+    ConnectSignals();
 }
 
 
@@ -65,6 +62,24 @@ void Scene::addItem(Card* card)
 QPointF Scene::GetCenterPos(void)
 {
     return QPointF(xPos + (width/2), yPos + (height/2));
+}
+
+
+//------------------------------------------------------------------------------
+// SetTitle - Set the UI input box title.
+//------------------------------------------------------------------------------
+void Scene::SetTitle(const QString& newTitle)
+{
+    title->setText(newTitle);
+}
+
+
+//------------------------------------------------------------------------------
+// SetText - Set the UI input box text.
+//------------------------------------------------------------------------------
+void Scene::SetText(const QString& newText)
+{
+    text->setText(newText);
 }
 
 
@@ -107,6 +122,16 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent)
 //------------------------------------------------------------------------------
 void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent*)
 {
+}
+
+
+//------------------------------------------------------------------------------
+// ConnectSignals - Connect various signals to/from this class.
+//------------------------------------------------------------------------------
+void Scene::ConnectSignals(void)
+{
+    QObject::connect(dialog, SIGNAL(ExecuteDeal()),
+                     this,   SIGNAL(ExecuteDeal()));
 }
 
 

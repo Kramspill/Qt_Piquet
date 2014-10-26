@@ -12,6 +12,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsItem>
+#include <QLabel>
 
 
 //------------------------------------------------------------------------------
@@ -32,28 +33,37 @@ public:
     Scene(Scene&);
     ~Scene(void);
 
-    void    Initialize(void);
-    void    addItem(Card* card);
+    void         Initialize(void);
 
-    QPointF GetCenterPos(void);
+    QPointF      GetCenterPos(void);
+
+    void         SetTitle(const QString& newTitle);
+    void         SetText(const QString& newText);
 
 protected:
-    void    mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
-    void    mouseDoubleClickEvent(QGraphicsSceneMouseEvent*);
-
-public slots:
-    void    CreateDialog(Dialog::DialogType dialogType);
-
-signals:
-    void    SignalCardSelectionsChanged(Card*);
-    void    ExecuteDeal(void);
+    void         mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
+    void         mouseDoubleClickEvent(QGraphicsSceneMouseEvent*);
 
 private:
-    Dialog* dialog;
-    int     xPos;
-    int     yPos;
-    int     width;
-    int     height;
+    void         ConnectSignals(void);
+
+public slots:
+    void         CreateDialog(Dialog::DialogType dialogType);
+
+signals:
+    void         SignalCardSelectionsChanged(Card*);
+    void         ExecuteDeal(void);
+
+private:
+    QPushButton* primaryAction;
+    QPushButton* secondaryAction;
+    QLabel*      title;
+    QLabel*      text;
+    Dialog*      dialog;
+    int          xPos;
+    int          yPos;
+    int          width;
+    int          height;
 };
 
 #endif // SCENE_H
