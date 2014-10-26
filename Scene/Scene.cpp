@@ -14,7 +14,11 @@
 //------------------------------------------------------------------------------
 Scene::Scene(int x, int y, int width, int height) :
     QGraphicsScene(x, y, width, height),
-    dialog(0)
+    dialog(0),
+    xPos(x),
+    yPos(y),
+    width(width),
+    height(height)
 {
 }
 
@@ -52,6 +56,15 @@ void Scene::Initialize(void)
 void Scene::addItem(Card* card)
 {
     QGraphicsScene::addItem(card);
+}
+
+
+//------------------------------------------------------------------------------
+// GetCenterPos - Get the coordinates of the center of the window.
+//------------------------------------------------------------------------------
+QPointF Scene::GetCenterPos(void)
+{
+    return QPointF(xPos + (width/2), yPos + (height/2));
 }
 
 

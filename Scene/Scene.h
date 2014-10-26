@@ -35,6 +35,8 @@ public:
     void    Initialize(void);
     void    addItem(Card* card);
 
+    QPointF GetCenterPos(void);
+
 protected:
     void    mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
     void    mouseDoubleClickEvent(QGraphicsSceneMouseEvent*);
@@ -48,6 +50,10 @@ signals:
 
 private:
     Dialog* dialog;
+    int     xPos;
+    int     yPos;
+    int     width;
+    int     height;
 };
 
 #endif // SCENE_H

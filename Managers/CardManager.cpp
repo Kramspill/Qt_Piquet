@@ -39,14 +39,19 @@ CardManager::~CardManager(void)
 //------------------------------------------------------------------------------
 void CardManager::Initialize(Scene* scene)
 {
+    // Get the center position for card array placement.
+    QPointF p = scene->GetCenterPos();
+    int x = (int)p.x();
+    int y = (int)p.y();
+
     // Initialize the CardArray member variables.
-    deck           = new CardArray(CardArray::DECK,            1900,     500);
-    talon          = new CardArray(CardArray::TALON,           1600,     500);
-    playerHand     = new CardArray(CardArray::PLAYERHAND,      1900,     670);
-    cpuHand        = new CardArray(CardArray::CPUHAND,         1870,     250);
-    playerDiscards = new CardArray(CardArray::PLAYERDISCARDS,  1900,     500);
-    cpuDiscards    = new CardArray(CardArray::CPUDISCARDS,     1900,     500);
-    previousTricks = new CardArray(CardArray::PREVIOUSTRICKS,  1900,     500);
+    deck           = new CardArray(CardArray::DECK,            x-100,    y);
+    talon          = new CardArray(CardArray::TALON,           x-200,    y);
+    playerHand     = new CardArray(CardArray::PLAYERHAND,      x,     y+140);
+    cpuHand        = new CardArray(CardArray::CPUHAND,         x-20,     y-295);
+    playerDiscards = new CardArray(CardArray::PLAYERDISCARDS,  x+200,   y+100);
+    cpuDiscards    = new CardArray(CardArray::CPUDISCARDS,     x+200,   y-100);
+    previousTricks = new CardArray(CardArray::PREVIOUSTRICKS,  x-100,     y);
 
     // Initialize the timer to allow animation to finish before informing of
     // state changes.
