@@ -28,6 +28,7 @@ Card::Card(const QString& svgFileName, Suit theSuit, Rank theRank) :
     suit(theSuit),
     rank(theRank)
 {
+    setGraphicsItem(this);
     Initialize();
 }
 
@@ -136,20 +137,53 @@ void Card::UpdateAnimation(bool noAnimation)
 
 
 //------------------------------------------------------------------------------
-// sizeHint -
-//------------------------------------------------------------------------------
-QSizeF Card::sizeHint(Qt::SizeHint which, const QSizeF& constraint) const
-{
-
-}
-
-
-//------------------------------------------------------------------------------
 // setGeometry -
 //------------------------------------------------------------------------------
 void Card::setGeometry(const QRectF& rect)
 {
+    prepareGeometryChange();
+    QGraphicsLayoutItem::setGeometry(rect);
+    setPos(rect.topLeft());
+}
 
+
+//------------------------------------------------------------------------------
+// boundingRect -
+//------------------------------------------------------------------------------
+QRectF Card::boundingRect(void) const
+{
+    QSizeF rect = geometry().size();
+    return QRectF(QPointF(0,0), geometry().size());
+}
+
+
+//------------------------------------------------------------------------------
+// boundingRegion -
+//------------------------------------------------------------------------------
+QRegion Card::boundingRegion(const QTransform& itemToDeviceTransform) const
+{
+    return QGraphicsItem::boundingRegion(itemToDeviceTransform);
+}
+
+
+//------------------------------------------------------------------------------
+// sizeHint -
+//------------------------------------------------------------------------------
+QSizeF Card::sizeHint(Qt::SizeHint which, const QSizeF& constraint) const
+{
+    QSizeF* size;
+
+    switch (which)
+    {
+        case Qt::MinimumSize:
+        case Qt::PreferredSize:
+        case Qt::MaximumSize:
+            *size = QSizeF(225,315);
+        default:
+            break;
+    }
+
+    return size ? *size : constraint;
 }
 
 

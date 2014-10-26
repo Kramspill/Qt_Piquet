@@ -18,7 +18,7 @@
 //------------------------------------------------------------------------------
 #include "Scene/Scene.h"
 #include "ScoreManager.h"
-#include "Cards/CardArray.h"
+#include "Layouts/CardLayout.h"
 #include "Cards/Card.h"
 
 
@@ -35,35 +35,31 @@ public:
 
     void                     Initialize(Scene* scene);
 
-    void                     TransferCards(CardArray* source,
-                                           CardArray* destination,
+    void                     TransferCards(CardLayout* source,
+                                           CardLayout* destination,
                                            int numberOfCards);
-    void                     TransferSelectedCards(CardArray* source,
-                                                   CardArray* destination);
+    void                     TransferSelectedCards(CardLayout* source,
+                                                   CardLayout* destination);
 
-    CardArray*               GetDesiredCardArray(
-                                        CardArray::CardArrayType cardArrayType);
+    CardLayout*              GetDesiredCardLayout(CardLayout::Type type);
     Card                     GetCurrentTrick(void);
 
-    ScoreManager::PhaseScore GetSelectionScore(CardArray::SelectionType phase);
+    ScoreManager::PhaseScore GetSelectionScore(CardLayout::SelectionType phase);
 
 private:
+    void                     AddLayoutsToScene(Scene* scene);
     void                     ConnectSignals(void);
     void                     InitializeCards(void);
-    void                     AddCardsToScene(Scene* scene);
     void                     ShuffleDeck(void);
 
 public slots:
     void                     SetCardsSelectable(bool setSelectable, int limit,
-                                                CardArray::CardArrayType
-                                         cardArrayType = CardArray::PLAYERHAND);
+                                                CardLayout::Type type = CardLayout::PLAYERHAND);
     void                     CardSelectionsChanged(Card* card,
-                                                   CardArray::CardArrayType
-                                         cardArrayType = CardArray::PLAYERHAND);
-    bool                     CheckSelection(CardArray::SelectionType phase,
-                                            CardArray::CardArrayType
-                                         cardArrayType = CardArray::PLAYERHAND);
-
+                                                   CardLayout::Type type = CardLayout::PLAYERHAND);
+    /*bool                     CheckSelection(CardLayout::SelectionType phase,
+                                            CardLayout::Type type = CardLayout::PLAYERHAND);
+*/
 private slots:
     void                     SignalTransferComplete(void);
 
@@ -72,14 +68,15 @@ signals:
     //void       SignalValidSelection(void);
 
 private:
-    CardArray*               deck;
-    CardArray*               talon;
-    CardArray*               playerHand;
-    CardArray*               cpuHand;
-    CardArray*               playerDiscards;
-    CardArray*               cpuDiscards;
-    CardArray*               previousTricks;
-    Card                     currentTrick;
+    CardLayout*              deck;
+    CardLayout*              talon;
+    CardLayout*              playerHand;
+    CardLayout*              cpuHand;
+    CardLayout*              playerDiscards;
+    CardLayout*              cpuDiscards;
+    CardLayout*              previousTricks;
+    CardLayout*              playerTrick;
+    CardLayout*              cpuTrick;
     QTimer*                  transitionTimer;
     int                      numOfCardsTransferred;
 };

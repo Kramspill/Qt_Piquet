@@ -72,10 +72,13 @@ public:
     void                SetPosition(QPointF newPosition, int zPosition = -1);
     void                UpdateAnimation(bool noAnimation);
 
-protected:
+    void                setGeometry(const QRectF & rect);
+    QRectF              boundingRect(void) const;
+    QRegion             boundingRegion(const QTransform&
+                                       itemToDeviceTransform) const;
+
     QSizeF              sizeHint(Qt::SizeHint which,
                                  const QSizeF & constraint = QSizeF()) const;
-    void                setGeometry(const QRectF & rect);
 
 private:
     void                Initialize(void);

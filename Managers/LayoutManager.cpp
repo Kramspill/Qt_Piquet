@@ -39,21 +39,25 @@ LayoutManager::~LayoutManager(void)
 void LayoutManager::Initialize(void)
 {
     // Allocate memory for the members.
-    mainLayout           = new QGraphicsAnchorLayout();
-    playingField         = new QGraphicsAnchorLayout();
-    scoreLayout          = new QGraphicsAnchorLayout(); // Temp type
-    dialogLayout         = new QGraphicsAnchorLayout(); // Temp type
-    deckLayout           = new CardLayout();
+    mainLayout           = new QGraphicsGridLayout();
+    playingField         = new QGraphicsGridLayout();
+    scoreLayout          = new QGraphicsGridLayout();
+    dialogLayout         = new QGraphicsGridLayout();
+    /*deckLayout           = new CardLayout();
     playerCardsLayout    = new CardLayout();
     cpuCardsLayout       = new CardLayout();
     talonLayout          = new CardLayout();
     playerDiscardLayout  = new CardLayout();
     cpuDiscardLayout     = new CardLayout();
     previousTricksLayout = new CardLayout();
-    currentTrickLayout   = new CardLayout();
+    playerTrickLayout    = new CardLayout();
+    cpuTrickLayout       = new CardLayout();*/
 
     // Position the layouts within the mainLayout.
     PositionLayouts();
+
+    // Activate the main layout.
+    mainLayout->activate();
 }
 
 
@@ -69,11 +73,11 @@ void LayoutManager::Transfer(QGraphicsLayoutItem* item,
     CardLayout* destLayout = GetLayout(dest);
 
     // Get the index of the item from the source layout.
-    int index = srcLayout->GetItemIndex(item);
+    //int index = srcLayout->GetItemIndex(item);
 
     // Remove the item from the source and add it to the destination.
-    srcLayout->removeAt(index);
-    destLayout->AddItem(item);
+    //srcLayout->removeAt(index);
+    //destLayout->AddItem(item);
 }
 
 
@@ -114,11 +118,16 @@ CardLayout* LayoutManager::GetLayout(LayoutManager::Location layout)
             chosenLayout = previousTricksLayout;
             break;
 
-        case CURRENTTRICK:
-            chosenLayout = currentTrickLayout;
+        case PLAYERTRICK:
+            chosenLayout = playerTrickLayout;
+            break;
+
+        case CPUTRICK:
+            chosenLayout = cpuTrickLayout;
             break;
 
         default:
+            chosenLayout = 0;
             break;
     }
 
@@ -131,32 +140,19 @@ CardLayout* LayoutManager::GetLayout(LayoutManager::Location layout)
 //------------------------------------------------------------------------------
 void LayoutManager::PositionLayouts(void)
 {
-    mainLayout->addAnchor(playerCardsLayout, Qt::AnchorTop,
-                          mainLayout,        Qt::AnchorTop);
-    mainLayout->addAnchor(cpuCardsLayout,    Qt::AnchorBottom,
-                          mainLayout,        Qt::AnchorBottom);
-    mainLayout->addAnchor(dialogLayout,      Qt::AnchorRight,
-                          mainLayout,        Qt::AnchorRight);
-    mainLayout->addAnchor(dialogLayout,      Qt::AnchorBottom,
-                          mainLayout,        Qt::AnchorBottom);
+    // Add the layouts within mainLayout.
+    mainLayout->addItem(playingField,           1, 1, 3, 7);
+    mainLayout->addItem(playerCardsLayout,      4, 2, 1, 5);
+    mainLayout->addItem(cpuCardsLayout,         0, 2, 1, 5);
+    mainLayout->addItem(talonLayout,            2, 0, 1, 1);
+    mainLayout->addItem(scoreLayout,            2, 0, 3, 1);
+    mainLayout->addItem(dialogLayout,           2, 0, 1, 1);
 
-    // Playing field.
-    mainLayout->addAnchor(playingField,      Qt::AnchorTop,
-                          mainLayout,        Qt::AnchorTop);
-    mainLayout->addAnchor(playingField,      Qt::AnchorBottom,
-                          mainLayout,        Qt::AnchorBottom);
-    mainLayout->addAnchor(playingField,      Qt::AnchorLeft,
-                          mainLayout,        Qt::AnchorLeft);
-    mainLayout->addAnchor(playingField,      Qt::AnchorRight,
-                          mainLayout,        Qt::AnchorRight);
-
-    // Inside playing field.
-    mainLayout->addAnchor(deckLayout,        Qt::AnchorTop,
-                          playingField,      Qt::AnchorTop);
-    mainLayout->addAnchor(deckLayout,        Qt::AnchorBottom,
-                          playingField,      Qt::AnchorBottom);
-    mainLayout->addAnchor(deckLayout,        Qt::AnchorLeft,
-                          playingField,      Qt::AnchorLeft);
-    mainLayout->addAnchor(deckLayout,        Qt::AnchorRight,
-                          playingField,      Qt::AnchorRight);
+    // Add the layouts within playingField.
+    playingField->addItem(deckLayout,           1, 3, 1, 1);
+    playingField->addItem(playerTrickLayout,    2, 3, 1, 1);
+    playingField->addItem(cpuTrickLayout,       0, 3, 1, 1);
+    playingField->addItem(previousTricksLayout, 1, 0, 1, 3);
+    playingField->addItem(playerDiscardLayout,  2, 6, 1, 1);
+    playingField->addItem(cpuDiscardLayout,     0, 6, 1, 1);
 }

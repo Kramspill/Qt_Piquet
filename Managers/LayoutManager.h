@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 // Qt Header Files
 //------------------------------------------------------------------------------
-#include <QGraphicsAnchorLayout>
+#include <QGraphicsGridLayout>
 
 
 //------------------------------------------------------------------------------
@@ -33,7 +33,8 @@ public:
         PLAYERDISCARDS,
         CPUDISCARDS,
         PREVTRICKS,
-        CURRENTTRICK
+        PLAYERTRICK,
+        CPUTRICK
     };
 
 public:
@@ -41,28 +42,30 @@ public:
     LayoutManager(LayoutManager&);
     ~LayoutManager(void);
 
-    void                   Initialize(void);
+    void                 Initialize(void);
 
-    void                   Transfer(QGraphicsLayoutItem* item,
-                                    Location src, Location dest);
-    CardLayout*            GetLayout(Location layout);
-
-private:
-    void                   PositionLayouts(void);
+    void                 Transfer(QGraphicsLayoutItem* item,
+                                  Location src, Location dest);
+    CardLayout*          GetLayout(Location layout);
+    QGraphicsGridLayout* GetMainLayout(void) { return mainLayout; }
 
 private:
-    QGraphicsAnchorLayout* mainLayout;
-    QGraphicsAnchorLayout* playingField;
-    QGraphicsAnchorLayout* scoreLayout;
-    QGraphicsAnchorLayout* dialogLayout;
-    CardLayout*            deckLayout;
-    CardLayout*            playerCardsLayout;
-    CardLayout*            cpuCardsLayout;
-    CardLayout*            talonLayout;
-    CardLayout*            playerDiscardLayout;
-    CardLayout*            cpuDiscardLayout;
-    CardLayout*            previousTricksLayout;
-    CardLayout*            currentTrickLayout;
+    void                 PositionLayouts(void);
+
+private:
+    QGraphicsGridLayout* mainLayout;
+    QGraphicsGridLayout* playingField;
+    QGraphicsGridLayout* scoreLayout;
+    QGraphicsGridLayout* dialogLayout;
+    CardLayout*          deckLayout;
+    CardLayout*          playerCardsLayout;
+    CardLayout*          cpuCardsLayout;
+    CardLayout*          talonLayout;
+    CardLayout*          playerDiscardLayout;
+    CardLayout*          cpuDiscardLayout;
+    CardLayout*          previousTricksLayout;
+    CardLayout*          playerTrickLayout;
+    CardLayout*          cpuTrickLayout;
 };
 
 #endif // LAYOUTMANAGER_H

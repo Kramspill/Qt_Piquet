@@ -31,7 +31,9 @@ SOURCES +=\
     AI/KnowledgeBase.cpp \
     Scene/Dialog.cpp \
     Managers/LayoutManager.cpp \
-    Layouts/CardLayout.cpp
+    Layouts/CardLayout.cpp \
+    Layouts/InputDialog.cpp \
+    Layouts/ScoreDialog.cpp
 
 HEADERS  += \
     Managers/GameManager.h \
@@ -51,7 +53,9 @@ HEADERS  += \
     AI/KnowledgeBase.h \
     Scene/Dialog.h \
     Managers/LayoutManager.h \
-    Layouts/CardLayout.h
+    Layouts/CardLayout.h \
+    Layouts/InputDialog.h \
+    Layouts/ScoreDialog.h
 
 #FORMS    += MainWindow.ui
 

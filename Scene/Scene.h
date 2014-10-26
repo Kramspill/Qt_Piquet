@@ -10,14 +10,19 @@
 // Qt Header Files
 //------------------------------------------------------------------------------
 #include <QGraphicsScene>
+#include <QGraphicsWidget>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsItem>
+#include <QGraphicsGridLayout>
 
 
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
 #include "Cards/Card.h"
+#include "Layouts/CardLayout.h"
+#include "Layouts/InputDialog.h"
+#include "Layouts/ScoreDialog.h"
 #include "Dialog.h"
 
 
@@ -28,26 +33,55 @@ class Scene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    Scene(int x, int y, int width, int height);
+    enum Layout
+    {
+        MAIN,
+        PLAYER,
+        CPU,
+        TALON,
+        PLAYING,
+        INPUT,
+        SCORE
+    };
+
+public:
+    Scene(void);
     Scene(Scene&);
     ~Scene(void);
 
-    void    Initialize(void);
-    void    addItem(Card* card);
+    void                 Initialize(void);
+
+    void                 AddLayout(Layout layout, CardLayout* cardLayout,
+                                   int row, int column);
+    QGraphicsGridLayout* GetLayout(Layout layout);
 
 protected:
-    void    mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
-    void    mouseDoubleClickEvent(QGraphicsSceneMouseEvent*);
-
-public slots:
-    void    CreateDialog(Dialog::DialogType dialogType);
-
-signals:
-    void    SignalCardSelectionsChanged(Card*);
-    void    ExecuteDeal(void);
+    void                 mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
+    void                 mouseDoubleClickEvent(QGraphicsSceneMouseEvent*);
 
 private:
-    Dialog* dialog;
+    void                 PositionLayouts(void);
+    void                 ConnectSignals(void);
+
+public slots:
+    void                 CreateDialog(Dialog::DialogType dialogType);
+
+signals:
+    void                 SignalCardSelectionsChanged(Card*);
+    void                 ExecuteDeal(void);
+    void                 ExecutePlayerDiscard(void);
+
+private:
+    QGraphicsWidget*     container;
+    QGraphicsGridLayout* mainLayout;
+    QGraphicsGridLayout* playerCardArea;
+    QGraphicsGridLayout* cpuCardArea;
+    QGraphicsGridLayout* talonArea;
+    QGraphicsGridLayout* playingArea;
+    InputDialog*         inputDialog;
+    ScoreDialog*         scoreDialog;
+
+    Dialog*              dialog;
 };
 
 #endif // SCENE_H

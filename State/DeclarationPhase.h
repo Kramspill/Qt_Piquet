@@ -19,7 +19,7 @@
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
-#include "Cards/CardArray.h"
+#include "Layouts/CardLayout.h"
 
 
 //------------------------------------------------------------------------------
@@ -65,7 +65,7 @@ private slots:
 
 signals:
     void           SetCardsSelectable(bool, int);
-    void           DeclareSelection(CardArray::SelectionType);
+    void           DeclareSelection(CardLayout::SelectionType);
     void           SignalValidSelection(void);
     void           DeclarationPhaseFinished(void);
 

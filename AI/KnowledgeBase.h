@@ -16,7 +16,7 @@
 // My Header Files
 //------------------------------------------------------------------------------
 #include "Managers/ScoreManager.h"
-#include "Cards/CardArray.h"
+#include "Layouts/CardLayout.h"
 
 
 //------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ class KnowledgeBase : public QObject
 public:
     struct KnowledgeItem
     {
-        CardArray::CardArrayType location;
+        CardLayout::Type location;
         int index;
         int rank;
     };
@@ -41,16 +41,16 @@ public:
     void                     Initialize(void);
     void                     UpdateCard(Card::Suit suit, Card::Rank rank,
                                         int index,
-                                        CardArray::CardArrayType location);
-    void                     FlagDispensableCards(CardArray* cpuHand);
+                                        CardLayout::Type location);
+    void                     FlagDispensableCards(CardLayout* cpuHand);
 
     ScoreManager::PhaseScore CalculatePoint(void);
     ScoreManager::PhaseScore CalculateSequence(void);
     ScoreManager::PhaseScore CalculateSet(void);
 
 private:
-    void                     RankCards(CardArray* cpuHand);
-    void                     CalculateSuitValues(CardArray* cpuHand);
+    void                     RankCards(CardLayout* cpuHand);
+    void                     CalculateSuitValues(CardLayout* cpuHand);
     void                     RankStoppers(void);
     void                     RankSets(void);
     void                     RankSequences(void);
@@ -58,7 +58,7 @@ private:
 
 signals:
     void                     SignalCardSelectionsChanged(Card*,
-                                                      CardArray::CardArrayType);
+                                                         CardLayout::Type);
 
 private:
     KnowledgeItem*           cardStatus[4][8];

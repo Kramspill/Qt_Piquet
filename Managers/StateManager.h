@@ -10,7 +10,6 @@
 // Qt Header Files
 //------------------------------------------------------------------------------
 #include <QObject>
-#include <QPushButton>
 #include <QStateMachine>
 
 
@@ -34,8 +33,7 @@ public:
     StateManager(StateManager&);
     ~StateManager(void);
 
-    void              Initialize(QPushButton* button, QPushButton* button2,
-                                 QPushButton* button3, QPushButton* button4);
+    void              Initialize(void);
 
 private:
     void              ConnectSignals(void);
@@ -45,13 +43,13 @@ private slots:
     void              AIProcessingComplete(void);
 
 signals:
-    void              RequestCardTransfer(CardArray::CardArrayType,
-                                          CardArray::CardArrayType,
+    void              RequestCardTransfer(CardLayout::Type,
+                                          CardLayout::Type,
                                           int, bool);
     void              TransferComplete(int);
 
     void              SetCardsSelectable(bool, int);
-    void              DeclareSelection(CardArray::SelectionType);
+    void              DeclareSelection(CardLayout::SelectionType);
 
     void              RequestDialog(Dialog::DialogType);
     void              ExecuteDeal(void);

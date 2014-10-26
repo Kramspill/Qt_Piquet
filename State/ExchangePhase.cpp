@@ -38,11 +38,10 @@ ExchangePhase::~ExchangePhase(void)
 //------------------------------------------------------------------------------
 // Initialize - Initialize and execute the internal state machine of this class.
 //------------------------------------------------------------------------------
-void ExchangePhase::Initialize(QPushButton* button)
+void ExchangePhase::Initialize(void)
 {
     // Initialize member variables.
     cardsTransferred = 0;
-    exchangeButton   = button;
 
     // Initialize the state machine.
     stateMachine  = new QStateMachine();
@@ -116,7 +115,7 @@ void ExchangePhase::ConnectSignals(void)
             this, SLOT(InformTransferComplete(int)));
 
     // Setup the work done in each state.
-    connect(exchangeButton, SIGNAL(clicked()), this, SLOT(PlayerDiscard()));
+    connect(this,           SIGNAL(Discard()), this, SLOT(PlayerDiscard()));
     connect(playerDraw,     SIGNAL(entered()), this, SLOT(PlayerDraw()));
     connect(cpuProcessing,  SIGNAL(entered()), this, SLOT(CpuProcessing()));
     connect(cpuDiscard,     SIGNAL(entered()), this, SLOT(CpuDiscard()));
@@ -161,7 +160,7 @@ void ExchangePhase::InformTransferComplete(int numOfCardsTransferred)
 //------------------------------------------------------------------------------
 void ExchangePhase::PlayerDiscard(void)
 {
-    emit RequestCardTransfer(CardArray::PLAYERHAND, CardArray::PLAYERDISCARDS,
+    emit RequestCardTransfer(CardLayout::PLAYERHAND, CardLayout::PLAYERDISCARDS,
                              0, true);
 }
 
@@ -171,7 +170,7 @@ void ExchangePhase::PlayerDiscard(void)
 //------------------------------------------------------------------------------
 void ExchangePhase::PlayerDraw(void)
 {
-    emit RequestCardTransfer(CardArray::TALON, CardArray::PLAYERHAND,
+    emit RequestCardTransfer(CardLayout::TALON, CardLayout::PLAYERHAND,
                              cardsTransferred, false);
 }
 
@@ -190,7 +189,7 @@ void ExchangePhase::CpuProcessing(void)
 //------------------------------------------------------------------------------
 void ExchangePhase::CpuDiscard(void)
 {
-    emit RequestCardTransfer(CardArray::CPUHAND, CardArray::CPUDISCARDS,
+    emit RequestCardTransfer(CardLayout::CPUHAND, CardLayout::CPUDISCARDS,
                              0, true);
 }
 
@@ -200,6 +199,6 @@ void ExchangePhase::CpuDiscard(void)
 //------------------------------------------------------------------------------
 void ExchangePhase::CpuDraw(void)
 {
-    emit RequestCardTransfer(CardArray::TALON, CardArray::CPUHAND,
+    emit RequestCardTransfer(CardLayout::TALON, CardLayout::CPUHAND,
                              cardsTransferred, false);
 }

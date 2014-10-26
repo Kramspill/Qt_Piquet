@@ -12,8 +12,8 @@
 //------------------------------------------------------------------------------
 // Constructor
 //------------------------------------------------------------------------------
-Scene::Scene(int x, int y, int width, int height) :
-    QGraphicsScene(x, y, width, height),
+Scene::Scene(void) :
+    QGraphicsScene(),
     dialog(0)
 {
 }
@@ -41,17 +41,43 @@ Scene::~Scene(void)
 //------------------------------------------------------------------------------
 void Scene::Initialize(void)
 {
-    QObject::connect(dialog, SIGNAL(ExecuteDeal()),
-                     this,   SIGNAL(ExecuteDeal()));
+    // Allocate memory for member variables.
+    container      = new QGraphicsWidget();
+    mainLayout     = new QGraphicsGridLayout();
+    playerCardArea = new QGraphicsGridLayout();
+    cpuCardArea    = new QGraphicsGridLayout();
+    talonArea      = new QGraphicsGridLayout();
+    playingArea    = new QGraphicsGridLayout();
+    inputDialog    = new InputDialog();
+    scoreDialog    = new ScoreDialog();
+
+    // Position the layouts within the mainLayout.
+    PositionLayouts();
+
+    // Set the containing widget's layout and add the container to the scene.
+    container->setLayout(mainLayout);
+    this->addItem(container);
+
+    // Activate the main layout.
+    mainLayout->activate();
+
+    // Connect signals.
+    ConnectSignals();
 }
 
 
 //------------------------------------------------------------------------------
-// addItem - Override of QGraphicsScene::addItem to accept a Card object.
+// AddLayout - Add a layout to one of the scene's top layer layouts.
 //------------------------------------------------------------------------------
-void Scene::addItem(Card* card)
+void Scene::AddLayout(Scene::Layout layout, CardLayout* cardLayout,
+                      int row, int column)
 {
-    QGraphicsScene::addItem(card);
+    QGraphicsGridLayout* l = GetLayout(layout);
+
+    l->addItem(cardLayout, row, column, Qt::AlignVCenter);
+
+    // Re-activate the main layout.
+    mainLayout->activate();
 }
 
 
@@ -94,6 +120,70 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent)
 //------------------------------------------------------------------------------
 void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent*)
 {
+}
+
+
+//------------------------------------------------------------------------------
+// PositionLayouts - Set the positions of the layouts contained by mainLayout.
+//------------------------------------------------------------------------------
+void Scene::PositionLayouts(void)
+{
+    // Add the layouts within mainLayout.
+    mainLayout->addItem(playerCardArea, 4, 2, 1, 5, Qt::AlignVCenter);
+    mainLayout->addItem(cpuCardArea,    0, 2, 1, 5, Qt::AlignVCenter);
+    mainLayout->addItem(talonArea,      1, 0, 3, 1, Qt::AlignVCenter);
+    mainLayout->addItem(playingArea,    1, 1, 3, 7, Qt::AlignVCenter);
+    mainLayout->addItem(inputDialog,    4, 8, 1, 2, Qt::AlignVCenter);
+    mainLayout->addItem(scoreDialog,    1, 8, 3, 2, Qt::AlignVCenter);
+}
+
+
+//------------------------------------------------------------------------------
+// ConnectSignals - Connect the signals to/from this class.
+//------------------------------------------------------------------------------
+void Scene::ConnectSignals(void)
+{
+    QObject::connect(inputDialog, SIGNAL(ExecuteDeal()),
+                     this,        SIGNAL(ExecuteDeal()));
+    QObject::connect(inputDialog, SIGNAL(ExecutePlayerDiscard()),
+                     this,        SIGNAL(ExecutePlayerDiscard()));
+}
+
+
+//------------------------------------------------------------------------------
+// GetLayout - Return a desired layout from this class.
+//------------------------------------------------------------------------------
+QGraphicsGridLayout* Scene::GetLayout(Scene::Layout layout)
+{
+    QGraphicsGridLayout* l;
+
+    switch ( layout )
+    {
+        case MAIN:
+            l = mainLayout;
+            break;
+
+        case PLAYER:
+            l = playerCardArea;
+            break;
+
+        case CPU:
+            l = cpuCardArea;
+            break;
+
+        case TALON:
+            l = talonArea;
+            break;
+
+        case PLAYING:
+            l = playingArea;
+            break;
+
+        default:
+            break;
+    }
+
+    return l;
 }
 
 

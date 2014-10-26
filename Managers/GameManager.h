@@ -12,7 +12,8 @@
 #include <QObject>
 #include <QPushButton>
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QGraphicsWidget>
+#include <QGraphicsGridLayout>
 
 
 //------------------------------------------------------------------------------
@@ -28,6 +29,7 @@
 
 // TEST //
 #include "Scene/Dialog.h"
+#include "Cards/Card.h"
 // ==== //
 
 
@@ -42,28 +44,27 @@ public:
     GameManager(GameManager&);
     ~GameManager(void);
 
-    void           Initialize(void);
+    void             Initialize(void);
 
 private:
-    void           ConnectSignals(void);
+    void             ConnectSignals(void);
 
 private slots:
-    void           RequestCardTransfer(CardArray::CardArrayType src,
-                                       CardArray::CardArrayType dest,
-                                       int  numOfCards,
-                                       bool transferSelectedCards);
-    void           DeclareSelection(CardArray::SelectionType phase);
-    void           SelectAIAction(AI::AIAction action);
-    void           UpdateAI(void);
+    void             RequestCardTransfer(CardLayout::Type src,
+                                         CardLayout::Type dest,
+                                         int  numOfCards,
+                                         bool transferSelectedCards);
+    void             DeclareSelection(CardLayout::SelectionType phase);
+    void             SelectAIAction(AI::AIAction action);
+    void             UpdateAI(void);
 
 private:
-    Scene*         scene;
-    View*          view;
-    AI*            ai;
-    LayoutManager* layoutManager;
-    CardManager*   cardManager;
-    StateManager*  stateManager;
-    ScoreManager*  scoreManager;
+    Scene*           scene;
+    View*            view;
+    AI*              ai;
+    CardManager*     cardManager;
+    StateManager*    stateManager;
+    ScoreManager*    scoreManager;
 };
 
 #endif // GAMEMANAGER_H

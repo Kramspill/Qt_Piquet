@@ -12,8 +12,9 @@
 //------------------------------------------------------------------------------
 // Constructor
 //------------------------------------------------------------------------------
-CardLayout::CardLayout(QGraphicsLayoutItem* parent) :
-    QGraphicsLayout(parent)
+CardLayout::CardLayout(Type aType, QGraphicsLayoutItem* parent) :
+    QGraphicsLayout(parent),
+    type(aType)
 {
 }
 
@@ -38,46 +39,68 @@ CardLayout::~CardLayout(void)
 //------------------------------------------------------------------------------
 // addItem - Add an item to this layout.
 //------------------------------------------------------------------------------
-void CardLayout::AddItem(QGraphicsLayoutItem* layoutItem)
+void CardLayout::AddCard(Card* card, bool temp)
 {
-    QGraphicsLayout::addChildLayoutItem(layoutItem);
-
-    items.append(layoutItem);
+    this->addChildLayoutItem(card);
+    setGeometry(geometry());
+    cards.append(card);
 }
 
 
 //------------------------------------------------------------------------------
 // GetItemIndex - Get the index of an item in this layout.
 //------------------------------------------------------------------------------
-int CardLayout::GetItemIndex(QGraphicsLayoutItem* item)
+int CardLayout::GetCardIndex(Card* card)
 {
-    return items.indexOf(item);
+    return cards.indexOf(card);
+}
+
+
+//------------------------------------------------------------------------------
+// RemoveCard - Remove a card from this layout. If no card is specified, then
+//              the top card is removed.
+//------------------------------------------------------------------------------
+Card* CardLayout::RemoveCard(Card* card)
+{
+    Card* removedCard;
+
+    if ( !card )
+    {
+        removedCard = cards.first();
+        cards.removeFirst();
+    }
+    else
+    {
+        cards.takeAt(cards.indexOf(card));
+    }
+
+    return removedCard;
 }
 
 
 //------------------------------------------------------------------------------
 // setGeometry - How the layout is defined.
 //------------------------------------------------------------------------------
-void CardLayout::setGeometry(const QRect& rect)
+void CardLayout::setGeometry(const QRectF& rect)
 {
     QGraphicsLayout::setGeometry(rect);
 
-    if (items.size() == 0)
+    if (cards.size() == 0)
         return;
 
-    int width  = rect.width()  - (items.size() - 1);
-    int height = rect.height() - (items.size() - 1);
+    int width  = rect.width()  - (cards.size() - 1);
+    int height = rect.height() - (cards.size() - 1);
 
     int index = 0;
-    while ( index < items.size() )
+    while ( index < cards.size() )
     {
-        QGraphicsLayoutItem* item = items.at(index);
+        Card* card = cards.at(index);
         QRect geometry(rect.x() + index,
                        rect.y() + index,
                        width,
                        height);
 
-        item->setGeometry(geometry);
+        card->setGeometry(geometry);
         index++;
     }
 }
@@ -90,19 +113,19 @@ QSizeF CardLayout::sizeHint(Qt::SizeHint which, const QSizeF& constraint) const
 {
     QSizeF size(0,0);
 
-    int numOfItems = items.size();
+    int numOfItems = cards.size();
     if (numOfItems > 0)
-        size = QSizeF(100,70);
+        size = QSizeF(50,30);
 
     int index = 0;
-    while ( index < numOfItems )
+    /*while ( index < numOfItems )
     {
-        //QGraphicsLayoutItem* item = items.at(index);
-        //size = size.expandedTo(item->sizeHint(Qt::PreferredSize));
+        Card* card = cards.at(index);
+        size = size.expandedTo(card->sizeHint(Qt::PreferredSize));
         index++;
-    }
+    }*/
 
-    return size + numOfItems * QSizeF(1, 1);
+    return size;// + numOfItems * QSizeF(1, 1);
 }
 
 
@@ -111,16 +134,16 @@ QSizeF CardLayout::sizeHint(Qt::SizeHint which, const QSizeF& constraint) const
 //------------------------------------------------------------------------------
 int CardLayout::count(void) const
 {
-  return items.size();
+  return cards.size();
 }
 
 
 //------------------------------------------------------------------------------
 // itemAt - Retrieve a layout item at the specified index.
 //------------------------------------------------------------------------------
-QGraphicsLayoutItem* CardLayout::itemAt(int index) const
+Card* CardLayout::itemAt(int index) const
 {
-    return items.value(index);
+    return cards.value(index);
 }
 
 
@@ -129,7 +152,41 @@ QGraphicsLayoutItem* CardLayout::itemAt(int index) const
 //------------------------------------------------------------------------------
 void CardLayout::removeAt(int index)
 {
-    if ( index >= 0 && index < items.count() )
-        items.takeAt(index);
+    if ( index >= 0 && index < cards.count() )
+        cards.takeAt(index);
+}
+
+
+//------------------------------------------------------------------------------
+// Shuffle - Randomize this CardArray.
+//------------------------------------------------------------------------------
+void CardLayout::Shuffle(void)
+{
+
+}
+
+
+//------------------------------------------------------------------------------
+// Sort - Sort this CardArray.
+//------------------------------------------------------------------------------
+void CardLayout::Sort(void)
+{
+
+}
+
+
+//------------------------------------------------------------------------------
+// ResetZPositions - Reset the zPositions in this array.
+//------------------------------------------------------------------------------
+void CardLayout::ResetZPositions(void)
+{
+    Card* card;
+    int   arraySize = count();
+
+    for ( int index = 0; index < arraySize; index++ )
+    {
+        card = itemAt(index);
+        card->SetPosition(card->GetPosition(), index + 1);
+    }
 }
 

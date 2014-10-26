@@ -154,7 +154,7 @@ void DeclarationPhase::PlayerPoint(void)
 
     // Reconnect the button to perform the desired operations.
     connect(declareButton, SIGNAL(clicked()), this,
-            SIGNAL(DeclareSelection(CardArray::POINT)));
+            SIGNAL(DeclareSelection(CardLayout::POINT)));
 }
 
 
@@ -169,7 +169,7 @@ void DeclarationPhase::PlayerSequence(void)
 
     // Reconnect the button to perform the desired operations.
     connect(declareButton, SIGNAL(clicked()), this,
-            SIGNAL(DeclareSelection(CardArray::SEQUENCE)));
+            SIGNAL(DeclareSelection(CardLayout::SEQUENCE)));
 }
 
 
@@ -184,7 +184,7 @@ void DeclarationPhase::PlayerSet(void)
 
     // Reconnect the button to perform the desired operations.
     connect(declareButton, SIGNAL(clicked()), this,
-            SIGNAL(DeclareSelection(CardArray::SET)));
+            SIGNAL(DeclareSelection(CardLayout::SET)));
 }
 
 

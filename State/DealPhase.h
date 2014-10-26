@@ -19,7 +19,7 @@
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
-#include "Cards/CardArray.h"
+#include "Layouts/CardLayout.h"
 #include "Scene/Dialog.h"
 
 
@@ -34,7 +34,7 @@ public:
     DealPhase(DealPhase&);
     ~DealPhase(void);
 
-    void           Initialize(QPushButton* button);
+    void           Initialize(void);
 
 protected:
     void           onEntry(QEvent*);
@@ -52,8 +52,8 @@ private slots:
 signals:
     void           ExecuteDeal(void);
     void           RequestDialog(Dialog::DialogType);
-    void           RequestCardTransfer(CardArray::CardArrayType,
-                                       CardArray::CardArrayType,
+    void           RequestCardTransfer(CardLayout::Type,
+                                       CardLayout::Type,
                                        int, bool);
     void           TransferComplete(void);
 

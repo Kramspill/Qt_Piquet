@@ -19,7 +19,7 @@
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
-#include "Cards/CardArray.h"
+#include "Layouts/CardLayout.h"
 #include "AI/AI.h"
 
 
@@ -34,7 +34,7 @@ public:
     ExchangePhase(ExchangePhase&);
     ~ExchangePhase(void);
 
-    void           Initialize(QPushButton* button);
+    void           Initialize(void);
 
 protected:
     void           onEntry(QEvent*);
@@ -57,8 +57,8 @@ private slots:
 
 signals:
     void           SetCardsSelectable(bool, int);
-    void           RequestCardTransfer(CardArray::CardArrayType,
-                                       CardArray::CardArrayType,
+    void           RequestCardTransfer(CardLayout::Type,
+                                       CardLayout::Type,
                                        int, bool);
     void           TransferComplete(int);
 
