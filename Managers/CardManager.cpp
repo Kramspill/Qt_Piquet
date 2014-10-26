@@ -45,13 +45,13 @@ void CardManager::Initialize(Scene* scene)
     int y = (int)p.y();
 
     // Initialize the CardArray member variables.
-    deck           = new CardArray(CardArray::DECK,            x-100,    y);
-    talon          = new CardArray(CardArray::TALON,           x-200,    y);
-    playerHand     = new CardArray(CardArray::PLAYERHAND,      x,     y+140);
-    cpuHand        = new CardArray(CardArray::CPUHAND,         x-20,     y-295);
-    playerDiscards = new CardArray(CardArray::PLAYERDISCARDS,  x+200,   y+100);
-    cpuDiscards    = new CardArray(CardArray::CPUDISCARDS,     x+200,   y-100);
-    previousTricks = new CardArray(CardArray::PREVIOUSTRICKS,  x-100,     y);
+    deck           = new CardArray(CardArray::DECK,            x-100,  y);
+    talon          = new CardArray(CardArray::TALON,           x-200,  y);
+    playerHand     = new CardArray(CardArray::PLAYERHAND,      x,      y+170);
+    cpuHand        = new CardArray(CardArray::CPUHAND,         x-20,   y-295);
+    playerDiscards = new CardArray(CardArray::PLAYERDISCARDS,  x+200,  y+100);
+    cpuDiscards    = new CardArray(CardArray::CPUDISCARDS,     x+200,  y-100);
+    previousTricks = new CardArray(CardArray::PREVIOUSTRICKS,  x-100,  y);
 
     // Initialize the timer to allow animation to finish before informing of
     // state changes.
@@ -285,7 +285,7 @@ void CardManager::AddCardsToScene(Scene* scene)
     {
         card = deck->GetCard(index);
 
-        card->setScale(0.5);
+        card->setScale(0.4);
         scene->addItem(card);
     }
 }
