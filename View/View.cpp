@@ -15,6 +15,7 @@
 View::View(QGraphicsScene* scene) :
     QGraphicsView(scene)
 {
+    setBackgroundBrush(QBrush(Qt::darkGreen, Qt::SolidPattern));
 }
 
 
