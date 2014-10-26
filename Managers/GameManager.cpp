@@ -39,7 +39,7 @@ GameManager::~GameManager(void)
 //------------------------------------------------------------------------------
 void GameManager::Initialize(void)
 {
-    // Initialize the scene.
+    // Acquire the coordinates of the center of the available display.
     QDesktopWidget* desktop = QApplication::desktop();
 
     int width  = 800;
@@ -47,7 +47,9 @@ void GameManager::Initialize(void)
     int xPos   = (desktop->width()  - width)  / 2;
     int yPos   = (desktop->height() - height) / 2;
 
+    // Initialize the scene.
     scene = new Scene(xPos, yPos, width, height);
+    scene->Initialize();
 
     // TEMP -----------------
     QPushButton* button = new QPushButton("Deal");
@@ -62,14 +64,6 @@ void GameManager::Initialize(void)
     QPushButton* button4 = new QPushButton("Sink");
     scene->addWidget(button4);
     button4->setGeometry(xPos+575, yPos+277, 75, 23);
-
-    //= Dialog Test =//
-    /*Dialog* dialog = new Dialog();
-    Dialog::ButtonType buttonType = Dialog::DEAL;
-    dialog->Initialize("Title", "This is a message", 1, &buttonType);
-    dialog->exec();*/
-    //===============//
-
     //-----------------------
 
     // Initialize the CardManager with the scene object.
