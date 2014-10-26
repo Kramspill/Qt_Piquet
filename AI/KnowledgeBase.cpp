@@ -67,7 +67,7 @@ void KnowledgeBase::Initialize(void)
         {
             KnowledgeItem* item = new KnowledgeItem();
 
-            item->location = CardLayout::UNKNOWN;
+            item->location = CardArray::UNKNOWN;
             item->index    = 0;
             item->rank     = -1;
 
@@ -82,7 +82,7 @@ void KnowledgeBase::Initialize(void)
 // UpdateCard - Update the status of a card.
 //------------------------------------------------------------------------------
 void KnowledgeBase::UpdateCard(Card::Suit suit, Card::Rank rank, int index,
-                               CardLayout::Type location)
+                               CardArray::CardArrayType location)
 {
     cardStatus[suit][rank-7]->location = location;
     cardStatus[suit][rank-7]->index    = index;
@@ -93,7 +93,7 @@ void KnowledgeBase::UpdateCard(Card::Suit suit, Card::Rank rank, int index,
 // FlagDispensableCards - Flag cards that have no value to the cpu so that they
 //                        may be exchanged.
 //------------------------------------------------------------------------------
-void KnowledgeBase::FlagDispensableCards(CardLayout* cpuHand)
+void KnowledgeBase::FlagDispensableCards(CardArray* cpuHand)
 {
     Card* card;
 
@@ -103,12 +103,12 @@ void KnowledgeBase::FlagDispensableCards(CardLayout* cpuHand)
     // Select 3 cards for now.
     for ( int index = 2; index >= 0; index-- )
     {
-        card = cpuHand->itemAt(cardRanks[index]);
-        //cpuHand->SetSelectionLimit(12);
+        card = cpuHand->GetCard(cardRanks[index]);
+        cpuHand->SetSelectionLimit(12);
 
         card->setFlag(QGraphicsItem::ItemIsSelectable, true);
         card->setSelected(true);
-        emit SignalCardSelectionsChanged(card, CardLayout::CPUHAND);
+        emit SignalCardSelectionsChanged(card, CardArray::CPUHAND);
     }
 }
 
@@ -131,7 +131,7 @@ ScoreManager::PhaseScore KnowledgeBase::CalculatePoint(void)
         {
             KnowledgeItem* item = cardStatus[suitIndex][valueIndex];
 
-            if ( item->location == CardLayout::CPUHAND )
+            if ( item->location == CardArray::CPUHAND )
             {
                 currentScore.numOfCards++;
                 currentScore.totalValue += pointValues[valueIndex];
@@ -179,7 +179,7 @@ ScoreManager::PhaseScore KnowledgeBase::CalculateSet(void)
 //------------------------------------------------------------------------------
 // RankCards - Rank the cards in the cpu's hand based on it's usefulness.
 //------------------------------------------------------------------------------
-void KnowledgeBase::RankCards(CardLayout* cpuHand)
+void KnowledgeBase::RankCards(CardArray* cpuHand)
 {
     // Determine the cpu's best and worst suits.
     CalculateSuitValues(cpuHand);
@@ -201,15 +201,15 @@ void KnowledgeBase::RankCards(CardLayout* cpuHand)
 //------------------------------------------------------------------------------
 // CalculateSuitValues - Determine the cpu's best and worst suits and rank them.
 //------------------------------------------------------------------------------
-void KnowledgeBase::CalculateSuitValues(CardLayout* cpuHand)
+void KnowledgeBase::CalculateSuitValues(CardArray* cpuHand)
 {
     Card* card;
-    int   size = cpuHand->count();
+    int   size = cpuHand->GetSize();
 
     // Total up the values for each suit in the cpu's hand.
     for ( int index = 0; index < size; index++ )
     {
-        card = cpuHand->itemAt(index);
+        card = cpuHand->GetCard(index);
 
         suitValues[card->GetSuit()] += pointValues[card->GetRank()-7];
     }
@@ -257,7 +257,7 @@ void KnowledgeBase::RankStoppers(void)
 
             // If the item at this location is in the cpuHand then a stopper
             // has been found.
-            if ( item && item->location == CardLayout::CPUHAND )
+            if ( item && item->location == CardArray::CPUHAND )
             {
                 item->rank               = currentRank;
                 cardRanks[currentRank--] = item->index;
@@ -279,7 +279,7 @@ void KnowledgeBase::RankStoppers(void)
                 KnowledgeItem* item =
                         cardStatus[suitRanks[index]][cardValue];
 
-                if ( item && item->location == CardLayout::CPUHAND )
+                if ( item && item->location == CardArray::CPUHAND )
                 {
                     item->rank               = currentRank;
                     cardRanks[currentRank--] = item->index;
@@ -314,7 +314,7 @@ void KnowledgeBase::RankSets(void)
             {
                 item = cardStatus[suitRanks[suitIndex]][valueIndex];
 
-                if ( item && item->location == CardLayout::CPUHAND )
+                if ( item && item->location == CardArray::CPUHAND )
                 {
                     cardCount++;
                 }
@@ -327,7 +327,7 @@ void KnowledgeBase::RankSets(void)
                 {
                     item = cardStatus[suitRanks[suitIndex]][valueIndex];
 
-                    if ( item && item->location == CardLayout::CPUHAND )
+                    if ( item && item->location == CardArray::CPUHAND )
                     {
                         if ( item->rank == -1)
                         {
@@ -362,7 +362,7 @@ void KnowledgeBase::RankSequences(void)
             {
                 item = cardStatus[suitRanks[suitIndex]][valueIndex];
 
-                if ( item && item->location == CardLayout::CPUHAND )
+                if ( item && item->location == CardArray::CPUHAND )
                 {
                     sequenceCount++;
                 }
@@ -411,7 +411,7 @@ void KnowledgeBase::FinishRanking(void)
             {
                 item = cardStatus[suitRanks[suitIndex]][valueIndex];
 
-                if ( item && item->location == CardLayout::CPUHAND &&
+                if ( item && item->location == CardArray::CPUHAND &&
                      item->rank == -1 )
                 {
                     item->rank               = currentRank;

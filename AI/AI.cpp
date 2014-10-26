@@ -54,7 +54,7 @@ void AI::Initialize(void)
 // UpdateKnowledgeBase - Update the status of a card in the knowledge base.
 //------------------------------------------------------------------------------
 void AI::UpdateKnowledgeBase(Card* card, int index,
-                             CardLayout::Type location)
+                             CardArray::CardArrayType location)
 {
     Card::Suit  suit  = card->GetSuit();
     Card::Rank rank = card->GetRank();
@@ -67,7 +67,7 @@ void AI::UpdateKnowledgeBase(Card* card, int index,
 //------------------------------------------------------------------------------
 // UpdateHand - Provide the ai with up-to-date information on it's cards.
 //------------------------------------------------------------------------------
-void AI::UpdateHand(CardLayout* newCpuHand)
+void AI::UpdateHand(CardArray* newCpuHand)
 {
     cpuHand = newCpuHand;
 }
@@ -139,8 +139,8 @@ void AI::ConnectSignals(void)
 {
     connect(knowledgeBase,
             SIGNAL(SignalCardSelectionsChanged(Card*,
-                                               CardLayout::Type)),
+                                               CardArray::CardArrayType)),
             this,
             SIGNAL(SignalCardSelectionsChanged(Card*,
-                                               CardLayout::Type)));
+                                               CardArray::CardArrayType)));
 }

@@ -37,20 +37,21 @@ StateManager::~StateManager(void)
 //------------------------------------------------------------------------------
 // Initialize - Initialize the phases that represent the states of the game.
 //------------------------------------------------------------------------------
-void StateManager::Initialize(void)
+void StateManager::Initialize(QPushButton* button,  QPushButton* button2,
+                              QPushButton* button3, QPushButton* button4)
 {
     // Setup the state machine of the Game.
     stateMachine = new QStateMachine();
 
     // Allocate memory to the phases and initialize them.
     dealPhase = new DealPhase(stateMachine);
-    dealPhase->Initialize();
+    dealPhase->Initialize(button);
 
     exchangePhase = new ExchangePhase(stateMachine);
-    exchangePhase->Initialize();
+    exchangePhase->Initialize(button2);
 
-    //declarationPhase = new DeclarationPhase(stateMachine);
-    //declarationPhase->Initialize(button3, button4);
+    declarationPhase = new DeclarationPhase(stateMachine);
+    declarationPhase->Initialize(button3, button4);
 
     /*
     trickPhase = new TrickPhase();
@@ -61,27 +62,21 @@ void StateManager::Initialize(void)
     stateMachine->setInitialState(dealPhase);
 
     // Setup the transitions between the states.
-    dealPhase->addTransition(       dealPhase,
-                                    SIGNAL(DealPhaseFinished()),
-                                    exchangePhase);
-/*
-    exchangePhase->addTransition(   exchangePhase,
-                                    SIGNAL(ExchangePhaseFinished()),
-                                    declarationPhase);
-
-    declarationPhase->addTransition(declarationPhase,
-                                    SIGNAL(DeclarationPhaseFinished()),
+    dealPhase->addTransition(dealPhase, SIGNAL(DealPhaseFinished()),
+                             exchangePhase);
+    exchangePhase->addTransition(exchangePhase,
+                                 SIGNAL(ExchangePhaseFinished()),
+                                 declarationPhase);
+    /*
+    declarationPhase->addTransition(SomeObject, SIGNAL(SomeSignal()),
                                     trickPhase);
-
-    trickPhase->addTransition(      trickPhase,
-                                    SIGNAL(TrickPhaseFinished()),
-                                    playSummaryState);
+    trickPhase->addTransition(SomeObject, SIGNAL(SomeSignal()),
+                              playSummaryState);
     */
 
     // Connect the various signals.
     ConnectSignals();
 
-    // Execute the state machine.
     stateMachine->start();
 }
 
@@ -103,22 +98,22 @@ void StateManager::ConnectSignals(void)
                      SIGNAL(RequestDialog(Dialog::DialogType)));
 
     QObject::connect(dealPhase,
-                     SIGNAL(RequestCardTransfer(CardLayout::Type,
-                                                CardLayout::Type,
+                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
+                                                CardArray::CardArrayType,
                                                 int, bool)),
                      this,
-                     SIGNAL(RequestCardTransfer(CardLayout::Type,
-                                                CardLayout::Type,
+                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
+                                                CardArray::CardArrayType,
                                                 int, bool)));
 
     // Connect signals to/fom the exchange phase state.
     QObject::connect(exchangePhase,
-                     SIGNAL(RequestCardTransfer(CardLayout::Type,
-                                                CardLayout::Type,
+                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
+                                                CardArray::CardArrayType,
                                                 int, bool)),
                      this,
-                     SIGNAL(RequestCardTransfer(CardLayout::Type,
-                                                CardLayout::Type,
+                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
+                                                CardArray::CardArrayType,
                                                 int, bool)));
     QObject::connect(exchangePhase,
                      SIGNAL(SetCardsSelectable(bool, int)),
@@ -138,15 +133,14 @@ void StateManager::ConnectSignals(void)
                      SIGNAL(SignalValidSelection()),
                      declarationPhase,
                      SLOT(ValidSelection()));*/
-    /*QObject::connect(declarationPhase,
+    QObject::connect(declarationPhase,
                      SIGNAL(SetCardsSelectable(bool, int)),
                      this,
                      SIGNAL(SetCardsSelectable(bool, int)));
     QObject::connect(declarationPhase,
-                     SIGNAL(DeclareSelection(CardLayout::SelectionType)),
+                     SIGNAL(DeclareSelection(CardArray::SelectionType)),
                      this,
-                     SIGNAL(DeclareSelection(CardLayout::SelectionType)));
-*/
+                     SIGNAL(DeclareSelection(CardArray::SelectionType)));
 }
 
 

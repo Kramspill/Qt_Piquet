@@ -39,19 +39,14 @@ CardManager::~CardManager(void)
 //------------------------------------------------------------------------------
 void CardManager::Initialize(Scene* scene)
 {
-    // Allocate memory for member variables.
-    deck           = new CardLayout(CardLayout::DECK);
-    talon          = new CardLayout(CardLayout::TALON);
-    playerHand     = new CardLayout(CardLayout::PLAYERHAND);
-    cpuHand        = new CardLayout(CardLayout::CPUHAND);
-    playerDiscards = new CardLayout(CardLayout::PLAYERDISCARDS);
-    cpuDiscards    = new CardLayout(CardLayout::CPUDISCARDS);
-    previousTricks = new CardLayout(CardLayout::PREVIOUSTRICKS);
-    playerTrick    = new CardLayout(CardLayout::PLAYERTRICK);
-    cpuTrick       = new CardLayout(CardLayout::CPUTRICK);
-
-    // Add the card layouts to the appropriate area within the scene.
-    AddLayoutsToScene(scene);
+    // Initialize the CardArray member variables.
+    deck           = new CardArray(CardArray::DECK,            1900,     500);
+    talon          = new CardArray(CardArray::TALON,           1600,     500);
+    playerHand     = new CardArray(CardArray::PLAYERHAND,      1900,     670);
+    cpuHand        = new CardArray(CardArray::CPUHAND,         1870,     250);
+    playerDiscards = new CardArray(CardArray::PLAYERDISCARDS,  1900,     500);
+    cpuDiscards    = new CardArray(CardArray::CPUDISCARDS,     1900,     500);
+    previousTricks = new CardArray(CardArray::PREVIOUSTRICKS,  1900,     500);
 
     // Initialize the timer to allow animation to finish before informing of
     // state changes.
@@ -70,19 +65,22 @@ void CardManager::Initialize(Scene* scene)
 
     // Shuffle the deck.
     ShuffleDeck();
+
+    // Add the cards (initially in the deck) to the scene.
+    AddCardsToScene(scene);
 }
 
 
 //------------------------------------------------------------------------------
 // TransferCards - Transfer cards between one CardArray and another.
 //------------------------------------------------------------------------------
-void CardManager::TransferCards(CardLayout* source, CardLayout* destination,
+void CardManager::TransferCards(CardArray* source, CardArray* destination,
                                 int numberOfCards)
 {
     for (int index = 0; index < numberOfCards; index++)
     {
         // Remove the card from the source array, and add it to the destination.
-        Card* card = source->RemoveCard();
+        Card* card = source->RemoveTopCard();
         destination->AddCard(card);
     }
 
@@ -98,10 +96,10 @@ void CardManager::TransferCards(CardLayout* source, CardLayout* destination,
 // TransferSelectedCards - Transfer a cardArray's selected cards to another
 //                         CardArray.
 //------------------------------------------------------------------------------
-void CardManager::TransferSelectedCards(CardLayout* source,
-                                        CardLayout* destination)
+void CardManager::TransferSelectedCards(CardArray* source,
+                                        CardArray* destination)
 {
-    int numberOfCards = 3;//source->GetSelectedCardsSize();
+    int numberOfCards = source->GetSelectedCardsSize();
 
     if ( numberOfCards > 0 )
     {
@@ -109,8 +107,8 @@ void CardManager::TransferSelectedCards(CardLayout* source,
         {
             // Remove the card from the source array, and add it to the
             // destination.
-            //Card* card = source->RemoveSelectedCard();
-            //destination->AddCard(card);
+            Card* card = source->RemoveSelectedCard();
+            destination->AddCard(card);
         }
 
         // Update the number of cards transferred.
@@ -123,39 +121,40 @@ void CardManager::TransferSelectedCards(CardLayout* source,
 
 
 //------------------------------------------------------------------------------
-// GetDesiredCardLayout - Return the CardArray associated with a given type.
+// GetDesiredCardArray - Return the CardArray associated with a given type.
 //------------------------------------------------------------------------------
-CardLayout* CardManager::GetDesiredCardLayout(CardLayout::Type type)
+CardArray* CardManager::GetDesiredCardArray(
+        CardArray::CardArrayType cardArrayType)
 {
-    CardLayout* returnedArray = 0;
+    CardArray* returnedArray = 0;
 
-    switch ( type )
+    switch ( cardArrayType )
     {
-        case CardLayout::DECK:
+        case CardArray::DECK:
             returnedArray = deck;
             break;
 
-        case CardLayout::TALON:
+        case CardArray::TALON:
             returnedArray = talon;
             break;
 
-        case CardLayout::PLAYERHAND:
+        case CardArray::PLAYERHAND:
             returnedArray = playerHand;
             break;
 
-        case CardLayout::CPUHAND:
+        case CardArray::CPUHAND:
             returnedArray = cpuHand;
             break;
 
-        case CardLayout::PLAYERDISCARDS:
+        case CardArray::PLAYERDISCARDS:
             returnedArray = playerDiscards;
             break;
 
-        case CardLayout::CPUDISCARDS:
+        case CardArray::CPUDISCARDS:
             returnedArray = cpuDiscards;
             break;
 
-        case CardLayout::PREVIOUSTRICKS:
+        case CardArray::PREVIOUSTRICKS:
             returnedArray = previousTricks;
             break;
 
@@ -168,29 +167,21 @@ CardLayout* CardManager::GetDesiredCardLayout(CardLayout::Type type)
 
 
 //------------------------------------------------------------------------------
+// GetCurrentTrick - Accessor for CardManager's currentTrick member variable.
+//------------------------------------------------------------------------------
+Card CardManager::GetCurrentTrick(void)
+{
+    return currentTrick;
+}
+
+
+//------------------------------------------------------------------------------
 // GetSelectionScore - Get the score of the user's current selection.
 //------------------------------------------------------------------------------
-/*ScoreManager::PhaseScore CardManager::GetSelectionScore(
-                                                CardLayout::SelectionType phase)
+ScoreManager::PhaseScore CardManager::GetSelectionScore(CardArray::SelectionType
+                                                        phase)
 {
     return playerHand->GetSelectionScore(phase);
-}*/
-
-
-//------------------------------------------------------------------------------
-// AddLayoutsToScene - Add the card layouts to the scene.
-//------------------------------------------------------------------------------
-void CardManager::AddLayoutsToScene(Scene* scene)
-{
-    scene->AddLayout(Scene::PLAYING, deck,           2, 4);
-    scene->AddLayout(Scene::TALON,   talon,          1, 0);
-    scene->AddLayout(Scene::PLAYER,  playerHand,     0, 0);
-    scene->AddLayout(Scene::CPU,     cpuHand,        0, 0);
-    scene->AddLayout(Scene::PLAYING, playerDiscards, 2, 6);
-    scene->AddLayout(Scene::PLAYING, cpuDiscards,    0, 6);
-    scene->AddLayout(Scene::PLAYING, previousTricks, 1, 0);
-    scene->AddLayout(Scene::PLAYING, playerTrick,    2, 3);
-    scene->AddLayout(Scene::PLAYING, cpuTrick,       0, 3);
 }
 
 
@@ -276,25 +267,22 @@ void CardManager::InitializeCards(void)
                            Card::SPADES, Card::KING), true);
     deck->AddCard(new Card(":/Cards/Spades/Resources/Spades/AS.svg",
                            Card::SPADES, Card::ACE), true);
+}
 
-    // TEST //
-    /*talon->AddCard(new Card(":/Cards/Spades/Resources/Spades/AS.svg",
-                            Card::SPADES, Card::ACE), true);
-    playerHand->AddCard(new Card(":/Cards/Spades/Resources/Spades/AS.svg",
-                                 Card::SPADES, Card::ACE), true);
-    cpuHand->AddCard(new Card(":/Cards/Spades/Resources/Spades/AS.svg",
-                              Card::SPADES, Card::ACE), true);
-    playerDiscards->AddCard(new Card(":/Cards/Spades/Resources/Spades/AS.svg",
-                                     Card::SPADES, Card::ACE), true);
-    cpuDiscards->AddCard(new Card(":/Cards/Spades/Resources/Spades/AS.svg",
-                                  Card::SPADES, Card::ACE), true);
-    previousTricks->AddCard(new Card(":/Cards/Spades/Resources/Spades/AS.svg",
-                                     Card::SPADES, Card::ACE), true);
-    playerTrick->AddCard(new Card(":/Cards/Spades/Resources/Spades/AS.svg",
-                                  Card::SPADES, Card::ACE), true);
-    cpuTrick->AddCard(new Card(":/Cards/Spades/Resources/Spades/AS.svg",
-                               Card::SPADES, Card::ACE), true);*/
-    //////////
+
+//------------------------------------------------------------------------------
+// AddCardsToScene - Add all the cards to the scene.
+//------------------------------------------------------------------------------
+void CardManager::AddCardsToScene(Scene* scene)
+{
+    Card* card;
+    for (int index = 0; index < deck->GetSize(); index++)
+    {
+        card = deck->GetCard(index);
+
+        card->setScale(0.5);
+        scene->addItem(card);
+    }
 }
 
 
@@ -304,11 +292,11 @@ void CardManager::InitializeCards(void)
 void CardManager::ShuffleDeck(void)
 {
     // Line up the cards in the deck before shuffling.
-    //deck->Stagger(CardLayout::NOSTAGGER);
+    deck->Stagger(CardArray::NOSTAGGER);
     deck->Shuffle();
 
     // Re-stagger the deck.
-    //deck->Stagger(CardLayout::DECKSTAGGER);
+    deck->Stagger(CardArray::DECKSTAGGER);
 }
 
 
@@ -316,18 +304,18 @@ void CardManager::ShuffleDeck(void)
 // SetCardsSelectable - Enable/Disable a CardArray's cards to be selected.
 //------------------------------------------------------------------------------
 void CardManager::SetCardsSelectable(bool setSelectable, int limit,
-                                     CardLayout::Type type)
+                                     CardArray::CardArrayType cardArrayType)
 {
-    Card*       card;
-    CardLayout* cardArray = GetDesiredCardLayout(type);
+    Card*      card;
+    CardArray* cardArray = GetDesiredCardArray(cardArrayType);
 
     // Set the limit of how many cards can be selected at once.
-    //cardArray->SetSelectionLimit(limit);
+    cardArray->SetSelectionLimit(limit);
 
     // Loop through the array setting the ItemIsSelectable property.
-    for ( int index = 0; index < cardArray->count(); index++ )
+    for ( int index = 0; index < cardArray->GetSize(); index++ )
     {
-        card = cardArray->itemAt(index);
+        card = cardArray->GetCard(index);
 
         if ( setSelectable )
             card->setFlag(QGraphicsItem::ItemIsSelectable, true);
@@ -342,16 +330,16 @@ void CardManager::SetCardsSelectable(bool setSelectable, int limit,
 //                         changed.
 //------------------------------------------------------------------------------
 void CardManager::CardSelectionsChanged(Card* card,
-                                        CardLayout::Type type)
+                                        CardArray::CardArrayType cardArrayType)
 {
-    CardLayout* cardArray = GetDesiredCardLayout(type);
+    CardArray* cardArray = GetDesiredCardArray(cardArrayType);
 
     // Update the card selections array in the CardArray.
-    /*if ( cardArray->UpdateCardSelections(card) )
+    if ( cardArray->UpdateCardSelections(card) )
     {
         // Update the position of the card based on if it's selected or not.
         card->UpdateSelection();
-    }*/
+    }
 }
 
 
@@ -359,13 +347,13 @@ void CardManager::CardSelectionsChanged(Card* card,
 // CallCheckSelection - Check the selection in the CardArray is correct for
 //                      the phase the game is in.
 //------------------------------------------------------------------------------
-/*bool CardManager::CheckSelection(CardLayout::SelectionType phase,
-                                 CardLayout::Type type)
+bool CardManager::CheckSelection(CardArray::SelectionType phase,
+                                 CardArray::CardArrayType cardArrayType)
 {
-    CardLayout* cardArray = GetDesiredCardLayout(type);
+    CardArray* cardArray = GetDesiredCardArray(cardArrayType);
 
     return cardArray->CheckSelection(phase);
-}*/
+}
 
 
 //------------------------------------------------------------------------------

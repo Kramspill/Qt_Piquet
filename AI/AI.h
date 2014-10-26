@@ -16,7 +16,7 @@
 // My Header Files
 //------------------------------------------------------------------------------
 #include "Managers/ScoreManager.h"
-#include "Layouts/CardLayout.h"
+#include "Cards/CardArray.h"
 #include "KnowledgeBase.h"
 
 
@@ -41,8 +41,8 @@ public:
     void                   Initialize(void);
 
     void                   UpdateKnowledgeBase(Card* card, int index,
-                                             CardLayout::Type location);
-    void                   UpdateHand(CardLayout* newCpuHand);
+                                             CardArray::CardArrayType location);
+    void                   UpdateHand(CardArray* newCpuHand);
 
     void                   SelectCardsToDiscard(void);
     ScoreManager::Response DeclarePoint(ScoreManager::PhaseScore userScore);
@@ -53,12 +53,13 @@ private:
     void                   ConnectSignals(void);
 
 signals:
-    void                   SignalCardSelectionsChanged(Card*,CardLayout::Type);
+    void                   SignalCardSelectionsChanged(Card*,
+                                                      CardArray::CardArrayType);
     void                   AIProcessingComplete(void);
 
 private:
     KnowledgeBase*         knowledgeBase;
-    CardLayout*            cpuHand;
+    CardArray*             cpuHand;
 };
 
 #endif // AI_H

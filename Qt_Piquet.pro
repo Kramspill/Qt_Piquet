@@ -29,11 +29,7 @@ SOURCES +=\
     State/TrickPhase.cpp \
     AI/AI.cpp \
     AI/KnowledgeBase.cpp \
-    Scene/Dialog.cpp \
-    Managers/LayoutManager.cpp \
-    Layouts/CardLayout.cpp \
-    Layouts/InputDialog.cpp \
-    Layouts/ScoreDialog.cpp
+    Scene/Dialog.cpp
 
 HEADERS  += \
     Managers/GameManager.h \
@@ -51,11 +47,7 @@ HEADERS  += \
     State/TrickPhase.h \
     AI/AI.h \
     AI/KnowledgeBase.h \
-    Scene/Dialog.h \
-    Managers/LayoutManager.h \
-    Layouts/CardLayout.h \
-    Layouts/InputDialog.h \
-    Layouts/ScoreDialog.h
+    Scene/Dialog.h
 
 #FORMS    += MainWindow.ui
 

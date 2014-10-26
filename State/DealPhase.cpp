@@ -38,8 +38,11 @@ DealPhase::~DealPhase(void)
 //------------------------------------------------------------------------------
 // Initialize - Initialize and execute the internal state machine of this class.
 //------------------------------------------------------------------------------
-void DealPhase::Initialize(void)
+void DealPhase::Initialize(QPushButton* button)
 {
+    // Initialize the dealCounter that determines when to deal the Talon.
+    ResetDealCounter();
+
     // Initialize the state machine.
     stateMachine = new QStateMachine();
 
@@ -54,6 +57,7 @@ void DealPhase::Initialize(void)
     stateMachine->setInitialState(initialState);
 
     // Setup the transitions from initialState.
+    //initialState->addTransition(button, SIGNAL(clicked()),      dealToPlayer);
     initialState->addTransition(this, SIGNAL(ExecuteDeal()),      dealToPlayer);
 
     // Setup the transitions from dealToPlayer.
@@ -67,9 +71,6 @@ void DealPhase::Initialize(void)
     // Setup the transitions from dealTalon.
     dealTalon->addTransition(   this, SIGNAL(TransferComplete()), finalState);
 
-    // Initialize the dealCounter that determines when to deal the Talon.
-    ResetDealCounter();
-
     // Setup the work done in each state.
     ConnectSignals();
 }
@@ -81,7 +82,7 @@ void DealPhase::Initialize(void)
 void DealPhase::onEntry(QEvent*)
 {
     stateMachine->start();
-    //emit RequestDialog(Dialog::DEAL);
+    emit RequestDialog(Dialog::DEAL);
 }
 
 
@@ -126,7 +127,7 @@ void DealPhase::DealToPlayer(void)
 {
     if ( dealCounter > 0 )
     {
-        emit RequestCardTransfer(CardLayout::DECK, CardLayout::PLAYERHAND, 3,
+        emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3,
                                  false);
         dealCounter--;
     }
@@ -145,7 +146,7 @@ void DealPhase::DealToCpu(void)
 {
     if ( dealCounter > 0 )
     {
-        emit RequestCardTransfer(CardLayout::DECK, CardLayout::CPUHAND, 3, false);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND, 3, false);
         dealCounter--;
     }
     else
@@ -161,5 +162,5 @@ void DealPhase::DealToCpu(void)
 //------------------------------------------------------------------------------
 void DealPhase::DealTalon(void)
 {
-    emit RequestCardTransfer(CardLayout::DECK, CardLayout::TALON, 8, false);
+    emit RequestCardTransfer(CardArray::DECK, CardArray::TALON, 8, false);
 }
