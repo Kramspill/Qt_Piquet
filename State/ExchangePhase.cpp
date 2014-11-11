@@ -38,11 +38,10 @@ ExchangePhase::~ExchangePhase(void)
 //------------------------------------------------------------------------------
 // Initialize - Initialize and execute the internal state machine of this class.
 //------------------------------------------------------------------------------
-void ExchangePhase::Initialize(QPushButton* button)
+void ExchangePhase::Initialize(void)
 {
     // Initialize member variables.
     cardsTransferred = 0;
-    exchangeButton   = button;
 
     // Initialize the state machine.
     stateMachine  = new QStateMachine();

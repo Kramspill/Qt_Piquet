@@ -35,7 +35,7 @@ public:
     ExchangePhase(ExchangePhase&);
     ~ExchangePhase(void);
 
-    void           Initialize(QPushButton* button);
+    void           Initialize(void);
 
 protected:
     void           onEntry(QEvent*);
@@ -81,7 +81,6 @@ private:
     QState*        cpuDiscard;
     QState*        cpuDraw;
     QFinalState*   finalState;
-    QPushButton*   exchangeButton;
     int            cardsTransferred;
 };
 
