@@ -55,6 +55,8 @@ private slots:
     void          SelectAIAction(AI::AIAction action);
     void          UpdateAI(void);
 
+    void          SetUI(Scene::PhaseType phase);
+
 private:
     Scene*        scene;
     View*         view;

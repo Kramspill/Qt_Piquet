@@ -114,6 +114,11 @@ void GameManager::ConnectSignals(void)
                      SLOT(CreateDialog(Dialog::DialogType)));
 
     QObject::connect(stateManager,
+                     SIGNAL(SetUI(Scene::PhaseType)),
+                     this,
+                     SLOT(SetUI(Scene::PhaseType)));
+
+    QObject::connect(stateManager,
                      SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
                                                 CardArray::CardArrayType,
                                                 int, bool)),
@@ -283,4 +288,13 @@ void GameManager::UpdateAI(void)
         card = cardArray->GetCard(index);
         ai->UpdateKnowledgeBase(card, index, CardArray::PREVIOUSTRICKS);
     }
+}
+
+
+//------------------------------------------------------------------------------
+// SetUI - Set the scene's ui.
+//------------------------------------------------------------------------------
+void GameManager::SetUI(Scene::PhaseType phase)
+{
+    scene->SetUI(phase);
 }
