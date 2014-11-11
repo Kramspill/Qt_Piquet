@@ -34,8 +34,7 @@ public:
     StateManager(StateManager&);
     ~StateManager(void);
 
-    void              Initialize(QPushButton* button, QPushButton* button2,
-                                 QPushButton* button3, QPushButton* button4);
+    void              Initialize(void);
 
 private:
     void              ConnectSignals(void);
