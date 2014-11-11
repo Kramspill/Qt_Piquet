@@ -63,6 +63,7 @@ public slots:
 signals:
     void         SignalCardSelectionsChanged(Card*);
     void         ExecuteDeal(void);
+    void         ExecuteExchange(void);
 
 private:
     QPushButton* primaryAction;

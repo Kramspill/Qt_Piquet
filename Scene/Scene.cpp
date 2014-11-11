@@ -174,16 +174,33 @@ void Scene::SetUI(Scene::PhaseType phase)
     {
         case DEAL:
             title->setText("Deal Phase");
-            text->setText("Click 'Deal' to have\nthe dealer deal the cards");
+            text->setText("Click 'Deal' to have\nthe dealer deal the cards.");
 
             primaryAction->setText("Deal");
             secondaryAction->setVisible(false);
 
-            title->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
-            text->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+            title->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+            text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
 
             QObject::connect(primaryAction, SIGNAL(clicked()),
                              this,          SIGNAL(ExecuteDeal()));
+            break;
+
+        case EXCHANGE:
+            title->setText("Exchange Phase");
+            text->setText("Select cards from your hand\nto exchange with from the Talon.");
+
+            primaryAction->setText("Exchange");
+            secondaryAction->setVisible(false);
+
+             primaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+            title->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+            text->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+
+            QObject::disconnect(primaryAction, SIGNAL(clicked()),
+                                this,          SIGNAL(ExecuteDeal()));
+            QObject::connect(   primaryAction, SIGNAL(clicked()),
+                                this,          SIGNAL(ExecuteExchange()));
             break;
     };
 }
