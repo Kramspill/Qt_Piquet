@@ -86,7 +86,7 @@ void ExchangePhase::Initialize(QPushButton* button)
 void ExchangePhase::onEntry(QEvent*)
 {
     stateMachine->start();
-
+    emit SetUI(Scene::EXCHANGE);
     emit UpdateAI();
 }
 
@@ -116,7 +116,8 @@ void ExchangePhase::ConnectSignals(void)
             this, SLOT(InformTransferComplete(int)));
 
     // Setup the work done in each state.
-    connect(exchangeButton, SIGNAL(clicked()), this, SLOT(PlayerDiscard()));
+    connect(this, SIGNAL(ExecuteExchange()),
+            this, SLOT(PlayerDiscard()));
     connect(playerDraw,     SIGNAL(entered()), this, SLOT(PlayerDraw()));
     connect(cpuProcessing,  SIGNAL(entered()), this, SLOT(CpuProcessing()));
     connect(cpuDiscard,     SIGNAL(entered()), this, SLOT(CpuDiscard()));

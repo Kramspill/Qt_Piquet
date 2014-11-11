@@ -21,6 +21,7 @@
 //------------------------------------------------------------------------------
 #include "Cards/CardArray.h"
 #include "AI/AI.h"
+#include "Scene/Scene.h"
 
 
 //------------------------------------------------------------------------------
@@ -61,6 +62,8 @@ signals:
                                        CardArray::CardArrayType,
                                        int, bool);
     void           TransferComplete(int);
+    void           SetUI(Scene::PhaseType);
+    void           ExecuteExchange(void);
 
     void           TransitionState(void);
 
