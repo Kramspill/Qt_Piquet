@@ -170,6 +170,11 @@ void GameManager::ConnectSignals(void)
                      SIGNAL(ExecuteDeal()),
                      stateManager,
                      SIGNAL(ExecuteDeal()));
+
+    QObject::connect(scene,
+                     SIGNAL(ExecuteExchange()),
+                     stateManager,
+                     SIGNAL(ExecuteExchange()));
 }
 
 
