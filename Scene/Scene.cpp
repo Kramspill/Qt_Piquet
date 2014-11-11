@@ -46,10 +46,10 @@ Scene::~Scene(void)
 void Scene::Initialize(void)
 {
     // Allocate space for member variables.
-    primaryAction   = new QPushButton("BLANK");
-    secondaryAction = new QPushButton("BLANK");
-    title           = new QLabel("BLANK");
-    text            = new QLabel("BLANK");
+    primaryAction   = new QPushButton();
+    secondaryAction = new QPushButton();
+    title           = new QLabel();
+    text            = new QLabel();
 
     // Add items to the scene.
     addWidget(primaryAction);
@@ -174,7 +174,7 @@ void Scene::SetUI(Scene::PhaseType phase)
     {
         case DEAL:
             title->setText("Deal Phase");
-            text->setText("Click 'Deal' to have\n the dealer deal the cards");
+            text->setText("Click 'Deal' to have\nthe dealer deal the cards");
 
             primaryAction->setText("Deal");
             secondaryAction->setVisible(false);
