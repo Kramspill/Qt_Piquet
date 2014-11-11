@@ -42,7 +42,7 @@ public:
     DeclarationPhase(DeclarationPhase&);
     ~DeclarationPhase(void);
 
-    void           Initialize(QPushButton* button, QPushButton* button2);
+    void           Initialize(void);
 
 protected:
     void           onEntry(QEvent*);
@@ -80,7 +80,6 @@ private:
     QState*        initialTrick;
     QFinalState*   finalState;
     PhaseOutcome   phaseStatus[3];
-    QPushButton*   declareButton;
 };
 
 #endif // DECLARATIONPHASE_H

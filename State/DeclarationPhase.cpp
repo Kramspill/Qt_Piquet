@@ -38,13 +38,10 @@ DeclarationPhase::~DeclarationPhase(void)
 //------------------------------------------------------------------------------
 // Initialize - Initialize and execute the internal state machine of this class.
 //------------------------------------------------------------------------------
-void DeclarationPhase::Initialize(QPushButton* button, QPushButton* button2)
+void DeclarationPhase::Initialize(void)
 {
     // Initialize the state machine.
     stateMachine = new QStateMachine();
-
-    // Assign this state's declareButton for easy access.
-    declareButton = button;
 
     // Initialize the status of each phase.
     for ( int index = 0; index < 3; index++ )
@@ -149,12 +146,6 @@ void DeclarationPhase::ValidSelection(void)
 //------------------------------------------------------------------------------
 void DeclarationPhase::PlayerPoint(void)
 {
-    // Ensure the declare button is disconnected from all signals.
-    disconnect(declareButton, 0, 0, 0);
-
-    // Reconnect the button to perform the desired operations.
-    connect(declareButton, SIGNAL(clicked()), this,
-            SIGNAL(DeclareSelection(CardArray::POINT)));
 }
 
 
@@ -164,12 +155,6 @@ void DeclarationPhase::PlayerPoint(void)
 //------------------------------------------------------------------------------
 void DeclarationPhase::PlayerSequence(void)
 {
-    // Ensure the declare button is disconnected from all signals.
-    disconnect(declareButton, 0, 0, 0);
-
-    // Reconnect the button to perform the desired operations.
-    connect(declareButton, SIGNAL(clicked()), this,
-            SIGNAL(DeclareSelection(CardArray::SEQUENCE)));
 }
 
 
@@ -179,12 +164,6 @@ void DeclarationPhase::PlayerSequence(void)
 //------------------------------------------------------------------------------
 void DeclarationPhase::PlayerSet(void)
 {
-    // Ensure the declare button is disconnected from all signals.
-    disconnect(declareButton, 0, 0, 0);
-
-    // Reconnect the button to perform the desired operations.
-    connect(declareButton, SIGNAL(clicked()), this,
-            SIGNAL(DeclareSelection(CardArray::SET)));
 }
 
 
