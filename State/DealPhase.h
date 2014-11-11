@@ -35,7 +35,7 @@ public:
     DealPhase(DealPhase&);
     ~DealPhase(void);
 
-    void           Initialize(QPushButton* button);
+    void           Initialize(void);
 
 protected:
     void           onEntry(QEvent*);

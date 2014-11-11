@@ -38,7 +38,7 @@ DealPhase::~DealPhase(void)
 //------------------------------------------------------------------------------
 // Initialize - Initialize and execute the internal state machine of this class.
 //------------------------------------------------------------------------------
-void DealPhase::Initialize(QPushButton* button)
+void DealPhase::Initialize(void)
 {
     // Initialize the dealCounter that determines when to deal the Talon.
     ResetDealCounter();
