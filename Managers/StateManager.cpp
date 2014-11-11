@@ -106,6 +106,11 @@ void StateManager::ConnectSignals(void)
                                                 CardArray::CardArrayType,
                                                 int, bool)));
 
+    QObject::connect(dealPhase,
+                     SIGNAL(SetUI(Scene::PhaseType)),
+                     this,
+                     SIGNAL(SetUI(Scene::PhaseType)));
+
     // Connect signals to/fom the exchange phase state.
     QObject::connect(exchangePhase,
                      SIGNAL(RequestCardTransfer(CardArray::CardArrayType,

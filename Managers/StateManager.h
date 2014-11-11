@@ -54,6 +54,7 @@ signals:
     void              DeclareSelection(CardArray::SelectionType);
 
     void              RequestDialog(Dialog::DialogType);
+    void              SetUI(Scene::PhaseType);
     void              ExecuteDeal(void);
 
     void              SignalAI(AI::AIAction);
