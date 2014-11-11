@@ -58,10 +58,10 @@ void Scene::Initialize(void)
     addWidget(text);
 
     // Position the items in the scene.
-    primaryAction->move(2230, 800);
-    secondaryAction->move(2170, 800);
-    title->move(2200, 700);
-    text->move(2170, 750);
+    primaryAction->move(2180, 800);
+    secondaryAction->move(2120, 800);
+    title->move(2150, 700);
+    text->move(2120, 750);
 
     // Connect the signals.
     ConnectSignals();
