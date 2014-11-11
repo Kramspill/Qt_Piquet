@@ -56,6 +56,7 @@ signals:
     void              RequestDialog(Dialog::DialogType);
     void              SetUI(Scene::PhaseType);
     void              ExecuteDeal(void);
+    void              ExecuteExchange(void);
 
     void              SignalAI(AI::AIAction);
     void              UpdateAI(void);

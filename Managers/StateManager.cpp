@@ -133,6 +133,16 @@ void StateManager::ConnectSignals(void)
                      this,
                      SIGNAL(UpdateAI()));
 
+    QObject::connect(exchangePhase,
+                     SIGNAL(SetUI(Scene::PhaseType)),
+                     this,
+                     SIGNAL(SetUI(Scene::PhaseType)));
+
+    QObject::connect(this,
+                     SIGNAL(ExecuteExchange()),
+                     exchangePhase,
+                     SIGNAL(ExecuteExchange()));
+
     // Connect signals to/fom the declaration phase state.
     /*QObject::connect(this,
                      SIGNAL(SignalValidSelection()),
