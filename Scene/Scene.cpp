@@ -46,10 +46,22 @@ Scene::~Scene(void)
 void Scene::Initialize(void)
 {
     // Allocate space for member variables.
-    primaryAction   = new QPushButton();
-    secondaryAction = new QPushButton();
-    title           = new QLabel();
-    text            = new QLabel();
+    primaryAction   = new QPushButton("BLANK");
+    secondaryAction = new QPushButton("BLANK");
+    title           = new QLabel("BLANK");
+    text            = new QLabel("BLANK");
+
+    // Add items to the scene.
+    addWidget(primaryAction);
+    addWidget(secondaryAction);
+    addWidget(title);
+    addWidget(text);
+
+    // Position the items in the scene.
+    primaryAction->move(2230, 800);
+    secondaryAction->move(2170, 800);
+    title->move(2200, 700);
+    text->move(2170, 750);
 
     // Connect the signals.
     ConnectSignals();
@@ -130,8 +142,8 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent*)
 //------------------------------------------------------------------------------
 void Scene::ConnectSignals(void)
 {
-    QObject::connect(dialog, SIGNAL(ExecuteDeal()),
-                     this,   SIGNAL(ExecuteDeal()));
+    /*QObject::connect(dialog, SIGNAL(ExecuteDeal()),
+                     this,   SIGNAL(ExecuteDeal()));*/
 }
 
 
@@ -150,4 +162,28 @@ void Scene::CreateDialog(Dialog::DialogType dialogType)
         emit ExecuteDeal();
         //emit DialogAccepted(dialogType);
     }
+}
+
+
+//------------------------------------------------------------------------------
+// SetUI - Setup the ui buttons and labels for the current phase.
+//------------------------------------------------------------------------------
+void Scene::SetUI(Scene::PhaseType phase)
+{
+    switch ( phase )
+    {
+        case DEAL:
+            title->setText("Deal Phase");
+            text->setText("Click 'Deal' to have\n the dealer deal the cards");
+
+            primaryAction->setText("Deal");
+            secondaryAction->setVisible(false);
+
+            title->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+            text->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+
+            QObject::connect(primaryAction, SIGNAL(clicked()),
+                             this,          SIGNAL(ExecuteDeal()));
+            break;
+    };
 }

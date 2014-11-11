@@ -29,6 +29,15 @@ class Scene : public QGraphicsScene
 {
     Q_OBJECT
 public:
+    enum PhaseType
+    {
+        DEAL,
+        EXCHANGE,
+        DECLARATION,
+        TRICK
+    };
+
+public:
     Scene(int x, int y, int width, int height);
     Scene(Scene&);
     ~Scene(void);
@@ -49,6 +58,7 @@ private:
 
 public slots:
     void         CreateDialog(Dialog::DialogType dialogType);
+    void         SetUI(PhaseType phase);
 
 signals:
     void         SignalCardSelectionsChanged(Card*);
