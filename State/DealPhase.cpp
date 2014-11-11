@@ -82,7 +82,8 @@ void DealPhase::Initialize(QPushButton* button)
 void DealPhase::onEntry(QEvent*)
 {
     stateMachine->start();
-    emit RequestDialog(Dialog::DEAL);
+    emit SetUI(Scene::DEAL);
+    //emit RequestDialog(Dialog::DEAL);
 }
 
 

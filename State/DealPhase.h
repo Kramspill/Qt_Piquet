@@ -21,6 +21,7 @@
 //------------------------------------------------------------------------------
 #include "Cards/CardArray.h"
 #include "Scene/Dialog.h"
+#include "Scene/Scene.h"
 
 
 //------------------------------------------------------------------------------
@@ -52,6 +53,7 @@ private slots:
 signals:
     void           ExecuteDeal(void);
     void           RequestDialog(Dialog::DialogType);
+    void           SetUI(Scene::PhaseType);
     void           RequestCardTransfer(CardArray::CardArrayType,
                                        CardArray::CardArrayType,
                                        int, bool);
