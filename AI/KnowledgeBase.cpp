@@ -121,6 +121,10 @@ ScoreManager::PhaseScore KnowledgeBase::CalculatePoint(void)
     ScoreManager::PhaseScore currentScore;
     ScoreManager::PhaseScore maxScore;
 
+    // Initialize the maxScore.
+    maxScore.numOfCards = 0;
+    maxScore.totalValue = 0;
+
     for ( int suitIndex = 0; suitIndex < 4; suitIndex++ )
     {
         // Initialize the current score to 0.
@@ -163,7 +167,53 @@ ScoreManager::PhaseScore KnowledgeBase::CalculatePoint(void)
 //------------------------------------------------------------------------------
 ScoreManager::PhaseScore KnowledgeBase::CalculateSequence(void)
 {
+    ScoreManager::PhaseScore currentScore;
+    ScoreManager::PhaseScore maxScore;
 
+    // Initialize the maxScore.
+    maxScore.numOfCards = 0;
+    maxScore.totalValue = 0;
+
+    for ( int suitIndex = 0; suitIndex < 4; suitIndex++ )
+    {
+        // Initialize the current score to 0.
+        currentScore.numOfCards = 0;
+        currentScore.totalValue = 0;
+        int count               = 0;
+
+        for ( int valueIndex = 0; valueIndex < 8; valueIndex++ )
+        {
+            KnowledgeItem* item = cardStatus[suitIndex][valueIndex];
+
+            if ( item->location == CardArray::CPUHAND )
+            {
+                count++;
+            }
+            else if ( count >= 3 && count >= currentScore.numOfCards )
+            {
+                currentScore.numOfCards = count;
+                currentScore.totalValue = valueIndex + 7;
+                count = 0;
+            }
+        }
+
+        // Check if this is now the max Sequence.
+        if ( currentScore.numOfCards >= maxScore.numOfCards )
+        {
+            if ( currentScore.numOfCards > maxScore.numOfCards )
+            {
+                maxScore.numOfCards = currentScore.numOfCards;
+                maxScore.totalValue = currentScore.totalValue;
+            }
+            else if ( currentScore.totalValue > maxScore.totalValue )
+            {
+                maxScore.numOfCards = currentScore.numOfCards;
+                maxScore.totalValue = currentScore.totalValue;
+            }
+        }
+    }
+
+    return maxScore;
 }
 
 
@@ -172,7 +222,55 @@ ScoreManager::PhaseScore KnowledgeBase::CalculateSequence(void)
 //------------------------------------------------------------------------------
 ScoreManager::PhaseScore KnowledgeBase::CalculateSet(void)
 {
+    ScoreManager::PhaseScore currentScore;
+    ScoreManager::PhaseScore maxScore;
 
+    // Initialize the maxScore.
+    maxScore.numOfCards = 0;
+    maxScore.totalValue = 0;
+
+    for ( int valueIndex = 3; valueIndex < 8; valueIndex++ )
+    {
+        // Initialize the current score to 0.
+        currentScore.numOfCards = 0;
+        currentScore.totalValue = 0;
+        int count               = 0;
+
+        for ( int suitIndex = 0; suitIndex < 4; suitIndex++ )
+        {
+            KnowledgeItem* item = cardStatus[suitIndex][valueIndex];
+
+            if ( item->location == CardArray::CPUHAND )
+            {
+                count++;
+            }
+        }
+
+        // Set the currentScore if it's greater than 2 cards.
+        if ( count > 2 )
+        {
+            currentScore.numOfCards = count;
+            currentScore.totalValue = valueIndex + 7;
+        }
+
+        // Check if this is now the max Set.
+        if ( currentScore.numOfCards >= maxScore.numOfCards )
+        {
+            if ( currentScore.numOfCards > maxScore.numOfCards )
+            {
+                maxScore.numOfCards = currentScore.numOfCards;
+                maxScore.totalValue = currentScore.totalValue;
+            }
+            else if ( currentScore.totalValue > maxScore.totalValue )
+            {
+                maxScore.numOfCards = currentScore.numOfCards;
+                maxScore.totalValue = currentScore.totalValue;
+            }
+        }
+
+    }
+
+    return maxScore;
 }
 
 
