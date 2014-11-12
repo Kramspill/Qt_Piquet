@@ -69,7 +69,6 @@ private slots:
 
 signals:
     void                     TransferComplete(int);
-    //void       SignalValidSelection(void);
 
 private:
     CardArray*               deck;

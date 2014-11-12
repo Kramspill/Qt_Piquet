@@ -197,9 +197,6 @@ void CardManager::ConnectSignals(void)
 {
     connect(transitionTimer, SIGNAL(timeout()), this,
             SLOT(SignalTransferComplete()));
-
-    /*connect(playerHand, SIGNAL(SignalValidSelection()), this,
-            SIGNAL(SignalValidSelection()));*/
 }
 
 
