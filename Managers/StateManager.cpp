@@ -92,11 +92,6 @@ void StateManager::ConnectSignals(void)
                      SIGNAL(ExecuteDeal()));
 
     QObject::connect(dealPhase,
-                     SIGNAL(RequestDialog(Dialog::DialogType)),
-                     this,
-                     SIGNAL(RequestDialog(Dialog::DialogType)));
-
-    QObject::connect(dealPhase,
                      SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
                                                 CardArray::CardArrayType,
                                                 int, bool)),
@@ -142,15 +137,16 @@ void StateManager::ConnectSignals(void)
                      exchangePhase,
                      SIGNAL(ExecuteExchange()));
 
-    // Connect signals to/fom the declaration phase state.
-    /*QObject::connect(this,
-                     SIGNAL(SignalValidSelection()),
-                     declarationPhase,
-                     SLOT(ValidSelection()));*/
     QObject::connect(declarationPhase,
                      SIGNAL(SetCardsSelectable(bool, int)),
                      this,
                      SIGNAL(SetCardsSelectable(bool, int)));
+
+    QObject::connect(declarationPhase,
+                     SIGNAL(SetUI(Scene::PhaseType)),
+                     this,
+                     SIGNAL(SetUI(Scene::PhaseType)));
+
     QObject::connect(declarationPhase,
                      SIGNAL(DeclareSelection(CardArray::SelectionType)),
                      this,
@@ -181,8 +177,12 @@ void StateManager::SignalTransferComplete(int numOfCardsTransferred)
 //------------------------------------------------------------------------------
 void StateManager::AIProcessingComplete(void)
 {
-     if ( stateMachine->configuration().contains(exchangePhase) )
+    if ( stateMachine->configuration().contains(exchangePhase) )
     {
         emit exchangePhase->AIProcessingComplete();
+    }
+    else if ( stateMachine->configuration().contains(declarationPhase) )
+    {
+        declarationPhase->PhaseComplete();
     }
 }
