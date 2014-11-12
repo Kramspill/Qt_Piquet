@@ -94,9 +94,6 @@ private:
     void                     UpdateCardState(Card* card, bool noAnimation);
     void                     ResetZPositions(void);
 
-signals:
-    void                     SignalValidSelection(void);
-
 private:
     std::vector<Card*>       cards;
     std::vector<Card*>       selectedCards;

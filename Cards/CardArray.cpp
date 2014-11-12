@@ -220,7 +220,10 @@ bool CardArray::CheckSelection(CardArray::SelectionType phase)
 {
     Card*      aCard;
     Card::Suit theSuit;
+    Card::Rank theRank;
     int        numOfSelectedCards = selectedCards.size();
+    bool       cardBuckets[8] = { false };
+    int        i;
     bool       valid = true;
 
     switch ( phase )
@@ -244,9 +247,79 @@ bool CardArray::CheckSelection(CardArray::SelectionType phase)
             break;
 
         case SEQUENCE:
+            // Perform a bucket sort then check the cards.
+            aCard   = selectedCards[0];
+            theSuit = aCard->GetSuit();
+
+            if ( numOfSelectedCards < 3 )
+            {
+                valid = false;
+            }
+            else
+            {
+                for ( int index = 0; index < numOfSelectedCards; index++ )
+                {
+                    aCard = selectedCards[index];
+
+                    // Place the card in it's bucket.
+                    cardBuckets[aCard->GetRank()-7] = true;
+
+                    // Check they are of the same suit during sorting.
+                    if ( aCard->GetSuit() != theSuit )
+                    {
+                    valid = false;
+                    index = numOfSelectedCards;
+                    }
+                }
+            }
+
+            // Check the selection order.
+            if ( valid )
+            {
+                i = 0;
+
+                while ( i < 8 && !cardBuckets[i])
+                {
+                    i++;
+                }
+
+                while ( i < 8 && numOfSelectedCards > 0 && cardBuckets[i])
+                {
+                    i++;
+                    numOfSelectedCards--;
+                }
+
+                if ( numOfSelectedCards != 0 )
+                {
+                    valid = false;
+                }
+            }
             break;
 
         case SET:
+            aCard   = selectedCards[0];
+            theSuit = aCard->GetSuit();
+            theRank = aCard->GetRank();
+
+            if ( theRank < 10 || numOfSelectedCards < 3 )
+            {
+                valid = false;
+            }
+            else
+            {
+                for ( int index = 1; index < numOfSelectedCards; index++ )
+                {
+                    aCard = selectedCards[index];
+
+                    // Check they are of the same suit during sorting.
+                    if ( aCard->GetSuit() != theSuit &&
+                     aCard->GetRank() != theRank )
+                    {
+                        valid = false;
+                        index = numOfSelectedCards;
+                    }
+                }
+            }
             break;
 
         default:
@@ -268,6 +341,8 @@ ScoreManager::PhaseScore CardArray::GetSelectionScore(CardArray::SelectionType
     score.numOfCards = GetSelectedCardsSize();
     score.totalValue = 0;
 
+    Card::Rank maxCard = Card::SEVEN;
+
     // The selection has already been verified so we can make some assumptions
     // in the calculations to speed things up.
     switch ( phase )
@@ -280,9 +355,18 @@ ScoreManager::PhaseScore CardArray::GetSelectionScore(CardArray::SelectionType
             break;
 
         case SEQUENCE:
+            for ( int index = 0; index < score.numOfCards; index++ )
+            {
+                if ( selectedCards[index]->GetRank() > maxCard )
+                {
+                    maxCard = selectedCards[index]->GetRank();
+                    score.totalValue = selectedCards[index]->GetRank();
+                }
+            }
             break;
 
         case SET:
+            score.totalValue = selectedCards[0]->GetRank();
             break;
     }
 
