@@ -57,6 +57,10 @@ private slots:
 
     void          SetUI(Scene::PhaseType phase);
 
+    void          DeclarePoint(void);
+    void          DeclareSequence(void);
+    void          DeclareSet(void);
+
 private:
     Scene*        scene;
     View*         view;

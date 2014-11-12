@@ -87,11 +87,6 @@ void GameManager::ConnectSignals(void)
                      stateManager,
                      SLOT(SignalTransferComplete(int)));
 
-   /* QObject::connect(cardManager,
-                     SIGNAL(SignalValidSelection()),
-                     stateManager,
-                     SIGNAL(SignalValidSelection()));*/
-
     // Connect the signals from the state manager.
     QObject::connect(stateManager,
                      SIGNAL(RequestDialog(Dialog::DialogType)),
@@ -160,6 +155,21 @@ void GameManager::ConnectSignals(void)
                      SIGNAL(ExecuteExchange()),
                      stateManager,
                      SIGNAL(ExecuteExchange()));
+
+    QObject::connect(scene,
+                     SIGNAL(DeclarePoint()),
+                     this,
+                     SLOT(DeclarePoint()));
+
+    QObject::connect(scene,
+                     SIGNAL(DeclareSequence()),
+                     this,
+                     SLOT(DeclareSequence()));
+
+    QObject::connect(scene,
+                     SIGNAL(DeclareSet()),
+                     this,
+                     SLOT(DeclareSet()));
 }
 
 
@@ -287,4 +297,49 @@ void GameManager::UpdateAI(void)
 void GameManager::SetUI(Scene::PhaseType phase)
 {
     scene->SetUI(phase);
+}
+
+
+//------------------------------------------------------------------------------
+// DeclarePoint - Player declare's their Point.
+//------------------------------------------------------------------------------
+void GameManager::DeclarePoint(void)
+{
+    if ( cardManager->CheckSelection(CardArray::POINT) )
+    {
+        ScoreManager::PhaseScore userScore;
+
+        userScore = cardManager->GetSelectionScore(CardArray::POINT);
+        ai->DeclarePoint(userScore);
+    }
+}
+
+
+//------------------------------------------------------------------------------
+// DeclareSequence - Player declare's their Sequence.
+//------------------------------------------------------------------------------
+void GameManager::DeclareSequence(void)
+{
+    if ( cardManager->CheckSelection(CardArray::SEQUENCE) )
+    {
+        ScoreManager::PhaseScore userScore;
+
+        userScore = cardManager->GetSelectionScore(CardArray::SEQUENCE);
+        ai->DeclareSequence(userScore);
+    }
+}
+
+
+//------------------------------------------------------------------------------
+// DeclareSet - Player declare's their Set.
+//------------------------------------------------------------------------------
+void GameManager::DeclareSet(void)
+{
+    if ( cardManager->CheckSelection(CardArray::SET) )
+    {
+        ScoreManager::PhaseScore userScore;
+
+        userScore = cardManager->GetSelectionScore(CardArray::SET);
+        ai->DeclareSet(userScore);
+    }
 }
