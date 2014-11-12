@@ -83,7 +83,6 @@ void DealPhase::onEntry(QEvent*)
 {
     stateMachine->start();
     emit SetUI(Scene::DEAL);
-    //emit RequestDialog(Dialog::DEAL);
 }
 
 
