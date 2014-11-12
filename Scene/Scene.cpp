@@ -50,18 +50,21 @@ void Scene::Initialize(void)
     secondaryAction = new QPushButton();
     title           = new QLabel();
     text            = new QLabel();
+    log             = new QTextEdit();
 
     // Add items to the scene.
     addWidget(primaryAction);
     addWidget(secondaryAction);
     addWidget(title);
     addWidget(text);
+    addWidget(log);
 
     // Position the items in the scene.
     primaryAction->move(2180, 800);
     secondaryAction->move(2120, 800);
     title->move(2150, 700);
     text->move(2120, 750);
+    log->move(2050, 500);
 
     // Connect the signals.
     ConnectSignals();
@@ -193,7 +196,7 @@ void Scene::SetUI(Scene::PhaseType phase)
             primaryAction->setText("Exchange");
             secondaryAction->setVisible(false);
 
-             primaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+            primaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
             title->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
             text->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
 
@@ -201,6 +204,73 @@ void Scene::SetUI(Scene::PhaseType phase)
                                 this,          SIGNAL(ExecuteDeal()));
             QObject::connect(   primaryAction, SIGNAL(clicked()),
                                 this,          SIGNAL(ExecuteExchange()));
+            break;
+
+        case POINT:
+            title->setText("Declaration Phase");
+            text->setText("Select cards of the same\nsuit for Point declaration.");
+
+            primaryAction->setText("Declare");
+            secondaryAction->setText("Skip");
+            secondaryAction->setVisible(true);
+
+            primaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+            secondaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+            title->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+            text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+
+            QObject::disconnect(primaryAction,   SIGNAL(clicked()),
+                                this,            SIGNAL(ExecuteExchange()));
+            QObject::connect(   primaryAction,   SIGNAL(clicked()),
+                                this,            SIGNAL(DeclarePoint()));
+
+            QObject::connect(   secondaryAction, SIGNAL(clicked()),
+                                this,            SIGNAL(SkipDeclaration()));
+            break;
+
+        case SEQUENCE:
+            title->setText("Declaration Phase");
+            text->setText("Select cards of the same\nsuit for Sequence declaration.");
+
+            primaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+            secondaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+            title->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+            text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+
+            QObject::disconnect(primaryAction,   SIGNAL(clicked()),
+                                this,            SIGNAL(DeclarePoint()));
+            QObject::connect(   primaryAction,   SIGNAL(clicked()),
+                                this,            SIGNAL(DeclareSequence()));
+            break;
+
+        case SET:
+            title->setText("Declaration Phase");
+            text->setText("Select cards of the same\nsuit for Set declaration.");
+
+            primaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+            secondaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+            title->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+            text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+
+            QObject::disconnect(primaryAction,   SIGNAL(clicked()),
+                                this,            SIGNAL(DeclareSequence()));
+            QObject::connect(   primaryAction,   SIGNAL(clicked()),
+                                this,            SIGNAL(DeclareSet()));
+            break;
+
+        case TRICK:
+            title->setText("Trick Phase");
+            text->setText("Select cards of the same\nsuit for Set declaration.");
+
+            primaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+            secondaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+            title->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+            text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+
+            QObject::disconnect(primaryAction,   SIGNAL(clicked()),
+                                this,            SIGNAL(DeclareSequence()));
+            QObject::connect(   primaryAction,   SIGNAL(clicked()),
+                                this,            SIGNAL(DeclareSet()));
             break;
     };
 }

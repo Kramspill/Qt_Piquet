@@ -13,6 +13,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsItem>
 #include <QLabel>
+#include <QTextEdit>
 
 
 //------------------------------------------------------------------------------
@@ -33,7 +34,9 @@ public:
     {
         DEAL,
         EXCHANGE,
-        DECLARATION,
+        POINT,
+        SEQUENCE,
+        SET,
         TRICK
     };
 
@@ -64,12 +67,17 @@ signals:
     void         SignalCardSelectionsChanged(Card*);
     void         ExecuteDeal(void);
     void         ExecuteExchange(void);
+    void         DeclarePoint(void);
+    void         DeclareSequence(void);
+    void         DeclareSet(void);
+    void         SkipDeclaration(void);
 
 private:
     QPushButton* primaryAction;
     QPushButton* secondaryAction;
     QLabel*      title;
     QLabel*      text;
+    QTextEdit*   log;
     Dialog*      dialog;
     int          xPos;
     int          yPos;
