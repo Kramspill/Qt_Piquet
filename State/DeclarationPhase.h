@@ -20,6 +20,7 @@
 // My Header Files
 //------------------------------------------------------------------------------
 #include "Cards/CardArray.h"
+#include "Scene/Scene.h"
 
 
 //------------------------------------------------------------------------------
@@ -44,15 +45,14 @@ public:
 
     void           Initialize(void);
 
+    void           PhaseComplete(void);
+
 protected:
     void           onEntry(QEvent*);
     void           onExit(QEvent*);
 
 private:
     void           ConnectSignals(void);
-
-public slots:
-    void           ValidSelection(void);
 
 private slots:
     void           PlayerPoint(void);
@@ -65,9 +65,15 @@ private slots:
 
 signals:
     void           SetCardsSelectable(bool, int);
+    void           SetUI(Scene::PhaseType);
     void           DeclareSelection(CardArray::SelectionType);
-    void           SignalValidSelection(void);
     void           DeclarationPhaseFinished(void);
+
+    void           PointComplete(void);
+    void           SequenceComplete(void);
+    void           SetComplete(void);
+    void           NoLosses(void);
+    void           Losses(void);
 
 private:
     QStateMachine* stateMachine;

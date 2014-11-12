@@ -90,6 +90,26 @@ void DeclarationPhase::Initialize(void)
 
 
 //------------------------------------------------------------------------------
+// PhaseComplete - Emit a signal to move to the next phase.
+//------------------------------------------------------------------------------
+void DeclarationPhase::PhaseComplete(void)
+{
+    if ( stateMachine->configuration().contains(playerPoint) )
+    {
+        emit PointComplete();
+    }
+    else if ( stateMachine->configuration().contains(playerSequence) )
+    {
+        emit SequenceComplete();
+    }
+    else if ( stateMachine->configuration().contains(playerSet) )
+    {
+        emit SetComplete();
+    }
+}
+
+
+//------------------------------------------------------------------------------
 // onEntry - Override of QState::onEntry.
 //------------------------------------------------------------------------------
 void DeclarationPhase::onEntry(QEvent*)
@@ -129,23 +149,12 @@ void DeclarationPhase::ConnectSignals(void)
 
 
 //------------------------------------------------------------------------------
-// ValidSelection - Called in response to a correct selection being made.
-//------------------------------------------------------------------------------
-void DeclarationPhase::ValidSelection(void)
-{
-    // NOTE: either at this point, will check with the AI, OR
-    // when this signal goes up the chain and reaches GameManager, we'll call
-    // the AI check there and have the AI respond.
-    emit SignalValidSelection();
-}
-
-
-//------------------------------------------------------------------------------
 // PlayerPoint - Function that performs the required operations for the
 //               playerPoint state.
 //------------------------------------------------------------------------------
 void DeclarationPhase::PlayerPoint(void)
 {
+    emit SetUI(Scene::POINT);
 }
 
 
@@ -155,6 +164,7 @@ void DeclarationPhase::PlayerPoint(void)
 //------------------------------------------------------------------------------
 void DeclarationPhase::PlayerSequence(void)
 {
+    emit SetUI(Scene::SEQUENCE);
 }
 
 
@@ -164,6 +174,7 @@ void DeclarationPhase::PlayerSequence(void)
 //------------------------------------------------------------------------------
 void DeclarationPhase::PlayerSet(void)
 {
+    emit SetUI(Scene::SET);
 }
 
 
@@ -202,5 +213,5 @@ void DeclarationPhase::CpuSet(void)
 //------------------------------------------------------------------------------
 void DeclarationPhase::InitialTrick(void)
 {
-
+    emit SetUI(Scene::TRICK);
 }
