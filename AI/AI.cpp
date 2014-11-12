@@ -96,7 +96,34 @@ ScoreManager::Response AI::DeclarePoint(ScoreManager::PhaseScore userScore)
     else
     {
         ScoreManager::PhaseScore score = knowledgeBase->CalculatePoint();
+
+        // Compare the scores and update the log + scores.
+        if ( userScore.numOfCards > score.numOfCards )
+        {
+            emit GoodResponse();
+        }
+        else if ( userScore.numOfCards < score.numOfCards )
+        {
+            emit NotGoodResponse();
+        }
+        else
+        {
+            if ( userScore.totalValue > score.totalValue )
+            {
+                emit HowHighWinResponse();
+            }
+            else if ( userScore.totalValue < score.totalValue )
+            {
+                emit HowHighLossResponse();
+            }
+            else
+            {
+                emit HowHighEvenResponse();
+            }
+        }
     }
+
+    emit AIProcessingComplete();
 }
 
 
@@ -112,7 +139,34 @@ ScoreManager::Response AI::DeclareSequence(ScoreManager::PhaseScore userScore)
     else
     {
         ScoreManager::PhaseScore score = knowledgeBase->CalculateSequence();
+
+        // Compare the scores and update the log + scores.
+        if ( userScore.numOfCards > score.numOfCards )
+        {
+            emit GoodResponse();
+        }
+        else if ( userScore.numOfCards < score.numOfCards )
+        {
+            emit NotGoodResponse();
+        }
+        else
+        {
+            if ( userScore.totalValue > score.totalValue )
+            {
+                emit HowHighWinResponse();
+            }
+            else if ( userScore.totalValue < score.totalValue )
+            {
+                emit HowHighLossResponse();
+            }
+            else
+            {
+                emit HowHighEvenResponse();
+            }
+        }
     }
+
+    emit AIProcessingComplete();
 }
 
 
@@ -128,7 +182,34 @@ ScoreManager::Response AI::DeclareSet(ScoreManager::PhaseScore userScore)
     else
     {
         ScoreManager::PhaseScore score = knowledgeBase->CalculateSet();
+
+        // Compare the scores and update the log + scores.
+        if ( userScore.numOfCards > score.numOfCards )
+        {
+            emit GoodResponse();
+        }
+        else if ( userScore.numOfCards < score.numOfCards )
+        {
+            emit NotGoodResponse();
+        }
+        else
+        {
+            if ( userScore.totalValue > score.totalValue )
+            {
+                emit HowHighWinResponse();
+            }
+            else if ( userScore.totalValue < score.totalValue )
+            {
+                emit HowHighLossResponse();
+            }
+            else
+            {
+                emit HowHighEvenResponse();
+            }
+        }
     }
+
+    emit AIProcessingComplete();
 }
 
 
