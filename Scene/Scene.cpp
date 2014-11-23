@@ -18,7 +18,8 @@ Scene::Scene(int x, int y, int width, int height) :
     xPos(x),
     yPos(y),
     width(width),
-    height(height)
+    height(height),
+    cardsMoveable(false)
 {
 }
 
@@ -122,8 +123,9 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent)
     {
         Card* itemIsACard = qgraphicsitem_cast<Card*>(itemUnderMouse);
 
-        // Call the parent class' mousePressEvent if the item isn't a Card.
-        if ( !itemIsACard )
+        // Call the parent class' mousePressEvent if the item isn't a Card
+        // or we have set the cards to be moveable.
+        if ( !itemIsACard || cardsMoveable )
         {
             QGraphicsScene::mousePressEvent(mouseEvent);
         }
@@ -225,7 +227,7 @@ void Scene::SetUI(Scene::PhaseType phase)
                                 this,            SIGNAL(DeclarePoint()));
 
             QObject::connect(   secondaryAction, SIGNAL(clicked()),
-                                this,            SIGNAL(SkipDeclaration()));
+                                this,            SIGNAL(SkipPoint()));
             break;
 
         case SEQUENCE:
@@ -241,6 +243,11 @@ void Scene::SetUI(Scene::PhaseType phase)
                                 this,            SIGNAL(DeclarePoint()));
             QObject::connect(   primaryAction,   SIGNAL(clicked()),
                                 this,            SIGNAL(DeclareSequence()));
+
+            QObject::disconnect(secondaryAction, SIGNAL(clicked()),
+                                this,            SIGNAL(SkipPoint()));
+            QObject::connect(   secondaryAction, SIGNAL(clicked()),
+                                this,            SIGNAL(SkipSequence()));
             break;
 
         case SET:
@@ -256,6 +263,11 @@ void Scene::SetUI(Scene::PhaseType phase)
                                 this,            SIGNAL(DeclareSequence()));
             QObject::connect(   primaryAction,   SIGNAL(clicked()),
                                 this,            SIGNAL(DeclareSet()));
+
+            QObject::disconnect(secondaryAction, SIGNAL(clicked()),
+                                this,            SIGNAL(SkipSequence()));
+            QObject::connect(   secondaryAction, SIGNAL(clicked()),
+                                this,            SIGNAL(SkipSet()));
             break;
 
         case TRICK:
@@ -268,9 +280,18 @@ void Scene::SetUI(Scene::PhaseType phase)
             text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
 
             QObject::disconnect(primaryAction,   SIGNAL(clicked()),
-                                this,            SIGNAL(DeclareSequence()));
-            QObject::connect(   primaryAction,   SIGNAL(clicked()),
                                 this,            SIGNAL(DeclareSet()));
+            QObject::disconnect(secondaryAction, SIGNAL(clicked()),
+                                this,            SIGNAL(SkipSet()));
             break;
     };
+}
+
+
+//------------------------------------------------------------------------------
+// SetCardsMoveable - Set the cards in the scene to allow movement by a user.
+//------------------------------------------------------------------------------
+void Scene::SetCardsMoveable(bool moveable)
+{
+    cardsMoveable = moveable;
 }

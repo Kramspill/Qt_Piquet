@@ -62,6 +62,7 @@ private:
 public slots:
     void         CreateDialog(Dialog::DialogType dialogType);
     void         SetUI(PhaseType phase);
+    void         SetCardsMoveable(bool moveable);
 
 signals:
     void         SignalCardSelectionsChanged(Card*);
@@ -70,7 +71,10 @@ signals:
     void         DeclarePoint(void);
     void         DeclareSequence(void);
     void         DeclareSet(void);
-    void         SkipDeclaration(void);
+    void         SkipDeclaration(void); //TODO
+    void         SkipPoint(void);
+    void         SkipSequence(void);
+    void         SkipSet(void);
 
 private:
     QPushButton* primaryAction;
@@ -83,6 +87,7 @@ private:
     int          yPos;
     int          width;
     int          height;
+    bool         cardsMoveable;
 };
 
 #endif // SCENE_H
