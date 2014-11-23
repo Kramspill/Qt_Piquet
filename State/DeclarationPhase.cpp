@@ -124,7 +124,6 @@ void DeclarationPhase::onEntry(QEvent*)
 //------------------------------------------------------------------------------
 void DeclarationPhase::onExit(QEvent*)
 {
-    emit SetCardsSelectable(false, 0);
 }
 
 
@@ -213,5 +212,7 @@ void DeclarationPhase::CpuSet(void)
 //------------------------------------------------------------------------------
 void DeclarationPhase::InitialTrick(void)
 {
+    emit SetCardsSelectable(false, 0);
+    emit SetCardsMoveable(true);
     emit SetUI(Scene::TRICK);
 }

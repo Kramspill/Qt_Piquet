@@ -65,6 +65,7 @@ private slots:
 
 signals:
     void           SetCardsSelectable(bool, int);
+    void           SetCardsMoveable(bool);
     void           SetUI(Scene::PhaseType);
     void           DeclareSelection(CardArray::SelectionType);
     void           DeclarationPhaseFinished(void);
