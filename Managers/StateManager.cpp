@@ -137,10 +137,16 @@ void StateManager::ConnectSignals(void)
                      exchangePhase,
                      SIGNAL(ExecuteExchange()));
 
+    // Connect signals to/fom the declaration phase state.
     QObject::connect(declarationPhase,
                      SIGNAL(SetCardsSelectable(bool, int)),
                      this,
                      SIGNAL(SetCardsSelectable(bool, int)));
+
+    QObject::connect(declarationPhase,
+                     SIGNAL(SetCardsMoveable(bool)),
+                     this,
+                     SIGNAL(SetCardsMoveable(bool)));
 
     QObject::connect(declarationPhase,
                      SIGNAL(SetUI(Scene::PhaseType)),

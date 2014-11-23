@@ -50,6 +50,7 @@ signals:
     void              TransferComplete(int);
 
     void              SetCardsSelectable(bool, int);
+    void              SetCardsMoveable(bool);
     void              DeclareSelection(CardArray::SelectionType);
 
     void              RequestDialog(Dialog::DialogType);
