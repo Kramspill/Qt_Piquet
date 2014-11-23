@@ -303,6 +303,34 @@ void CardManager::ShuffleDeck(void)
 
 
 //------------------------------------------------------------------------------
+// SetCardsMoveable - Enable/Disable a CardArray's cards to be moveable.
+//------------------------------------------------------------------------------
+void CardManager::SetCardsMoveable(bool setMoveable,
+                                   CardArray::CardArrayType cardArrayType)
+{
+    Card*      card;
+    CardArray* cardArray = GetDesiredCardArray(cardArrayType);
+
+    // Loop through the array setting the ItemIsMovable property.
+    for ( int index = 0; index < cardArray->GetSize(); index++ )
+    {
+        card = cardArray->GetCard(index);
+
+        if ( setMoveable )
+        {
+            card->setFlag(QGraphicsItem::ItemIsMovable, true);
+            emit InformCardsMoveable(true);
+        }
+        else
+        {
+            card->setFlag(QGraphicsItem::ItemIsMovable, false);
+            InformCardsMoveable(false);
+        }
+    }
+}
+
+
+//------------------------------------------------------------------------------
 // SetCardsSelectable - Enable/Disable a CardArray's cards to be selected.
 //------------------------------------------------------------------------------
 void CardManager::SetCardsSelectable(bool setSelectable, int limit,

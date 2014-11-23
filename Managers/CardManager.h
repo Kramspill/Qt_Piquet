@@ -54,6 +54,9 @@ private:
     void                     ShuffleDeck(void);
 
 public slots:
+    void                     SetCardsMoveable(bool setMoveable,
+                                              CardArray::CardArrayType
+                                         cardArrayType = CardArray::PLAYERHAND);
     void                     SetCardsSelectable(bool setSelectable, int limit,
                                                 CardArray::CardArrayType
                                          cardArrayType = CardArray::PLAYERHAND);
@@ -69,6 +72,7 @@ private slots:
 
 signals:
     void                     TransferComplete(int);
+    void                     InformCardsMoveable(bool);
 
 private:
     CardArray*               deck;
