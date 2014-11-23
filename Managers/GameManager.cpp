@@ -87,6 +87,11 @@ void GameManager::ConnectSignals(void)
                      stateManager,
                      SLOT(SignalTransferComplete(int)));
 
+    QObject::connect(cardManager,
+                     SIGNAL(InformCardsMoveable(bool)),
+                     scene,
+                     SLOT(SetCardsMoveable(bool)));
+
     // Connect the signals from the state manager.
     QObject::connect(stateManager,
                      SIGNAL(RequestDialog(Dialog::DialogType)),
@@ -111,6 +116,11 @@ void GameManager::ConnectSignals(void)
                      SIGNAL(SetCardsSelectable(bool, int)),
                      cardManager,
                      SLOT(SetCardsSelectable(bool, int)));
+
+    QObject::connect(stateManager,
+                     SIGNAL(SetCardsMoveable(bool)),
+                     cardManager,
+                     SLOT(SetCardsMoveable(bool)));
 
     QObject::connect(stateManager,
                      SIGNAL(DeclareSelection(CardArray::SelectionType)),
@@ -170,6 +180,26 @@ void GameManager::ConnectSignals(void)
                      SIGNAL(DeclareSet()),
                      this,
                      SLOT(DeclareSet()));
+
+    QObject::connect(scene,
+                     SIGNAL(SkipDeclaration()),
+                     this,
+                     SLOT(SkipDeclaration())); // TODO
+
+    QObject::connect(scene,
+                     SIGNAL(SkipPoint()),
+                     this,
+                     SLOT(SkipPoint()));
+
+    QObject::connect(scene,
+                     SIGNAL(SkipSequence()),
+                     this,
+                     SLOT(SkipSequence()));
+
+    QObject::connect(scene,
+                     SIGNAL(SkipSet()),
+                     this,
+                     SLOT(SkipSet()));
 }
 
 
@@ -342,4 +372,59 @@ void GameManager::DeclareSet(void)
         userScore = cardManager->GetSelectionScore(CardArray::SET);
         ai->DeclareSet(userScore);
     }
+}
+
+
+//------------------------------------------------------------------------------
+// SkipDeclaration - Skip a declaration.
+//------------------------------------------------------------------------------
+void GameManager::SkipDeclaration(void)
+{
+    ScoreManager::PhaseScore userScore;
+
+    userScore.numOfCards = 0;
+    userScore.totalValue = 0;
+    // TO DO:
+}
+
+
+//------------------------------------------------------------------------------
+// SkipPoint - Skip the Point declaration.
+//------------------------------------------------------------------------------
+void GameManager::SkipPoint(void)
+{
+    ScoreManager::PhaseScore userScore;
+
+    userScore.numOfCards = 0;
+    userScore.totalValue = 0;
+
+    ai->DeclarePoint(userScore);
+}
+
+
+//------------------------------------------------------------------------------
+// SkipSequence - Skip the Sequence declaration.
+//------------------------------------------------------------------------------
+void GameManager::SkipSequence(void)
+{
+    ScoreManager::PhaseScore userScore;
+
+    userScore.numOfCards = 0;
+    userScore.totalValue = 0;
+
+    ai->DeclareSequence(userScore);
+}
+
+
+//------------------------------------------------------------------------------
+// SkipSet - Skip the Set declaration.
+//------------------------------------------------------------------------------
+void GameManager::SkipSet(void)
+{
+    ScoreManager::PhaseScore userScore;
+
+    userScore.numOfCards = 0;
+    userScore.totalValue = 0;
+
+    ai->DeclareSet(userScore);
 }

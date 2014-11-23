@@ -60,6 +60,10 @@ private slots:
     void          DeclarePoint(void);
     void          DeclareSequence(void);
     void          DeclareSet(void);
+    void          SkipDeclaration(void); // TODO;
+    void          SkipPoint(void);
+    void          SkipSequence(void);
+    void          SkipSet(void);
 
 private:
     Scene*        scene;
