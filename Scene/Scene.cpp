@@ -71,7 +71,7 @@ void Scene::Initialize(void)
     QPointF p = GetCenterPos();
     int x = (int)p.x();
     int y = (int)p.y();
-    playerTrickArea = new QRect(x-130, y+50, 100, 100);
+    playerTrickArea = new QRect(x-200, y-80, 170, 160);
 
     // Connect the signals.
     ConnectSignals();
@@ -169,7 +169,11 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
             {
                 if ( IsInsideTrickArea(mouseEvent->scenePos()) )
                 {
-                    card->SetPosition(GetCenterPos());
+                    QPointF p = GetCenterPos();
+                    p.setX(p.x() - 130);
+                    p.setY(p.y() + 20);
+
+                    card->SetPosition(p);
                 }
             }
 
