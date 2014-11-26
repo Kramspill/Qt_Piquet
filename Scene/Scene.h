@@ -12,6 +12,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsItem>
+#include <QRect>
 #include <QLabel>
 #include <QTextEdit>
 
@@ -54,10 +55,13 @@ public:
 
 protected:
     void         mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
+    void         mouseMoveEvent(QGraphicsSceneMouseEvent* mouseEvent);
+    void         mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent);
     void         mouseDoubleClickEvent(QGraphicsSceneMouseEvent*);
 
 private:
     void         ConnectSignals(void);
+    bool         IsInsideTrickArea(QPointF p);
 
 public slots:
     void         CreateDialog(Dialog::DialogType dialogType);
@@ -83,6 +87,7 @@ private:
     QLabel*      text;
     QTextEdit*   log;
     Dialog*      dialog;
+    QRect*       playerTrickArea;
     int          xPos;
     int          yPos;
     int          width;

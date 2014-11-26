@@ -67,6 +67,12 @@ void Scene::Initialize(void)
     text->move(2120, 750);
     log->move(2050, 500);
 
+    // Set up the player trick area.
+    QPointF p = GetCenterPos();
+    int x = (int)p.x();
+    int y = (int)p.y();
+    playerTrickArea = new QRect(x-130, y+50, 100, 100);
+
     // Connect the signals.
     ConnectSignals();
 }
@@ -100,7 +106,7 @@ void Scene::SetText(const QString& newText)
 
 
 //------------------------------------------------------------------------------
-// mouseReleaseEvent - Override of QGraphicsScene::mousePressEvent to allow
+// mousePressEvent - Override of QGraphicsScene::mousePressEvent to allow
 //                     multiple item selection without needing the Ctrl key.
 //------------------------------------------------------------------------------
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent)
@@ -134,8 +140,48 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent)
 
 
 //------------------------------------------------------------------------------
-// mouseReleaseEvent - Override of QGraphicsScene::mouseDoubleClickEvent to do
-//                     nothing.
+// mouseMoveEvent - Override of QGraphicsScene::mouseMoveEvent.
+//------------------------------------------------------------------------------
+void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* mouseEvent)
+{
+    QGraphicsScene::mouseMoveEvent(mouseEvent);
+}
+
+
+//------------------------------------------------------------------------------
+// mouseReleaseEvent - Override of QGraphicsScene::mouseReleaseEvent.
+//------------------------------------------------------------------------------
+void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
+{
+    // Get the item located at this mousePressEvent.
+    QGraphicsItem* itemUnderMouse =
+            itemAt(mouseEvent->scenePos(), QTransform());
+
+    if ( itemUnderMouse )
+    {
+        Card* card = qgraphicsitem_cast<Card*>(itemUnderMouse);
+
+        // Call the parent class' mousePressEvent if the item isn't a Card
+        // or we have set the cards to be moveable.
+        if ( !card || cardsMoveable )
+        {
+            if ( card && cardsMoveable )
+            {
+                if ( IsInsideTrickArea(mouseEvent->scenePos()) )
+                {
+                    card->SetPosition(GetCenterPos());
+                }
+            }
+
+            QGraphicsScene::mouseReleaseEvent(mouseEvent);
+        }
+    }
+}
+
+
+//------------------------------------------------------------------------------
+// mouseDoubleClickEvent - Override of QGraphicsScene::mouseDoubleClickEvent to
+//                         do nothing.
 //------------------------------------------------------------------------------
 void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent*)
 {
@@ -149,6 +195,25 @@ void Scene::ConnectSignals(void)
 {
     /*QObject::connect(dialog, SIGNAL(ExecuteDeal()),
                      this,   SIGNAL(ExecuteDeal()));*/
+}
+
+
+//------------------------------------------------------------------------------
+// IsInsideTrickArea - Check if a card was moved inside the trick area.
+//------------------------------------------------------------------------------
+bool Scene::IsInsideTrickArea(QPointF p)
+{
+    bool result = false;
+
+    if ( p.x() > playerTrickArea->x() &&
+         p.x() < playerTrickArea->x() + playerTrickArea->width() &&
+         p.y() > playerTrickArea->y() &&
+         p.y() < playerTrickArea->y() + playerTrickArea->height() )
+    {
+        result = true;
+    }
+
+    return result;
 }
 
 
@@ -272,7 +337,7 @@ void Scene::SetUI(Scene::PhaseType phase)
 
         case TRICK:
             title->setText("Trick Phase");
-            text->setText("Select cards of the same\nsuit for Set declaration.");
+            text->setText("Drag a card to the playing field.");
 
             primaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
             secondaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
