@@ -15,6 +15,10 @@
 #include <QPropertyAnimation>
 #include <QPointF>
 
+#include <QDrag>
+#include <QMimeData>
+#include <QMouseEvent>
+
 
 //------------------------------------------------------------------------------
 // My Header Files
@@ -70,6 +74,9 @@ public:
     void                UpdateSelection(void);
     void                SetPosition(QPointF newPosition, int zPosition = -1);
     void                UpdateAnimation(bool noAnimation);
+
+protected:
+    void                mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
 
 private:
     void                Initialize(void);

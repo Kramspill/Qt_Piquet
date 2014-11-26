@@ -136,6 +136,17 @@ void Card::UpdateAnimation(bool noAnimation)
 
 
 //------------------------------------------------------------------------------
+// mouseReleaseEvent - Handle mouse release events.
+//------------------------------------------------------------------------------
+void Card::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+{
+    QGraphicsItem::mouseReleaseEvent(event);
+
+    UpdateAnimation(false);
+}
+
+
+//------------------------------------------------------------------------------
 // Initialize - Initialize the states and transitions of a Card.
 //------------------------------------------------------------------------------
 void Card::Initialize(void)
