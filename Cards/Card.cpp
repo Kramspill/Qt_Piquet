@@ -173,7 +173,8 @@ void Card::Initialize(void)
     InCpuHandState*        inCpuHandState        = new InCpuHandState();
     InPlayerDiscardsState* inPlayerDiscardsState = new InPlayerDiscardsState();
     InCpuDiscardsState*    inCpuDiscardsState    = new InCpuDiscardsState();
-    InCurrentTrickState*   inCurrentTrickState   = new InCurrentTrickState();
+    InPlayerTrickState*    inPlayerTrickState    = new InPlayerTrickState();
+    InCpuTrickState*       inCpuTrickState       = new InCpuTrickState();
     InPreviousTricksState* inPreviousTricksState = new InPreviousTricksState();
 
     // Add the states to the state machine.
@@ -183,7 +184,8 @@ void Card::Initialize(void)
     stateMachine->addState(inCpuHandState);
     stateMachine->addState(inPlayerDiscardsState);
     stateMachine->addState(inCpuDiscardsState);
-    stateMachine->addState(inCurrentTrickState);
+    stateMachine->addState(inPlayerTrickState);
+    stateMachine->addState(inCpuTrickState);
     stateMachine->addState(inPreviousTricksState);
 
     // Set the initial state.
@@ -204,14 +206,14 @@ void Card::Initialize(void)
     // Setup the transitions from the InPlayerHand state.
     inPlayerHandState->addTransition(this, SIGNAL(InPlayerDiscards()),
                                      inPlayerDiscardsState);
-    //inPlayerHandState->addTransition(SomeObject, SIGNAL(inCurrentTrick()),
-    //                                 inCurrentTrickState);
+    inPlayerHandState->addTransition(this, SIGNAL(InPlayerTrick()),
+                                     inPlayerTrickState);
 
     // Setup the transitions from the InCpuHand state.
     inCpuHandState->addTransition(this, SIGNAL(InCpuDiscards()),
                                   inCpuDiscardsState);
-    //inCpuHandState->addTransition(SomeObject, SIGNAL(inCurrentTrick()),
-    //                              inCurrentTrickState);
+    inCpuHandState->addTransition(this, SIGNAL(InCpuTrick()),
+                                  inCpuTrickState);
 /*
     // Setup the transitions from the InPlayerDiscards state.
     inPlayerDiscardsState->addTransition(SomeObject, SIGNAL(inDeck()),
@@ -231,8 +233,13 @@ void Card::Initialize(void)
     */
 
     // Link the card to the signals from CardStates.
-    connect(inPlayerHandState, SIGNAL(entered()), this, SLOT(FlipCard()));
-    connect(inPlayerHandState, SIGNAL(exited()), this, SLOT(FlipCard()));
+    connect(inPlayerHandState,  SIGNAL(entered()), this, SLOT(FlipCard()));
+    connect(inPlayerHandState,  SIGNAL(exited()),  this, SLOT(FlipCard()));
+    connect(inPlayerTrickState, SIGNAL(entered()), this, SLOT(FlipCard()));
+    connect(inPlayerTrickState, SIGNAL(exited()),  this, SLOT(FlipCard()));
+    connect(inCpuTrickState,    SIGNAL(entered()), this, SLOT(FlipCard()));
+    connect(inCpuTrickState,    SIGNAL(exited()),  this, SLOT(FlipCard()));
+
     connect(inCpuHandState, SIGNAL(entered()), this, SLOT(FlipCard()));
     connect(inCpuHandState, SIGNAL(exited()), this, SLOT(FlipCard()));
 

@@ -91,6 +91,8 @@ signals:
     void                InCpuHand(void);
     void                InPlayerDiscards(void);
     void                InCpuDiscards(void);
+    void                InPlayerTrick(void);
+    void                InCpuTrick(void);
 
 private:
     QSvgRenderer*       renderer;
