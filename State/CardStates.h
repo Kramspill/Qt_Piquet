@@ -115,12 +115,29 @@ protected:
 
 
 //------------------------------------------------------------------------------
-// Class: InCurrentTrickState
+// Class: InPlayerTrickState
 //------------------------------------------------------------------------------
-class InCurrentTrickState : public QState
+class InPlayerTrickState : public QState
 {
 public:
-    InCurrentTrickState(QState* parent = 0) :
+    InPlayerTrickState(QState* parent = 0) :
+        QState(parent)
+    {
+    }
+
+protected:
+    void onEntry(QEvent*) {}
+    void onExit(QEvent*)  {}
+};
+
+
+//------------------------------------------------------------------------------
+// Class: InCpuTrickState
+//------------------------------------------------------------------------------
+class InCpuTrickState : public QState
+{
+public:
+    InCpuTrickState(QState* parent = 0) :
         QState(parent)
     {
     }
