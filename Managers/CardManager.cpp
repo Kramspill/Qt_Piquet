@@ -51,6 +51,8 @@ void CardManager::Initialize(Scene* scene)
     cpuHand        = new CardArray(CardArray::CPUHAND,         x-150,  y-295);
     playerDiscards = new CardArray(CardArray::PLAYERDISCARDS,  x+50,   y+20);
     cpuDiscards    = new CardArray(CardArray::CPUDISCARDS,     x+50,   y-150);
+    playerTrick    = new CardArray(CardArray::PLAYERTRICK,     x-130,  y+20);
+    cpuTrick       = new CardArray(CardArray::CPUTRICK,        x-130,  y-130);
     previousTricks = new CardArray(CardArray::PREVIOUSTRICKS,  x-100,  y);
 
     // Initialize the timer to allow animation to finish before informing of
@@ -126,6 +128,24 @@ void CardManager::TransferSelectedCards(CardArray* source,
 
 
 //------------------------------------------------------------------------------
+// TransferCard - Transfer a single card to another CardArray.
+//------------------------------------------------------------------------------
+void CardManager::TransferCard(CardArray* source, CardArray* destination,
+                               Card* card)
+{
+    // Remove the card from the source array, and add it to the destination.
+    source->RemoveCard(card);
+    destination->AddCard(card);
+
+    // Update the number of cards transferred.
+    numOfCardsTransferred = 1;
+
+    // Delay the signal of transfer completion for animation purposes.
+    transitionTimer->start(100);
+}
+
+
+//------------------------------------------------------------------------------
 // GetDesiredCardArray - Return the CardArray associated with a given type.
 //------------------------------------------------------------------------------
 CardArray* CardManager::GetDesiredCardArray(
@@ -159,6 +179,14 @@ CardArray* CardManager::GetDesiredCardArray(
             returnedArray = cpuDiscards;
             break;
 
+        case CardArray::PLAYERTRICK:
+            returnedArray = playerTrick;
+            break;
+
+        case CardArray::CPUTRICK:
+            returnedArray = cpuTrick;
+            break;
+
         case CardArray::PREVIOUSTRICKS:
             returnedArray = previousTricks;
             break;
@@ -168,15 +196,6 @@ CardArray* CardManager::GetDesiredCardArray(
     }
 
     return returnedArray;
-}
-
-
-//------------------------------------------------------------------------------
-// GetCurrentTrick - Accessor for CardManager's currentTrick member variable.
-//------------------------------------------------------------------------------
-Card CardManager::GetCurrentTrick(void)
-{
-    return currentTrick;
 }
 
 

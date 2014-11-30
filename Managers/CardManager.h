@@ -40,10 +40,12 @@ public:
                                            int numberOfCards);
     void                     TransferSelectedCards(CardArray* source,
                                                    CardArray* destination);
+    void                     TransferCard(CardArray* source,
+                                          CardArray* destination,
+                                          Card* card);
 
     CardArray*               GetDesiredCardArray(
                                         CardArray::CardArrayType cardArrayType);
-    Card                     GetCurrentTrick(void);
 
     ScoreManager::PhaseScore GetSelectionScore(CardArray::SelectionType phase);
 
@@ -82,7 +84,8 @@ private:
     CardArray*               playerDiscards;
     CardArray*               cpuDiscards;
     CardArray*               previousTricks;
-    Card                     currentTrick;
+    CardArray*               playerTrick;
+    CardArray*               cpuTrick;
     QTimer*                  transitionTimer;
     int                      numOfCardsTransferred;
 };
