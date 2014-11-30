@@ -169,11 +169,9 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
             {
                 if ( IsInsideTrickArea(mouseEvent->scenePos()) )
                 {
-                    QPointF p = GetCenterPos();
-                    p.setX(p.x() - 130);
-                    p.setY(p.y() + 20);
-
-                    card->SetPosition(p);
+                    emit RequestACardTransfer(CardArray::PLAYERHAND,
+                                              CardArray::PLAYERTRICK,
+                                              card);
                 }
             }
 
@@ -352,6 +350,9 @@ void Scene::SetUI(Scene::PhaseType phase)
                                 this,            SIGNAL(DeclareSet()));
             QObject::disconnect(secondaryAction, SIGNAL(clicked()),
                                 this,            SIGNAL(SkipSet()));
+
+            primaryAction->setVisible(false);
+            secondaryAction->setVisible(false);
             break;
     };
 }

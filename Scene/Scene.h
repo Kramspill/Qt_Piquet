@@ -21,6 +21,7 @@
 // My Header Files
 //------------------------------------------------------------------------------
 #include "Cards/Card.h"
+#include "Cards/CardArray.h"
 #include "Dialog.h"
 
 
@@ -69,6 +70,9 @@ public slots:
     void         SetCardsMoveable(bool moveable);
 
 signals:
+    void         RequestACardTransfer(CardArray::CardArrayType,
+                                      CardArray::CardArrayType,
+                                      Card*);
     void         SignalCardSelectionsChanged(Card*);
     void         ExecuteDeal(void);
     void         ExecuteExchange(void);
