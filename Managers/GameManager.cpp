@@ -200,6 +200,15 @@ void GameManager::ConnectSignals(void)
                      SIGNAL(SkipSet()),
                      this,
                      SLOT(SkipSet()));
+
+    QObject::connect(scene,
+                     SIGNAL(RequestACardTransfer(CardArray::CardArrayType,
+                                                 CardArray::CardArrayType,
+                                                 Card*)),
+                     this,
+                     SLOT(RequestACardTransfer(CardArray::CardArrayType,
+                                               CardArray::CardArrayType,
+                                               Card*)));
 }
 
 
@@ -219,6 +228,21 @@ void GameManager::RequestCardTransfer(CardArray::CardArrayType src,
         cardManager->TransferSelectedCards(source, destination);
     else
         cardManager->TransferCards(source, destination, numOfCards);
+}
+
+
+//------------------------------------------------------------------------------
+// RequestACardTransfer - Request a card to be transferred to a different
+//                        CardArray.
+//------------------------------------------------------------------------------
+void GameManager::RequestACardTransfer(CardArray::CardArrayType src,
+                                       CardArray::CardArrayType dest,
+                                       Card* card)
+{
+    CardArray* source      = cardManager->GetDesiredCardArray(src);
+    CardArray* destination = cardManager->GetDesiredCardArray(dest);
+
+    cardManager->TransferCard(source, destination, card);
 }
 
 

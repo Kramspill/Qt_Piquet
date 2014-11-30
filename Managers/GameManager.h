@@ -51,6 +51,9 @@ private slots:
                                       CardArray::CardArrayType dest,
                                       int  numOfCards,
                                       bool transferSelectedCards);
+    void          RequestACardTransfer(CardArray::CardArrayType src,
+                                       CardArray::CardArrayType dest,
+                                       Card*card);
     void          DeclareSelection(CardArray::SelectionType phase);
     void          SelectAIAction(AI::AIAction action);
     void          UpdateAI(void);
