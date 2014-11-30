@@ -42,6 +42,8 @@ public:
         TALON,
         PLAYERDISCARDS,
         CPUDISCARDS,
+        PLAYERTRICK,
+        CPUTRICK,
         PREVIOUSTRICKS
     };
 

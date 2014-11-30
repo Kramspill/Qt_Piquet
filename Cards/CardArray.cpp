@@ -600,6 +600,14 @@ void CardArray::UpdateCardState(Card* card, bool noAnimation)
             emit card->InCpuDiscards();
             break;
 
+        case PLAYERTRICK:
+            emit card->InPlayerTrick();
+            break;
+
+        case CPUTRICK:
+            emit card->InCpuTrick();
+            break;
+
         default:
             break;
     }
