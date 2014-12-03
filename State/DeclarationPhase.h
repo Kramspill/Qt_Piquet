@@ -21,6 +21,7 @@
 //------------------------------------------------------------------------------
 #include "Cards/CardArray.h"
 #include "Scene/Scene.h"
+#include "AI/AI.h"
 
 
 //------------------------------------------------------------------------------
@@ -58,18 +59,27 @@ private slots:
     void           PlayerPoint(void);
     void           PlayerSequence(void);
     void           PlayerSet(void);
+    void           PlayerInitialTrick(void);
     void           CpuPoint(void);
     void           CpuSequence(void);
     void           CpuSet(void);
-    void           InitialTrick(void);
+    void           CpuProcessing(void);
+    void           CpuInitialTrick(void);
 
 signals:
+    void           RequestCardTransfer(CardArray::CardArrayType,
+                                       CardArray::CardArrayType,
+                                       int, bool);
     void           SetCardsSelectable(bool, int);
     void           SetCardsMoveable(bool);
+    void           SignalAI(AI::AIAction);
     void           SetUI(Scene::PhaseType);
+    void           UpdateAI(void);
     void           DeclareSelection(CardArray::SelectionType);
     void           DeclarationPhaseFinished(void);
 
+    void           TransferComplete(void);
+    void           AIProcessingComplete(void);
     void           PointComplete(void);
     void           SequenceComplete(void);
     void           SetComplete(void);
@@ -84,7 +94,9 @@ private:
     QState*        cpuPoint;
     QState*        cpuSequence;
     QState*        cpuSet;
-    QState*        initialTrick;
+    QState*        cpuProcessing;
+    QState*        playerInitialTrick;
+    QState*        cpuInitialTrick;
     QFinalState*   finalState;
     PhaseOutcome   phaseStatus[3];
 };
