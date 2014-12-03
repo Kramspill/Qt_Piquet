@@ -67,7 +67,8 @@ void StateManager::Initialize(void)
                                  SIGNAL(ExchangePhaseFinished()),
                                  declarationPhase);
     /*
-    declarationPhase->addTransition(SomeObject, SIGNAL(SomeSignal()),
+    declarationPhase->addTransition(declarationPhase,
+                                    SIGNAL(DeclarationPhaseFinished()),
                                     trickPhase);
     trickPhase->addTransition(SomeObject, SIGNAL(SomeSignal()),
                               playSummaryState);
@@ -157,6 +158,25 @@ void StateManager::ConnectSignals(void)
                      SIGNAL(DeclareSelection(CardArray::SelectionType)),
                      this,
                      SIGNAL(DeclareSelection(CardArray::SelectionType)));
+
+    QObject::connect(declarationPhase,
+                     SIGNAL(SignalAI(AI::AIAction)),
+                     this,
+                     SIGNAL(SignalAI(AI::AIAction)));
+
+    QObject::connect(declarationPhase,
+                     SIGNAL(UpdateAI()),
+                     this,
+                     SIGNAL(UpdateAI()));
+
+    QObject::connect(declarationPhase,
+                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
+                                                CardArray::CardArrayType,
+                                                int, bool)),
+                     this,
+                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
+                                                CardArray::CardArrayType,
+                                                int, bool)));
 }
 
 
@@ -173,6 +193,10 @@ void StateManager::SignalTransferComplete(int numOfCardsTransferred)
     else if ( stateMachine->configuration().contains(exchangePhase) )
     {
         emit exchangePhase->TransferComplete(numOfCardsTransferred);
+    }
+    else if ( stateMachine->configuration().contains(declarationPhase) )
+    {
+        emit declarationPhase->TransferComplete();
     }
 }
 
