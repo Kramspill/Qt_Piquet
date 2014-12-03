@@ -43,6 +43,7 @@ public:
                                         int index,
                                         CardArray::CardArrayType location);
     void                     FlagDispensableCards(CardArray* cpuHand);
+    void                     SelectTrick(CardArray* cpuHand);
 
     ScoreManager::PhaseScore CalculatePoint(void);
     ScoreManager::PhaseScore CalculateSequence(void);

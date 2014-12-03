@@ -114,6 +114,20 @@ void KnowledgeBase::FlagDispensableCards(CardArray* cpuHand)
 
 
 //------------------------------------------------------------------------------
+// SelectTrick - Choose a card from the cpu's hand to play.
+//------------------------------------------------------------------------------
+void KnowledgeBase::SelectTrick(CardArray* cpuHand)
+{
+    // For now, we just get the top card.
+    Card* card = cpuHand->GetCard(0);
+
+    card->setFlag(QGraphicsItem::ItemIsSelectable, true);
+    card->setSelected(true);
+    emit SignalCardSelectionsChanged(card, CardArray::CPUHAND);
+}
+
+
+//------------------------------------------------------------------------------
 // CalculatePoint - Calculate the cpu's best Point.
 //------------------------------------------------------------------------------
 ScoreManager::PhaseScore KnowledgeBase::CalculatePoint(void)
