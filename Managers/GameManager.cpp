@@ -293,6 +293,7 @@ void GameManager::SelectAIAction(AI::AIAction action)
             break;
 
         case AI::TRICK:
+            ai->SelectTrickToPlay();
             break;
 
         default:
