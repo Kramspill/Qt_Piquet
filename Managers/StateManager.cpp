@@ -52,10 +52,8 @@ void StateManager::Initialize(void)
     declarationPhase = new DeclarationPhase(stateMachine);
     declarationPhase->Initialize();
 
-    /*
     trickPhase = new TrickPhase();
     trickPhase->Initialize();
-    */
 
     // Set the initial state for the state machine.
     stateMachine->setInitialState(dealPhase);
@@ -66,10 +64,10 @@ void StateManager::Initialize(void)
     exchangePhase->addTransition(exchangePhase,
                                  SIGNAL(ExchangePhaseFinished()),
                                  declarationPhase);
-    /*
     declarationPhase->addTransition(declarationPhase,
                                     SIGNAL(DeclarationPhaseFinished()),
                                     trickPhase);
+    /*
     trickPhase->addTransition(SomeObject, SIGNAL(SomeSignal()),
                               playSummaryState);
     */
@@ -177,6 +175,41 @@ void StateManager::ConnectSignals(void)
                      SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
                                                 CardArray::CardArrayType,
                                                 int, bool)));
+
+    // Connect signals to/fom the trick phase state.
+    QObject::connect(trickPhase,
+                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
+                                                CardArray::CardArrayType,
+                                                int, bool)),
+                     this,
+                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
+                                                CardArray::CardArrayType,
+                                                int, bool)));
+
+    QObject::connect(trickPhase,
+                     SIGNAL(SignalAI(AI::AIAction)),
+                     this,
+                     SIGNAL(SignalAI(AI::AIAction)));
+
+    QObject::connect(trickPhase,
+                     SIGNAL(UpdateAI()),
+                     this,
+                     SIGNAL(UpdateAI()));
+
+    QObject::connect(trickPhase,
+                     SIGNAL(SetCardsMoveable(bool)),
+                     this,
+                     SIGNAL(SetCardsMoveable(bool)));
+
+    QObject::connect(trickPhase,
+                     SIGNAL(CheckTrick(bool)),
+                     this,
+                     SIGNAL(CheckTrick(bool)));
+
+    QObject::connect(this,
+                     SIGNAL(TrickResult(bool)),
+                     trickPhase,
+                     SLOT(TrickResult(bool)));
 }
 
 
@@ -197,6 +230,10 @@ void StateManager::SignalTransferComplete(int numOfCardsTransferred)
     else if ( stateMachine->configuration().contains(declarationPhase) )
     {
         emit declarationPhase->TransferComplete();
+    }
+    else if ( stateMachine->configuration().contains(trickPhase) )
+    {
+        trickPhase->PlayerMoveFinished(numOfCardsTransferred);
     }
 }
 

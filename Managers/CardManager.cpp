@@ -53,7 +53,7 @@ void CardManager::Initialize(Scene* scene)
     cpuDiscards    = new CardArray(CardArray::CPUDISCARDS,     x+50,   y-150);
     playerTrick    = new CardArray(CardArray::PLAYERTRICK,     x-130,  y+20);
     cpuTrick       = new CardArray(CardArray::CPUTRICK,        x-130,  y-130);
-    previousTricks = new CardArray(CardArray::PREVIOUSTRICKS,  x-100,  y);
+    previousTricks = new CardArray(CardArray::PREVIOUSTRICKS,  x-300,  y-70);
 
     // Initialize the timer to allow animation to finish before informing of
     // state changes.
@@ -402,6 +402,42 @@ bool CardManager::CheckSelection(CardArray::SelectionType phase,
     CardArray* cardArray = GetDesiredCardArray(cardArrayType);
 
     return cardArray->CheckSelection(phase);
+}
+
+
+//------------------------------------------------------------------------------
+// CheckTrick - Check the cards currently in play for a trick.
+//------------------------------------------------------------------------------
+void CardManager::CheckTrick(bool player)
+{
+    Card* playerCard = playerTrick->GetCard(0);
+    Card* cpuCard    = cpuTrick->GetCard(0);
+
+    // Check for same suit condition.
+    if ( playerCard->GetSuit() != cpuCard->GetSuit() )
+    {
+        emit TrickResult(player);
+    }
+    else
+    {
+        Card::Rank playerRank = playerCard->GetRank();
+        Card::Rank cpuRank    = cpuCard->GetRank();
+
+        if ( playerRank > cpuRank )
+        {
+            emit TrickResult(true);
+        }
+        else
+        {
+            emit TrickResult(false);
+        }
+    }
+
+    // Move the cards to previousTricks pile.
+    TransferCard(playerTrick, previousTricks, playerCard);
+    TransferCard(cpuTrick,    previousTricks, cpuCard);
+
+    numOfCardsTransferred = 2;
 }
 
 

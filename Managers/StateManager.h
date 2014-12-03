@@ -61,6 +61,9 @@ signals:
     void              SignalAI(AI::AIAction);
     void              UpdateAI(void);
 
+    void              CheckTrick(bool);
+    void              TrickResult(bool);
+
 private:
     QStateMachine*    stateMachine;
     DealPhase*        dealPhase;

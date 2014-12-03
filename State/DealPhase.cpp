@@ -105,7 +105,7 @@ void DealPhase::ResetDealCounter(void)
 
 
 //------------------------------------------------------------------------------
-// ConnectSignals - Setup the work done in each state along with aadditional
+// ConnectSignals - Setup the work done in each state along with additional
 //                  necessary signals.
 //------------------------------------------------------------------------------
 void DealPhase::ConnectSignals(void)

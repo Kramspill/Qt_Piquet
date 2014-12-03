@@ -60,10 +60,10 @@ private slots:
     void           PlayerSequence(void);
     void           PlayerSet(void);
     void           PlayerInitialTrick(void);
+    void           ExitPlayerInitialTrick(void);
     void           CpuPoint(void);
     void           CpuSequence(void);
     void           CpuSet(void);
-    void           CpuProcessing(void);
     void           CpuInitialTrick(void);
 
 signals:
@@ -79,7 +79,6 @@ signals:
     void           DeclarationPhaseFinished(void);
 
     void           TransferComplete(void);
-    void           AIProcessingComplete(void);
     void           PointComplete(void);
     void           SequenceComplete(void);
     void           SetComplete(void);
@@ -94,7 +93,6 @@ private:
     QState*        cpuPoint;
     QState*        cpuSequence;
     QState*        cpuSet;
-    QState*        cpuProcessing;
     QState*        playerInitialTrick;
     QState*        cpuInitialTrick;
     QFinalState*   finalState;

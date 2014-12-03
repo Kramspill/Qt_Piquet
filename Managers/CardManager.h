@@ -68,6 +68,7 @@ public slots:
     bool                     CheckSelection(CardArray::SelectionType phase,
                                             CardArray::CardArrayType
                                          cardArrayType = CardArray::PLAYERHAND);
+    void                     CheckTrick(bool player);
 
 private slots:
     void                     SignalTransferComplete(void);
@@ -75,6 +76,7 @@ private slots:
 signals:
     void                     TransferComplete(int);
     void                     InformCardsMoveable(bool);
+    void                     TrickResult(bool);
 
 private:
     CardArray*               deck;

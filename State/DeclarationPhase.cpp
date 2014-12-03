@@ -56,7 +56,6 @@ void DeclarationPhase::Initialize(void)
     cpuPoint           = new QState(stateMachine);
     cpuSequence        = new QState(stateMachine);
     cpuSet             = new QState(stateMachine);
-    cpuProcessing      = new QState(stateMachine);
     playerInitialTrick = new QState(stateMachine);
     cpuInitialTrick    = new QState(stateMachine);
     finalState         = new QFinalState(stateMachine);
@@ -86,11 +85,7 @@ void DeclarationPhase::Initialize(void)
     cpuSequence->addTransition(this, SIGNAL(SequenceComplete()), cpuSet);
 
     // Setup the transitions from cpuSet.
-    cpuSet->addTransition(this, SIGNAL(SetComplete()), cpuProcessing);
-
-    // Setup the transitions from cpuSet.
-    cpuProcessing->addTransition(this, SIGNAL(AIProcessingComplete()),
-                                 cpuInitialTrick);
+    cpuSet->addTransition(this, SIGNAL(SetComplete()), cpuInitialTrick);
 
     // Setup the transitions from cpuInitialTrick.
     cpuInitialTrick->addTransition(this, SIGNAL(TransferComplete()), finalState);
@@ -117,10 +112,6 @@ void DeclarationPhase::PhaseComplete(void)
     else if ( stateMachine->configuration().contains(playerSet) )
     {
         emit SetComplete();
-    }
-    else if ( stateMachine->configuration().contains(cpuProcessing) )
-    {
-        emit AIProcessingComplete();
     }
 }
 
@@ -155,11 +146,12 @@ void DeclarationPhase::ConnectSignals(void)
     connect(playerSet,      SIGNAL(entered()), this, SLOT(PlayerSet()));
     connect(playerInitialTrick, SIGNAL(entered()),
             this,               SLOT(PlayerInitialTrick()));
+    connect(playerInitialTrick, SIGNAL(exited()),
+            this,               SLOT(ExitPlayerInitialTrick()));
 
     connect(cpuPoint,        SIGNAL(entered()), this, SLOT(CpuPoint()));
     connect(cpuSequence,     SIGNAL(entered()), this, SLOT(CpuSequence()));
     connect(cpuSet,          SIGNAL(entered()), this, SLOT(CpuSet()));
-    connect(cpuProcessing,   SIGNAL(entered()), this, SLOT(CpuProcessing()));
     connect(cpuInitialTrick, SIGNAL(entered()), this, SLOT(CpuInitialTrick()));
 
     connect(stateMachine, SIGNAL(finished()), this,
@@ -210,6 +202,16 @@ void DeclarationPhase::PlayerInitialTrick(void)
 
 
 //------------------------------------------------------------------------------
+// ExitPlayerInitialTrick - Function that performs the required operations for
+//                          the playerInitialTrick exited() state.
+//------------------------------------------------------------------------------
+void DeclarationPhase::ExitPlayerInitialTrick(void)
+{
+    emit SetCardsMoveable(false);
+}
+
+
+//------------------------------------------------------------------------------
 // CpuPoint - Function that performs the required operations for the cpuPoint
 //            state.
 //------------------------------------------------------------------------------
@@ -242,22 +244,13 @@ void DeclarationPhase::CpuSet(void)
 
 
 //------------------------------------------------------------------------------
-// CpuProcessing - Function that gives the cpu time to think about it's next
-//                 move.
-//------------------------------------------------------------------------------
-void DeclarationPhase::CpuProcessing(void)
-{
-    emit UpdateAI();
-    emit SignalAI(AI::TRICK);
-}
-
-
-//------------------------------------------------------------------------------
 // CpuInitialTrick - Function that performs the required operations for the
 //                   cpuInitialTrick state.
 //------------------------------------------------------------------------------
 void DeclarationPhase::CpuInitialTrick(void)
 {
+    emit UpdateAI();
+    emit SignalAI(AI::TRICK);
     emit RequestCardTransfer(CardArray::CPUHAND, CardArray::CPUTRICK,
                              0, true);
 }
