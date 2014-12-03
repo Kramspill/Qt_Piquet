@@ -45,6 +45,7 @@ public:
     void                   UpdateHand(CardArray* newCpuHand);
 
     void                   SelectCardsToDiscard(void);
+    void                   SelectTrickToPlay(void);
     ScoreManager::Response DeclarePoint(ScoreManager::PhaseScore userScore);
     ScoreManager::Response DeclareSequence(ScoreManager::PhaseScore userScore);
     ScoreManager::Response DeclareSet(ScoreManager::PhaseScore userScore);

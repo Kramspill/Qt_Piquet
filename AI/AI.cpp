@@ -85,6 +85,17 @@ void AI::SelectCardsToDiscard(void)
 
 
 //------------------------------------------------------------------------------
+// SelectTrickToPlay - Select a cars to play for the Trick phase.
+//------------------------------------------------------------------------------
+void AI::SelectTrickToPlay(void)
+{
+    knowledgeBase->SelectTrick(cpuHand);
+
+    emit AIProcessingComplete();
+}
+
+
+//------------------------------------------------------------------------------
 // DeclarePoint - Select cards for the Point declaration.
 //------------------------------------------------------------------------------
 ScoreManager::Response AI::DeclarePoint(ScoreManager::PhaseScore userScore)
