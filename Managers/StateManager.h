@@ -61,8 +61,8 @@ signals:
     void              SignalAI(AI::AIAction);
     void              UpdateAI(void);
 
-    void              CheckTrick(bool);
-    void              TrickResult(bool);
+    void              CheckTrick(int);
+    void              TrickResult(int);
 
 private:
     QStateMachine*    stateMachine;

@@ -41,7 +41,7 @@ TrickPhase::~TrickPhase(void)
 void TrickPhase::Initialize(void)
 {
     // For now assume player goes first.
-    player = true;
+    player = 1;
 
     // Initialize the state machine.
     stateMachine = new QStateMachine();
@@ -59,10 +59,10 @@ void TrickPhase::Initialize(void)
     scoreTrick->addTransition(this,  SIGNAL(CpusTurn()),    cpuTrick);
 
     // Setup the transitions from playerTrick.
-    playerTrick->addTransition(this, SIGNAL(CpusTurn()),    cpuTrick);
+    playerTrick->addTransition(this, SIGNAL(CheckTrick()),    scoreTrick);
 
     // Setup the transitions from cpuTrick.
-    cpuTrick->addTransition(this,    SIGNAL(PlayersTurn()), playerTrick);
+    cpuTrick->addTransition(this,    SIGNAL(CheckTrick()), scoreTrick);
 
     // Setup the work done in each state.
     ConnectSignals();
@@ -107,13 +107,13 @@ void TrickPhase::ConnectSignals(void)
 // PlayerMoveFinished - When a card is transferred, check if the user did the
 //                      transferral and cycle the state.
 //------------------------------------------------------------------------------
-void TrickPhase::PlayerMoveFinished(int numOfCardsTransferred)
+void TrickPhase::MoveFinished(int numOfCardsTransferred)
 {
-    if ( stateMachine->configuration().contains(playerTrick) &&
-         numOfCardsTransferred == 1 )
+    if ( (stateMachine->configuration().contains(playerTrick) ||
+          stateMachine->configuration().contains(cpuTrick)) &&
+         numOfCardsTransferred < 2 )
     {
-        // ERROR HERE!!!
-        emit CpusTurn();
+        emit CheckTrick();
     }
 }
 
@@ -135,11 +135,6 @@ void TrickPhase::ScoreTrick(void)
 void TrickPhase::PlayerTrick(void)
 {
     emit SetCardsMoveable(true);
-
-    if ( !player )
-    {
-        emit CheckTrick(player);
-    }
 }
 
 
@@ -163,15 +158,6 @@ void TrickPhase::CpuTrick(void)
     emit SignalAI(AI::TRICK);
     emit RequestCardTransfer(CardArray::CPUHAND, CardArray::CPUTRICK,
                              0, true);
-
-    if ( player )
-    {
-        emit CheckTrick(player);
-    }
-    else
-    {
-        emit PlayersTurn();
-    }
 }
 
 
@@ -179,16 +165,22 @@ void TrickPhase::CpuTrick(void)
 // TrickResult - Function that gets called to update who should lead the next
 //               trick.
 //------------------------------------------------------------------------------
-void TrickPhase::TrickResult(bool winningPlayer)
+void TrickPhase::TrickResult(int winningPlayer)
 {
-    player = winningPlayer;
-
-    if ( winningPlayer )
+    if ( winningPlayer == 0 || winningPlayer == 1 )
     {
-        emit PlayersTurn();
+        player = winningPlayer;
+
+        if ( player == 1 )
+            emit PlayersTurn();
+        else
+            emit CpusTurn();
     }
     else
     {
-        emit CpusTurn();
+        if ( player == 0 )
+            emit PlayersTurn();
+        else
+            emit CpusTurn();
     }
 }

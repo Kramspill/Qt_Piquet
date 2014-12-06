@@ -42,7 +42,7 @@ private:
     void           ConnectSignals(void);
 
 public slots:
-    void           PlayerMoveFinished(int numOfCardsTransferred);
+    void           MoveFinished(int numOfCardsTransferred);
 
 private slots:
     void           ScoreTrick(void);
@@ -50,7 +50,7 @@ private slots:
     void           ExitPlayerTrick(void);
     void           CpuTrick(void);
 
-    void           TrickResult(bool winningPlayer);
+    void           TrickResult(int winningPlayer);
 
 signals:
     void           TrickPhaseFinished(void);
@@ -61,7 +61,8 @@ signals:
                                        int, bool);
     void           TransferComplete(void);
     void           SetCardsMoveable(bool);
-    void           CheckTrick(bool);
+    void           CheckTrick(int);
+    void           CheckTrick();
 
     void           PlayersTurn(void);
     void           CpusTurn(void);
@@ -71,7 +72,7 @@ private:
     QState*        playerTrick;
     QState*        cpuTrick;
     QState*        scoreTrick;
-    bool           player;
+    int            player;
 };
 
 #endif // TRICKPHASE_H

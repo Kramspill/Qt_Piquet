@@ -52,7 +52,7 @@ void StateManager::Initialize(void)
     declarationPhase = new DeclarationPhase(stateMachine);
     declarationPhase->Initialize();
 
-    trickPhase = new TrickPhase();
+    trickPhase = new TrickPhase(stateMachine);
     trickPhase->Initialize();
 
     // Set the initial state for the state machine.
@@ -67,7 +67,7 @@ void StateManager::Initialize(void)
     declarationPhase->addTransition(declarationPhase,
                                     SIGNAL(DeclarationPhaseFinished()),
                                     trickPhase);
-    /*
+/*
     trickPhase->addTransition(SomeObject, SIGNAL(SomeSignal()),
                               playSummaryState);
     */
@@ -202,14 +202,14 @@ void StateManager::ConnectSignals(void)
                      SIGNAL(SetCardsMoveable(bool)));
 
     QObject::connect(trickPhase,
-                     SIGNAL(CheckTrick(bool)),
+                     SIGNAL(CheckTrick(int)),
                      this,
-                     SIGNAL(CheckTrick(bool)));
+                     SIGNAL(CheckTrick(int)));
 
     QObject::connect(this,
-                     SIGNAL(TrickResult(bool)),
+                     SIGNAL(TrickResult(int)),
                      trickPhase,
-                     SLOT(TrickResult(bool)));
+                     SLOT(TrickResult(int)));
 }
 
 
@@ -233,7 +233,7 @@ void StateManager::SignalTransferComplete(int numOfCardsTransferred)
     }
     else if ( stateMachine->configuration().contains(trickPhase) )
     {
-        trickPhase->PlayerMoveFinished(numOfCardsTransferred);
+        trickPhase->MoveFinished(numOfCardsTransferred);
     }
 }
 

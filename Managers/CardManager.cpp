@@ -408,36 +408,48 @@ bool CardManager::CheckSelection(CardArray::SelectionType phase,
 //------------------------------------------------------------------------------
 // CheckTrick - Check the cards currently in play for a trick.
 //------------------------------------------------------------------------------
-void CardManager::CheckTrick(bool player)
+void CardManager::CheckTrick(int player)
 {
     Card* playerCard = playerTrick->GetCard(0);
     Card* cpuCard    = cpuTrick->GetCard(0);
 
-    // Check for same suit condition.
-    if ( playerCard->GetSuit() != cpuCard->GetSuit() )
-    {
-        emit TrickResult(player);
-    }
-    else
-    {
-        Card::Rank playerRank = playerCard->GetRank();
-        Card::Rank cpuRank    = cpuCard->GetRank();
+    // Check that the tricks have cards in them.
+    int playerSize   = playerTrick->GetSize();
+    int cpuSize      = cpuTrick->GetSize();
 
-        if ( playerRank > cpuRank )
+
+    if ( playerSize == 1 && cpuSize == 1 && playerCard && cpuCard )
+    {
+        // Check for same suit condition.
+        if ( playerCard->GetSuit() != cpuCard->GetSuit() )
         {
-            emit TrickResult(true);
+            emit TrickResult(player);
         }
         else
         {
-            emit TrickResult(false);
+            Card::Rank playerRank = playerCard->GetRank();
+            Card::Rank cpuRank    = cpuCard->GetRank();
+
+            if ( playerRank > cpuRank )
+            {
+                emit TrickResult(1);
+            }
+            else
+            {
+                emit TrickResult(0);
+            }
         }
+
+        // Move the cards to previousTricks pile.
+        TransferCard(playerTrick, previousTricks, playerCard);
+        TransferCard(cpuTrick,    previousTricks, cpuCard);
+
+        numOfCardsTransferred = 2;
     }
-
-    // Move the cards to previousTricks pile.
-    TransferCard(playerTrick, previousTricks, playerCard);
-    TransferCard(cpuTrick,    previousTricks, cpuCard);
-
-    numOfCardsTransferred = 2;
+    else
+    {
+        emit TrickResult(3);
+    }
 }
 
 

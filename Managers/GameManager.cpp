@@ -88,9 +88,9 @@ void GameManager::ConnectSignals(void)
                      SLOT(SignalTransferComplete(int)));
 
     QObject::connect(cardManager,
-                     SIGNAL(TrickResult(bool)),
+                     SIGNAL(TrickResult(int)),
                      stateManager,
-                     SIGNAL(TrickResult(bool)));
+                     SIGNAL(TrickResult(int)));
 
     QObject::connect(cardManager,
                      SIGNAL(InformCardsMoveable(bool)),
@@ -128,9 +128,9 @@ void GameManager::ConnectSignals(void)
                      SLOT(SetCardsMoveable(bool)));
 
     QObject::connect(stateManager,
-                     SIGNAL(CheckTrick(bool)),
+                     SIGNAL(CheckTrick(int)),
                      cardManager,
-                     SLOT(CheckTrick(bool)));
+                     SLOT(CheckTrick(int)));
 
     QObject::connect(stateManager,
                      SIGNAL(DeclareSelection(CardArray::SelectionType)),
