@@ -43,28 +43,28 @@ private:
     void           ConnectSignals(void);
 
 private slots:
-    void           DealToPlayer(void);
-    void           DealToCpu(void);
-    void           DealTalon(void);
+    void           DealToPlayer1(void);
+    void           DealToPlayer2(void);
+    void           DealToTalon(void);
 
 signals:
-    void           SetUI(Scene::PhaseType);
+    void           ExecuteDeal(void);
+    void           BeginDealTalon(void);
+    void           DealPhaseFinished(void);
 
     void           RequestCardTransfer(CardArray::CardArrayType,
                                        CardArray::CardArrayType,
                                        int, bool);
     void           TransferComplete(void);
 
-    void           ExecuteDeal(void);
-    void           BeginDealTalon(void);
-    void           DealPhaseFinished(void);
+    void           SetUI(Scene::PhaseType);
 
 private:
     QStateMachine* stateMachine;
-    QState*        initialState;
-    QState*        dealToPlayer;
-    QState*        dealToCpu;
-    QState*        dealTalon;
+    QState*        awaitingSignal;
+    QState*        dealToPlayer1;
+    QState*        dealToPlayer2;
+    QState*        dealToTalon;
     QFinalState*   finalState;
     int            dealCounter;
 };

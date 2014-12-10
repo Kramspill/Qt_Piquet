@@ -40,36 +40,38 @@ DealPhase::~DealPhase(void)
 //------------------------------------------------------------------------------
 void DealPhase::Initialize(void)
 {
-    // Initialize the dealCounter that determines when to deal the Talon.
-    ResetDealCounter();
-
     // Initialize the state machine.
     stateMachine = new QStateMachine();
 
     // Initialize the states within the state machine.
-    initialState = new QState(stateMachine);
-    dealToPlayer = new QState(stateMachine);
-    dealToCpu    = new QState(stateMachine);
-    dealTalon    = new QState(stateMachine);
-    finalState   = new QFinalState(stateMachine);
+    awaitingSignal = new QState(stateMachine);
+    dealToPlayer1  = new QState(stateMachine);
+    dealToPlayer2  = new QState(stateMachine);
+    dealToTalon    = new QState(stateMachine);
+    finalState     = new QFinalState(stateMachine);
 
     // Set the initial state for the state machine.
-    stateMachine->setInitialState(initialState);
+    stateMachine->setInitialState(awaitingSignal);
 
-    // Setup the transitions from initialState.
-    //initialState->addTransition(button, SIGNAL(clicked()),      dealToPlayer);
-    initialState->addTransition(this, SIGNAL(ExecuteDeal()),      dealToPlayer);
+    // Setup the transitions from the awaitingSignal state.
+    awaitingSignal->addTransition(this, SIGNAL(DealToPlayer1()), dealToPlayer1);
+    awaitingSignal->addTransition(this, SIGNAL(DealToPlayer2()), dealToPlayer2);
 
-    // Setup the transitions from dealToPlayer.
-    dealToPlayer->addTransition(this, SIGNAL(TransferComplete()), dealToCpu);
-    dealToPlayer->addTransition(this, SIGNAL(BeginDealTalon()),   dealTalon);
+    // Setup the transitions from the dealToPlayer1 state.
+    dealToPlayer1->addTransition(this, SIGNAL(TransferComplete()),
+                                 dealToPlayer2);
+    dealToPlayer1->addTransition(this, SIGNAL(BeginDealTalon()),   dealToTalon);
 
-    // Setup the transitions from dealToCpu.
-    dealToCpu->addTransition(   this, SIGNAL(TransferComplete()), dealToPlayer);
-    dealToCpu->addTransition(   this, SIGNAL(BeginDealTalon()),   dealTalon);
+    // Setup the transitions from the dealToPlayer2 state.
+    dealToPlayer2->addTransition(this, SIGNAL(TransferComplete()),
+                                 dealToPlayer1);
+    dealToPlayer2->addTransition(this, SIGNAL(BeginDealTalon()),   dealToTalon);
 
-    // Setup the transitions from dealTalon.
-    dealTalon->addTransition(   this, SIGNAL(TransferComplete()), finalState);
+    // Setup the transitions from the dealToTalon state.
+    dealToTalon->addTransition(  this, SIGNAL(TransferComplete()), finalState);
+
+    // Initialize the dealCounter that determines when to deal the Talon.
+    ResetDealCounter();
 
     // Setup the work done in each state.
     ConnectSignals();
@@ -110,9 +112,9 @@ void DealPhase::ResetDealCounter(void)
 //------------------------------------------------------------------------------
 void DealPhase::ConnectSignals(void)
 {
-    connect(dealToPlayer, SIGNAL(entered()),  this, SLOT(DealToPlayer()));
-    connect(dealToCpu,    SIGNAL(entered()),  this, SLOT(DealToCpu()));
-    connect(dealTalon,    SIGNAL(entered()),  this, SLOT(DealTalon()));
+    connect(dealToPlayer1, SIGNAL(entered()), this, SLOT(DealToPlayer()));
+    connect(dealToPlayer2, SIGNAL(entered()), this, SLOT(DealToCpu()));
+    connect(dealToTalon,   SIGNAL(entered()), this, SLOT(DealTalon()));
 
     connect(stateMachine, SIGNAL(finished()), this,
             SIGNAL(DealPhaseFinished()));
@@ -120,10 +122,10 @@ void DealPhase::ConnectSignals(void)
 
 
 //------------------------------------------------------------------------------
-// DealToPlayer - Function that performs the required operations for the
-//                dealToPlayer state.
+// DealToPlayer1 - Function that performs the required operations for the
+//                 dealToPlayer state.
 //------------------------------------------------------------------------------
-void DealPhase::DealToPlayer(void)
+void DealPhase::DealToPlayer1(void)
 {
     if ( dealCounter > 0 )
     {
@@ -139,10 +141,10 @@ void DealPhase::DealToPlayer(void)
 
 
 //------------------------------------------------------------------------------
-// DealToCpu - Function that performs the required operations for the dealToCpu
-//             state.
+// DealToPlayer2 - Function that performs the required operations for the
+//                 dealToPlayer2 state.
 //------------------------------------------------------------------------------
-void DealPhase::DealToCpu(void)
+void DealPhase::DealToPlayer2(void)
 {
     if ( dealCounter > 0 )
     {
@@ -157,10 +159,10 @@ void DealPhase::DealToCpu(void)
 
 
 //------------------------------------------------------------------------------
-// DealTalon - Function that performs the required operations for the dealTalon
-//             state.
+// DealToTalon - Function that performs the required operations for the
+//               dealToTalon state.
 //------------------------------------------------------------------------------
-void DealPhase::DealTalon(void)
+void DealPhase::DealToTalon(void)
 {
     emit RequestCardTransfer(CardArray::DECK, CardArray::TALON, 8, false);
 }
