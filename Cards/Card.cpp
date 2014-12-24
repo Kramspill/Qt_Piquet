@@ -155,9 +155,8 @@ void Card::mousePressEvent(QGraphicsSceneMouseEvent* event)
 //------------------------------------------------------------------------------
 void Card::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
-    //QGraphicsItem::mouseReleaseEvent(event);
-
-    //UpdateAnimation(false);
+    if ( this->flags() & QGraphicsItem::ItemIsMovable )
+        QGraphicsItem::mouseReleaseEvent(event);
 }
 
 

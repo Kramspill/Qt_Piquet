@@ -162,8 +162,13 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
             {
                 if ( IsInsideTrickArea(mouseEvent->scenePos()) )
                 {
+                    card->setFlag(QGraphicsItem::ItemIsSelectable, true);
                     card->setSelected(true);
                     emit TrickPlayed();
+                }
+                else
+                {
+                    card->UpdateAnimation(false);
                 }
             }
         }
