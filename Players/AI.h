@@ -18,12 +18,13 @@
 #include "Managers/ScoreManager.h"
 #include "Cards/CardArray.h"
 #include "KnowledgeBase.h"
+#include "Player.h"
 
 
 //------------------------------------------------------------------------------
 // Class: AI
 //------------------------------------------------------------------------------
-class AI : public QObject
+class AI : public Player
 {
     Q_OBJECT
 public:
@@ -38,7 +39,14 @@ public:
     AI(AI&);
     ~AI(void);
 
-    void                   Initialize(void);
+    void                   Initialize(PlayerNum num);
+
+    void                   ExecuteDeal(void);
+    void                   ExecuteExchange(void);
+    void                   AnnounceDeclaration(State phase);
+    void                   Respond(State phase);
+    void                   PlayTrick(void);
+
 
     void                   UpdateKnowledgeBase(Card* card, int index,
                                              CardArray::CardArrayType location);
@@ -46,14 +54,12 @@ public:
 
     void                   SelectCardsToDiscard(void);
     void                   SelectTrickToPlay(void);
-    ScoreManager::Response DeclarePoint(ScoreManager::PhaseScore userScore);
-    ScoreManager::Response DeclareSequence(ScoreManager::PhaseScore userScore);
-    ScoreManager::Response DeclareSet(ScoreManager::PhaseScore userScore);
 
 private:
     void                   ConnectSignals(void);
 
 signals:
+    void                   RequestCardPositions(PlayerNum player);
     void                   SignalCardSelectionsChanged(Card*,
                                                       CardArray::CardArrayType);
     void                   AIProcessingComplete(void);

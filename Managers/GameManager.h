@@ -20,10 +20,12 @@
 //------------------------------------------------------------------------------
 #include "Scene/Scene.h"
 #include "View/View.h"
-#include "AI/AI.h"
+#include "Players/AI.h"
+#include "Players/Player.h"
 #include "CardManager.h"
 #include "StateManager.h"
 #include "ScoreManager.h"
+#include "State/GlobalStateInfo.h"
 
 // TEST //
 #include "Scene/Dialog.h"
@@ -47,6 +49,7 @@ private:
     void          ConnectSignals(void);
 
 private slots:
+    /* OLD CODE
     void          RequestCardTransfer(CardArray::CardArrayType src,
                                       CardArray::CardArrayType dest,
                                       int  numOfCards,
@@ -67,11 +70,44 @@ private slots:
     void          SkipPoint(void);
     void          SkipSequence(void);
     void          SkipSet(void);
+    */
+
+    // NEW CODE //
+    void          ExecuteDeal(void);
+    void          ExecuteExchange(void);
+    void          AnnounceDeclaration(State phase, PlayerNum player);
+    void          DeclareSelection(State phase, PlayerNum player);
+    void          ResolveResponse(State phase, PlayerNum player);
+    void          PlayTrick(PlayerNum player);
+
+    void          RequestCardTransfer(CardArray::CardArrayType src,
+                                      CardArray::CardArrayType dest,
+                                      int numCards);
+    void          UpdateAI(PlayerNum player);
+
+
+
+
+
+
+
+    /*void          BeginExchange(int player);
+    void          MakeDeclaration(CardArray::SelectionType phase,
+                                  PlayerNum                player);
+    void          ProcessDeclaration(CardArray::SelectionType phase,
+                                     PlayerNum                player);
+    void          UpdateAI(PlayerNum player);
+
+    void          TransferComplete(void);
+
+    void          SetUI(Scene::PhaseType phase);*/
+    //
 
 private:
     Scene*        scene;
     View*         view;
-    AI*           ai;
+    Player*       player1;
+    Player*       player2;
     CardManager*  cardManager;
     StateManager* stateManager;
     ScoreManager* scoreManager;

@@ -11,6 +11,7 @@
 //------------------------------------------------------------------------------
 #include <QObject>
 #include <QTimer>
+#include <QEventLoop>
 
 
 //------------------------------------------------------------------------------
@@ -20,6 +21,7 @@
 #include "ScoreManager.h"
 #include "Cards/CardArray.h"
 #include "Cards/Card.h"
+#include "State/GlobalStateInfo.h"
 
 
 //------------------------------------------------------------------------------
@@ -38,6 +40,9 @@ public:
     void                     TransferCards(CardArray* source,
                                            CardArray* destination,
                                            int numberOfCards);
+    void                     DealOutCards(CardArray* source,
+                                          CardArray* destination,
+                                          int        numberOfCards);
     void                     TransferSelectedCards(CardArray* source,
                                                    CardArray* destination);
     void                     TransferCard(CardArray* source,
@@ -47,7 +52,8 @@ public:
     CardArray*               GetDesiredCardArray(
                                         CardArray::CardArrayType cardArrayType);
 
-    ScoreManager::PhaseScore GetSelectionScore(CardArray::SelectionType phase);
+    //ScoreManager::PhaseScore GetSelectionScore(CardArray::SelectionType phase);
+    std::vector<Card*>       GetSelection(PlayerNum player);
 
 private:
     void                     ConnectSignals(void);
@@ -56,12 +62,9 @@ private:
     void                     ShuffleDeck(void);
 
 public slots:
-    void                     SetCardsMoveable(bool setMoveable,
-                                              CardArray::CardArrayType
-                                         cardArrayType = CardArray::PLAYERHAND);
-    void                     SetCardsSelectable(bool setSelectable, int limit,
-                                                CardArray::CardArrayType
-                                         cardArrayType = CardArray::PLAYERHAND);
+    void                     SetCardsMoveable(bool setMoveable);
+    void                     SetCardsSelectable(bool setSelectable,
+                                                PlayerNum player);
     void                     CardSelectionsChanged(Card* card,
                                                    CardArray::CardArrayType
                                          cardArrayType = CardArray::PLAYERHAND);
@@ -69,14 +72,17 @@ public slots:
                                             CardArray::CardArrayType
                                          cardArrayType = CardArray::PLAYERHAND);
     void                     CheckTrick(int player);
+    void                     ValidateSelection(void);
+    void                     DeselectUserCards(void);
 
 private slots:
     void                     SignalTransferComplete(void);
 
 signals:
-    void                     TransferComplete(int);
+    void                     TransferComplete(void);
     void                     InformCardsMoveable(bool);
     void                     TrickResult(int);
+    void                     ValidSelection(bool);
 
 private:
     CardArray*               deck;

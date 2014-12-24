@@ -17,8 +17,7 @@
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
-#include "Cards/CardArray.h"
-#include "Scene/Scene.h"
+#include "State/GlobalStateInfo.h"
 
 
 //------------------------------------------------------------------------------
@@ -36,37 +35,19 @@ public:
 
 protected:
     void           onEntry(QEvent*);
-    void           onExit(QEvent*);
 
 private:
-    void           ResetDealCounter(void);
     void           ConnectSignals(void);
-
-private slots:
-    void           DealToPlayer1(void);
-    void           DealToPlayer2(void);
-    void           DealToTalon(void);
 
 signals:
     void           ExecuteDeal(void);
-    void           BeginDealTalon(void);
+    void           DealComplete(void);
     void           DealPhaseFinished(void);
-
-    void           RequestCardTransfer(CardArray::CardArrayType,
-                                       CardArray::CardArrayType,
-                                       int, bool);
-    void           TransferComplete(void);
-
-    void           SetUI(Scene::PhaseType);
 
 private:
     QStateMachine* stateMachine;
     QState*        awaitingSignal;
-    QState*        dealToPlayer1;
-    QState*        dealToPlayer2;
-    QState*        dealToTalon;
     QFinalState*   finalState;
-    int            dealCounter;
 };
 
 #endif // DEALPHASE_H

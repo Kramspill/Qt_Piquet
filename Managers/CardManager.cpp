@@ -84,6 +84,36 @@ void CardManager::Initialize(Scene* scene)
 void CardManager::TransferCards(CardArray* source, CardArray* destination,
                                 int numberOfCards)
 {
+    // Determine if we are transfering specific cards or not.
+    if ( numberOfCards == 0 )
+    {
+        // Check if our destination is a player's hand and perform a deal if so.
+        if ( destination->GetCardArrayType() == CardArray::PLAYERHAND ||
+             destination->GetCardArrayType() == CardArray::CPUHAND )
+        {
+            numberOfCards = 12 - destination->GetSize();
+            DealOutCards(source, destination, numberOfCards);
+        }
+        else
+        {
+            // In this case, we are transferring cards that have been selected.
+            TransferSelectedCards(source, destination);
+        }
+    }
+    else
+    {
+        DealOutCards(source, destination, numberOfCards);
+    }
+}
+
+
+//------------------------------------------------------------------------------
+// DealOutCards - Deal out cards from one CardArray to another.
+//------------------------------------------------------------------------------
+void CardManager::DealOutCards(CardArray* source,
+                               CardArray* destination,
+                               int        numberOfCards)
+{
     for (int index = 0; index < numberOfCards; index++)
     {
         // Remove the card from the source array, and add it to the destination.
@@ -96,6 +126,11 @@ void CardManager::TransferCards(CardArray* source, CardArray* destination,
 
     // Delay the signal of transfer completion for animation purposes.
     transitionTimer->start(100);
+
+    // Wait for timer to finish.
+    QEventLoop* loop = new QEventLoop();
+    connect(transitionTimer, SIGNAL(timeout()), loop, SLOT(quit()));
+    loop->exec();
 }
 
 
@@ -106,24 +141,43 @@ void CardManager::TransferCards(CardArray* source, CardArray* destination,
 void CardManager::TransferSelectedCards(CardArray* source,
                                         CardArray* destination)
 {
-    int numberOfCards = source->GetSelectedCardsSize();
+    std::vector<Card*> cards;
+    int size = source->GetSize();
 
-    if ( numberOfCards > 0 )
+    // Locate the selected cards.
+    for ( int i = 0; i < size; i++ )
     {
-        for (int index = 0; index < numberOfCards; index++)
+        Card* card = source->GetCard(i);
+
+        if ( card->isSelected() )
         {
-            // Remove the card from the source array, and add it to the
-            // destination.
-            Card* card = source->RemoveSelectedCard();
-            destination->AddCard(card);
+            card->setSelected(false);
+            cards.push_back(card);
         }
-
-        // Update the number of cards transferred.
-        numOfCardsTransferred = numberOfCards;
-
-        // Delay the signal of transfer completion for animation purposes.
-        transitionTimer->start(100);
     }
+
+    // Set the number of cards to be transferred.
+    size = cards.size();
+
+    // Transfer the selected cards to the destination CardArray.
+    if ( size > 0 )
+    {
+        for ( int i = 0; i < size; i++ )
+        {
+            source->RemoveCard(cards.back());
+            destination->AddCard(cards.back());
+
+            cards.pop_back();
+        }
+    }
+
+    // Delay the signal of transfer completion for animation purposes.
+    transitionTimer->start(100);
+
+    // Wait for timer to finish.
+    QEventLoop* loop = new QEventLoop();
+    connect(transitionTimer, SIGNAL(timeout()), loop, SLOT(quit()));
+    loop->exec();
 }
 
 
@@ -202,10 +256,37 @@ CardArray* CardManager::GetDesiredCardArray(
 //------------------------------------------------------------------------------
 // GetSelectionScore - Get the score of the user's current selection.
 //------------------------------------------------------------------------------
-ScoreManager::PhaseScore CardManager::GetSelectionScore(CardArray::SelectionType
+/*ScoreManager::PhaseScore CardManager::GetSelectionScore(CardArray::SelectionType
                                                         phase)
 {
-    return playerHand->GetSelectionScore(phase);
+    //return playerHand->GetSelectionScore(phase);
+}*/
+
+
+//------------------------------------------------------------------------------
+// GetSelection - Return the player's selected cards.
+//------------------------------------------------------------------------------
+std::vector<Card*> CardManager::GetSelection(PlayerNum player)
+{
+    std::vector<Card*> selectedCards;
+    CardArray*         cards;
+
+    // Retrieve the correct CardArray.
+    if ( player == PLAYER1 )
+        cards = playerHand;
+    else
+        cards = cpuHand;
+
+    // Locate the selected cards.
+    for ( int i = 0; i < cards->GetSize(); i++ )
+    {
+        Card* card = cards->GetCard(i);
+
+        if ( card->isSelected() )
+            selectedCards.push_back(card);
+    }
+
+    return selectedCards;
 }
 
 
@@ -214,8 +295,8 @@ ScoreManager::PhaseScore CardManager::GetSelectionScore(CardArray::SelectionType
 //------------------------------------------------------------------------------
 void CardManager::ConnectSignals(void)
 {
-    connect(transitionTimer, SIGNAL(timeout()), this,
-            SLOT(SignalTransferComplete()));
+    //connect(transitionTimer, SIGNAL(timeout()), this,
+    //        SLOT(SignalTransferComplete()));
 }
 
 
@@ -324,16 +405,14 @@ void CardManager::ShuffleDeck(void)
 //------------------------------------------------------------------------------
 // SetCardsMoveable - Enable/Disable a CardArray's cards to be moveable.
 //------------------------------------------------------------------------------
-void CardManager::SetCardsMoveable(bool setMoveable,
-                                   CardArray::CardArrayType cardArrayType)
+void CardManager::SetCardsMoveable(bool setMoveable)
 {
-    Card*      card;
-    CardArray* cardArray = GetDesiredCardArray(cardArrayType);
+    Card* card;
 
     // Loop through the array setting the ItemIsMovable property.
-    for ( int index = 0; index < cardArray->GetSize(); index++ )
+    for ( int index = 0; index < playerHand->GetSize(); index++ )
     {
-        card = cardArray->GetCard(index);
+        card = playerHand->GetCard(index);
 
         if ( setMoveable )
         {
@@ -343,33 +422,37 @@ void CardManager::SetCardsMoveable(bool setMoveable,
         else
         {
             card->setFlag(QGraphicsItem::ItemIsMovable, false);
-            InformCardsMoveable(false);
+            emit InformCardsMoveable(false);
         }
     }
 }
 
 
 //------------------------------------------------------------------------------
-// SetCardsSelectable - Enable/Disable a CardArray's cards to be selected.
+// SetCardsSelectable - Enable/Disable the user's cards to be selected.
 //------------------------------------------------------------------------------
-void CardManager::SetCardsSelectable(bool setSelectable, int limit,
-                                     CardArray::CardArrayType cardArrayType)
+void CardManager::SetCardsSelectable(bool setSelectable, PlayerNum player)
 {
-    Card*      card;
-    CardArray* cardArray = GetDesiredCardArray(cardArrayType);
-
-    // Set the limit of how many cards can be selected at once.
-    cardArray->SetSelectionLimit(limit);
+    Card* card;
+    CardArray* hand = (player == PLAYER1) ? playerHand : cpuHand;
 
     // Loop through the array setting the ItemIsSelectable property.
-    for ( int index = 0; index < cardArray->GetSize(); index++ )
+    for ( int index = 0; index < hand->GetSize(); index++ )
     {
-        card = cardArray->GetCard(index);
+        card = hand->GetCard(index);
 
         if ( setSelectable )
+        {
             card->setFlag(QGraphicsItem::ItemIsSelectable, true);
+        }
         else
+        {
+            if ( card->isSelected() )
+                card->setSelected(false);
+
+            card->UpdateSelection();
             card->setFlag(QGraphicsItem::ItemIsSelectable, false);
+        }
     }
 }
 
@@ -454,10 +537,160 @@ void CardManager::CheckTrick(int player)
 
 
 //------------------------------------------------------------------------------
+// ValidateSelection - Inform the scene to enable/disable buttons based on
+//                     whether the user's seection is valid or not.
+//------------------------------------------------------------------------------
+void CardManager::ValidateSelection(void)
+{
+    std::vector<Card*> selectedCards = GetSelection(PLAYER1);
+    int  i     = 0;
+    int  j     = 0;
+    bool valid = true;
+    Card::Suit suit;
+    Card::Rank rank;
+    bool  cardBuckets[8] = { false };
+
+    switch ( currentPhase )
+    {
+        case EXCHANGE:
+            if ( selectedCards.size() < 1 ||
+                 selectedCards.size() > 5 ||
+                 selectedCards.size() > talon->GetSize() )
+            {
+                valid = false;
+            }
+            break;
+
+        case POINT:
+            if ( selectedCards.size() == 0 )
+            {
+                valid = false;
+            }
+            else
+            {
+                suit = selectedCards[i]->GetSuit();
+
+                // First check it's a valid Point.
+                while ( i < selectedCards.size() && valid )
+                {
+                    if ( selectedCards[i++]->GetSuit() != suit )
+                        valid = false;
+                }
+
+                if ( younger == PLAYER1 && valid )
+                {
+                    // Check if we are responding or not as we need to at least
+                    // match the opponents point.
+                }
+            }
+            break;
+
+        case SEQUENCE:
+            if ( selectedCards.size() < 3 )
+            {
+                valid = false;
+            }
+            else
+            {
+                // Perform a bucket sort then check the cards.
+                suit = selectedCards[i]->GetSuit();
+
+                // First check it's a valid Sequence.
+                while ( i < selectedCards.size() && valid )
+                {
+                    // Place the card in it's bucket.
+                    cardBuckets[selectedCards[i]->GetRank()-7] = true;
+
+                    if ( selectedCards[i++]->GetSuit() != suit )
+                        valid = false;
+                }
+
+                if ( valid )
+                {
+                    i = 0;
+                    j = 0;
+
+                    // Now check if the cards are in sequence.
+                    while ( i < 8 && !cardBuckets[i++] ) {}
+
+                    while ( i < 8 && cardBuckets[i] )
+                    {
+                        i++;
+                        j++;
+                    }
+
+                    if ( j != selectedCards.size() )
+                    {
+                        valid == false;
+                    }
+                    else if ( younger == PLAYER1 )
+                    {
+                        // Check if we are responding or not as we need to at
+                        // least match the opponents Sequence.
+                    }
+                }
+            }
+            break;
+
+        case SET:
+            if ( selectedCards.size() < 3 || selectedCards.size() > 4 )
+            {
+                valid = false;
+            }
+            else
+            {
+                rank = selectedCards[i]->GetRank();
+
+                while ( i < selectedCards.size() && valid )
+                {
+                    if ( selectedCards[i++]->GetRank() != rank )
+                        valid = false;
+                }
+
+                if ( younger == PLAYER1 && valid )
+                {
+                    // Check if we are responding or not as we need to at
+                    // least match the opponents Sequence.
+                }
+            }
+            break;
+
+        default:
+            break;
+    }
+
+    if ( valid )
+        emit ValidSelection(true);
+    else
+        emit ValidSelection(false);
+}
+
+
+//------------------------------------------------------------------------------
+// DeselectUserCards - Deselect all user cards, called when a skip is requested.
+//------------------------------------------------------------------------------
+void CardManager::DeselectUserCards(void)
+{
+    Card* card;
+
+    for ( int i = 0; i < playerHand->GetSize(); i++ )
+    {
+        card = playerHand->GetCard(i);
+
+        if ( card->isSelected() )
+        {
+            card->setSelected(false);
+            card->UpdateSelection();
+        }
+    }
+}
+
+
+//------------------------------------------------------------------------------
 // SignalTransferComplete - Inform the gameManager that a card transfer has
 //                          finished.
 //------------------------------------------------------------------------------
 void CardManager::SignalTransferComplete(void)
 {
-    emit TransferComplete(numOfCardsTransferred);
+    emit TransferComplete();
 }

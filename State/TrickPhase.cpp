@@ -40,29 +40,41 @@ TrickPhase::~TrickPhase(void)
 //------------------------------------------------------------------------------
 void TrickPhase::Initialize(void)
 {
-    // For now assume player goes first.
-    player = 1;
-
     // Initialize the state machine.
     stateMachine = new QStateMachine();
 
     // Initialize the states within the state machine.
-    playerTrick = new QState(stateMachine);
-    cpuTrick    = new QState(stateMachine);
-    scoreTrick  = new QState(stateMachine);
+    awaitingSignal = new QState(stateMachine);
+    player1Trick   = new QState(stateMachine);
+    player2Trick   = new QState(stateMachine);
+    finalState     = new QFinalState(stateMachine);
 
     // Set the initial state for the state machine.
-    stateMachine->setInitialState(scoreTrick);
+    stateMachine->setInitialState(awaitingSignal);
 
-    // Setup the transitions from scoreTrick.
-    scoreTrick->addTransition(this,  SIGNAL(PlayersTurn()), playerTrick);
-    scoreTrick->addTransition(this,  SIGNAL(CpusTurn()),    cpuTrick);
+    // Setup the transitions from the awaitingSignal state.
+    awaitingSignal->addTransition(this,
+                                  SIGNAL(Player1PlayTrick()),
+                                  player1Trick);
+    awaitingSignal->addTransition(this,
+                                  SIGNAL(Player2PlayTrick()),
+                                  player2Trick);
 
-    // Setup the transitions from playerTrick.
-    playerTrick->addTransition(this, SIGNAL(CheckTrick()),    scoreTrick);
+    // Setup the transitions from the player1Trick state.
+    player1Trick->addTransition(  this,
+                                  SIGNAL(Player2PlayTrick()),
+                                  player2Trick);
+    player1Trick->addTransition(  this,
+                                  SIGNAL(AllTricksComplete()),
+                                  finalState);
 
-    // Setup the transitions from cpuTrick.
-    cpuTrick->addTransition(this,    SIGNAL(CheckTrick()), scoreTrick);
+    // Setup the transitions from the player1Trick state.
+    player2Trick->addTransition(  this,
+                                  SIGNAL(Player1PlayTrick()),
+                                  player1Trick);
+    player2Trick->addTransition(  this,
+                                  SIGNAL(AllTricksComplete()),
+                                  finalState);
 
     // Setup the work done in each state.
     ConnectSignals();
@@ -74,16 +86,9 @@ void TrickPhase::Initialize(void)
 //------------------------------------------------------------------------------
 void TrickPhase::onEntry(QEvent*)
 {
+    currentPhase = TRICK;
+
     stateMachine->start();
-}
-
-
-//------------------------------------------------------------------------------
-// onExit - Override of QState::onExit.
-//------------------------------------------------------------------------------
-void TrickPhase::onExit(QEvent*)
-{
-
 }
 
 
@@ -93,94 +98,29 @@ void TrickPhase::onExit(QEvent*)
 //------------------------------------------------------------------------------
 void TrickPhase::ConnectSignals(void)
 {
-    connect(scoreTrick,  SIGNAL(entered()),  this, SLOT(ScoreTrick()));
-    connect(playerTrick, SIGNAL(entered()),  this, SLOT(PlayerTrick()));
-    connect(playerTrick, SIGNAL(exited()),   this, SLOT(ExitPlayerTrick()));
-    connect(cpuTrick,    SIGNAL(entered()),  this, SLOT(CpuTrick()));
+    connect(player1Trick, SIGNAL(entered()),  this, SLOT(Player1Trick()));
+    connect(player2Trick, SIGNAL(entered()),  this, SLOT(Player2Trick()));
 
-    connect(stateMachine, SIGNAL(finished()), this,
+    connect(stateMachine,
+            SIGNAL(finished()),
+            this,
             SIGNAL(TrickPhaseFinished()));
 }
 
 
 //------------------------------------------------------------------------------
-// PlayerMoveFinished - When a card is transferred, check if the user did the
-//                      transferral and cycle the state.
+// Player1Trick - Player 1 plays a trick.
 //------------------------------------------------------------------------------
-void TrickPhase::MoveFinished(int numOfCardsTransferred)
+void TrickPhase::Player1Trick(void)
 {
-    if ( (stateMachine->configuration().contains(playerTrick) ||
-          stateMachine->configuration().contains(cpuTrick)) &&
-         numOfCardsTransferred < 2 )
-    {
-        emit CheckTrick();
-    }
+    emit PlayTrick(1);
 }
 
 
 //------------------------------------------------------------------------------
-// ScoreTrick - Function that performs the required operations for the
-//              scoreTrick state.
+// Player2Trick - Player 2 plays a trick.
 //------------------------------------------------------------------------------
-void TrickPhase::ScoreTrick(void)
+void TrickPhase::Player2Trick(void)
 {
-    emit CheckTrick(player);
-}
-
-
-//------------------------------------------------------------------------------
-// PlayerTrick - Function that performs the required operations for the
-//               playerTrick state.
-//------------------------------------------------------------------------------
-void TrickPhase::PlayerTrick(void)
-{
-    emit SetCardsMoveable(true);
-}
-
-
-//------------------------------------------------------------------------------
-// PlayerTrick - Function that performs the required operations for the
-//               playerTrick exited() state.
-//------------------------------------------------------------------------------
-void TrickPhase::ExitPlayerTrick(void)
-{
-    emit SetCardsMoveable(false);
-}
-
-
-//------------------------------------------------------------------------------
-// CpuTrick - Function that performs the required operations for the cpuTrick
-//            state.
-//------------------------------------------------------------------------------
-void TrickPhase::CpuTrick(void)
-{
-    emit UpdateAI();
-    emit SignalAI(AI::TRICK);
-    emit RequestCardTransfer(CardArray::CPUHAND, CardArray::CPUTRICK,
-                             0, true);
-}
-
-
-//------------------------------------------------------------------------------
-// TrickResult - Function that gets called to update who should lead the next
-//               trick.
-//------------------------------------------------------------------------------
-void TrickPhase::TrickResult(int winningPlayer)
-{
-    if ( winningPlayer == 0 || winningPlayer == 1 )
-    {
-        player = winningPlayer;
-
-        if ( player == 1 )
-            emit PlayersTurn();
-        else
-            emit CpusTurn();
-    }
-    else
-    {
-        if ( player == 0 )
-            emit PlayersTurn();
-        else
-            emit CpusTurn();
-    }
+    emit PlayTrick(2);
 }

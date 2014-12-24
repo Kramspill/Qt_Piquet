@@ -106,8 +106,8 @@ void KnowledgeBase::FlagDispensableCards(CardArray* cpuHand)
         card = cpuHand->GetCard(cardRanks[index]);
         cpuHand->SetSelectionLimit(12);
 
-        card->setFlag(QGraphicsItem::ItemIsSelectable, true);
         card->setSelected(true);
+        card->UpdateSelection();
         emit SignalCardSelectionsChanged(card, CardArray::CPUHAND);
     }
 }
@@ -121,29 +121,28 @@ void KnowledgeBase::SelectTrick(CardArray* cpuHand)
     // For now, we just get the top card.
     Card* card = cpuHand->GetCard(0);
 
-    card->setFlag(QGraphicsItem::ItemIsSelectable, true);
     card->setSelected(true);
+    card->UpdateSelection();
     emit SignalCardSelectionsChanged(card, CardArray::CPUHAND);
 }
 
 
 //------------------------------------------------------------------------------
-// CalculatePoint - Calculate the cpu's best Point.
+// SelectPoint - Calculate the cpu's best Point and select it.
 //------------------------------------------------------------------------------
-ScoreManager::PhaseScore KnowledgeBase::CalculatePoint(void)
+void KnowledgeBase::SelectPoint(CardArray* hand)
 {
-    ScoreManager::PhaseScore currentScore;
-    ScoreManager::PhaseScore maxScore;
-
-    // Initialize the maxScore.
-    maxScore.numOfCards = 0;
-    maxScore.totalValue = 0;
+    int currentNumCards = 0;
+    int bestNumCards    = 0;
+    int currentValue    = 0;
+    int bestValue       = 0;
+    int bestSuit        = 0;
 
     for ( int suitIndex = 0; suitIndex < 4; suitIndex++ )
     {
         // Initialize the current score to 0.
-        currentScore.numOfCards = 0;
-        currentScore.totalValue = 0;
+        currentNumCards = 0;
+        currentValue    = 0;
 
         for ( int valueIndex = 0; valueIndex < 8; valueIndex++ )
         {
@@ -151,49 +150,60 @@ ScoreManager::PhaseScore KnowledgeBase::CalculatePoint(void)
 
             if ( item->location == CardArray::CPUHAND )
             {
-                currentScore.numOfCards++;
-                currentScore.totalValue += pointValues[valueIndex];
+                currentNumCards++;
+                currentValue   += pointValues[valueIndex];
             }
         }
 
-        // Check if this is now the max Point.
-        if ( currentScore.numOfCards >= maxScore.numOfCards )
+        // Check if this is now the best Point.
+        if ( currentNumCards >= bestNumCards )
         {
-            if ( currentScore.numOfCards > maxScore.numOfCards )
+            if ( currentNumCards > bestNumCards )
             {
-                maxScore.numOfCards = currentScore.numOfCards;
-                maxScore.totalValue = currentScore.totalValue;
+                bestNumCards = currentNumCards;
+                bestValue    = currentValue;
+                bestSuit     = suitIndex;
             }
-            else if ( currentScore.totalValue > maxScore.totalValue )
+            else if ( currentValue > bestValue )
             {
-                maxScore.numOfCards = currentScore.numOfCards;
-                maxScore.totalValue = currentScore.totalValue;
+                bestNumCards = currentNumCards;
+                bestValue    = currentValue;
+                bestSuit     = suitIndex;
             }
         }
     }
 
-    return maxScore;
+    // Now select the cards.
+    for ( int i = 0; i < hand->GetSize(); i++ )
+    {
+        Card* card = hand->GetCard(i);
+
+        if ( card->GetSuit() == bestSuit )
+        {
+            card->setSelected(true);
+            card->UpdateSelection();
+        }
+    }
 }
 
 
 //------------------------------------------------------------------------------
-// CalculateSequence - Calculate the cpu's best Sequence.
+// SelectSequence - Calculate the cpu's best Sequence and select it..
 //------------------------------------------------------------------------------
-ScoreManager::PhaseScore KnowledgeBase::CalculateSequence(void)
+void KnowledgeBase::SelectSequence(CardArray* hand)
 {
-    ScoreManager::PhaseScore currentScore;
-    ScoreManager::PhaseScore maxScore;
-
-    // Initialize the maxScore.
-    maxScore.numOfCards = 0;
-    maxScore.totalValue = 0;
+    int currentNumCards = 0;
+    int bestNumCards    = 0;
+    int currentValue    = 0;
+    int bestValue       = 0;
+    int bestSuit        = 0;
 
     for ( int suitIndex = 0; suitIndex < 4; suitIndex++ )
     {
         // Initialize the current score to 0.
-        currentScore.numOfCards = 0;
-        currentScore.totalValue = 0;
-        int count               = 0;
+        currentNumCards = 0;
+        currentValue    = 0;
+        int count       = 0;
 
         for ( int valueIndex = 0; valueIndex < 8; valueIndex++ )
         {
@@ -203,52 +213,84 @@ ScoreManager::PhaseScore KnowledgeBase::CalculateSequence(void)
             {
                 count++;
             }
-            else if ( count >= 3 && count >= currentScore.numOfCards )
+            else if ( count >= 3 && count >= currentNumCards )
             {
-                currentScore.numOfCards = count;
-                currentScore.totalValue = valueIndex + 7;
-                count = 0;
+                currentNumCards = count;
+                currentValue    = valueIndex + 7;
+                count           = 0;
             }
         }
 
-        // Check if this is now the max Sequence.
-        if ( currentScore.numOfCards >= maxScore.numOfCards )
+        // Check if this is now the best Sequence.
+        if ( currentNumCards >= bestNumCards )
         {
-            if ( currentScore.numOfCards > maxScore.numOfCards )
+            if ( currentNumCards > bestNumCards )
             {
-                maxScore.numOfCards = currentScore.numOfCards;
-                maxScore.totalValue = currentScore.totalValue;
+                bestNumCards = currentNumCards;
+                bestValue    = currentValue;
+                bestSuit     = suitIndex;
             }
-            else if ( currentScore.totalValue > maxScore.totalValue )
+            else if ( currentValue > bestValue )
             {
-                maxScore.numOfCards = currentScore.numOfCards;
-                maxScore.totalValue = currentScore.totalValue;
+                bestNumCards = currentNumCards;
+                bestValue    = currentValue;
+                bestSuit     = suitIndex;
             }
         }
     }
 
-    return maxScore;
+    // Now select the cards.
+    if ( bestNumCards > 0 )
+    {
+        Card* card;
+
+       // Start by finding the top card.
+        bool topCardNotFound = true;
+        int  i = 0;
+        while ( topCardNotFound && i < 12 )
+        {
+            card = hand->GetCard(i++);
+
+            if ( card->GetSuit() == bestSuit &&
+                 card->GetRank() == bestValue )
+            {
+                topCardNotFound = false;
+                i--;
+            }
+        }
+
+        card->setSelected(true);
+        card->UpdateSelection();
+        i--;
+        bestNumCards--;
+
+        while ( bestNumCards > 0 )
+        {
+            Card* card = hand->GetCard(i--);
+            card->setSelected(true);
+            card->UpdateSelection();
+            bestNumCards--;
+        }
+    }
 }
 
 
 //------------------------------------------------------------------------------
-// CalculateSet - Calculate the cpu's best Set.
+// SelectSet - Calculate the cpu's best Set and select it.
 //------------------------------------------------------------------------------
-ScoreManager::PhaseScore KnowledgeBase::CalculateSet(void)
+void KnowledgeBase::SelectSet(CardArray* hand)
 {
-    ScoreManager::PhaseScore currentScore;
-    ScoreManager::PhaseScore maxScore;
-
-    // Initialize the maxScore.
-    maxScore.numOfCards = 0;
-    maxScore.totalValue = 0;
+    int currentNumCards = 0;
+    int bestNumCards    = 0;
+    int currentValue    = 0;
+    int bestValue       = 0;
 
     for ( int valueIndex = 3; valueIndex < 8; valueIndex++ )
     {
         // Initialize the current score to 0.
-        currentScore.numOfCards = 0;
-        currentScore.totalValue = 0;
-        int count               = 0;
+        currentNumCards = 0;
+        currentValue    = 0;
+        int count       = 0;
 
         for ( int suitIndex = 0; suitIndex < 4; suitIndex++ )
         {
@@ -263,28 +305,40 @@ ScoreManager::PhaseScore KnowledgeBase::CalculateSet(void)
         // Set the currentScore if it's greater than 2 cards.
         if ( count > 2 )
         {
-            currentScore.numOfCards = count;
-            currentScore.totalValue = valueIndex + 7;
+            currentNumCards = count;
+            currentValue    = valueIndex + 7;
         }
 
-        // Check if this is now the max Set.
-        if ( currentScore.numOfCards >= maxScore.numOfCards )
+        // Check if this is now the best Set.
+        if ( currentNumCards >= bestNumCards )
         {
-            if ( currentScore.numOfCards > maxScore.numOfCards )
+            if ( currentNumCards > bestNumCards )
             {
-                maxScore.numOfCards = currentScore.numOfCards;
-                maxScore.totalValue = currentScore.totalValue;
+                bestNumCards = currentNumCards;
+                bestValue    = currentValue;
             }
-            else if ( currentScore.totalValue > maxScore.totalValue )
+            else if ( currentValue > bestValue )
             {
-                maxScore.numOfCards = currentScore.numOfCards;
-                maxScore.totalValue = currentScore.totalValue;
+                bestNumCards = currentNumCards;
+                bestValue    = currentValue;
             }
         }
-
     }
 
-    return maxScore;
+    // Now select the cards.
+    if ( bestNumCards > 0 )
+    {
+        for ( int i = 0; i < hand->GetSize(); i++ )
+        {
+            Card* card = hand->GetCard(i);
+
+            if ( card->GetRank() == bestValue )
+            {
+                card->setSelected(true);
+                card->UpdateSelection();
+            }
+        }
+    }
 }
 
 

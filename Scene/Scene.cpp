@@ -106,8 +106,17 @@ void Scene::SetText(const QString& newText)
 
 
 //------------------------------------------------------------------------------
+// UpdateLog - Update the log field.
+//------------------------------------------------------------------------------
+void Scene::UpdateLog(const QString& newMessage)
+{
+    log->append(newMessage);
+}
+
+
+//------------------------------------------------------------------------------
 // mousePressEvent - Override of QGraphicsScene::mousePressEvent to allow
-//                     multiple item selection without needing the Ctrl key.
+//                   multiple item selection without needing the Ctrl key.
 //------------------------------------------------------------------------------
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent)
 {
@@ -115,26 +124,10 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent)
     QGraphicsItem* itemUnderMouse =
             itemAt(mouseEvent->scenePos(), QTransform());
 
-    // Toggle the item's selection if possible.
-    if ( itemUnderMouse && itemUnderMouse->isEnabled() &&
-            (itemUnderMouse->flags() & QGraphicsItem::ItemIsSelectable) )
+    // If there is an item, then call the parent function.
+    if ( itemUnderMouse )
     {
-        itemUnderMouse->setSelected(!itemUnderMouse->isSelected());
-
-        // Inform the card it has been selected and add the card to the
-        // selection array.
-        emit SignalCardSelectionsChanged((Card*)itemUnderMouse);
-    }
-    else if ( itemUnderMouse )
-    {
-        Card* itemIsACard = qgraphicsitem_cast<Card*>(itemUnderMouse);
-
-        // Call the parent class' mousePressEvent if the item isn't a Card
-        // or we have set the cards to be moveable.
-        if ( !itemIsACard || cardsMoveable )
-        {
-            QGraphicsScene::mousePressEvent(mouseEvent);
-        }
+        QGraphicsScene::mousePressEvent(mouseEvent);
     }
 }
 
@@ -169,24 +162,36 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
             {
                 if ( IsInsideTrickArea(mouseEvent->scenePos()) )
                 {
-                    emit RequestACardTransfer(CardArray::PLAYERHAND,
-                                              CardArray::PLAYERTRICK,
-                                              card);
+                    card->setSelected(true);
+                    emit TrickPlayed();
                 }
             }
-
-            QGraphicsScene::mouseReleaseEvent(mouseEvent);
+        }
+        else
+        {
+            // If the item is a card, validate the user's selection.
+            emit ValidateSelection();
         }
     }
+
+    QGraphicsScene::mouseReleaseEvent(mouseEvent);
 }
 
 
 //------------------------------------------------------------------------------
-// mouseDoubleClickEvent - Override of QGraphicsScene::mouseDoubleClickEvent to
-//                         do nothing.
+// mouseDoubleClickEvent - Override of QGraphicsScene::mouseDoubleClickEvent.
 //------------------------------------------------------------------------------
-void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent*)
+void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* mouseEvent)
 {
+    // Get the item located at this mousePressEvent.
+    QGraphicsItem* itemUnderMouse =
+            itemAt(mouseEvent->scenePos(), QTransform());
+
+    // If there is an item, then call the parent function.
+    if ( itemUnderMouse )
+    {
+        QGraphicsScene::mousePressEvent(mouseEvent);
+    }
 }
 
 
@@ -231,7 +236,7 @@ void Scene::CreateDialog(Dialog::DialogType dialogType)
 
     if ( result == 1 )
     {
-        emit ExecuteDeal();
+        //emit ExecuteDeal();
         //emit DialogAccepted(dialogType);
     }
 }
@@ -240,7 +245,7 @@ void Scene::CreateDialog(Dialog::DialogType dialogType)
 //------------------------------------------------------------------------------
 // SetUI - Setup the ui buttons and labels for the current phase.
 //------------------------------------------------------------------------------
-void Scene::SetUI(Scene::PhaseType phase)
+void Scene::SetUI(State phase)
 {
     switch ( phase )
     {
@@ -255,7 +260,7 @@ void Scene::SetUI(Scene::PhaseType phase)
             text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
 
             QObject::connect(primaryAction, SIGNAL(clicked()),
-                             this,          SIGNAL(ExecuteDeal()));
+                             this,          SIGNAL(BeginDeal()));
             break;
 
         case EXCHANGE:
@@ -263,6 +268,7 @@ void Scene::SetUI(Scene::PhaseType phase)
             text->setText("Select cards from your hand\nto exchange with from the Talon.");
 
             primaryAction->setText("Exchange");
+            primaryAction->setEnabled(false);
             secondaryAction->setVisible(false);
 
             primaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
@@ -270,9 +276,9 @@ void Scene::SetUI(Scene::PhaseType phase)
             text->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
 
             QObject::disconnect(primaryAction, SIGNAL(clicked()),
-                                this,          SIGNAL(ExecuteDeal()));
+                                this,          SIGNAL(BeginDeal()));
             QObject::connect(   primaryAction, SIGNAL(clicked()),
-                                this,          SIGNAL(ExecuteExchange()));
+                                this,          SIGNAL(BeginExchange()));
             break;
 
         case POINT:
@@ -280,6 +286,7 @@ void Scene::SetUI(Scene::PhaseType phase)
             text->setText("Select cards of the same\nsuit for Point declaration.");
 
             primaryAction->setText("Declare");
+            primaryAction->setEnabled(false);
             secondaryAction->setText("Skip");
             secondaryAction->setVisible(true);
 
@@ -289,52 +296,52 @@ void Scene::SetUI(Scene::PhaseType phase)
             text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
 
             QObject::disconnect(primaryAction,   SIGNAL(clicked()),
-                                this,            SIGNAL(ExecuteExchange()));
+                                this,            SIGNAL(BeginExchange()));
             QObject::connect(   primaryAction,   SIGNAL(clicked()),
-                                this,            SIGNAL(DeclarePoint()));
+                                this,            SIGNAL(Declare()));
 
             QObject::connect(   secondaryAction, SIGNAL(clicked()),
-                                this,            SIGNAL(SkipPoint()));
+                                this,            SIGNAL(Skip()));
             break;
 
         case SEQUENCE:
             title->setText("Declaration Phase");
             text->setText("Select cards of the same\nsuit for Sequence declaration.");
 
+            primaryAction->setEnabled(false);
+
             primaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
             secondaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
             title->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
             text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
-
-            QObject::disconnect(primaryAction,   SIGNAL(clicked()),
-                                this,            SIGNAL(DeclarePoint()));
-            QObject::connect(   primaryAction,   SIGNAL(clicked()),
-                                this,            SIGNAL(DeclareSequence()));
-
-            QObject::disconnect(secondaryAction, SIGNAL(clicked()),
-                                this,            SIGNAL(SkipPoint()));
-            QObject::connect(   secondaryAction, SIGNAL(clicked()),
-                                this,            SIGNAL(SkipSequence()));
             break;
 
         case SET:
             title->setText("Declaration Phase");
             text->setText("Select cards of the same\nsuit for Set declaration.");
 
+            primaryAction->setEnabled(false);
+
             primaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
             secondaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
             title->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
             text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+            break;
 
-            QObject::disconnect(primaryAction,   SIGNAL(clicked()),
-                                this,            SIGNAL(DeclareSequence()));
-            QObject::connect(   primaryAction,   SIGNAL(clicked()),
-                                this,            SIGNAL(DeclareSet()));
+        case RESPOND:
+            title->setText("Declaration Phase");
+            text->setText("Select cards of the same\nsuit for Point declaration.");
 
-            QObject::disconnect(secondaryAction, SIGNAL(clicked()),
-                                this,            SIGNAL(SkipSequence()));
-            QObject::connect(   secondaryAction, SIGNAL(clicked()),
-                                this,            SIGNAL(SkipSet()));
+            primaryAction->setEnabled(false);
+
+            primaryAction->setText("Good");
+            secondaryAction->setText("Not Good");
+            secondaryAction->setVisible(true);
+
+            primaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+            secondaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+            title->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+            text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
             break;
 
         case TRICK:
@@ -347,9 +354,9 @@ void Scene::SetUI(Scene::PhaseType phase)
             text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
 
             QObject::disconnect(primaryAction,   SIGNAL(clicked()),
-                                this,            SIGNAL(DeclareSet()));
+                                this,            SIGNAL(Declare()));
             QObject::disconnect(secondaryAction, SIGNAL(clicked()),
-                                this,            SIGNAL(SkipSet()));
+                                this,            SIGNAL(Skip()));
 
             primaryAction->setVisible(false);
             secondaryAction->setVisible(false);
@@ -364,4 +371,16 @@ void Scene::SetUI(Scene::PhaseType phase)
 void Scene::SetCardsMoveable(bool moveable)
 {
     cardsMoveable = moveable;
+}
+
+
+//------------------------------------------------------------------------------
+// SetCardsMoveable - Set the cards in the scene to allow movement by a user.
+//------------------------------------------------------------------------------
+void Scene::SetValidSelection(bool valid)
+{
+    if ( valid )
+        primaryAction->setEnabled(true);
+    else
+        primaryAction->setEnabled(false);
 }

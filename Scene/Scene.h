@@ -23,6 +23,7 @@
 #include "Cards/Card.h"
 #include "Cards/CardArray.h"
 #include "Dialog.h"
+#include "State/GlobalStateInfo.h"
 
 
 //------------------------------------------------------------------------------
@@ -31,17 +32,6 @@
 class Scene : public QGraphicsScene
 {
     Q_OBJECT
-public:
-    enum PhaseType
-    {
-        DEAL,
-        EXCHANGE,
-        POINT,
-        SEQUENCE,
-        SET,
-        TRICK
-    };
-
 public:
     Scene(int x, int y, int width, int height);
     Scene(Scene&);
@@ -54,11 +44,13 @@ public:
     void         SetTitle(const QString& newTitle);
     void         SetText(const QString& newText);
 
+    void         UpdateLog(const QString& newMessage);
+
 protected:
     void         mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
     void         mouseMoveEvent(QGraphicsSceneMouseEvent* mouseEvent);
     void         mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent);
-    void         mouseDoubleClickEvent(QGraphicsSceneMouseEvent*);
+    void         mouseDoubleClickEvent(QGraphicsSceneMouseEvent*mouseEvent);
 
 private:
     void         ConnectSignals(void);
@@ -66,23 +58,23 @@ private:
 
 public slots:
     void         CreateDialog(Dialog::DialogType dialogType);
-    void         SetUI(PhaseType phase);
+    void         SetUI(State phase);
     void         SetCardsMoveable(bool moveable);
+    void         SetValidSelection(bool valid);
 
 signals:
+    void         BeginDeal(void);
+    void         BeginExchange(void);
+    void         Declare(void);
+    void         Skip(void);
+    void         TrickPlayed(void);
+
+
     void         RequestACardTransfer(CardArray::CardArrayType,
                                       CardArray::CardArrayType,
                                       Card*);
     void         SignalCardSelectionsChanged(Card*);
-    void         ExecuteDeal(void);
-    void         ExecuteExchange(void);
-    void         DeclarePoint(void);
-    void         DeclareSequence(void);
-    void         DeclareSet(void);
-    void         SkipDeclaration(void); //TODO
-    void         SkipPoint(void);
-    void         SkipSequence(void);
-    void         SkipSet(void);
+    void         ValidateSelection();
 
 private:
     QPushButton* primaryAction;

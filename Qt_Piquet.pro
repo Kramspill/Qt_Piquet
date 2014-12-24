@@ -30,7 +30,8 @@ SOURCES +=\
     Scene/Dialog.cpp \
     Players/AI.cpp \
     Players/KnowledgeBase.cpp \
-    Players/Player.cpp
+    Players/Player.cpp \
+    State/GlobalStateInfo.cpp
 
 HEADERS  += \
     Managers/GameManager.h \
@@ -49,7 +50,8 @@ HEADERS  += \
     Scene/Dialog.h \
     Players/AI.h \
     Players/KnowledgeBase.h \
-    Players/Player.h
+    Players/Player.h \
+    State/GlobalStateInfo.h
 
 #FORMS    += MainWindow.ui
 

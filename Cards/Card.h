@@ -76,7 +76,9 @@ public:
     void                UpdateAnimation(bool noAnimation);
 
 protected:
+    void                mousePressEvent(QGraphicsSceneMouseEvent* event);
     void                mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
+    //void                mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event);
 
 private:
     void                Initialize(void);
@@ -103,6 +105,7 @@ private:
     Rank                rank;
     int                 value;
     QPointF             position;
+    QPointF             origPosition;
     QStateMachine*      stateMachine;
     QPropertyAnimation* transitionAnimation;
     /* Transformation for flipping the card */

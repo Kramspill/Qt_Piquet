@@ -15,7 +15,9 @@
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
+#include "State/GlobalStateInfo.h"
 #include "Cards/Card.h"
+#include "Cards/CardArray.h"
 
 
 //------------------------------------------------------------------------------
@@ -25,48 +27,27 @@ class ScoreManager : public QObject
 {
     Q_OBJECT
 public:
-    enum Response
-    {
-        GOOD,
-        NOTGOOD,
-        EVEN,
-        QUESTION
-    };
-
-    enum SequenceScoring
-    {
-        THREE = 3,
-        FOUR  = 4,
-        FIVE  = 15,
-        SIX   = 16,
-        SEVEN = 17,
-        EIGHT = 18
-    };
-
-    struct PhaseScore
-    {
-        int numOfCards;
-        int totalValue;
-    };
-
-public:
     ScoreManager(void);
     ScoreManager(ScoreManager&);
     ~ScoreManager(void);
 
-    void Initialize(void);
+    void        Initialize(void);
 
-    int  GetPlayerScore(void);
-    int  GetCPUScore(void);
+    void        CreateDeclaration(std::vector<Card*> cards, State phase);
+    void        CreateResponse(std::vector<Card*> cards, State phase);
+    void        ScoreDeclaration(State phase, PlayerNum player);
 
-public slots:
-    void CheckPoint(void);
-    void CheckSequence(void);
-    void CheckSet(void);
+    int         GetPlayerScore(void);
+    int         GetCPUScore(void);
 
 private:
-    int  playerScore;
-    int  cpuScore;
+    int         GetValue(std::vector<Card*> cards, State phase);
+    void GetDeclaration(std::vector<Card*> cards, State phase, char* destBuffer);
+    void GetResponse(std::vector<Card*> cards, State phase, char* destBuffer);
+
+private:
+    int         playerScore;
+    int         cpuScore;
 };
 
 #endif // SCOREMANAGER_H

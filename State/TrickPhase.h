@@ -17,8 +17,7 @@
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
-#include "Cards/CardArray.h"
-#include "AI/AI.h"
+#include "State/GlobalStateInfo.h"
 
 
 //------------------------------------------------------------------------------
@@ -36,43 +35,27 @@ public:
 
 protected:
     void           onEntry(QEvent*);
-    void           onExit(QEvent*);
 
 private:
     void           ConnectSignals(void);
 
-public slots:
-    void           MoveFinished(int numOfCardsTransferred);
-
 private slots:
-    void           ScoreTrick(void);
-    void           PlayerTrick(void);
-    void           ExitPlayerTrick(void);
-    void           CpuTrick(void);
-
-    void           TrickResult(int winningPlayer);
+    void           Player1Trick(void);
+    void           Player2Trick(void);
 
 signals:
+    void           Player1PlayTrick(void);
+    void           Player2PlayTrick(void);
+    void           PlayTrick(int);
+    void           AllTricksComplete(void);
     void           TrickPhaseFinished(void);
-    void           UpdateAI(void);
-    void           SignalAI(AI::AIAction);
-    void           RequestCardTransfer(CardArray::CardArrayType,
-                                       CardArray::CardArrayType,
-                                       int, bool);
-    void           TransferComplete(void);
-    void           SetCardsMoveable(bool);
-    void           CheckTrick(int);
-    void           CheckTrick();
-
-    void           PlayersTurn(void);
-    void           CpusTurn(void);
 
 private:
     QStateMachine* stateMachine;
-    QState*        playerTrick;
-    QState*        cpuTrick;
-    QState*        scoreTrick;
-    int            player;
+    QState*        awaitingSignal;
+    QState*        player1Trick;
+    QState*        player2Trick;
+    QFinalState*   finalState;
 };
 
 #endif // TRICKPHASE_H

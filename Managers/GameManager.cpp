@@ -55,9 +55,11 @@ void GameManager::Initialize(void)
     cardManager = new CardManager();
     cardManager->Initialize(scene);
 
-    // Initialize the AI.
-    ai = new AI();
-    ai->Initialize();
+    // Initialize the players (default is player vs cpu).
+    player1 = new Player();
+    player1->Initialize(PLAYER1);
+    player2 = new AI();
+    player2->Initialize(PLAYER2);
 
     // Initialize the StateManager.
     stateManager = new StateManager();
@@ -81,144 +83,447 @@ void GameManager::Initialize(void)
 //------------------------------------------------------------------------------
 void GameManager::ConnectSignals(void)
 {
+    // OLD CODE //
     // Connect the signals from the card manager.
-    QObject::connect(cardManager,
-                     SIGNAL(TransferComplete(int)),
-                     stateManager,
-                     SLOT(SignalTransferComplete(int)));
-
-    QObject::connect(cardManager,
-                     SIGNAL(TrickResult(int)),
-                     stateManager,
-                     SIGNAL(TrickResult(int)));
-
-    QObject::connect(cardManager,
-                     SIGNAL(InformCardsMoveable(bool)),
-                     scene,
-                     SLOT(SetCardsMoveable(bool)));
+   /* QObject::connect(cardManager,
+                     SIGNAL(TransferComplete()),
+                     this,
+                     SLOT(TransferComplete()));
 
     // Connect the signals from the state manager.
-    QObject::connect(stateManager,
-                     SIGNAL(RequestDialog(Dialog::DialogType)),
-                     scene,
-                     SLOT(CreateDialog(Dialog::DialogType)));
-
     QObject::connect(stateManager,
                      SIGNAL(SetUI(Scene::PhaseType)),
                      this,
                      SLOT(SetUI(Scene::PhaseType)));
-
     QObject::connect(stateManager,
+                     SIGNAL(BeginExchange(int)),
+                     this,
+                     SLOT(BeginExchange(int)));
+    QObject::connect(stateManager,
+                     SIGNAL(MakeDeclaration(CardArray::SelectionType,
+                                            PlayerNum)),
+                     this,
+                     SLOT(MakeDeclaration(CardArray::SelectionType,
+                                          PlayerNum)));
+
+    // Connect the signals from player 1.
+    QObject::connect(player1,
+                     SIGNAL(DealComplete()),
+                     stateManager,
+                     SIGNAL(DealComplete()));
+    QObject::connect(player1,
+                     SIGNAL(ExchangeComplete()),
+                     stateManager,
+                     SIGNAL(ExchangeComplete()));
+    QObject::connect(player1,
+                     SIGNAL(AllExchangesComplete()),
+                     stateManager,
+                     SIGNAL(AllExchangesComplete()));
+    QObject::connect(player1,
+                     SIGNAL(AnnounceDeclaration(CardArray::SelectionType,
+                                                PlayerNum)),
+                     this,
+                     SLOT(ProcessDeclaration(CardArray::SelectionType,
+                                             PlayerNum)));
+    QObject::connect(player1,
+                     SIGNAL(SetCardsSelectable(bool)),
+                     cardManager,
+                     SLOT(SetCardsSelectable(bool)));
+    QObject::connect(player1,
                      SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
                                                 CardArray::CardArrayType,
-                                                int, bool)),
+                                                int)),
                      this,
                      SLOT(RequestCardTransfer(CardArray::CardArrayType,
                                               CardArray::CardArrayType,
-                                              int, bool)));
-
-    QObject::connect(stateManager,
-                     SIGNAL(SetCardsSelectable(bool, int)),
-                     cardManager,
-                     SLOT(SetCardsSelectable(bool, int)));
-
-    QObject::connect(stateManager,
-                     SIGNAL(SetCardsMoveable(bool)),
-                     cardManager,
-                     SLOT(SetCardsMoveable(bool)));
-
-    QObject::connect(stateManager,
-                     SIGNAL(CheckTrick(int)),
-                     cardManager,
-                     SLOT(CheckTrick(int)));
-
-    QObject::connect(stateManager,
-                     SIGNAL(DeclareSelection(CardArray::SelectionType)),
+                                              int)));
+    QObject::connect(player1,
+                     SIGNAL(SetUI(State)),
                      this,
-                     SLOT(DeclareSelection(CardArray::SelectionType)));
+                     SLOT(SetUI(State)));
 
-    QObject::connect(stateManager,
-                     SIGNAL(SignalAI(AI::AIAction)),
-                     this,
-                     SLOT(SelectAIAction(AI::AIAction)));
-
-    QObject::connect(stateManager,
-                     SIGNAL(UpdateAI()),
-                     this,
-                     SLOT(UpdateAI()));
-
-    // Connect the signals from the ai.
-    QObject::connect(ai,
-                     SIGNAL(AIProcessingComplete()),
+    // Connect the signals from player 2.
+    QObject::connect(player2,
+                     SIGNAL(DealComplete()),
                      stateManager,
-                     SLOT(AIProcessingComplete()));
-
-    QObject::connect(ai,
-                     SIGNAL(SignalCardSelectionsChanged(Card*,
-                                                     CardArray::CardArrayType)),
-                     cardManager,
-                     SLOT(CardSelectionsChanged(Card*,
-                                                CardArray::CardArrayType)));
+                     SIGNAL(DealComplete()));
+    QObject::connect(player2,
+                     SIGNAL(ExchangeComplete()),
+                     stateManager,
+                     SIGNAL(ExchangeComplete()));
+    QObject::connect(player2,
+                     SIGNAL(AllExchangesComplete()),
+                     stateManager,
+                     SIGNAL(AllExchangesComplete()));
+    QObject::connect(player2,
+                     SIGNAL(RequestCardPositions(PlayerNum)),
+                     this,
+                     SLOT(UpdateAI(PlayerNum)));
+    QObject::connect(player2,
+                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
+                                                CardArray::CardArrayType,
+                                                int)),
+                     this,
+                     SLOT(RequestCardTransfer(CardArray::CardArrayType,
+                                              CardArray::CardArrayType,
+                                              int)));
+    QObject::connect(player2,
+                     SIGNAL(SetUI(Scene::PhaseType)),
+                     this,
+                     SLOT(SetUI(Scene::PhaseType)));
 
     // Connect the signals from the scene.
     QObject::connect(scene,
-                     SIGNAL(SignalCardSelectionsChanged(Card*)),
-                     cardManager,
-                     SLOT(CardSelectionsChanged(Card*)));
-
-    QObject::connect(scene,
                      SIGNAL(ExecuteDeal()),
-                     stateManager,
-                     SIGNAL(ExecuteDeal()));
-
+                     this,
+                     SLOT(ExecuteDeal()));
     QObject::connect(scene,
                      SIGNAL(ExecuteExchange()),
+                     player1,
+                     SLOT(ExecuteExchange()));
+    */
+
+    // NEW CODE //
+    // Connect the signals from the card manager.
+    QObject::connect(cardManager,
+                     SIGNAL(InformCardsMoveable(bool)),
+                     scene,
+                     SLOT(SetCardsMoveable(bool)));
+    QObject::connect(cardManager,
+                     SIGNAL(ValidSelection(bool)),
+                     scene,
+                     SLOT(SetValidSelection(bool)));
+
+    // Connect the signals from the state manager.
+    QObject::connect(stateManager,
+                     SIGNAL(ExecuteDeal()),
+                     this,
+                     SLOT(ExecuteDeal()));
+    QObject::connect(stateManager,
+                     SIGNAL(ExecuteExchange()),
+                     this,
+                     SLOT(ExecuteExchange()));
+    QObject::connect(stateManager,
+                     SIGNAL(AnnounceDeclaration(State, PlayerNum)),
+                     this,
+                     SLOT(AnnounceDeclaration(State, PlayerNum)));
+    QObject::connect(stateManager,
+                     SIGNAL(PlayTrick(PlayerNum)),
+                     this,
+                     SLOT(PlayTrick(PlayerNum)));
+
+    // Connect the signals from player 1.
+    QObject::connect(player1,
+                     SIGNAL(DealComplete()),
                      stateManager,
-                     SIGNAL(ExecuteExchange()));
-
-    QObject::connect(scene,
-                     SIGNAL(DeclarePoint()),
+                     SIGNAL(DealComplete()));
+    QObject::connect(player1,
+                     SIGNAL(ExchangeComplete()),
+                     stateManager,
+                     SIGNAL(ExchangeComplete()));
+    QObject::connect(player1,
+                     SIGNAL(SetCardsMoveable(bool)),
+                     cardManager,
+                     SLOT(SetCardsMoveable(bool)));
+    QObject::connect(player1,
+                     SIGNAL(DeselectCards()),
+                     cardManager,
+                     SLOT(DeselectUserCards()));
+    QObject::connect(player1,
+                     SIGNAL(SetUI(State)),
+                     scene,
+                     SLOT(SetUI(State)));
+    QObject::connect(player1,
+                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
+                                                CardArray::CardArrayType,
+                                                int)),
                      this,
-                     SLOT(DeclarePoint()));
+                     SLOT(RequestCardTransfer(CardArray::CardArrayType,
+                                              CardArray::CardArrayType,
+                                              int)));
 
-    QObject::connect(scene,
-                     SIGNAL(DeclareSequence()),
+    // Connect the signals from player 2.
+    QObject::connect(player2,
+                     SIGNAL(DealComplete()),
+                     stateManager,
+                     SIGNAL(DealComplete()));
+    QObject::connect(player2,
+                     SIGNAL(ExchangeComplete()),
+                     stateManager,
+                     SIGNAL(ExchangeComplete()));
+    QObject::connect(player2,
+                     SIGNAL(SetUI(State)),
+                     scene,
+                     SLOT(SetUI(State)));
+    QObject::connect(player2,
+                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
+                                                CardArray::CardArrayType,
+                                                int)),
                      this,
-                     SLOT(DeclareSequence()));
+                     SLOT(RequestCardTransfer(CardArray::CardArrayType,
+                                              CardArray::CardArrayType,
+                                              int)));
+    QObject::connect(player2,
+                     SIGNAL(RequestCardPositions(PlayerNum)),
+                     this,
+                     SLOT(UpdateAI(PlayerNum)));
 
+    // Connect the signals from the scene.
     QObject::connect(scene,
-                     SIGNAL(DeclareSet()),
-                     this,
-                     SLOT(DeclareSet()));
+                     SIGNAL(BeginDeal()),
+                     player1,
+                     SIGNAL(BeginDeal()));
+    QObject::connect(scene,
+                     SIGNAL(BeginExchange()),
+                     player1,
+                     SIGNAL(BeginExchange()));
+    QObject::connect(scene,
+                     SIGNAL(Declare()),
+                     player1,
+                     SIGNAL(Declare()));
+    QObject::connect(scene,
+                     SIGNAL(Skip()),
+                     player1,
+                     SIGNAL(Skip()));
+    QObject::connect(scene,
+                     SIGNAL(TrickPlayed()),
+                     player1,
+                     SIGNAL(TrickPlayed()));
+    QObject::connect(scene,
+                     SIGNAL(ValidateSelection()),
+                     cardManager,
+                     SLOT(ValidateSelection()));
+}
 
-    QObject::connect(scene,
-                     SIGNAL(SkipDeclaration()),
-                     this,
-                     SLOT(SkipDeclaration())); // TODO
 
-    QObject::connect(scene,
-                     SIGNAL(SkipPoint()),
-                     this,
-                     SLOT(SkipPoint()));
+//------------------------------------------------------------------------------
+// ExecuteDeal - Inform the younger to begin dealing the cards.
+//------------------------------------------------------------------------------
+void GameManager::ExecuteDeal(void)
+{
+    if ( younger == PLAYER1 )
+    {
+        player1->ExecuteDeal();
+        scene->UpdateLog("PLAYER 1: DEAL");
+    }
+    else
+    {
+        player2->ExecuteDeal();
+        scene->UpdateLog("PLAYER 2: DEAL");
+    }
+}
 
-    QObject::connect(scene,
-                     SIGNAL(SkipSequence()),
-                     this,
-                     SLOT(SkipSequence()));
 
-    QObject::connect(scene,
-                     SIGNAL(SkipSet()),
-                     this,
-                     SLOT(SkipSet()));
+//------------------------------------------------------------------------------
+// ExecuteExchange - Inform the players to perform their exchanges.
+//------------------------------------------------------------------------------
+void GameManager::ExecuteExchange(void)
+{
+    if ( elder == PLAYER1 )
+    {
+        cardManager->SetCardsSelectable(true, PLAYER1);
+        player1->ExecuteExchange();
+        cardManager->SetCardsSelectable(false, PLAYER1);
 
-    QObject::connect(scene,
-                     SIGNAL(RequestACardTransfer(CardArray::CardArrayType,
-                                                 CardArray::CardArrayType,
-                                                 Card*)),
-                     this,
-                     SLOT(RequestACardTransfer(CardArray::CardArrayType,
-                                               CardArray::CardArrayType,
-                                               Card*)));
+        cardManager->SetCardsSelectable(true, PLAYER2);
+        player2->ExecuteExchange();
+        cardManager->SetCardsSelectable(false, PLAYER2);
+    }
+    else
+    {
+        cardManager->SetCardsSelectable(true, PLAYER2);
+        player2->ExecuteExchange();
+        cardManager->SetCardsSelectable(false, PLAYER2);
+
+        cardManager->SetCardsSelectable(true, PLAYER1);
+        player1->ExecuteExchange();
+        cardManager->SetCardsSelectable(false, PLAYER1);
+    }
+}
+
+
+//------------------------------------------------------------------------------
+// AnnounceDeclaration - Inform the players to announce a declaration.
+//------------------------------------------------------------------------------
+void GameManager::AnnounceDeclaration(State phase, PlayerNum player)
+{
+    Player* elderPlayer;
+    Player* youngerPlayer;
+
+    // Determine who will be making declarations.
+    if ( player == elder )
+    {
+        elderPlayer   = (player == PLAYER1) ? player1 : player2;
+        youngerPlayer = (player == PLAYER1) ? player2 : player1;
+    }
+    else
+    {
+        elderPlayer   = (player == PLAYER1) ? player2 : player1;
+        youngerPlayer = (player == PLAYER1) ? player1 : player2;
+    }
+
+    // Set the phase for user selection validation.
+    currentPhase = phase;
+
+    // If the elder is making declarations, the younger may respond.
+    // There are no responses to the younger's declarations.
+    if ( player == elder )
+    {
+        // Elder makes his declaration.
+        cardManager->SetCardsSelectable(true, elder);
+        elderPlayer->AnnounceDeclaration(phase);
+        DeclareSelection(phase, elder);
+
+        // Younger makes his response if needed.
+        if ( declaration->notSkipped )
+        {
+            cardManager->SetCardsSelectable(true, younger);
+            youngerPlayer->Respond(phase);
+            ResolveResponse(phase, younger);
+            cardManager->SetCardsSelectable(false, younger);
+
+            // Score the declaration.
+            scoreManager->ScoreDeclaration(phase, elder);
+
+            // If elder won their declaration and this isn't the Point,
+            // elder may make as many declarations as they like/can.
+            if ( response->good && phase != POINT )
+            {
+                while ( declaration->notSkipped )
+                {
+                    elderPlayer->AnnounceDeclaration(phase);
+                    DeclareSelection(phase, elder);
+                    response->good = true;
+                    scoreManager->ScoreDeclaration(phase, elder);
+                }
+            }
+        }
+        else
+        {
+            switch ( phase )
+            {
+                case POINT:
+                    declarationResults->pointWinner = younger;
+                    break;
+
+                case SEQUENCE:
+                    declarationResults->sequenceWinner = younger;
+                    break;
+
+                case SET:
+                    declarationResults->setWinner = younger;
+                    break;
+            }
+        }
+
+        cardManager->SetCardsSelectable(false, elder);
+    }
+    else
+    {
+        // Younger announces their declarations and scores for it.
+        cardManager->SetCardsSelectable(true, younger);
+        youngerPlayer->AnnounceDeclaration(phase);
+        DeclareSelection(phase, younger);
+        response->good = true;
+        scoreManager->ScoreDeclaration(phase, younger);
+
+        if ( phase != POINT )
+        {
+            while ( declaration->notSkipped )
+            {
+                // INIFINITE LOOOP
+                youngerPlayer->AnnounceDeclaration(phase);
+                DeclareSelection(phase, younger);
+                response->good = true;
+                scoreManager->ScoreDeclaration(phase, younger);
+            }
+        }
+
+        cardManager->SetCardsSelectable(false, younger);
+    }
+}
+
+
+//------------------------------------------------------------------------------
+// DeclareSelection - Check the card selection and inform the younger hand to
+//                    respond.
+//------------------------------------------------------------------------------
+void GameManager::DeclareSelection(State phase, PlayerNum player)
+{
+    // Get the player's selection.
+    std::vector<Card*> selectedCards = cardManager->GetSelection(player);
+
+    // Create a declaration from the selection and store it in the global state.
+    scoreManager->CreateDeclaration(selectedCards, phase);
+
+    // Output the declaration (if applicable).
+    if ( declaration->notSkipped )
+    {
+        char* str = new char[30];
+        snprintf(str, 30, "PLAYER %d: %s", player, declaration->declaration);
+
+        scene->UpdateLog(str);
+        delete[] str;
+    }
+
+    // Disable the selected cards.
+    for ( int i = 0; i < selectedCards.size(); i++ )
+        selectedCards[i]->setFlag(QGraphicsItem::ItemIsSelectable, false);
+}
+
+
+//------------------------------------------------------------------------------
+// ResolveResponse - Resolve the response of the younger hand.
+//------------------------------------------------------------------------------
+void GameManager::ResolveResponse(State phase, PlayerNum player)
+{
+    // Get the player's selection.
+    std::vector<Card*> selectedCards = cardManager->GetSelection(player);
+
+    // Create a response from the selection and store it in the global state.
+    scoreManager->CreateResponse(selectedCards, phase);
+
+    char* str = new char[30];
+
+    // Output the response.
+    if ( response->hasQuestion )
+    {
+        snprintf(str, 30, "PLAYER %d: HOW HIGH?", player);
+        scene->UpdateLog(str);
+
+        snprintf(str, 30, "PLAYER %d: %s", elder, declaration->response);
+        scene->UpdateLog(str);
+    }
+
+    if ( response->good )
+    {
+        snprintf(str, 30, "PLAYER %d: GOOD", player);
+        scene->UpdateLog(str);
+    }
+    else if ( response->even )
+    {
+        snprintf(str, 30, "PLAYER %d: EVEN", player);
+        scene->UpdateLog(str);
+    }
+    else
+    {
+        snprintf(str, 30, "PLAYER %d: NOT GOOD", player);
+        scene->UpdateLog(str);
+    }
+
+    delete[] str;
+}
+
+
+//------------------------------------------------------------------------------
+// PlayTrick - Reolve the response of the younger hand.
+//------------------------------------------------------------------------------
+void GameManager::PlayTrick(PlayerNum player)
+{
+    if ( player == PLAYER1 )
+        player1->PlayTrick();
+    else
+        player2->PlayTrick();
 }
 
 
@@ -228,98 +533,26 @@ void GameManager::ConnectSignals(void)
 //------------------------------------------------------------------------------
 void GameManager::RequestCardTransfer(CardArray::CardArrayType src,
                                       CardArray::CardArrayType dest,
-                                      int  numOfCards,
-                                      bool transferSelectedCards)
+                                      int numCards)
 {
     CardArray* source      = cardManager->GetDesiredCardArray(src);
     CardArray* destination = cardManager->GetDesiredCardArray(dest);
 
-    if ( transferSelectedCards )
-        cardManager->TransferSelectedCards(source, destination);
-    else
-        cardManager->TransferCards(source, destination, numOfCards);
-}
-
-
-//------------------------------------------------------------------------------
-// RequestACardTransfer - Request a card to be transferred to a different
-//                        CardArray.
-//------------------------------------------------------------------------------
-void GameManager::RequestACardTransfer(CardArray::CardArrayType src,
-                                       CardArray::CardArrayType dest,
-                                       Card* card)
-{
-    CardArray* source      = cardManager->GetDesiredCardArray(src);
-    CardArray* destination = cardManager->GetDesiredCardArray(dest);
-
-    cardManager->TransferCard(source, destination, card);
-}
-
-
-//------------------------------------------------------------------------------
-// DeclareSelection - Check the card selection and inform the younger hand to
-//                    respond.
-//------------------------------------------------------------------------------
-void GameManager::DeclareSelection(CardArray::SelectionType phase)
-{
-    if ( cardManager->CheckSelection(phase) )
-    {
-        ScoreManager::PhaseScore userScore;
-        ScoreManager::Response   response;
-
-        switch ( phase )
-        {
-            case CardArray::POINT:
-                userScore = cardManager->GetSelectionScore(phase);
-                response  = ai->DeclarePoint(userScore);
-                break;
-
-            case CardArray::SEQUENCE:
-                userScore = cardManager->GetSelectionScore(phase);
-                response  = ai->DeclareSequence(userScore);
-                break;
-
-            case CardArray::SET:
-                userScore = cardManager->GetSelectionScore(phase);
-                response  = ai->DeclareSet(userScore);
-                break;
-
-            default:
-                break;
-        }
-    }
-}
-
-
-//------------------------------------------------------------------------------
-// CallSelectAIAction - Call an action within the ai class.
-//------------------------------------------------------------------------------
-void GameManager::SelectAIAction(AI::AIAction action)
-{
-    switch ( action )
-    {
-        case AI::DISCARD:
-            ai->SelectCardsToDiscard();
-            break;
-
-        case AI::TRICK:
-            ai->SelectTrickToPlay();
-            break;
-
-        default:
-            break;
-    }
+    cardManager->TransferCards(source, destination, numCards);
 }
 
 
 //------------------------------------------------------------------------------
 // UpdateAI - Update the game's ai with current knowledge.
 //------------------------------------------------------------------------------
-void GameManager::UpdateAI(void)
+void GameManager::UpdateAI(PlayerNum player)
 {
     Card*      card;
     CardArray* cardArray;
     int        size = 0;
+
+    // Select the chosen player.
+    AI* ai = player == PLAYER1 ? (AI*)player1 : (AI*)player2;
 
     // Retrieve the cpu's hand and update the ai's knowledge base.
     cardArray = cardManager->GetDesiredCardArray(CardArray::CPUHAND);
@@ -353,113 +586,4 @@ void GameManager::UpdateAI(void)
         card = cardArray->GetCard(index);
         ai->UpdateKnowledgeBase(card, index, CardArray::PREVIOUSTRICKS);
     }
-}
-
-
-//------------------------------------------------------------------------------
-// SetUI - Set the scene's ui.
-//------------------------------------------------------------------------------
-void GameManager::SetUI(Scene::PhaseType phase)
-{
-    scene->SetUI(phase);
-}
-
-
-//------------------------------------------------------------------------------
-// DeclarePoint - Player declare's their Point.
-//------------------------------------------------------------------------------
-void GameManager::DeclarePoint(void)
-{
-    if ( cardManager->CheckSelection(CardArray::POINT) )
-    {
-        ScoreManager::PhaseScore userScore;
-
-        userScore = cardManager->GetSelectionScore(CardArray::POINT);
-        ai->DeclarePoint(userScore);
-    }
-}
-
-
-//------------------------------------------------------------------------------
-// DeclareSequence - Player declare's their Sequence.
-//------------------------------------------------------------------------------
-void GameManager::DeclareSequence(void)
-{
-    if ( cardManager->CheckSelection(CardArray::SEQUENCE) )
-    {
-        ScoreManager::PhaseScore userScore;
-
-        userScore = cardManager->GetSelectionScore(CardArray::SEQUENCE);
-        ai->DeclareSequence(userScore);
-    }
-}
-
-
-//------------------------------------------------------------------------------
-// DeclareSet - Player declare's their Set.
-//------------------------------------------------------------------------------
-void GameManager::DeclareSet(void)
-{
-    if ( cardManager->CheckSelection(CardArray::SET) )
-    {
-        ScoreManager::PhaseScore userScore;
-
-        userScore = cardManager->GetSelectionScore(CardArray::SET);
-        ai->DeclareSet(userScore);
-    }
-}
-
-
-//------------------------------------------------------------------------------
-// SkipDeclaration - Skip a declaration.
-//------------------------------------------------------------------------------
-void GameManager::SkipDeclaration(void)
-{
-    ScoreManager::PhaseScore userScore;
-
-    userScore.numOfCards = 0;
-    userScore.totalValue = 0;
-    // TO DO:
-}
-
-
-//------------------------------------------------------------------------------
-// SkipPoint - Skip the Point declaration.
-//------------------------------------------------------------------------------
-void GameManager::SkipPoint(void)
-{
-    ScoreManager::PhaseScore userScore;
-
-    userScore.numOfCards = 0;
-    userScore.totalValue = 0;
-
-    ai->DeclarePoint(userScore);
-}
-
-
-//------------------------------------------------------------------------------
-// SkipSequence - Skip the Sequence declaration.
-//------------------------------------------------------------------------------
-void GameManager::SkipSequence(void)
-{
-    ScoreManager::PhaseScore userScore;
-
-    userScore.numOfCards = 0;
-    userScore.totalValue = 0;
-
-    ai->DeclareSequence(userScore);
-}
-
-
-//------------------------------------------------------------------------------
-// SkipSet - Skip the Set declaration.
-//------------------------------------------------------------------------------
-void GameManager::SkipSet(void)
-{
-    ScoreManager::PhaseScore userScore;
-
-    userScore.numOfCards = 0;
-    userScore.totalValue = 0;
-
-    ai->DeclareSet(userScore);
 }

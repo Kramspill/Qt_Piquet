@@ -22,7 +22,7 @@
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
-#include "Managers/ScoreManager.h"
+//#include "Managers/ScoreManager.h"
 #include "Card.h"
 
 
@@ -80,7 +80,7 @@ public:
 
     bool                     UpdateCardSelections(Card* card);
     bool                     CheckSelection(SelectionType phase);
-    ScoreManager::PhaseScore GetSelectionScore(SelectionType phase);
+    //ScoreManager::PhaseScore GetSelectionScore(SelectionType phase);
     Card*                    RemoveSelectedCard(void);
     void                     DeselectAll(void);
 

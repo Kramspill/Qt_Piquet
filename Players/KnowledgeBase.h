@@ -45,9 +45,9 @@ public:
     void                     FlagDispensableCards(CardArray* cpuHand);
     void                     SelectTrick(CardArray* cpuHand);
 
-    ScoreManager::PhaseScore CalculatePoint(void);
-    ScoreManager::PhaseScore CalculateSequence(void);
-    ScoreManager::PhaseScore CalculateSet(void);
+    void                     SelectPoint(CardArray* hand);
+    void                     SelectSequence(CardArray* hand);
+    void                     SelectSet(CardArray* hand);
 
 private:
     void                     RankCards(CardArray* cpuHand);

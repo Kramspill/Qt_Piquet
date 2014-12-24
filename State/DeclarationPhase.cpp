@@ -43,76 +43,35 @@ void DeclarationPhase::Initialize(void)
     // Initialize the state machine.
     stateMachine = new QStateMachine();
 
-    // Initialize the status of each phase.
-    for ( int index = 0; index < 3; index++ )
-    {
-        phaseStatus[index] = PENDING;
-    }
-
     // Initialize the states within the state machine.
-    playerPoint        = new QState(stateMachine);
-    playerSequence     = new QState(stateMachine);
-    playerSet          = new QState(stateMachine);
-    cpuPoint           = new QState(stateMachine);
-    cpuSequence        = new QState(stateMachine);
-    cpuSet             = new QState(stateMachine);
-    playerInitialTrick = new QState(stateMachine);
-    cpuInitialTrick    = new QState(stateMachine);
-    finalState         = new QFinalState(stateMachine);
+    elderDeclarations   = new QState(stateMachine);
+    elderTrick          = new QState(stateMachine);
+    youngerDeclarations = new QState(stateMachine);
+    youngerTrick        = new QState(stateMachine);
+    finalState          = new QFinalState(stateMachine);
 
     // Set the initial state for the state machine.
-    stateMachine->setInitialState(playerPoint);
+    stateMachine->setInitialState(elderDeclarations);
 
-    // Setup the transitions from playerPoint.
-    playerPoint->addTransition(this, SIGNAL(PointComplete()),  playerSequence);
+    // Setup the transitions from the elderDeclarations state.
+    elderDeclarations->addTransition(this,
+                                     SIGNAL(DeclarationsComplete()),
+                                     elderTrick);
 
-    // Setup the transitions from playerSequence.
-    playerSequence->addTransition(this, SIGNAL(SequenceComplete()), playerSet);
+    // Setup the transitions from the elderTrick state.
+    elderTrick->addTransition(this,
+                              SIGNAL(TrickComplete()), youngerDeclarations);
 
-    // Setup the transitions from playerSet.
-    playerSet->addTransition(this, SIGNAL(SetComplete()), playerInitialTrick);
+    // Setup the transitions from the elderTrick state.
+    youngerDeclarations->addTransition(this,
+                                       SIGNAL(DeclarationsComplete()),
+                                       youngerTrick);
 
-    // Setup the transitions from playerInitialTrick.
-    playerInitialTrick->addTransition(this,
-                                      SIGNAL(TransferComplete()), cpuPoint);
-    //playerInitialTrick->addTransition(this,
-    //                                  SIGNAL(TransferComplete()), finalState);
-
-    // Setup the transitions from cpuPoint.
-    cpuPoint->addTransition(this, SIGNAL(PointComplete()), cpuSequence);
-
-    // Setup the transitions from cpuSequence.
-    cpuSequence->addTransition(this, SIGNAL(SequenceComplete()), cpuSet);
-
-    // Setup the transitions from cpuSet.
-    cpuSet->addTransition(this, SIGNAL(SetComplete()), cpuInitialTrick);
-
-    // Setup the transitions from cpuInitialTrick.
-    cpuInitialTrick->addTransition(this, SIGNAL(TransferComplete()), finalState);
-    //cpuInitialTrick->addTransition(this, SIGNAL(Losses()), playerPoint);
+    // Setup the transitions from the elderTrick state.
+    youngerTrick->addTransition(this, SIGNAL(TrickComplete()), finalState);
 
     // Setup the work done in each state.
     ConnectSignals();
-}
-
-
-//------------------------------------------------------------------------------
-// PhaseComplete - Emit a signal to move to the next phase.
-//------------------------------------------------------------------------------
-void DeclarationPhase::PhaseComplete(void)
-{
-    if ( stateMachine->configuration().contains(playerPoint) )
-    {
-        emit PointComplete();
-    }
-    else if ( stateMachine->configuration().contains(playerSequence) )
-    {
-        emit SequenceComplete();
-    }
-    else if ( stateMachine->configuration().contains(playerSet) )
-    {
-        emit SetComplete();
-    }
 }
 
 
@@ -122,15 +81,6 @@ void DeclarationPhase::PhaseComplete(void)
 void DeclarationPhase::onEntry(QEvent*)
 {
     stateMachine->start();
-    emit SetCardsSelectable(true, 12);
-}
-
-
-//------------------------------------------------------------------------------
-// onExit - Override of QState::onExit.
-//------------------------------------------------------------------------------
-void DeclarationPhase::onExit(QEvent*)
-{
 }
 
 
@@ -140,117 +90,66 @@ void DeclarationPhase::onExit(QEvent*)
 //------------------------------------------------------------------------------
 void DeclarationPhase::ConnectSignals(void)
 {
-    // Setup the work done in each state.
-    connect(playerPoint,    SIGNAL(entered()), this, SLOT(PlayerPoint()));
-    connect(playerSequence, SIGNAL(entered()), this, SLOT(PlayerSequence()));
-    connect(playerSet,      SIGNAL(entered()), this, SLOT(PlayerSet()));
-    connect(playerInitialTrick, SIGNAL(entered()),
-            this,               SLOT(PlayerInitialTrick()));
-    connect(playerInitialTrick, SIGNAL(exited()),
-            this,               SLOT(ExitPlayerInitialTrick()));
+    connect(elderDeclarations, SIGNAL(entered()),
+            this,              SLOT(ElderDeclarations()));
+    connect(elderTrick,   SIGNAL(entered()), this, SLOT(ElderTrick()));
+    connect(youngerDeclarations, SIGNAL(entered()),
+            this,                SLOT(YoungerDeclarations()));
+    connect(youngerTrick, SIGNAL(entered()), this, SLOT(YoungerTrick()));
 
-    connect(cpuPoint,        SIGNAL(entered()), this, SLOT(CpuPoint()));
-    connect(cpuSequence,     SIGNAL(entered()), this, SLOT(CpuSequence()));
-    connect(cpuSet,          SIGNAL(entered()), this, SLOT(CpuSet()));
-    connect(cpuInitialTrick, SIGNAL(entered()), this, SLOT(CpuInitialTrick()));
-
-    connect(stateMachine, SIGNAL(finished()), this,
+    connect(stateMachine,
+            SIGNAL(finished()),
+            this,
             SIGNAL(DeclarationPhaseFinished()));
 }
 
 
 //------------------------------------------------------------------------------
-// PlayerPoint - Function that performs the required operations for the
-//               playerPoint state.
+// ElderDeclarations - Elder makes their declarations.
 //------------------------------------------------------------------------------
-void DeclarationPhase::PlayerPoint(void)
+void DeclarationPhase::ElderDeclarations(void)
 {
-    emit SetUI(Scene::POINT);
+    emit AnnounceDeclaration(POINT,    elder);
+    emit AnnounceDeclaration(SEQUENCE, elder);
+    emit AnnounceDeclaration(SET,      elder);
+
+    emit DeclarationsComplete();
 }
 
 
 //------------------------------------------------------------------------------
-// PlayerSequence - Function that performs the required operations for the
-//                  playerSequence state.
+// ElderTrick - Elder playes their initial trick.
 //------------------------------------------------------------------------------
-void DeclarationPhase::PlayerSequence(void)
+void DeclarationPhase::ElderTrick(void)
 {
-    emit SetUI(Scene::SEQUENCE);
+    emit PlayTrick(elder);
+    emit TrickComplete();
 }
 
 
 //------------------------------------------------------------------------------
-// PlayerSet - Function that performs the required operations for the playerSet
-//             state.
+// YoungerDeclarations - Younger makes their declarations.
 //------------------------------------------------------------------------------
-void DeclarationPhase::PlayerSet(void)
+void DeclarationPhase::YoungerDeclarations(void)
 {
-    emit SetUI(Scene::SET);
+    if ( declarationResults->pointWinner == younger )
+        emit AnnounceDeclaration(POINT, younger);
+
+    if ( declarationResults->sequenceWinner == younger )
+        emit AnnounceDeclaration(SEQUENCE, younger);
+
+    if ( declarationResults->setWinner == younger )
+        emit AnnounceDeclaration(SET, younger);
+
+    emit DeclarationsComplete();
 }
 
 
 //------------------------------------------------------------------------------
-// PlayerInitialTrick - Function that performs the required operations for the
-//                      playerInitialTrick state.
+// YoungerTrick - Younger plays their initial trick.
 //------------------------------------------------------------------------------
-void DeclarationPhase::PlayerInitialTrick(void)
+void DeclarationPhase::YoungerTrick(void)
 {
-    emit SetCardsSelectable(false, 0);
-    emit SetCardsMoveable(true);
-    emit SetUI(Scene::TRICK);
-}
-
-
-//------------------------------------------------------------------------------
-// ExitPlayerInitialTrick - Function that performs the required operations for
-//                          the playerInitialTrick exited() state.
-//------------------------------------------------------------------------------
-void DeclarationPhase::ExitPlayerInitialTrick(void)
-{
-    emit SetCardsMoveable(false);
-}
-
-
-//------------------------------------------------------------------------------
-// CpuPoint - Function that performs the required operations for the cpuPoint
-//            state.
-//------------------------------------------------------------------------------
-void DeclarationPhase::CpuPoint(void)
-{
-    // For now just skip.
-    emit PointComplete();
-}
-
-
-//------------------------------------------------------------------------------
-// CpuSequence - Function that performs the required operations for the
-//               cpuSequence state.
-//------------------------------------------------------------------------------
-void DeclarationPhase::CpuSequence(void)
-{
-    // For now just skip.
-    emit SequenceComplete();
-}
-
-
-//------------------------------------------------------------------------------
-// CpuSet - Function that performs the required operations for the cpuSet state.
-//------------------------------------------------------------------------------
-void DeclarationPhase::CpuSet(void)
-{
-    // For now just skip.
-    emit SetComplete();
-}
-
-
-//------------------------------------------------------------------------------
-// CpuInitialTrick - Function that performs the required operations for the
-//                   cpuInitialTrick state.
-//------------------------------------------------------------------------------
-void DeclarationPhase::CpuInitialTrick(void)
-{
-    emit UpdateAI();
-    emit SignalAI(AI::TRICK);
-    emit RequestCardTransfer(CardArray::CPUHAND, CardArray::CPUTRICK,
-                             0, true);
+    emit PlayTrick(younger);
+    emit TrickComplete();
 }

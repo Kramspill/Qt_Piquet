@@ -333,7 +333,7 @@ bool CardArray::CheckSelection(CardArray::SelectionType phase)
 //------------------------------------------------------------------------------
 // GetSelectionScore - Get the score of the current selection.
 //------------------------------------------------------------------------------
-ScoreManager::PhaseScore CardArray::GetSelectionScore(CardArray::SelectionType
+/*ScoreManager::PhaseScore CardArray::GetSelectionScore(CardArray::SelectionType
                                                       phase)
 {
     ScoreManager::PhaseScore score;
@@ -371,7 +371,7 @@ ScoreManager::PhaseScore CardArray::GetSelectionScore(CardArray::SelectionType
     }
 
     return score;
-}
+}*/
 
 
 //------------------------------------------------------------------------------

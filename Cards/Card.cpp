@@ -93,11 +93,12 @@ void Card::UpdateSelection(void)
 {
     if ( this->isSelected() )
     {
+        origPosition = position;
         position.setY(position.y() - 30);
     }
     else
     {
-        position.setY(position.y() + 30);
+        position.setY(origPosition.y());
     }
 
     UpdateAnimation(false);
@@ -112,7 +113,8 @@ void Card::SetPosition(QPointF newPosition, int zPosition)
     if ( zPosition != -1 )
         this->setZValue(zPosition);
 
-    position = newPosition;
+    position     = newPosition;
+    origPosition = position;
 }
 
 
@@ -136,14 +138,36 @@ void Card::UpdateAnimation(bool noAnimation)
 
 
 //------------------------------------------------------------------------------
+// mouseReleaseEvent - Handle mouse press events.
+//------------------------------------------------------------------------------
+void Card::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+    if ( isEnabled() && (flags() & QGraphicsItem::ItemIsSelectable))
+    {
+        setSelected(!isSelected());
+        UpdateSelection();
+    }
+}
+
+
+//------------------------------------------------------------------------------
 // mouseReleaseEvent - Handle mouse release events.
 //------------------------------------------------------------------------------
 void Card::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
-    QGraphicsItem::mouseReleaseEvent(event);
+    //QGraphicsItem::mouseReleaseEvent(event);
 
-    UpdateAnimation(false);
+    //UpdateAnimation(false);
 }
+
+
+//------------------------------------------------------------------------------
+// mouseDoubleClickEvent - Override of QGraphicsItem::mouseDoubleClickEvent to
+//                         do nothing.
+//------------------------------------------------------------------------------
+/*void Card::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
+{
+}*/
 
 
 //------------------------------------------------------------------------------

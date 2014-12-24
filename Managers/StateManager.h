@@ -10,7 +10,6 @@
 // Qt Header Files
 //------------------------------------------------------------------------------
 #include <QObject>
-#include <QPushButton>
 #include <QStateMachine>
 
 
@@ -39,30 +38,16 @@ public:
 private:
     void              ConnectSignals(void);
 
-private slots:
-    void              SignalTransferComplete(int numOfCardsTransferred);
-    void              AIProcessingComplete(void);
-
 signals:
-    void              RequestCardTransfer(CardArray::CardArrayType,
-                                          CardArray::CardArrayType,
-                                          int, bool);
-    void              TransferComplete(int);
-
-    void              SetCardsSelectable(bool, int);
-    void              SetCardsMoveable(bool);
-    void              DeclareSelection(CardArray::SelectionType);
-
-    void              RequestDialog(Dialog::DialogType);
-    void              SetUI(Scene::PhaseType);
     void              ExecuteDeal(void);
+    void              DealComplete(void);
+
     void              ExecuteExchange(void);
+    void              ExchangeComplete(void);
 
-    void              SignalAI(AI::AIAction);
-    void              UpdateAI(void);
+    void              AnnounceDeclaration(State, PlayerNum);
 
-    void              CheckTrick(int);
-    void              TrickResult(int);
+    void              PlayTrick(PlayerNum);
 
 private:
     QStateMachine*    stateMachine;

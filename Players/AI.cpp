@@ -21,7 +21,7 @@ AI::AI(void)
 // Copy Constructor
 //------------------------------------------------------------------------------
 AI::AI(AI&) :
-    QObject()
+    Player()
 {
 
 }
@@ -39,14 +39,105 @@ AI::~AI(void)
 //------------------------------------------------------------------------------
 // Initialize - Initialize itself.
 //------------------------------------------------------------------------------
-void AI::Initialize(void)
+void AI::Initialize(PlayerNum num)
 {
+    playerNumber = num;
+
     // Initialize the knowledge base.
     knowledgeBase = new KnowledgeBase();
     knowledgeBase->Initialize();
 
     // Connect the signals.
     ConnectSignals();
+}
+
+
+//------------------------------------------------------------------------------
+// ExecuteDeal - Player executes a deal.
+//------------------------------------------------------------------------------
+void AI::ExecuteDeal(void)
+{
+    // Set the UI.
+    emit SetUI(DEAL);
+
+    // Begin dealing out the cards.
+    emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
+    emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
+    emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
+    emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
+    emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
+    emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
+    emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
+    emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
+    emit RequestCardTransfer(CardArray::DECK, CardArray::TALON,      8);
+
+    emit DealComplete();
+}
+
+
+//------------------------------------------------------------------------------
+// ExecuteExchange - Player executes an exchange.
+//------------------------------------------------------------------------------
+void AI::ExecuteExchange(void)
+{
+    // Request information on card positions.
+    emit RequestCardPositions(playerNumber);
+
+    // Select the cards to exchange.
+    SelectCardsToDiscard();
+
+    emit RequestCardTransfer(CardArray::CPUHAND,
+                             CardArray::CPUDISCARDS,
+                             0);
+    emit RequestCardTransfer(CardArray::TALON,
+                             CardArray::CPUHAND,
+                             0);
+
+    // Update information on card positions.
+    emit RequestCardPositions(playerNumber);
+
+    if ( younger == playerNumber)
+        emit ExchangeComplete();
+}
+
+
+//------------------------------------------------------------------------------
+// AnnouceDeclaration - Player prepares to make a declaration.
+//------------------------------------------------------------------------------
+void AI::AnnounceDeclaration(State phase)
+{
+    switch ( phase )
+    {
+        case POINT:
+            knowledgeBase->SelectPoint(cpuHand);
+            break;
+
+        case SEQUENCE:
+            knowledgeBase->SelectSequence(cpuHand);
+            break;
+
+        case SET:
+            knowledgeBase->SelectSet(cpuHand);
+            break;
+    }
+}
+
+
+//------------------------------------------------------------------------------
+// Respond - Player responds to a declaration.
+//------------------------------------------------------------------------------
+void AI::Respond(State phase)
+{
+    AnnounceDeclaration(phase);
+}
+
+
+//------------------------------------------------------------------------------
+// PlayTrick - Player plays a single trick.
+//------------------------------------------------------------------------------
+void AI::PlayTrick(void)
+{
+
 }
 
 
@@ -80,7 +171,7 @@ void AI::SelectCardsToDiscard(void)
 {
     knowledgeBase->FlagDispensableCards(cpuHand);
 
-    emit AIProcessingComplete();
+    //emit AIProcessingComplete();
 }
 
 
@@ -90,135 +181,6 @@ void AI::SelectCardsToDiscard(void)
 void AI::SelectTrickToPlay(void)
 {
     knowledgeBase->SelectTrick(cpuHand);
-
-    emit AIProcessingComplete();
-}
-
-
-//------------------------------------------------------------------------------
-// DeclarePoint - Select cards for the Point declaration.
-//------------------------------------------------------------------------------
-ScoreManager::Response AI::DeclarePoint(ScoreManager::PhaseScore userScore)
-{
-    if ( /*elderHand*/ 0 )
-    {
-
-    }
-    else
-    {
-        ScoreManager::PhaseScore score = knowledgeBase->CalculatePoint();
-
-        // Compare the scores and update the log + scores.
-        if ( userScore.numOfCards > score.numOfCards )
-        {
-            emit GoodResponse();
-        }
-        else if ( userScore.numOfCards < score.numOfCards )
-        {
-            emit NotGoodResponse();
-        }
-        else
-        {
-            if ( userScore.totalValue > score.totalValue )
-            {
-                emit HowHighWinResponse();
-            }
-            else if ( userScore.totalValue < score.totalValue )
-            {
-                emit HowHighLossResponse();
-            }
-            else
-            {
-                emit HowHighEvenResponse();
-            }
-        }
-    }
-
-    emit AIProcessingComplete();
-}
-
-
-//------------------------------------------------------------------------------
-// DeclareSequence - Select cards for the Sequence declaration.
-//------------------------------------------------------------------------------
-ScoreManager::Response AI::DeclareSequence(ScoreManager::PhaseScore userScore)
-{
-    if ( /*elderHand*/ 0 )
-    {
-
-    }
-    else
-    {
-        ScoreManager::PhaseScore score = knowledgeBase->CalculateSequence();
-
-        // Compare the scores and update the log + scores.
-        if ( userScore.numOfCards > score.numOfCards )
-        {
-            emit GoodResponse();
-        }
-        else if ( userScore.numOfCards < score.numOfCards )
-        {
-            emit NotGoodResponse();
-        }
-        else
-        {
-            if ( userScore.totalValue > score.totalValue )
-            {
-                emit HowHighWinResponse();
-            }
-            else if ( userScore.totalValue < score.totalValue )
-            {
-                emit HowHighLossResponse();
-            }
-            else
-            {
-                emit HowHighEvenResponse();
-            }
-        }
-    }
-
-    emit AIProcessingComplete();
-}
-
-
-//------------------------------------------------------------------------------
-// DeclareSet - Select cards for the Set declaration.
-//------------------------------------------------------------------------------
-ScoreManager::Response AI::DeclareSet(ScoreManager::PhaseScore userScore)
-{
-    if ( /*elderHand*/ 0 )
-    {
-
-    }
-    else
-    {
-        ScoreManager::PhaseScore score = knowledgeBase->CalculateSet();
-
-        // Compare the scores and update the log + scores.
-        if ( userScore.numOfCards > score.numOfCards )
-        {
-            emit GoodResponse();
-        }
-        else if ( userScore.numOfCards < score.numOfCards )
-        {
-            emit NotGoodResponse();
-        }
-        else
-        {
-            if ( userScore.totalValue > score.totalValue )
-            {
-                emit HowHighWinResponse();
-            }
-            else if ( userScore.totalValue < score.totalValue )
-            {
-                emit HowHighLossResponse();
-            }
-            else
-            {
-                emit HowHighEvenResponse();
-            }
-        }
-    }
 
     emit AIProcessingComplete();
 }
