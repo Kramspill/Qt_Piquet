@@ -18,18 +18,14 @@
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
+#include "State/GlobalStateInfo.h"
 #include "Scene/Scene.h"
 #include "View/View.h"
-#include "Players/AI.h"
 #include "Players/Player.h"
+#include "Players/AI.h"
 #include "CardManager.h"
 #include "StateManager.h"
 #include "ScoreManager.h"
-#include "State/GlobalStateInfo.h"
-
-// TEST //
-#include "Scene/Dialog.h"
-// ==== //
 
 
 //------------------------------------------------------------------------------
@@ -49,30 +45,6 @@ private:
     void          ConnectSignals(void);
 
 private slots:
-    /* OLD CODE
-    void          RequestCardTransfer(CardArray::CardArrayType src,
-                                      CardArray::CardArrayType dest,
-                                      int  numOfCards,
-                                      bool transferSelectedCards);
-    void          RequestACardTransfer(CardArray::CardArrayType src,
-                                       CardArray::CardArrayType dest,
-                                       Card*card);
-    void          DeclareSelection(CardArray::SelectionType phase);
-    void          SelectAIAction(AI::AIAction action);
-    void          UpdateAI(void);
-
-    void          SetUI(Scene::PhaseType phase);
-
-    void          DeclarePoint(void);
-    void          DeclareSequence(void);
-    void          DeclareSet(void);
-    void          SkipDeclaration(void); // TODO;
-    void          SkipPoint(void);
-    void          SkipSequence(void);
-    void          SkipSet(void);
-    */
-
-    // NEW CODE //
     void          ExecuteDeal(void);
     void          ExecuteExchange(void);
     void          AnnounceDeclaration(State phase, PlayerNum player);
@@ -84,24 +56,6 @@ private slots:
                                       CardArray::CardArrayType dest,
                                       int numCards);
     void          UpdateAI(PlayerNum player);
-
-
-
-
-
-
-
-    /*void          BeginExchange(int player);
-    void          MakeDeclaration(CardArray::SelectionType phase,
-                                  PlayerNum                player);
-    void          ProcessDeclaration(CardArray::SelectionType phase,
-                                     PlayerNum                player);
-    void          UpdateAI(PlayerNum player);
-
-    void          TransferComplete(void);
-
-    void          SetUI(Scene::PhaseType phase);*/
-    //
 
 private:
     Scene*        scene;

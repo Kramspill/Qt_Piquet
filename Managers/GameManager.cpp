@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Filename: GameManager.cpp
-// Description: Manages the other managers in the game.
+// Description: Manages the other Managers in the game.
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
@@ -47,7 +47,7 @@ void GameManager::Initialize(void)
     int xPos   = (desktop->width()  - width)  / 2;
     int yPos   = (desktop->height() - height) / 2;
 
-    // Initialize the scene.
+    // Initialize the Scene.
     scene = new Scene(xPos, yPos, width, height);
     scene->Initialize();
 
@@ -69,7 +69,7 @@ void GameManager::Initialize(void)
     scoreManager = new ScoreManager();
     scoreManager->Initialize();
 
-    // Initialize the view and display it.
+    // Initialize the View and display it.
     view = new View(scene);
     view->show();
 
@@ -83,134 +83,31 @@ void GameManager::Initialize(void)
 //------------------------------------------------------------------------------
 void GameManager::ConnectSignals(void)
 {
-    // OLD CODE //
-    // Connect the signals from the card manager.
-   /* QObject::connect(cardManager,
-                     SIGNAL(TransferComplete()),
-                     this,
-                     SLOT(TransferComplete()));
-
-    // Connect the signals from the state manager.
-    QObject::connect(stateManager,
-                     SIGNAL(SetUI(Scene::PhaseType)),
-                     this,
-                     SLOT(SetUI(Scene::PhaseType)));
-    QObject::connect(stateManager,
-                     SIGNAL(BeginExchange(int)),
-                     this,
-                     SLOT(BeginExchange(int)));
-    QObject::connect(stateManager,
-                     SIGNAL(MakeDeclaration(CardArray::SelectionType,
-                                            PlayerNum)),
-                     this,
-                     SLOT(MakeDeclaration(CardArray::SelectionType,
-                                          PlayerNum)));
-
-    // Connect the signals from player 1.
-    QObject::connect(player1,
-                     SIGNAL(DealComplete()),
-                     stateManager,
-                     SIGNAL(DealComplete()));
-    QObject::connect(player1,
-                     SIGNAL(ExchangeComplete()),
-                     stateManager,
-                     SIGNAL(ExchangeComplete()));
-    QObject::connect(player1,
-                     SIGNAL(AllExchangesComplete()),
-                     stateManager,
-                     SIGNAL(AllExchangesComplete()));
-    QObject::connect(player1,
-                     SIGNAL(AnnounceDeclaration(CardArray::SelectionType,
-                                                PlayerNum)),
-                     this,
-                     SLOT(ProcessDeclaration(CardArray::SelectionType,
-                                             PlayerNum)));
-    QObject::connect(player1,
-                     SIGNAL(SetCardsSelectable(bool)),
-                     cardManager,
-                     SLOT(SetCardsSelectable(bool)));
-    QObject::connect(player1,
-                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
-                                                CardArray::CardArrayType,
-                                                int)),
-                     this,
-                     SLOT(RequestCardTransfer(CardArray::CardArrayType,
-                                              CardArray::CardArrayType,
-                                              int)));
-    QObject::connect(player1,
-                     SIGNAL(SetUI(State)),
-                     this,
-                     SLOT(SetUI(State)));
-
-    // Connect the signals from player 2.
-    QObject::connect(player2,
-                     SIGNAL(DealComplete()),
-                     stateManager,
-                     SIGNAL(DealComplete()));
-    QObject::connect(player2,
-                     SIGNAL(ExchangeComplete()),
-                     stateManager,
-                     SIGNAL(ExchangeComplete()));
-    QObject::connect(player2,
-                     SIGNAL(AllExchangesComplete()),
-                     stateManager,
-                     SIGNAL(AllExchangesComplete()));
-    QObject::connect(player2,
-                     SIGNAL(RequestCardPositions(PlayerNum)),
-                     this,
-                     SLOT(UpdateAI(PlayerNum)));
-    QObject::connect(player2,
-                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
-                                                CardArray::CardArrayType,
-                                                int)),
-                     this,
-                     SLOT(RequestCardTransfer(CardArray::CardArrayType,
-                                              CardArray::CardArrayType,
-                                              int)));
-    QObject::connect(player2,
-                     SIGNAL(SetUI(Scene::PhaseType)),
-                     this,
-                     SLOT(SetUI(Scene::PhaseType)));
-
-    // Connect the signals from the scene.
+    // Connect the signals from the Scene.
     QObject::connect(scene,
-                     SIGNAL(ExecuteDeal()),
-                     this,
-                     SLOT(ExecuteDeal()));
-    QObject::connect(scene,
-                     SIGNAL(ExecuteExchange()),
+                     SIGNAL(BeginDeal()),
                      player1,
-                     SLOT(ExecuteExchange()));
-    */
-
-    // NEW CODE //
-    // Connect the signals from the card manager.
-    QObject::connect(cardManager,
-                     SIGNAL(InformCardsMoveable(bool)),
-                     scene,
-                     SLOT(SetCardsMoveable(bool)));
-    QObject::connect(cardManager,
-                     SIGNAL(ValidSelection(bool)),
-                     scene,
-                     SLOT(SetValidSelection(bool)));
-
-    // Connect the signals from the state manager.
-    QObject::connect(stateManager,
-                     SIGNAL(ExecuteDeal()),
-                     this,
-                     SLOT(ExecuteDeal()));
-    QObject::connect(stateManager,
-                     SIGNAL(ExecuteExchange()),
-                     this,
-                     SLOT(ExecuteExchange()));
-    QObject::connect(stateManager,
-                     SIGNAL(AnnounceDeclaration(State, PlayerNum)),
-                     this,
-                     SLOT(AnnounceDeclaration(State, PlayerNum)));
-    QObject::connect(stateManager,
-                     SIGNAL(PlayTrick(PlayerNum)),
-                     this,
-                     SLOT(PlayTrick(PlayerNum)));
+                     SIGNAL(BeginDeal()));
+    QObject::connect(scene,
+                     SIGNAL(BeginExchange()),
+                     player1,
+                     SIGNAL(BeginExchange()));
+    QObject::connect(scene,
+                     SIGNAL(Declare()),
+                     player1,
+                     SIGNAL(Declare()));
+    QObject::connect(scene,
+                     SIGNAL(Skip()),
+                     player1,
+                     SIGNAL(Skip()));
+    QObject::connect(scene,
+                     SIGNAL(TrickPlayed()),
+                     player1,
+                     SIGNAL(TrickPlayed()));
+    QObject::connect(scene,
+                     SIGNAL(ValidateSelection()),
+                     cardManager,
+                     SLOT(ValidateSelection()));
 
     // Connect the signals from player 1.
     QObject::connect(player1,
@@ -272,31 +169,33 @@ void GameManager::ConnectSignals(void)
                      this,
                      SLOT(UpdateAI(PlayerNum)));
 
-    // Connect the signals from the scene.
-    QObject::connect(scene,
-                     SIGNAL(BeginDeal()),
-                     player1,
-                     SIGNAL(BeginDeal()));
-    QObject::connect(scene,
-                     SIGNAL(BeginExchange()),
-                     player1,
-                     SIGNAL(BeginExchange()));
-    QObject::connect(scene,
-                     SIGNAL(Declare()),
-                     player1,
-                     SIGNAL(Declare()));
-    QObject::connect(scene,
-                     SIGNAL(Skip()),
-                     player1,
-                     SIGNAL(Skip()));
-    QObject::connect(scene,
-                     SIGNAL(TrickPlayed()),
-                     player1,
-                     SIGNAL(TrickPlayed()));
-    QObject::connect(scene,
-                     SIGNAL(ValidateSelection()),
-                     cardManager,
-                     SLOT(ValidateSelection()));
+    // Connect the signals from the CardManager.
+    QObject::connect(cardManager,
+                     SIGNAL(InformCardsMoveable(bool)),
+                     scene,
+                     SLOT(SetCardsMoveable(bool)));
+    QObject::connect(cardManager,
+                     SIGNAL(ValidSelection(bool)),
+                     scene,
+                     SLOT(SetValidSelection(bool)));
+
+    // Connect the signals from the StateManager.
+    QObject::connect(stateManager,
+                     SIGNAL(ExecuteDeal()),
+                     this,
+                     SLOT(ExecuteDeal()));
+    QObject::connect(stateManager,
+                     SIGNAL(ExecuteExchange()),
+                     this,
+                     SLOT(ExecuteExchange()));
+    QObject::connect(stateManager,
+                     SIGNAL(AnnounceDeclaration(State, PlayerNum)),
+                     this,
+                     SLOT(AnnounceDeclaration(State, PlayerNum)));
+    QObject::connect(stateManager,
+                     SIGNAL(PlayTrick(PlayerNum)),
+                     this,
+                     SLOT(PlayTrick(PlayerNum)));
 }
 
 
@@ -319,7 +218,7 @@ void GameManager::ExecuteDeal(void)
 
 
 //------------------------------------------------------------------------------
-// ExecuteExchange - Inform the players to perform their exchanges.
+// ExecuteExchange - Inform the players to perform their Exchanges.
 //------------------------------------------------------------------------------
 void GameManager::ExecuteExchange(void)
 {
@@ -347,7 +246,7 @@ void GameManager::ExecuteExchange(void)
 
 
 //------------------------------------------------------------------------------
-// AnnounceDeclaration - Inform the players to announce a declaration.
+// AnnounceDeclaration - Inform the players to announce a Declaration.
 //------------------------------------------------------------------------------
 void GameManager::AnnounceDeclaration(State phase, PlayerNum player)
 {
@@ -422,6 +321,7 @@ void GameManager::AnnounceDeclaration(State phase, PlayerNum player)
 
         if ( dynamic_cast<AI*>(elderPlayer) )
             UpdateAI(elder);
+
         cardManager->SetCardsSelectable(false, elder);
     }
     else
@@ -446,6 +346,7 @@ void GameManager::AnnounceDeclaration(State phase, PlayerNum player)
 
         if ( dynamic_cast<AI*>(youngerPlayer) )
             UpdateAI(younger);
+
         cardManager->SetCardsSelectable(false, younger);
     }
 }
@@ -523,7 +424,7 @@ void GameManager::ResolveResponse(State phase, PlayerNum player)
 
 
 //------------------------------------------------------------------------------
-// PlayTrick - Reolve the response of the younger hand.
+// PlayTrick - Inform a player to play a Trick.
 //------------------------------------------------------------------------------
 void GameManager::PlayTrick(PlayerNum player)
 {
