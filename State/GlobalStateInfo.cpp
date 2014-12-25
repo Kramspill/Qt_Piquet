@@ -14,6 +14,7 @@
 //------------------------------------------------------------------------------
 PlayerNum           elder              = PLAYER1;
 PlayerNum           younger            = PLAYER2;
+PlayerNum           trickWinner        = PLAYER1;
 Declaration*        declaration        = new Declaration();
 Response*           response           = new Response();
 DeclarationResults* declarationResults = new DeclarationResults();

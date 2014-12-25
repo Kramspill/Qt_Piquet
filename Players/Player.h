@@ -56,6 +56,7 @@ signals:
     void         Declare(void);
     void         Skip(void);
 
+    void         PrepUserForTrick(void);
     void         TrickPlayed(void);
 
     void         SetCardsMoveable(bool);

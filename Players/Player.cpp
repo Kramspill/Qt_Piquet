@@ -141,6 +141,9 @@ void Player::PlayTrick(void)
     // Enable the players cards to be movable.
     emit SetCardsMoveable(true);
 
+    // Prep the user's hand so their choice will always be valid.
+    emit PrepUserForTrick();
+
     // Wait for user to make a response.
     QEventLoop* loop = new QEventLoop();
     connect(this, SIGNAL(TrickPlayed()), loop, SLOT(quit()));

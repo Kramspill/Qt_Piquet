@@ -256,6 +256,31 @@ void ScoreManager::ScoreDeclaration(State phase, PlayerNum player)
 
 
 //------------------------------------------------------------------------------
+// ScoreTrick - Score the tricks in play.
+//------------------------------------------------------------------------------
+PlayerNum ScoreManager::ScoreTrick(Card*     leadCard,
+                                   Card*     followCard,
+                                   PlayerNum player)
+{
+    PlayerNum winner;
+
+    if ( leadCard->GetSuit() == followCard->GetSuit() &&
+         leadCard->GetRank() <  followCard->GetRank() )
+    {
+        (player == PLAYER1) ? playerScore++ : cpuScore++;
+        winner = player;
+    }
+    else
+    {
+        (player == PLAYER1) ? cpuScore++ : playerScore++;
+        winner = (player == PLAYER1) ? PLAYER2 : PLAYER1;
+    }
+
+    return winner;
+}
+
+
+//------------------------------------------------------------------------------
 // Accessor for ScoreManager's playerScore member.
 //------------------------------------------------------------------------------
 int ScoreManager::GetPlayerScore(void)

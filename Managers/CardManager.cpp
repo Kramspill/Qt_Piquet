@@ -152,6 +152,8 @@ void CardManager::TransferSelectedCards(CardArray* source,
         if ( card->isSelected() )
         {
             card->setSelected(false);
+            card->setFlag(QGraphicsItem::ItemIsSelectable, false);
+            card->setFlag(QGraphicsItem::ItemIsMovable,    false);
             cards.push_back(card);
         }
     }
@@ -455,6 +457,42 @@ void CardManager::SetCardsSelectable(bool setSelectable, PlayerNum player)
 
             card->UpdateSelection();
             card->setFlag(QGraphicsItem::ItemIsSelectable, false);
+        }
+    }
+}
+
+
+//------------------------------------------------------------------------------
+// PrepUserForTrick - Ensure the user can onbly play valid Tricks.
+//------------------------------------------------------------------------------
+void CardManager::PrepUserForTrick(void)
+{
+    if ( cpuTrick->GetSize() > 0 )
+    {
+        Card* cpuCard    = cpuTrick->GetCard(0);
+        bool  validCards = false;
+        int   i          = 0;
+
+        // Loop through the user's hand checking if there is a card
+        // that can be played.
+        while ( !validCards && i < playerHand->GetSize() )
+        {
+            if ( playerHand->GetCard(i++)->GetSuit() == cpuCard->GetSuit() )
+                validCards = true;
+        }
+
+        // Now disable the other cards if valid ones were found.
+        if ( validCards )
+        {
+            Card* card;
+
+            for ( i = 0; i < playerHand->GetSize(); i++ )
+            {
+                card = playerHand->GetCard(i);
+
+                if ( card->GetSuit() != cpuCard->GetSuit() )
+                    card->setFlag(QGraphicsItem::ItemIsMovable, false);
+            }
         }
     }
 }

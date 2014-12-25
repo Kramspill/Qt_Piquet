@@ -222,6 +222,10 @@ void GameManager::ConnectSignals(void)
                      stateManager,
                      SIGNAL(ExchangeComplete()));
     QObject::connect(player1,
+                     SIGNAL(PrepUserForTrick()),
+                     cardManager,
+                     SLOT(PrepUserForTrick()));
+    QObject::connect(player1,
                      SIGNAL(SetCardsMoveable(bool)),
                      cardManager,
                      SLOT(SetCardsMoveable(bool)));
@@ -523,10 +527,62 @@ void GameManager::ResolveResponse(State phase, PlayerNum player)
 //------------------------------------------------------------------------------
 void GameManager::PlayTrick(PlayerNum player)
 {
+    CardArray* leadTrick;
+    CardArray* followTrick;
+
     if ( player == PLAYER1 )
-        player1->PlayTrick();
+    {
+        if ( dynamic_cast<AI*>(player1) )
+        {
+            cardManager->SetCardsSelectable(true, player);
+            player1->PlayTrick();
+            cardManager->SetCardsSelectable(false, player);
+        }
+        else
+        {
+            player1->PlayTrick();
+        }
+    }
     else
-        player2->PlayTrick();
+    {
+        if ( dynamic_cast<AI*>(player2) )
+        {
+            cardManager->SetCardsSelectable(true, player);
+            player2->PlayTrick();
+            cardManager->SetCardsSelectable(false, player);
+        }
+        else
+        {
+            player2->PlayTrick();
+        }
+    }
+
+    if ( player == PLAYER1 )
+    {
+        leadTrick   = cardManager->GetDesiredCardArray(CardArray::CPUTRICK);
+        followTrick = cardManager->GetDesiredCardArray(CardArray::PLAYERTRICK);
+    }
+    else
+    {
+        leadTrick   = cardManager->GetDesiredCardArray(CardArray::PLAYERTRICK);
+        followTrick = cardManager->GetDesiredCardArray(CardArray::CPUTRICK);
+    }
+
+    // Score the Trick.
+    if ( leadTrick->GetSize() > 0 && followTrick->GetSize() > 0 )
+    {
+        PlayerNum winner = scoreManager->ScoreTrick(leadTrick->GetCard(0),
+                                                    followTrick->GetCard(0),
+                                                    player);
+
+        RequestCardTransfer(CardArray::PLAYERTRICK,
+                            CardArray::PREVIOUSTRICKS, 1);
+        RequestCardTransfer(CardArray::CPUTRICK,
+                            CardArray::PREVIOUSTRICKS, 1);
+
+        trickWinner = winner;
+    }
+
 }
 
 

@@ -44,37 +44,14 @@ void TrickPhase::Initialize(void)
     stateMachine = new QStateMachine();
 
     // Initialize the states within the state machine.
-    awaitingSignal = new QState(stateMachine);
-    player1Trick   = new QState(stateMachine);
-    player2Trick   = new QState(stateMachine);
-    finalState     = new QFinalState(stateMachine);
+    playTricks = new QState(stateMachine);
+    finalState = new QFinalState(stateMachine);
 
     // Set the initial state for the state machine.
-    stateMachine->setInitialState(awaitingSignal);
+    stateMachine->setInitialState(playTricks);
 
-    // Setup the transitions from the awaitingSignal state.
-    awaitingSignal->addTransition(this,
-                                  SIGNAL(Player1PlayTrick()),
-                                  player1Trick);
-    awaitingSignal->addTransition(this,
-                                  SIGNAL(Player2PlayTrick()),
-                                  player2Trick);
-
-    // Setup the transitions from the player1Trick state.
-    player1Trick->addTransition(  this,
-                                  SIGNAL(Player2PlayTrick()),
-                                  player2Trick);
-    player1Trick->addTransition(  this,
-                                  SIGNAL(AllTricksComplete()),
-                                  finalState);
-
-    // Setup the transitions from the player1Trick state.
-    player2Trick->addTransition(  this,
-                                  SIGNAL(Player1PlayTrick()),
-                                  player1Trick);
-    player2Trick->addTransition(  this,
-                                  SIGNAL(AllTricksComplete()),
-                                  finalState);
+    // Setup the transitions from the playTricks state.
+    playTricks->addTransition(this, SIGNAL(TricksComplete()), finalState);
 
     // Setup the work done in each state.
     ConnectSignals();
@@ -98,8 +75,7 @@ void TrickPhase::onEntry(QEvent*)
 //------------------------------------------------------------------------------
 void TrickPhase::ConnectSignals(void)
 {
-    connect(player1Trick, SIGNAL(entered()),  this, SLOT(Player1Trick()));
-    connect(player2Trick, SIGNAL(entered()),  this, SLOT(Player2Trick()));
+    connect(playTricks, SIGNAL(entered()), this, SLOT(PlayTricks()));
 
     connect(stateMachine,
             SIGNAL(finished()),
@@ -107,20 +83,28 @@ void TrickPhase::ConnectSignals(void)
             SIGNAL(TrickPhaseFinished()));
 }
 
-
 //------------------------------------------------------------------------------
-// Player1Trick - Player 1 plays a trick.
+// PlayTricks - Tricks are played out.
 //------------------------------------------------------------------------------
-void TrickPhase::Player1Trick(void)
+void TrickPhase::PlayTricks(void)
 {
-    emit PlayTrick(1);
-}
+    int count = 11;
 
+    while ( count > 0 )
+    {
+        if ( trickWinner == PLAYER1 )
+        {
+            emit PlayTrick(PLAYER1);
+            emit PlayTrick(PLAYER2);
+        }
+        else
+        {
+            emit PlayTrick(PLAYER2);
+            emit PlayTrick(PLAYER1);
+        }
 
-//------------------------------------------------------------------------------
-// Player2Trick - Player 2 plays a trick.
-//------------------------------------------------------------------------------
-void TrickPhase::Player2Trick(void)
-{
-    emit PlayTrick(2);
+        count--;
+    }
+
+    emit TricksComplete();
 }

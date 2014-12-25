@@ -115,4 +115,10 @@ void StateManager::ConnectSignals(void)
                      SIGNAL(PlayTrick(PlayerNum)),
                      this,
                      SIGNAL(PlayTrick(PlayerNum)));
+
+    // Connect signals to/from the trick phase state.
+    QObject::connect(trickPhase,
+                     SIGNAL(PlayTrick(PlayerNum)),
+                     this,
+                     SIGNAL(PlayTrick(PlayerNum)));
 }

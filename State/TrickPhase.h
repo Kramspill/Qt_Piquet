@@ -40,21 +40,16 @@ private:
     void           ConnectSignals(void);
 
 private slots:
-    void           Player1Trick(void);
-    void           Player2Trick(void);
+    void           PlayTricks(void);
 
 signals:
-    void           Player1PlayTrick(void);
-    void           Player2PlayTrick(void);
-    void           PlayTrick(int);
-    void           AllTricksComplete(void);
+    void           PlayTrick(PlayerNum);
+    void           TricksComplete(void);
     void           TrickPhaseFinished(void);
 
 private:
     QStateMachine* stateMachine;
-    QState*        awaitingSignal;
-    QState*        player1Trick;
-    QState*        player2Trick;
+    QState*        playTricks;
     QFinalState*   finalState;
 };
 

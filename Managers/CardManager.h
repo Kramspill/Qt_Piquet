@@ -65,6 +65,7 @@ public slots:
     void                     SetCardsMoveable(bool setMoveable);
     void                     SetCardsSelectable(bool setSelectable,
                                                 PlayerNum player);
+    void                     PrepUserForTrick(void);
     void                     CardSelectionsChanged(Card* card,
                                                    CardArray::CardArrayType
                                          cardArrayType = CardArray::PLAYERHAND);

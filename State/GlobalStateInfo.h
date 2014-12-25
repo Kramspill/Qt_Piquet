@@ -56,6 +56,7 @@ struct DeclarationResults
 
 extern PlayerNum           elder;
 extern PlayerNum           younger;
+extern PlayerNum           trickWinner;
 extern Declaration*        declaration;
 extern Response*           response;
 extern DeclarationResults* declarationResults;

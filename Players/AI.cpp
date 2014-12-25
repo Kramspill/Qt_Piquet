@@ -139,7 +139,13 @@ void AI::Respond(State phase)
 //------------------------------------------------------------------------------
 void AI::PlayTrick(void)
 {
+    emit RequestCardPositions(playerNumber);
 
+    knowledgeBase->SelectTrick(cpuHand);
+
+    emit RequestCardTransfer(CardArray::CPUHAND,
+                             CardArray::CPUTRICK,
+                             0);
 }
 
 
