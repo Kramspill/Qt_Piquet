@@ -173,12 +173,9 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
                 }
             }
         }
-        else
-        {
-            // If the item is a card, validate the user's selection.
-            emit ValidateSelection();
-        }
     }
+
+    emit ValidateSelection();
 
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
 }

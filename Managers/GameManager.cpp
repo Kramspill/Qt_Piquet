@@ -645,4 +645,14 @@ void GameManager::UpdateAI(PlayerNum player)
         card = cardArray->GetCard(index);
         ai->UpdateKnowledgeBase(card, index, CardArray::PREVIOUSTRICKS);
     }
+
+    // Retrieve the current trick and update the ai's knowledge base.
+    cardArray = cardManager->GetDesiredCardArray(CardArray::PLAYERTRICK);
+    size      = cardArray->GetSize();
+
+    for ( int index = 0; index < size; index++ )
+    {
+        card = cardArray->GetCard(index);
+        ai->UpdateKnowledgeBase(card, index, CardArray::PLAYERTRICK);
+    }
 }

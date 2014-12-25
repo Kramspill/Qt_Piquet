@@ -118,8 +118,71 @@ void KnowledgeBase::FlagDispensableCards(CardArray* cpuHand)
 //------------------------------------------------------------------------------
 void KnowledgeBase::SelectTrick(CardArray* cpuHand)
 {
-    // For now, we just get the top card.
-    Card* card = cpuHand->GetCard(0);
+    bool  trickFound = false;
+    int   suit       = 0;
+    int   value      = 0;
+    Card* card;
+
+    // Check if the opponent has a trick in play.
+    while ( !trickFound && suit < 4 )
+    {
+        value = 0;
+        while ( !trickFound && value < 8 )
+        {
+            if ( cardStatus[suit][value]->location == CardArray::PLAYERTRICK )
+                trickFound = true;
+
+            value++;
+        }
+
+        suit++;
+    }
+
+    // If a trick was found then select a card of the same suit.
+    if ( trickFound )
+    {
+        bool cardFound = false;
+
+        suit--;
+        value = 7;
+
+        // Check if we have a card of the same suit.
+        while ( !cardFound && value >= 0 )
+        {
+            if ( cardStatus[suit][value]->location == CardArray::CPUHAND )
+                cardFound = true;
+
+            value--;
+        }
+
+        if ( cardFound )
+        {
+            value++;
+            cardFound = false;
+
+            int i = 0;
+            while ( !cardFound )
+            {
+                card = cpuHand->GetCard(i++);
+
+                if ( card->GetSuit() == suit && card->GetRank()-7 == value )
+                {
+                    cardFound = true;
+                }
+            }
+
+        }
+        else
+        {
+            // For now, we just get the top card.
+            card = cpuHand->GetCard(0);
+        }
+    }
+    else
+    {
+        // For now, we just get the top card.
+        card = cpuHand->GetCard(0);
+    }
 
     card->setSelected(true);
     emit SignalCardSelectionsChanged(card, CardArray::CPUHAND);
