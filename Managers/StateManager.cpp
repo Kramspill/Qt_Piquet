@@ -39,7 +39,7 @@ StateManager::~StateManager(void)
 //------------------------------------------------------------------------------
 void StateManager::Initialize(void)
 {
-    // Setup the state machine of the Game.
+    // Setup the state machine of the game.
     stateMachine = new QStateMachine();
 
     // Allocate memory to the phases and initialize them.
@@ -77,6 +77,7 @@ void StateManager::Initialize(void)
     // Connect the various signals.
     ConnectSignals();
 
+    // Execute the state machine.
     stateMachine->start();
 }
 
@@ -86,7 +87,7 @@ void StateManager::Initialize(void)
 //------------------------------------------------------------------------------
 void StateManager::ConnectSignals(void)
 {
-    // Connect signals to/from the deal phase state.
+    // Connect signals to/from the Deal phase state.
     QObject::connect(dealPhase,
                      SIGNAL(ExecuteDeal()),
                      this,
@@ -96,7 +97,7 @@ void StateManager::ConnectSignals(void)
                      dealPhase,
                      SIGNAL(DealComplete()));
 
-    // Connect signals to/from the exchange phase state.
+    // Connect signals to/from the Exchange phase state.
     QObject::connect(exchangePhase,
                      SIGNAL(ExecuteExchange()),
                      this,
@@ -106,7 +107,7 @@ void StateManager::ConnectSignals(void)
                      exchangePhase,
                      SIGNAL(ExchangeComplete()));
 
-    // Connect signals to/from the declaration phase state.
+    // Connect signals to/from the Declaration phase state.
     QObject::connect(declarationPhase,
                      SIGNAL(AnnounceDeclaration(State, PlayerNum)),
                      this,
@@ -116,7 +117,7 @@ void StateManager::ConnectSignals(void)
                      this,
                      SIGNAL(PlayTrick(PlayerNum)));
 
-    // Connect signals to/from the trick phase state.
+    // Connect signals to/from the Trick phase state.
     QObject::connect(trickPhase,
                      SIGNAL(PlayTrick(PlayerNum)),
                      this,
