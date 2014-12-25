@@ -448,7 +448,10 @@ void CardManager::SetCardsSelectable(bool setSelectable, PlayerNum player)
         else
         {
             if ( card->isSelected() )
+            {
+                card->setFlag(QGraphicsItem::ItemIsSelectable, true);
                 card->setSelected(false);
+            }
 
             card->UpdateSelection();
             card->setFlag(QGraphicsItem::ItemIsSelectable, false);

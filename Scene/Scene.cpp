@@ -60,17 +60,18 @@ void Scene::Initialize(void)
     addWidget(text);
     addWidget(log);
 
-    // Position the items in the scene.
-    primaryAction->move(2180, 800);
-    secondaryAction->move(2120, 800);
-    title->move(2150, 700);
-    text->move(2120, 750);
-    log->move(2050, 500);
-
-    // Set up the player trick area.
     QPointF p = GetCenterPos();
     int x = (int)p.x();
     int y = (int)p.y();
+
+    // Position the items in the scene.
+    primaryAction->move(x+280, y+270);
+    secondaryAction->move(x+170, y+270);
+    title->move(x+220, y+200);
+    text->move(x+180, y+230);
+    log->move(x+130, y);
+
+    // Set up the player trick area.
     playerTrickArea = new QRect(x-200, y-80, 170, 160);
 
     // Connect the signals.

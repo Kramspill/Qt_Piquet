@@ -150,6 +150,6 @@ void DeclarationPhase::YoungerDeclarations(void)
 //------------------------------------------------------------------------------
 void DeclarationPhase::YoungerTrick(void)
 {
-    emit PlayTrick(younger);
-    emit TrickComplete();
+    //emit PlayTrick(younger);
+    //emit TrickComplete();
 }

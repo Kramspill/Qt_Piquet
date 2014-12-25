@@ -107,7 +107,6 @@ void KnowledgeBase::FlagDispensableCards(CardArray* cpuHand)
         cpuHand->SetSelectionLimit(12);
 
         card->setSelected(true);
-        card->UpdateSelection();
         emit SignalCardSelectionsChanged(card, CardArray::CPUHAND);
     }
 }
@@ -122,7 +121,6 @@ void KnowledgeBase::SelectTrick(CardArray* cpuHand)
     Card* card = cpuHand->GetCard(0);
 
     card->setSelected(true);
-    card->UpdateSelection();
     emit SignalCardSelectionsChanged(card, CardArray::CPUHAND);
 }
 
@@ -181,7 +179,6 @@ void KnowledgeBase::SelectPoint(CardArray* hand)
         if ( card->GetSuit() == bestSuit )
         {
             card->setSelected(true);
-            card->UpdateSelection();
         }
     }
 }
@@ -260,7 +257,6 @@ void KnowledgeBase::SelectSequence(CardArray* hand)
         }
 
         card->setSelected(true);
-        card->UpdateSelection();
         i--;
         bestNumCards--;
 
@@ -268,7 +264,6 @@ void KnowledgeBase::SelectSequence(CardArray* hand)
         {
             Card* card = hand->GetCard(i--);
             card->setSelected(true);
-            card->UpdateSelection();
             bestNumCards--;
         }
     }
@@ -335,7 +330,6 @@ void KnowledgeBase::SelectSet(CardArray* hand)
             if ( card->GetRank() == bestValue )
             {
                 card->setSelected(true);
-                card->UpdateSelection();
             }
         }
     }
