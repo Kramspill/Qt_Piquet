@@ -86,6 +86,7 @@ void KnowledgeBase::UpdateCard(Card::Suit suit, Card::Rank rank, int index,
 {
     cardStatus[suit][rank-7]->location = location;
     cardStatus[suit][rank-7]->index    = index;
+    cardStatus[suit][rank-7]->selected = false;
 }
 
 
@@ -206,14 +207,19 @@ void KnowledgeBase::SelectSequence(CardArray* hand)
         {
             KnowledgeItem* item = cardStatus[suitIndex][valueIndex];
 
-            if ( item->location == CardArray::CPUHAND )
+            if ( item->location == CardArray::CPUHAND &&
+                 item->selected == false )
             {
                 count++;
             }
             else if ( count >= 3 && count >= currentNumCards )
             {
                 currentNumCards = count;
-                currentValue    = valueIndex + 7;
+                currentValue    = valueIndex + 6;
+                count           = 0;
+            }
+            else
+            {
                 count           = 0;
             }
         }
@@ -239,32 +245,17 @@ void KnowledgeBase::SelectSequence(CardArray* hand)
     // Now select the cards.
     if ( bestNumCards > 0 )
     {
-        Card* card;
-
-       // Start by finding the top card.
-        bool topCardNotFound = true;
-        int  i = 0;
-        while ( topCardNotFound && i < 12 )
+        for ( int i = 0; i < hand->GetSize(); i++ )
         {
-            card = hand->GetCard(i++);
+            Card* card = hand->GetCard(i);
 
-            if ( card->GetSuit() == bestSuit &&
-                 card->GetRank() == bestValue )
+            if ( card->GetSuit() == bestSuit  &&
+                 card->GetRank() <= bestValue &&
+                 card->GetRank() > bestValue - bestNumCards )
             {
-                topCardNotFound = false;
-                i--;
+                card->setSelected(true);
+                cardStatus[card->GetSuit()][card->GetRank()-7]->selected = true;
             }
-        }
-
-        card->setSelected(true);
-        i--;
-        bestNumCards--;
-
-        while ( bestNumCards > 0 )
-        {
-            Card* card = hand->GetCard(i--);
-            card->setSelected(true);
-            bestNumCards--;
         }
     }
 }
@@ -291,7 +282,8 @@ void KnowledgeBase::SelectSet(CardArray* hand)
         {
             KnowledgeItem* item = cardStatus[suitIndex][valueIndex];
 
-            if ( item->location == CardArray::CPUHAND )
+            if ( item->location == CardArray::CPUHAND &&
+                 item->selected == false )
             {
                 count++;
             }
@@ -330,6 +322,7 @@ void KnowledgeBase::SelectSet(CardArray* hand)
             if ( card->GetRank() == bestValue )
             {
                 card->setSelected(true);
+                cardStatus[card->GetSuit()][card->GetRank()-7]->selected = true;
             }
         }
     }

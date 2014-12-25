@@ -29,8 +29,9 @@ public:
     struct KnowledgeItem
     {
         CardArray::CardArrayType location;
-        int index;
-        int rank;
+        int  index;
+        int  rank;
+        bool selected;
     };
 
 public:

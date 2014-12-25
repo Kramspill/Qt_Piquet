@@ -416,6 +416,8 @@ void GameManager::AnnounceDeclaration(State phase, PlayerNum player)
             }
         }
 
+        if ( dynamic_cast<AI*>(elderPlayer) )
+            UpdateAI(elder);
         cardManager->SetCardsSelectable(false, elder);
     }
     else
@@ -431,7 +433,6 @@ void GameManager::AnnounceDeclaration(State phase, PlayerNum player)
         {
             while ( declaration->notSkipped )
             {
-                // INIFINITE LOOOP
                 youngerPlayer->AnnounceDeclaration(phase);
                 DeclareSelection(phase, younger);
                 response->good = true;
@@ -439,6 +440,8 @@ void GameManager::AnnounceDeclaration(State phase, PlayerNum player)
             }
         }
 
+        if ( dynamic_cast<AI*>(youngerPlayer) )
+            UpdateAI(younger);
         cardManager->SetCardsSelectable(false, younger);
     }
 }

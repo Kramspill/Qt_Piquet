@@ -598,7 +598,7 @@ void CardManager::ValidateSelection(void)
                 // Perform a bucket sort then check the cards.
                 suit = selectedCards[i]->GetSuit();
 
-                // First check it's a valid Sequence.
+                // First check the cards are of the same suit.
                 while ( i < selectedCards.size() && valid )
                 {
                     // Place the card in it's bucket.
@@ -614,7 +614,7 @@ void CardManager::ValidateSelection(void)
                     j = 0;
 
                     // Now check if the cards are in sequence.
-                    while ( i < 8 && !cardBuckets[i++] ) {}
+                    while ( i < 8 && !cardBuckets[i] ) { i++; }
 
                     while ( i < 8 && cardBuckets[i] )
                     {
@@ -622,9 +622,9 @@ void CardManager::ValidateSelection(void)
                         j++;
                     }
 
-                    if ( j != selectedCards.size() )
+                    if ( j < selectedCards.size() )
                     {
-                        valid == false;
+                        valid = false;
                     }
                     else if ( younger == PLAYER1 )
                     {

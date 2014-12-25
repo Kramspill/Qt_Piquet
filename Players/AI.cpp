@@ -129,6 +129,8 @@ void AI::AnnounceDeclaration(State phase)
 void AI::Respond(State phase)
 {
     AnnounceDeclaration(phase);
+
+    emit RequestCardPositions(playerNumber);
 }
 
 
@@ -147,7 +149,7 @@ void AI::PlayTrick(void)
 void AI::UpdateKnowledgeBase(Card* card, int index,
                              CardArray::CardArrayType location)
 {
-    Card::Suit  suit  = card->GetSuit();
+    Card::Suit suit = card->GetSuit();
     Card::Rank rank = card->GetRank();
 
     // Add the information to the knowledge base.
