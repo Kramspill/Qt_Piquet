@@ -35,65 +35,50 @@ public:
     CardManager(CardManager&);
     ~CardManager(void);
 
-    void                     Initialize(Scene* scene);
+    void               Initialize(Scene* scene);
 
-    void                     TransferCards(CardArray* source,
-                                           CardArray* destination,
-                                           int        numberOfCards);
-    void                     DealOutCards(CardArray* source,
-                                          CardArray* destination,
-                                          int        numberOfCards);
-    void                     TransferSelectedCards(CardArray* source,
-                                                   CardArray* destination);
-    void                     TransferCard(CardArray* source,
-                                          CardArray* destination,
-                                          Card*      card);
+    void               TransferCards(CardArray* src,
+                                     CardArray* dest,
+                                     int        numCards);
 
-    CardArray*               GetCardArray(CardArray::Type Type);
-    std::vector<Card*>       GetSelection(PlayerNum player);
+    CardArray*         GetCardArray(CardArray::Type type);
+    std::vector<Card*> GetSelection(PlayerNum player);
 
 private:
-    void                     ConnectSignals(void);
-    void                     InitializeCards(void);
-    void                     AddCardsToScene(Scene* scene);
-    void                     ShuffleDeck(void);
+    void               InitializeCards(void);
+    void               AddCardsToScene(Scene* scene);
+    void               ShuffleDeck(void);
+
+    void               DealOutCards(CardArray* src,
+                                    CardArray* dest,
+                                    int        numCards);
+    void               TransferSelectedCards(CardArray* src,
+                                             CardArray* dest);
 
 public slots:
-    void                     SetCardsMoveable(bool setMoveable);
-    void                     SetCardsSelectable(bool setSelectable,
-                                                PlayerNum player);
-    void                     PrepUserForTrick(void);
-    void                     CardSelectionsChanged(Card* card,
-                                                   CardArray::Type
-                                         Type = CardArray::PLAYERHAND);
-    bool                     CheckSelection(CardArray::SelectionType phase,
-                                            CardArray::Type
-                                         Type = CardArray::PLAYERHAND);
-    void                     CheckTrick(int player);
-    void                     ValidateSelection(void);
-    void                     DeselectUserCards(void);
+    void               SetCardsMoveable(bool setMoveable);
+    void               SetCardsSelectable(bool setSelectable,
+                                          PlayerNum player);
 
-private slots:
-    void                     SignalTransferComplete(void);
+    void               DeselectCards(void);
+    void               ValidateSelection(void);
+    void               PrepForTrick(void);
 
 signals:
-    void                     TransferComplete(void);
-    void                     InformCardsMoveable(bool);
-    void                     TrickResult(int);
-    void                     ValidSelection(bool);
+    void               ValidSelection(bool);
+    void               InformCardsMoveable(bool);
 
 private:
-    CardArray*               deck;
-    CardArray*               talon;
-    CardArray*               playerHand;
-    CardArray*               cpuHand;
-    CardArray*               playerDiscards;
-    CardArray*               cpuDiscards;
-    CardArray*               previousTricks;
-    CardArray*               playerTrick;
-    CardArray*               cpuTrick;
-    QTimer*                  transitionTimer;
-    int                      numOfCardsTransferred;
+    CardArray*         deck;
+    CardArray*         talon;
+    CardArray*         playerHand;
+    CardArray*         cpuHand;
+    CardArray*         playerDiscards;
+    CardArray*         cpuDiscards;
+    CardArray*         previousTricks;
+    CardArray*         playerTrick;
+    CardArray*         cpuTrick;
+    QTimer*            transitionTimer;
 };
 
 #endif // CARDMANAGER_H

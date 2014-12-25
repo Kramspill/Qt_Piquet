@@ -142,7 +142,7 @@ void Player::PlayTrick(void)
     emit SetCardsMoveable(true);
 
     // Prep the user's hand so their choice will always be valid.
-    emit PrepUserForTrick();
+    emit PrepForTrick();
 
     // Wait for user to make a response.
     QEventLoop* loop = new QEventLoop();

@@ -60,13 +60,6 @@ void CardManager::Initialize(Scene* scene)
     transitionTimer = new QTimer();
     transitionTimer->setSingleShot(true);
 
-    // Initialize the member that keeps track of the number of cards transferred
-    // from the most recent card transaction.
-    numOfCardsTransferred = 0;
-
-    // Connect signals to/from this class.
-    ConnectSignals();
-
     // Initialize all the cards used in the game and add them to the deck.
     InitializeCards();
 
@@ -81,135 +74,40 @@ void CardManager::Initialize(Scene* scene)
 //------------------------------------------------------------------------------
 // TransferCards - Transfer cards between one CardArray and another.
 //------------------------------------------------------------------------------
-void CardManager::TransferCards(CardArray* source, CardArray* destination,
-                                int numberOfCards)
+void CardManager::TransferCards(CardArray* src, CardArray* dest,
+                                int numCards)
 {
     // Determine if we are transfering specific cards or not.
-    if ( numberOfCards == 0 )
+    if ( numCards == 0 )
     {
         // Check if our destination is a player's hand and perform a deal if so.
-        if ( destination->GetType() == CardArray::PLAYERHAND ||
-             destination->GetType() == CardArray::CPUHAND )
+        if ( dest->GetType() == CardArray::PLAYERHAND ||
+             dest->GetType() == CardArray::CPUHAND )
         {
-            numberOfCards = 12 - destination->GetSize();
-            DealOutCards(source, destination, numberOfCards);
+            numCards = 12 - dest->GetSize();
+            DealOutCards(src, dest, numCards);
         }
         else
         {
             // In this case, we are transferring cards that have been selected.
-            TransferSelectedCards(source, destination);
+            TransferSelectedCards(src, dest);
         }
     }
     else
     {
-        DealOutCards(source, destination, numberOfCards);
+        DealOutCards(src, dest, numCards);
     }
-}
-
-
-//------------------------------------------------------------------------------
-// DealOutCards - Deal out cards from one CardArray to another.
-//------------------------------------------------------------------------------
-void CardManager::DealOutCards(CardArray* source,
-                               CardArray* destination,
-                               int        numberOfCards)
-{
-    for (int index = 0; index < numberOfCards; index++)
-    {
-        // Remove the card from the source array, and add it to the destination.
-        Card* card = source->RemoveTopCard();
-        destination->AddCard(card);
-    }
-
-    // Update the number of cards transferred.
-    numOfCardsTransferred = numberOfCards;
-
-    // Delay the signal of transfer completion for animation purposes.
-    transitionTimer->start(100);
-
-    // Wait for timer to finish.
-    QEventLoop* loop = new QEventLoop();
-    connect(transitionTimer, SIGNAL(timeout()), loop, SLOT(quit()));
-    loop->exec();
-}
-
-
-//------------------------------------------------------------------------------
-// TransferSelectedCards - Transfer a cardArray's selected cards to another
-//                         CardArray.
-//------------------------------------------------------------------------------
-void CardManager::TransferSelectedCards(CardArray* source,
-                                        CardArray* destination)
-{
-    std::vector<Card*> cards;
-    int size = source->GetSize();
-
-    // Locate the selected cards.
-    for ( int i = 0; i < size; i++ )
-    {
-        Card* card = source->GetCard(i);
-
-        if ( card->isSelected() )
-        {
-            card->setSelected(false);
-            card->setFlag(QGraphicsItem::ItemIsSelectable, false);
-            card->setFlag(QGraphicsItem::ItemIsMovable,    false);
-            cards.push_back(card);
-        }
-    }
-
-    // Set the number of cards to be transferred.
-    size = cards.size();
-
-    // Transfer the selected cards to the destination CardArray.
-    if ( size > 0 )
-    {
-        for ( int i = 0; i < size; i++ )
-        {
-            source->RemoveCard(cards.back());
-            destination->AddCard(cards.back());
-
-            cards.pop_back();
-        }
-    }
-
-    // Delay the signal of transfer completion for animation purposes.
-    transitionTimer->start(100);
-
-    // Wait for timer to finish.
-    QEventLoop* loop = new QEventLoop();
-    connect(transitionTimer, SIGNAL(timeout()), loop, SLOT(quit()));
-    loop->exec();
-}
-
-
-//------------------------------------------------------------------------------
-// TransferCard - Transfer a single card to another CardArray.
-//------------------------------------------------------------------------------
-void CardManager::TransferCard(CardArray* source, CardArray* destination,
-                               Card* card)
-{
-    // Remove the card from the source array, and add it to the destination.
-    source->RemoveCard(card);
-    destination->AddCard(card);
-
-    // Update the number of cards transferred.
-    numOfCardsTransferred = 1;
-
-    // Delay the signal of transfer completion for animation purposes.
-    transitionTimer->start(100);
 }
 
 
 //------------------------------------------------------------------------------
 // GetCardArray - Return the CardArray associated with a given type.
 //------------------------------------------------------------------------------
-CardArray* CardManager::GetCardArray(
-        CardArray::Type Type)
+CardArray* CardManager::GetCardArray(CardArray::Type type)
 {
     CardArray* returnedArray = 0;
 
-    switch ( Type )
+    switch ( type )
     {
         case CardArray::DECK:
             returnedArray = deck;
@@ -256,16 +154,6 @@ CardArray* CardManager::GetCardArray(
 
 
 //------------------------------------------------------------------------------
-// GetSelectionScore - Get the score of the user's current selection.
-//------------------------------------------------------------------------------
-/*ScoreManager::PhaseScore CardManager::GetSelectionScore(CardArray::SelectionType
-                                                        phase)
-{
-    //return playerHand->GetSelectionScore(phase);
-}*/
-
-
-//------------------------------------------------------------------------------
 // GetSelection - Return the player's selected cards.
 //------------------------------------------------------------------------------
 std::vector<Card*> CardManager::GetSelection(PlayerNum player)
@@ -289,16 +177,6 @@ std::vector<Card*> CardManager::GetSelection(PlayerNum player)
     }
 
     return selectedCards;
-}
-
-
-//------------------------------------------------------------------------------
-// ConnectSignals - Connect the various signals to/from this class.
-//------------------------------------------------------------------------------
-void CardManager::ConnectSignals(void)
-{
-    //connect(transitionTimer, SIGNAL(timeout()), this,
-    //        SLOT(SignalTransferComplete()));
 }
 
 
@@ -405,6 +283,79 @@ void CardManager::ShuffleDeck(void)
 
 
 //------------------------------------------------------------------------------
+// DealOutCards - Deal out cards from one CardArray to another.
+//------------------------------------------------------------------------------
+void CardManager::DealOutCards(CardArray* src,
+                               CardArray* dest,
+                               int        numCards)
+{
+    for (int index = 0; index < numCards; index++)
+    {
+        // Remove the card from the source array, and add it to the destination.
+        Card* card = src->RemoveTopCard();
+        dest->AddCard(card);
+    }
+
+    // Delay the signal of transfer completion for animation purposes.
+    transitionTimer->start(100);
+
+    // Wait for timer to finish.
+    QEventLoop* loop = new QEventLoop();
+    connect(transitionTimer, SIGNAL(timeout()), loop, SLOT(quit()));
+    loop->exec();
+}
+
+
+//------------------------------------------------------------------------------
+// TransferSelectedCards - Transfer a cardArray's selected cards to another
+//                         CardArray.
+//------------------------------------------------------------------------------
+void CardManager::TransferSelectedCards(CardArray* src,
+                                        CardArray* dest)
+{
+    std::vector<Card*> cards;
+    int size = src->GetSize();
+
+    // Locate the selected cards.
+    for ( int i = 0; i < size; i++ )
+    {
+        Card* card = src->GetCard(i);
+
+        if ( card->isSelected() )
+        {
+            card->setSelected(false);
+            card->setFlag(QGraphicsItem::ItemIsSelectable, false);
+            card->setFlag(QGraphicsItem::ItemIsMovable,    false);
+            cards.push_back(card);
+        }
+    }
+
+    // Set the number of cards to be transferred.
+    size = cards.size();
+
+    // Transfer the selected cards to the destination CardArray.
+    if ( size > 0 )
+    {
+        for ( int i = 0; i < size; i++ )
+        {
+            src->RemoveCard(cards.back());
+            dest->AddCard(cards.back());
+
+            cards.pop_back();
+        }
+    }
+
+    // Delay the signal of transfer completion for animation purposes.
+    transitionTimer->start(100);
+
+    // Wait for timer to finish.
+    QEventLoop* loop = new QEventLoop();
+    connect(transitionTimer, SIGNAL(timeout()), loop, SLOT(quit()));
+    loop->exec();
+}
+
+
+//------------------------------------------------------------------------------
 // SetCardsMoveable - Enable/Disable a CardArray's cards to be moveable.
 //------------------------------------------------------------------------------
 void CardManager::SetCardsMoveable(bool setMoveable)
@@ -463,123 +414,28 @@ void CardManager::SetCardsSelectable(bool setSelectable, PlayerNum player)
 
 
 //------------------------------------------------------------------------------
-// PrepUserForTrick - Ensure the user can onbly play valid Tricks.
+// DeselectCards - Deselect all user cards, called when a skip is requested.
 //------------------------------------------------------------------------------
-void CardManager::PrepUserForTrick(void)
+void CardManager::DeselectCards(void)
 {
-    if ( cpuTrick->GetSize() > 0 )
+    Card* card;
+
+    for ( int i = 0; i < playerHand->GetSize(); i++ )
     {
-        Card* cpuCard    = cpuTrick->GetCard(0);
-        bool  validCards = false;
-        int   i          = 0;
+        card = playerHand->GetCard(i);
 
-        // Loop through the user's hand checking if there is a card
-        // that can be played.
-        while ( !validCards && i < playerHand->GetSize() )
+        if ( card->isSelected() )
         {
-            if ( playerHand->GetCard(i++)->GetSuit() == cpuCard->GetSuit() )
-                validCards = true;
+            card->setSelected(false);
+            card->UpdateSelection();
         }
-
-        // Now disable the other cards if valid ones were found.
-        if ( validCards )
-        {
-            Card* card;
-
-            for ( i = 0; i < playerHand->GetSize(); i++ )
-            {
-                card = playerHand->GetCard(i);
-
-                if ( card->GetSuit() != cpuCard->GetSuit() )
-                    card->setFlag(QGraphicsItem::ItemIsMovable, false);
-            }
-        }
-    }
-}
-
-
-//------------------------------------------------------------------------------
-// CardSelectionsChanged - Inform the card and CardArray that it's selection has
-//                         changed.
-//------------------------------------------------------------------------------
-void CardManager::CardSelectionsChanged(Card* card,
-                                        CardArray::Type Type)
-{
-    CardArray* cardArray = GetCardArray(Type);
-
-    // Update the card selections array in the CardArray.
-    if ( cardArray->UpdateCardSelections(card) )
-    {
-        // Update the position of the card based on if it's selected or not.
-        card->UpdateSelection();
-    }
-}
-
-
-//------------------------------------------------------------------------------
-// CallCheckSelection - Check the selection in the CardArray is correct for
-//                      the phase the game is in.
-//------------------------------------------------------------------------------
-bool CardManager::CheckSelection(CardArray::SelectionType phase,
-                                 CardArray::Type Type)
-{
-    CardArray* cardArray = GetCardArray(Type);
-
-    return cardArray->CheckSelection(phase);
-}
-
-
-//------------------------------------------------------------------------------
-// CheckTrick - Check the cards currently in play for a trick.
-//------------------------------------------------------------------------------
-void CardManager::CheckTrick(int player)
-{
-    Card* playerCard = playerTrick->GetCard(0);
-    Card* cpuCard    = cpuTrick->GetCard(0);
-
-    // Check that the tricks have cards in them.
-    int playerSize   = playerTrick->GetSize();
-    int cpuSize      = cpuTrick->GetSize();
-
-
-    if ( playerSize == 1 && cpuSize == 1 && playerCard && cpuCard )
-    {
-        // Check for same suit condition.
-        if ( playerCard->GetSuit() != cpuCard->GetSuit() )
-        {
-            emit TrickResult(player);
-        }
-        else
-        {
-            Card::Rank playerRank = playerCard->GetRank();
-            Card::Rank cpuRank    = cpuCard->GetRank();
-
-            if ( playerRank > cpuRank )
-            {
-                emit TrickResult(1);
-            }
-            else
-            {
-                emit TrickResult(0);
-            }
-        }
-
-        // Move the cards to previousTricks pile.
-        TransferCard(playerTrick, previousTricks, playerCard);
-        TransferCard(cpuTrick,    previousTricks, cpuCard);
-
-        numOfCardsTransferred = 2;
-    }
-    else
-    {
-        emit TrickResult(3);
     }
 }
 
 
 //------------------------------------------------------------------------------
 // ValidateSelection - Inform the scene to enable/disable buttons based on
-//                     whether the user's seection is valid or not.
+//                     whether the user's selection is valid or not.
 //------------------------------------------------------------------------------
 void CardManager::ValidateSelection(void)
 {
@@ -708,30 +564,36 @@ void CardManager::ValidateSelection(void)
 
 
 //------------------------------------------------------------------------------
-// DeselectUserCards - Deselect all user cards, called when a skip is requested.
+// PrepForTrick - Ensure the user can onbly play valid Tricks.
 //------------------------------------------------------------------------------
-void CardManager::DeselectUserCards(void)
+void CardManager::PrepForTrick(void)
 {
-    Card* card;
-
-    for ( int i = 0; i < playerHand->GetSize(); i++ )
+    if ( cpuTrick->GetSize() > 0 )
     {
-        card = playerHand->GetCard(i);
+        Card* cpuCard    = cpuTrick->GetCard(0);
+        bool  validCards = false;
+        int   i          = 0;
 
-        if ( card->isSelected() )
+        // Loop through the user's hand checking if there is a card
+        // that can be played.
+        while ( !validCards && i < playerHand->GetSize() )
         {
-            card->setSelected(false);
-            card->UpdateSelection();
+            if ( playerHand->GetCard(i++)->GetSuit() == cpuCard->GetSuit() )
+                validCards = true;
+        }
+
+        // Now disable the other cards if valid ones were found.
+        if ( validCards )
+        {
+            Card* card;
+
+            for ( i = 0; i < playerHand->GetSize(); i++ )
+            {
+                card = playerHand->GetCard(i);
+
+                if ( card->GetSuit() != cpuCard->GetSuit() )
+                    card->setFlag(QGraphicsItem::ItemIsMovable, false);
+            }
         }
     }
-}
-
-
-//------------------------------------------------------------------------------
-// SignalTransferComplete - Inform the gameManager that a card transfer has
-//                          finished.
-//------------------------------------------------------------------------------
-void CardManager::SignalTransferComplete(void)
-{
-    emit TransferComplete();
 }

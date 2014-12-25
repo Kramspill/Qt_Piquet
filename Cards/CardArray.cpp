@@ -178,42 +178,6 @@ void CardArray::Stagger(CardArray::StaggerType staggerType)
 
 
 //------------------------------------------------------------------------------
-// UpdateCardSelections - Update the the selected cards member vector.
-//------------------------------------------------------------------------------
-bool CardArray::UpdateCardSelections(Card* card)
-{
-    bool success = false;
-
-    if ( !card->isSelected() )
-    {
-        std::vector<Card*>::iterator iterator;
-
-        // The card has been deselected.
-        // Remove the card from the selectedCards vector.
-        iterator = std::find(selectedCards.begin(), selectedCards.end(), card);
-        selectedCards.erase(iterator);
-
-        success = true;
-    }
-    else if ( selectedCards.size() < selectionLimit )
-    {
-        // The card has been selected and the limit has not yet been reached.
-        // Add the card to the selectedCards vector.
-        selectedCards.push_back(card);
-        success = true;
-    }
-    else
-    {
-        // The card has been selected but the limit has been reached.
-        // Set the card to be unselected in the scene.
-        card->setSelected(false);
-    }
-
-    return success;
-}
-
-
-//------------------------------------------------------------------------------
 // CheckSelection - Check selectedCards contains valid Cards for the phase.
 //------------------------------------------------------------------------------
 bool CardArray::CheckSelection(CardArray::SelectionType phase)

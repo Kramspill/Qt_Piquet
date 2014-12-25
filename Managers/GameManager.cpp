@@ -119,9 +119,9 @@ void GameManager::ConnectSignals(void)
                      stateManager,
                      SIGNAL(ExchangeComplete()));
     QObject::connect(player1,
-                     SIGNAL(PrepUserForTrick()),
+                     SIGNAL(PrepForTrick()),
                      cardManager,
-                     SLOT(PrepUserForTrick()));
+                     SLOT(PrepForTrick()));
     QObject::connect(player1,
                      SIGNAL(SetCardsMoveable(bool)),
                      cardManager,
@@ -129,7 +129,7 @@ void GameManager::ConnectSignals(void)
     QObject::connect(player1,
                      SIGNAL(DeselectCards()),
                      cardManager,
-                     SLOT(DeselectUserCards()));
+                     SLOT(DeselectCards()));
     QObject::connect(player1,
                      SIGNAL(SetUI(State)),
                      scene,

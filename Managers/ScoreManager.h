@@ -45,10 +45,10 @@ private:
     int       GetValue(std::vector<Card*> cards, State phase);
     void      GetDeclaration(std::vector<Card*> cards,
                              State phase,
-                             char* destBuffer);
+                             char* destBuf);
     void      GetResponse(std::vector<Card*> cards,
                           State phase,
-                          char* destBuffer);
+                          char* destBuf);
 
 private:
     int       playerScore;

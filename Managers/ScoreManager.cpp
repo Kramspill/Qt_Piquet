@@ -342,7 +342,7 @@ int ScoreManager::GetValue(std::vector<Card*> cards, State phase)
 //------------------------------------------------------------------------------
 void ScoreManager::GetDeclaration(std::vector<Card*> cards,
                                   State              phase,
-                                  char*              destBuffer)
+                                  char*              destBuf)
 {
     char* seqNames[6] = { "TIERCE",  "QUARTE",   "QUINTE",
                           "SIXIÉME", "SEPTIÉME", "HUITIÉME" };
@@ -351,15 +351,15 @@ void ScoreManager::GetDeclaration(std::vector<Card*> cards,
     switch ( phase )
     {
         case POINT:
-            snprintf(destBuffer, 20, "POINT OF %d", cards.size());
+            snprintf(destBuf, 20, "POINT OF %d", cards.size());
             break;
 
         case SEQUENCE:
-            snprintf(destBuffer, 20, "%s", seqNames[cards.size()-3]);
+            snprintf(destBuf, 20, "%s", seqNames[cards.size()-3]);
             break;
 
         case SET:
-            snprintf(destBuffer, 20, "%s", setNames[cards.size()-3]);
+            snprintf(destBuf, 20, "%s", setNames[cards.size()-3]);
             break;
     }
 }
@@ -370,7 +370,7 @@ void ScoreManager::GetDeclaration(std::vector<Card*> cards,
 //------------------------------------------------------------------------------
 void ScoreManager::GetResponse(std::vector<Card*> cards,
                                State              phase,
-                               char*              destBuffer)
+                               char*              destBuf)
 {
     int   value        = GetValue(cards, phase);
     char* cardNames[8] = { "SEVEN", "EIGHT", "NINE", "TEN",
@@ -379,15 +379,15 @@ void ScoreManager::GetResponse(std::vector<Card*> cards,
     switch ( phase )
     {
         case POINT:
-            snprintf(destBuffer, 20, "MAKING %d", value);
+            snprintf(destBuf, 20, "MAKING %d", value);
             break;
 
         case SEQUENCE:
-            snprintf(destBuffer, 20, "TO THE %s", cardNames[value-7]);
+            snprintf(destBuf, 20, "TO THE %s", cardNames[value-7]);
             break;
 
         case SET:
-            snprintf(destBuffer, 20, "%ss", cardNames[value-7]);
+            snprintf(destBuf, 20, "%ss", cardNames[value-7]);
             break;
     }
 }

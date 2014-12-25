@@ -78,7 +78,6 @@ public:
     void                     Sort(void);
     void                     Stagger(StaggerType staggerType);
 
-    bool                     UpdateCardSelections(Card* card);
     bool                     CheckSelection(SelectionType phase);
     //ScoreManager::PhaseScore GetSelectionScore(SelectionType phase);
     Card*                    RemoveSelectedCard(void);
