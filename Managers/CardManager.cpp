@@ -88,8 +88,8 @@ void CardManager::TransferCards(CardArray* source, CardArray* destination,
     if ( numberOfCards == 0 )
     {
         // Check if our destination is a player's hand and perform a deal if so.
-        if ( destination->GetCardArrayType() == CardArray::PLAYERHAND ||
-             destination->GetCardArrayType() == CardArray::CPUHAND )
+        if ( destination->GetType() == CardArray::PLAYERHAND ||
+             destination->GetType() == CardArray::CPUHAND )
         {
             numberOfCards = 12 - destination->GetSize();
             DealOutCards(source, destination, numberOfCards);
@@ -202,14 +202,14 @@ void CardManager::TransferCard(CardArray* source, CardArray* destination,
 
 
 //------------------------------------------------------------------------------
-// GetDesiredCardArray - Return the CardArray associated with a given type.
+// GetCardArray - Return the CardArray associated with a given type.
 //------------------------------------------------------------------------------
-CardArray* CardManager::GetDesiredCardArray(
-        CardArray::CardArrayType cardArrayType)
+CardArray* CardManager::GetCardArray(
+        CardArray::Type Type)
 {
     CardArray* returnedArray = 0;
 
-    switch ( cardArrayType )
+    switch ( Type )
     {
         case CardArray::DECK:
             returnedArray = deck;
@@ -503,9 +503,9 @@ void CardManager::PrepUserForTrick(void)
 //                         changed.
 //------------------------------------------------------------------------------
 void CardManager::CardSelectionsChanged(Card* card,
-                                        CardArray::CardArrayType cardArrayType)
+                                        CardArray::Type Type)
 {
-    CardArray* cardArray = GetDesiredCardArray(cardArrayType);
+    CardArray* cardArray = GetCardArray(Type);
 
     // Update the card selections array in the CardArray.
     if ( cardArray->UpdateCardSelections(card) )
@@ -521,9 +521,9 @@ void CardManager::CardSelectionsChanged(Card* card,
 //                      the phase the game is in.
 //------------------------------------------------------------------------------
 bool CardManager::CheckSelection(CardArray::SelectionType phase,
-                                 CardArray::CardArrayType cardArrayType)
+                                 CardArray::Type Type)
 {
-    CardArray* cardArray = GetDesiredCardArray(cardArrayType);
+    CardArray* cardArray = GetCardArray(Type);
 
     return cardArray->CheckSelection(phase);
 }

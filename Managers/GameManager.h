@@ -51,8 +51,8 @@ private slots:
     void          ResolveResponse(State phase, PlayerNum player);
     void          PlayTrick(PlayerNum player);
 
-    void          RequestCardTransfer(CardArray::CardArrayType src,
-                                      CardArray::CardArrayType dest,
+    void          RequestCardTransfer(CardArray::Type src,
+                                      CardArray::Type dest,
                                       int numCards);
     void          UpdateAI(PlayerNum player);
 

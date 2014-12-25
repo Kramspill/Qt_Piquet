@@ -82,7 +82,7 @@ void KnowledgeBase::Initialize(void)
 // UpdateCard - Update the status of a card.
 //------------------------------------------------------------------------------
 void KnowledgeBase::UpdateCard(Card::Suit suit, Card::Rank rank, int index,
-                               CardArray::CardArrayType location)
+                               CardArray::Type location)
 {
     cardStatus[suit][rank-7]->location = location;
     cardStatus[suit][rank-7]->index    = index;

@@ -17,11 +17,11 @@
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
+#include "State/GlobalStateInfo.h"
 #include "Scene/Scene.h"
 #include "ScoreManager.h"
 #include "Cards/CardArray.h"
 #include "Cards/Card.h"
-#include "State/GlobalStateInfo.h"
 
 
 //------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ public:
 
     void                     TransferCards(CardArray* source,
                                            CardArray* destination,
-                                           int numberOfCards);
+                                           int        numberOfCards);
     void                     DealOutCards(CardArray* source,
                                           CardArray* destination,
                                           int        numberOfCards);
@@ -47,12 +47,9 @@ public:
                                                    CardArray* destination);
     void                     TransferCard(CardArray* source,
                                           CardArray* destination,
-                                          Card* card);
+                                          Card*      card);
 
-    CardArray*               GetDesiredCardArray(
-                                        CardArray::CardArrayType cardArrayType);
-
-    //ScoreManager::PhaseScore GetSelectionScore(CardArray::SelectionType phase);
+    CardArray*               GetCardArray(CardArray::Type Type);
     std::vector<Card*>       GetSelection(PlayerNum player);
 
 private:
@@ -67,11 +64,11 @@ public slots:
                                                 PlayerNum player);
     void                     PrepUserForTrick(void);
     void                     CardSelectionsChanged(Card* card,
-                                                   CardArray::CardArrayType
-                                         cardArrayType = CardArray::PLAYERHAND);
+                                                   CardArray::Type
+                                         Type = CardArray::PLAYERHAND);
     bool                     CheckSelection(CardArray::SelectionType phase,
-                                            CardArray::CardArrayType
-                                         cardArrayType = CardArray::PLAYERHAND);
+                                            CardArray::Type
+                                         Type = CardArray::PLAYERHAND);
     void                     CheckTrick(int player);
     void                     ValidateSelection(void);
     void                     DeselectUserCards(void);

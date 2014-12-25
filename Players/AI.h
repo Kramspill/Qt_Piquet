@@ -49,7 +49,7 @@ public:
 
 
     void                   UpdateKnowledgeBase(Card* card, int index,
-                                             CardArray::CardArrayType location);
+                                             CardArray::Type location);
     void                   UpdateHand(CardArray* newCpuHand);
 
     void                   SelectCardsToDiscard(void);
@@ -61,7 +61,7 @@ private:
 signals:
     void                   RequestCardPositions(PlayerNum player);
     void                   SignalCardSelectionsChanged(Card*,
-                                                      CardArray::CardArrayType);
+                                                      CardArray::Type);
     void                   AIProcessingComplete(void);
 
     void                   GoodResponse(void);

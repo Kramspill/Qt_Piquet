@@ -20,11 +20,11 @@ CardArray::CardArray(void)
 //------------------------------------------------------------------------------
 // Constructor
 //------------------------------------------------------------------------------
-CardArray::CardArray(CardArray::CardArrayType arrayType, int x, int y) :
+CardArray::CardArray(CardArray::Type arrayType, int x, int y) :
     cards(0),
     selectedCards(0),
     selectionLimit(0),
-    cardArrayType(arrayType),
+    type(arrayType),
     initialCardPosition(QPointF(x, y)),
     nextCardPosition(QPointF(x, y))
 {
@@ -436,11 +436,11 @@ int CardArray::GetSelectedCardsSize(void)
 
 
 //------------------------------------------------------------------------------
-// GetCardArrayType - Accessor for CardArray's cardArrayType member variable.
+// GetType - Accessor for CardArray's Type member variable.
 //------------------------------------------------------------------------------
-CardArray::CardArrayType CardArray::GetCardArrayType(void)
+CardArray::Type CardArray::GetType(void)
 {
-    return cardArrayType;
+    return type;
 }
 
 
@@ -484,7 +484,7 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
     QPointF shiftedPosition;
     int     arraySize = GetSize();
 
-    switch ( cardArrayType )
+    switch ( type )
     {
         case DECK:
         case TALON:
@@ -578,7 +578,7 @@ void CardArray::UpdateCardState(Card* card, bool noAnimation)
     card->UpdateAnimation(noAnimation);
 
     // Emit a signal to tell the card to change states.
-    switch ( cardArrayType )
+    switch ( type )
     {
         case TALON:
             emit card->InTalon();

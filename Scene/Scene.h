@@ -70,8 +70,8 @@ signals:
     void         TrickPlayed(void);
 
 
-    void         RequestACardTransfer(CardArray::CardArrayType,
-                                      CardArray::CardArrayType,
+    void         RequestACardTransfer(CardArray::Type,
+                                      CardArray::Type,
                                       Card*);
     void         SignalCardSelectionsChanged(Card*);
     void         ValidateSelection();

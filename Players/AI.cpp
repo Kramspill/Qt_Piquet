@@ -153,7 +153,7 @@ void AI::PlayTrick(void)
 // UpdateKnowledgeBase - Update the status of a card in the knowledge base.
 //------------------------------------------------------------------------------
 void AI::UpdateKnowledgeBase(Card* card, int index,
-                             CardArray::CardArrayType location)
+                             CardArray::Type location)
 {
     Card::Suit suit = card->GetSuit();
     Card::Rank rank = card->GetRank();
@@ -201,8 +201,8 @@ void AI::ConnectSignals(void)
 {
     connect(knowledgeBase,
             SIGNAL(SignalCardSelectionsChanged(Card*,
-                                               CardArray::CardArrayType)),
+                                               CardArray::Type)),
             this,
             SIGNAL(SignalCardSelectionsChanged(Card*,
-                                               CardArray::CardArrayType)));
+                                               CardArray::Type)));
 }

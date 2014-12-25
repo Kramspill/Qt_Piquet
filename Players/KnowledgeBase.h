@@ -28,7 +28,7 @@ class KnowledgeBase : public QObject
 public:
     struct KnowledgeItem
     {
-        CardArray::CardArrayType location;
+        CardArray::Type location;
         int  index;
         int  rank;
         bool selected;
@@ -42,7 +42,7 @@ public:
     void                     Initialize(void);
     void                     UpdateCard(Card::Suit suit, Card::Rank rank,
                                         int index,
-                                        CardArray::CardArrayType location);
+                                        CardArray::Type location);
     void                     FlagDispensableCards(CardArray* cpuHand);
     void                     SelectTrick(CardArray* cpuHand);
 
@@ -60,7 +60,7 @@ private:
 
 signals:
     void                     SignalCardSelectionsChanged(Card*,
-                                                      CardArray::CardArrayType);
+                                                      CardArray::Type);
 
 private:
     KnowledgeItem*           cardStatus[4][8];

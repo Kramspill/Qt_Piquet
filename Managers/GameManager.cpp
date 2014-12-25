@@ -135,12 +135,12 @@ void GameManager::ConnectSignals(void)
                      scene,
                      SLOT(SetUI(State)));
     QObject::connect(player1,
-                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
-                                                CardArray::CardArrayType,
+                     SIGNAL(RequestCardTransfer(CardArray::Type,
+                                                CardArray::Type,
                                                 int)),
                      this,
-                     SLOT(RequestCardTransfer(CardArray::CardArrayType,
-                                              CardArray::CardArrayType,
+                     SLOT(RequestCardTransfer(CardArray::Type,
+                                              CardArray::Type,
                                               int)));
 
     // Connect the signals from player 2.
@@ -157,12 +157,12 @@ void GameManager::ConnectSignals(void)
                      scene,
                      SLOT(SetUI(State)));
     QObject::connect(player2,
-                     SIGNAL(RequestCardTransfer(CardArray::CardArrayType,
-                                                CardArray::CardArrayType,
+                     SIGNAL(RequestCardTransfer(CardArray::Type,
+                                                CardArray::Type,
                                                 int)),
                      this,
-                     SLOT(RequestCardTransfer(CardArray::CardArrayType,
-                                              CardArray::CardArrayType,
+                     SLOT(RequestCardTransfer(CardArray::Type,
+                                              CardArray::Type,
                                               int)));
     QObject::connect(player2,
                      SIGNAL(RequestCardPositions(PlayerNum)),
@@ -460,13 +460,13 @@ void GameManager::PlayTrick(PlayerNum player)
 
     if ( player == PLAYER1 )
     {
-        leadTrick   = cardManager->GetDesiredCardArray(CardArray::CPUTRICK);
-        followTrick = cardManager->GetDesiredCardArray(CardArray::PLAYERTRICK);
+        leadTrick   = cardManager->GetCardArray(CardArray::CPUTRICK);
+        followTrick = cardManager->GetCardArray(CardArray::PLAYERTRICK);
     }
     else
     {
-        leadTrick   = cardManager->GetDesiredCardArray(CardArray::PLAYERTRICK);
-        followTrick = cardManager->GetDesiredCardArray(CardArray::CPUTRICK);
+        leadTrick   = cardManager->GetCardArray(CardArray::PLAYERTRICK);
+        followTrick = cardManager->GetCardArray(CardArray::CPUTRICK);
     }
 
     // Score the Trick.
@@ -491,12 +491,12 @@ void GameManager::PlayTrick(PlayerNum player)
 // RequestCardTransfer - Request a number of cards be transferred to a different
 //                       CardArray.
 //------------------------------------------------------------------------------
-void GameManager::RequestCardTransfer(CardArray::CardArrayType src,
-                                      CardArray::CardArrayType dest,
+void GameManager::RequestCardTransfer(CardArray::Type src,
+                                      CardArray::Type dest,
                                       int numCards)
 {
-    CardArray* source      = cardManager->GetDesiredCardArray(src);
-    CardArray* destination = cardManager->GetDesiredCardArray(dest);
+    CardArray* source      = cardManager->GetCardArray(src);
+    CardArray* destination = cardManager->GetCardArray(dest);
 
     cardManager->TransferCards(source, destination, numCards);
 }
@@ -515,7 +515,7 @@ void GameManager::UpdateAI(PlayerNum player)
     AI* ai = player == PLAYER1 ? (AI*)player1 : (AI*)player2;
 
     // Retrieve the cpu's hand and update the ai's knowledge base.
-    cardArray = cardManager->GetDesiredCardArray(CardArray::CPUHAND);
+    cardArray = cardManager->GetCardArray(CardArray::CPUHAND);
     size      = cardArray->GetSize();
 
     for ( int index = 0; index < size; index++ )
@@ -528,7 +528,7 @@ void GameManager::UpdateAI(PlayerNum player)
     ai->UpdateHand(cardArray);
 
     // Retrieve the cpu's discards and update the ai's knowledge base.
-    cardArray = cardManager->GetDesiredCardArray(CardArray::CPUDISCARDS);
+    cardArray = cardManager->GetCardArray(CardArray::CPUDISCARDS);
     size      = cardArray->GetSize();
 
     for ( int index = 0; index < size; index++ )
@@ -538,7 +538,7 @@ void GameManager::UpdateAI(PlayerNum player)
     }
 
     // Retrieve the previous tricks and update the ai's knowledge base.
-    cardArray = cardManager->GetDesiredCardArray(CardArray::PREVIOUSTRICKS);
+    cardArray = cardManager->GetCardArray(CardArray::PREVIOUSTRICKS);
     size      = cardArray->GetSize();
 
     for ( int index = 0; index < size; index++ )
@@ -548,7 +548,7 @@ void GameManager::UpdateAI(PlayerNum player)
     }
 
     // Retrieve the current trick and update the ai's knowledge base.
-    cardArray = cardManager->GetDesiredCardArray(CardArray::PLAYERTRICK);
+    cardArray = cardManager->GetCardArray(CardArray::PLAYERTRICK);
     size      = cardArray->GetSize();
 
     for ( int index = 0; index < size; index++ )

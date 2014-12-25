@@ -33,7 +33,7 @@ class CardArray : public QObject
 {
     Q_OBJECT
 public:
-    enum CardArrayType
+    enum Type
     {
         UNKNOWN,
         DECK,
@@ -64,7 +64,7 @@ public:
 
 public:
     CardArray(void);
-    CardArray(CardArrayType arrayType, int x, int y);
+    CardArray(Type arrayType, int x, int y);
     CardArray(CardArray&);
     ~CardArray(void);
 
@@ -86,7 +86,7 @@ public:
 
     int                      GetSize(void);
     int                      GetSelectedCardsSize(void);
-    CardArrayType            GetCardArrayType(void);
+    Type            GetType(void);
     void                     SetSelectionLimit(int newLimit);
 
 private:
@@ -100,7 +100,7 @@ private:
     std::vector<Card*>       cards;
     std::vector<Card*>       selectedCards;
     unsigned int             selectionLimit;
-    CardArrayType            cardArrayType;
+    Type                     type;
     QPointF                  initialCardPosition;
     QPointF                  nextCardPosition;
 };

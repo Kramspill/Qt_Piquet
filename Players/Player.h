@@ -61,8 +61,8 @@ signals:
 
     void         SetCardsMoveable(bool);
     void         DeselectCards(void);
-    void         RequestCardTransfer(CardArray::CardArrayType,
-                                     CardArray::CardArrayType,
+    void         RequestCardTransfer(CardArray::Type,
+                                     CardArray::Type,
                                      int);
     void         SetUI(State);
 
