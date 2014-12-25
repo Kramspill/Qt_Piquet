@@ -44,7 +44,7 @@ void ScoreManager::Initialize(void)
 
 
 //------------------------------------------------------------------------------
-// CreateDeclaration - Create a declaration from a selection.
+// CreateDeclaration - Create a Declaration from a selection.
 //------------------------------------------------------------------------------
 void ScoreManager::CreateDeclaration(std::vector<Card*> cards, State phase)
 {
@@ -96,7 +96,7 @@ void ScoreManager::CreateDeclaration(std::vector<Card*> cards, State phase)
 
 
 //------------------------------------------------------------------------------
-// CreateResponse - Create a response from a selection.
+// CreateResponse - Create a Response from a selection.
 //------------------------------------------------------------------------------
 void ScoreManager::CreateResponse(std::vector<Card*> cards, State phase)
 {
@@ -177,7 +177,7 @@ void ScoreManager::CreateResponse(std::vector<Card*> cards, State phase)
 
 
 //------------------------------------------------------------------------------
-// ScoreDeclaration - Score a player's declaration.
+// ScoreDeclaration - Score a player's Declaration.
 //------------------------------------------------------------------------------
 void ScoreManager::ScoreDeclaration(State phase, PlayerNum player)
 {
@@ -256,7 +256,7 @@ void ScoreManager::ScoreDeclaration(State phase, PlayerNum player)
 
 
 //------------------------------------------------------------------------------
-// ScoreTrick - Score the tricks in play.
+// ScoreTrick - Score the Tricks in play.
 //------------------------------------------------------------------------------
 PlayerNum ScoreManager::ScoreTrick(Card*     leadCard,
                                    Card*     followCard,
@@ -281,7 +281,7 @@ PlayerNum ScoreManager::ScoreTrick(Card*     leadCard,
 
 
 //------------------------------------------------------------------------------
-// Accessor for ScoreManager's playerScore member.
+// GetPlayerScore - Accessor for ScoreManager's playerScore member.
 //------------------------------------------------------------------------------
 int ScoreManager::GetPlayerScore(void)
 {
@@ -290,7 +290,7 @@ int ScoreManager::GetPlayerScore(void)
 
 
 //------------------------------------------------------------------------------
-// Accessor for ScoreManager's cpuScore member.
+// GetCPUScore - Accessor for ScoreManager's cpuScore member.
 //------------------------------------------------------------------------------
 int ScoreManager::GetCPUScore(void)
 {
@@ -338,7 +338,7 @@ int ScoreManager::GetValue(std::vector<Card*> cards, State phase)
 
 
 //------------------------------------------------------------------------------
-// GetDeclaration - Helper for CreateDeclaration to return the declaration text.
+// GetDeclaration - Helper for CreateDeclaration to return the Declaration text.
 //------------------------------------------------------------------------------
 void ScoreManager::GetDeclaration(std::vector<Card*> cards,
                                   State              phase,
@@ -366,7 +366,7 @@ void ScoreManager::GetDeclaration(std::vector<Card*> cards,
 
 
 //------------------------------------------------------------------------------
-// GetResponse - Helper for CreateDeclaration to return the response text.
+// GetResponse - Helper for CreateDeclaration to return the Response text.
 //------------------------------------------------------------------------------
 void ScoreManager::GetResponse(std::vector<Card*> cards,
                                State              phase,

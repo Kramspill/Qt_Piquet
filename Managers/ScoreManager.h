@@ -16,8 +16,8 @@
 // My Header Files
 //------------------------------------------------------------------------------
 #include "State/GlobalStateInfo.h"
-#include "Cards/Card.h"
 #include "Cards/CardArray.h"
+#include "Cards/Card.h"
 
 
 //------------------------------------------------------------------------------
@@ -31,24 +31,28 @@ public:
     ScoreManager(ScoreManager&);
     ~ScoreManager(void);
 
-    void        Initialize(void);
+    void      Initialize(void);
 
-    void        CreateDeclaration(std::vector<Card*> cards, State phase);
-    void        CreateResponse(std::vector<Card*> cards, State phase);
-    void        ScoreDeclaration(State phase, PlayerNum player);
+    void      CreateDeclaration(std::vector<Card*> cards, State phase);
+    void      CreateResponse(std::vector<Card*> cards, State phase);
+    void      ScoreDeclaration(State phase, PlayerNum player);
     PlayerNum ScoreTrick(Card* leadCard, Card* followCard, PlayerNum player);
 
-    int         GetPlayerScore(void);
-    int         GetCPUScore(void);
+    int       GetPlayerScore(void);
+    int       GetCPUScore(void);
 
 private:
-    int         GetValue(std::vector<Card*> cards, State phase);
-    void GetDeclaration(std::vector<Card*> cards, State phase, char* destBuffer);
-    void GetResponse(std::vector<Card*> cards, State phase, char* destBuffer);
+    int       GetValue(std::vector<Card*> cards, State phase);
+    void      GetDeclaration(std::vector<Card*> cards,
+                             State phase,
+                             char* destBuffer);
+    void      GetResponse(std::vector<Card*> cards,
+                          State phase,
+                          char* destBuffer);
 
 private:
-    int         playerScore;
-    int         cpuScore;
+    int       playerScore;
+    int       cpuScore;
 };
 
 #endif // SCOREMANAGER_H

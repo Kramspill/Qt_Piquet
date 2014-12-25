@@ -10,7 +10,6 @@
 // Qt Header Files
 //------------------------------------------------------------------------------
 #include <QObject>
-#include <QPushButton>
 #include <QApplication>
 #include <QDesktopWidget>
 
