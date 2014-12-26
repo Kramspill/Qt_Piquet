@@ -59,6 +59,7 @@ private:
 public slots:
     void         CreateDialog(Dialog::DialogType dialogType);
     void         SetUI(State phase);
+    void         RepositionObjects(void);
     void         SetCardsMoveable(bool moveable);
     void         SetValidSelection(bool valid);
 

@@ -369,6 +369,15 @@ void Scene::SetUI(State phase)
 
 
 //------------------------------------------------------------------------------
+// RepositionObjects - Reposition the objects in the scene.
+//------------------------------------------------------------------------------
+void Scene::RepositionObjects(void)
+{
+    primaryAction->move(primaryAction->pos().x()+1, primaryAction->pos().y());
+}
+
+
+//------------------------------------------------------------------------------
 // SetCardsMoveable - Set the cards in the scene to allow movement by a user.
 //------------------------------------------------------------------------------
 void Scene::SetCardsMoveable(bool moveable)

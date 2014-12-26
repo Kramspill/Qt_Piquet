@@ -17,6 +17,7 @@
 //------------------------------------------------------------------------------
 class View : public QGraphicsView
 {
+    Q_OBJECT
 public:
     View(QGraphicsScene* scene);
     View(View&);
@@ -24,6 +25,9 @@ public:
 
 protected:
     void resizeEvent(QResizeEvent* event);
+
+signals:
+    void RepositionObjects(void);
 };
 
 #endif // VIEW_H

@@ -43,4 +43,6 @@ void View::resizeEvent(QResizeEvent* event)
 {
     QGraphicsView::resizeEvent(event);
     fitInView(sceneRect(), Qt::KeepAspectRatio);
+
+    emit RepositionObjects();
 }

@@ -109,6 +109,12 @@ void GameManager::ConnectSignals(void)
                      cardManager,
                      SLOT(ValidateSelection()));
 
+    // Connect the signals from the View.
+    QObject::connect(view,
+                     SIGNAL(RepositionObjects()),
+                     scene,
+                     SLOT(RepositionObjects()));
+
     // Connect the signals from player 1.
     QObject::connect(player1,
                      SIGNAL(DealComplete()),
