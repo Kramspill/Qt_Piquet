@@ -13,11 +13,6 @@
 #include <QSvgRenderer>
 #include <QStateMachine>
 #include <QPropertyAnimation>
-#include <QPointF>
-
-#include <QDrag>
-#include <QMimeData>
-#include <QMouseEvent>
 
 
 //------------------------------------------------------------------------------
@@ -78,7 +73,6 @@ public:
 protected:
     void                mousePressEvent(QGraphicsSceneMouseEvent* event);
     void                mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
-    //void                mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event);
 
 private:
     void                Initialize(void);

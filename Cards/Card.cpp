@@ -138,7 +138,7 @@ void Card::UpdateAnimation(bool noAnimation)
 
 
 //------------------------------------------------------------------------------
-// mouseReleaseEvent - Handle mouse press events.
+// mousePressEvent - Handle mouse press events.
 //------------------------------------------------------------------------------
 void Card::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
@@ -158,15 +158,6 @@ void Card::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     if ( this->flags() & QGraphicsItem::ItemIsMovable )
         QGraphicsItem::mouseReleaseEvent(event);
 }
-
-
-//------------------------------------------------------------------------------
-// mouseDoubleClickEvent - Override of QGraphicsItem::mouseDoubleClickEvent to
-//                         do nothing.
-//------------------------------------------------------------------------------
-/*void Card::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
-{
-}*/
 
 
 //------------------------------------------------------------------------------
