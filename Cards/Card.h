@@ -102,7 +102,6 @@ private:
     QPointF             origPosition;
     QStateMachine*      stateMachine;
     QPropertyAnimation* transitionAnimation;
-    /* Transformation for flipping the card */
 };
 
 #endif // CARD_H

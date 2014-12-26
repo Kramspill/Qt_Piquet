@@ -22,8 +22,6 @@ CardArray::CardArray(void)
 //------------------------------------------------------------------------------
 CardArray::CardArray(CardArray::Type arrayType, int x, int y) :
     cards(0),
-    selectedCards(0),
-    selectionLimit(0),
     type(arrayType),
     initialCardPosition(QPointF(x, y)),
     nextCardPosition(QPointF(x, y))
@@ -178,210 +176,6 @@ void CardArray::Stagger(CardArray::StaggerType staggerType)
 
 
 //------------------------------------------------------------------------------
-// CheckSelection - Check selectedCards contains valid Cards for the phase.
-//------------------------------------------------------------------------------
-bool CardArray::CheckSelection(CardArray::SelectionType phase)
-{
-    Card*      aCard;
-    Card::Suit theSuit;
-    Card::Rank theRank;
-    int        numOfSelectedCards = selectedCards.size();
-    bool       cardBuckets[8] = { false };
-    int        i;
-    bool       valid = true;
-
-    switch ( phase )
-    {
-        case POINT:
-            // Get the first card to verify which suit to compare the other
-            // cards to.
-            aCard   = selectedCards[0];
-            theSuit = aCard->GetSuit();
-
-            for ( int index = 1; index < numOfSelectedCards; index++ )
-            {
-                aCard = selectedCards[index];
-
-                if ( aCard->GetSuit() != theSuit )
-                {
-                    valid = false;
-                    index = numOfSelectedCards;
-                }
-            }
-            break;
-
-        case SEQUENCE:
-            // Perform a bucket sort then check the cards.
-            aCard   = selectedCards[0];
-            theSuit = aCard->GetSuit();
-
-            if ( numOfSelectedCards < 3 )
-            {
-                valid = false;
-            }
-            else
-            {
-                for ( int index = 0; index < numOfSelectedCards; index++ )
-                {
-                    aCard = selectedCards[index];
-
-                    // Place the card in it's bucket.
-                    cardBuckets[aCard->GetRank()-7] = true;
-
-                    // Check they are of the same suit during sorting.
-                    if ( aCard->GetSuit() != theSuit )
-                    {
-                    valid = false;
-                    index = numOfSelectedCards;
-                    }
-                }
-            }
-
-            // Check the selection order.
-            if ( valid )
-            {
-                i = 0;
-
-                while ( i < 8 && !cardBuckets[i])
-                {
-                    i++;
-                }
-
-                while ( i < 8 && numOfSelectedCards > 0 && cardBuckets[i])
-                {
-                    i++;
-                    numOfSelectedCards--;
-                }
-
-                if ( numOfSelectedCards != 0 )
-                {
-                    valid = false;
-                }
-            }
-            break;
-
-        case SET:
-            aCard   = selectedCards[0];
-            theSuit = aCard->GetSuit();
-            theRank = aCard->GetRank();
-
-            if ( theRank < 10 || numOfSelectedCards < 3 )
-            {
-                valid = false;
-            }
-            else
-            {
-                for ( int index = 1; index < numOfSelectedCards; index++ )
-                {
-                    aCard = selectedCards[index];
-
-                    // Check they are of the same suit during sorting.
-                    if ( aCard->GetSuit() != theSuit &&
-                     aCard->GetRank() != theRank )
-                    {
-                        valid = false;
-                        index = numOfSelectedCards;
-                    }
-                }
-            }
-            break;
-
-        default:
-            break;
-    }
-
-    return valid;
-}
-
-
-//------------------------------------------------------------------------------
-// GetSelectionScore - Get the score of the current selection.
-//------------------------------------------------------------------------------
-/*ScoreManager::PhaseScore CardArray::GetSelectionScore(CardArray::SelectionType
-                                                      phase)
-{
-    ScoreManager::PhaseScore score;
-
-    score.numOfCards = GetSelectedCardsSize();
-    score.totalValue = 0;
-
-    Card::Rank maxCard = Card::SEVEN;
-
-    // The selection has already been verified so we can make some assumptions
-    // in the calculations to speed things up.
-    switch ( phase )
-    {
-        case POINT:
-            for ( int index = 0; index < score.numOfCards; index++ )
-            {
-                score.totalValue += selectedCards[index]->GetValue();
-            }
-            break;
-
-        case SEQUENCE:
-            for ( int index = 0; index < score.numOfCards; index++ )
-            {
-                if ( selectedCards[index]->GetRank() > maxCard )
-                {
-                    maxCard = selectedCards[index]->GetRank();
-                    score.totalValue = selectedCards[index]->GetRank();
-                }
-            }
-            break;
-
-        case SET:
-            score.totalValue = selectedCards[0]->GetRank();
-            break;
-    }
-
-    return score;
-}*/
-
-
-//------------------------------------------------------------------------------
-// RemoveSelectedCard - Remove the first card from the selectedCards vector.
-//------------------------------------------------------------------------------
-Card* CardArray::RemoveSelectedCard(void)
-{
-    Card* removedCard = 0;
-
-
-    if ( selectedCards.size() > 0 )
-    {
-        removedCard = selectedCards.front();
-
-        // Deselect and prevent further selection of the card.
-        removedCard->setSelected(false);
-        removedCard->setFlag(QGraphicsItem::ItemIsSelectable, false);
-
-        // Remove the card froom the selectedCards vector.
-        selectedCards.erase(selectedCards.begin());
-
-        // Remove the Card from the main array.
-        RemoveCard(removedCard);
-    }
-
-    return removedCard;
-}
-
-
-//------------------------------------------------------------------------------
-// DeselectAll - Deselect all cards in this array.
-//------------------------------------------------------------------------------
-void CardArray::DeselectAll(void)
-{
-    Card* card;
-    int   numOfSelectedCards = selectedCards.size();
-
-    for ( int index = 0; index < numOfSelectedCards; index++ )
-    {
-        card = selectedCards[index];
-        card->setSelected(false);
-    }
-}
-
-
-//------------------------------------------------------------------------------
 // GetSize - Return the size of the cards vector.
 //------------------------------------------------------------------------------
 int CardArray::GetSize(void)
@@ -391,30 +185,11 @@ int CardArray::GetSize(void)
 
 
 //------------------------------------------------------------------------------
-// GetSelectedCardsSize - Return the size of the selectedCards vector.
-//------------------------------------------------------------------------------
-int CardArray::GetSelectedCardsSize(void)
-{
-    return selectedCards.size();
-}
-
-
-//------------------------------------------------------------------------------
 // GetType - Accessor for CardArray's Type member variable.
 //------------------------------------------------------------------------------
 CardArray::Type CardArray::GetType(void)
 {
     return type;
-}
-
-
-//------------------------------------------------------------------------------
-// SetSelectionLimit - Set the limit of how many cards can be selected in this
-//                     array at once.
-//------------------------------------------------------------------------------
-void CardArray::SetSelectionLimit(int newLimit)
-{
-    selectionLimit = newLimit;
 }
 
 

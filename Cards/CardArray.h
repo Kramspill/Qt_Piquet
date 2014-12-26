@@ -10,7 +10,6 @@
 // Qt Header Files
 //------------------------------------------------------------------------------
 #include <QObject>
-#include <QPointF>
 
 
 //------------------------------------------------------------------------------
@@ -22,7 +21,6 @@
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
-//#include "Managers/ScoreManager.h"
 #include "Card.h"
 
 
@@ -55,53 +53,37 @@ public:
         PREVTRICKS
     };
 
-    enum SelectionType
-    {
-        POINT,
-        SEQUENCE,
-        SET
-    };
-
 public:
     CardArray(void);
     CardArray(Type arrayType, int x, int y);
     CardArray(CardArray&);
     ~CardArray(void);
 
-    void                     AddCard(Card* newCard,
-                                     bool initialCardCreation = false);
-    void                     RemoveCard(Card* aCard);
-    Card*                    RemoveTopCard(void);
-    Card*                    GetCard(int index);
+    void               AddCard(Card* newCard,
+                               bool initialCardCreation = false);
+    void               RemoveCard(Card* aCard);
+    Card*              RemoveTopCard(void);
+    Card*              GetCard(int index);
 
-    void                     Shuffle(void);
-    void                     Sort(void);
-    void                     Stagger(StaggerType staggerType);
+    void               Shuffle(void);
+    void               Sort(void);
+    void               Stagger(StaggerType staggerType);
 
-    bool                     CheckSelection(SelectionType phase);
-    //ScoreManager::PhaseScore GetSelectionScore(SelectionType phase);
-    Card*                    RemoveSelectedCard(void);
-    void                     DeselectAll(void);
-
-    int                      GetSize(void);
-    int                      GetSelectedCardsSize(void);
-    Type            GetType(void);
-    void                     SetSelectionLimit(int newLimit);
+    int                GetSize(void);
+    Type               GetType(void);
 
 private:
-    void                     UpdateCardPositions(Card* addedCard = 0,
-                                                 bool noAnimation = false);
-    void                     CleanUpCardPositions(bool newCardAdded);
-    void                     UpdateCardState(Card* card, bool noAnimation);
-    void                     ResetZPositions(void);
+    void               UpdateCardPositions(Card* addedCard  = 0,
+                                           bool noAnimation = false);
+    void               CleanUpCardPositions(bool newCardAdded);
+    void               UpdateCardState(Card* card, bool noAnimation);
+    void               ResetZPositions(void);
 
 private:
-    std::vector<Card*>       cards;
-    std::vector<Card*>       selectedCards;
-    unsigned int             selectionLimit;
-    Type                     type;
-    QPointF                  initialCardPosition;
-    QPointF                  nextCardPosition;
+    std::vector<Card*> cards;
+    Type               type;
+    QPointF            initialCardPosition;
+    QPointF            nextCardPosition;
 };
 
 #endif // CARDARRAY_H

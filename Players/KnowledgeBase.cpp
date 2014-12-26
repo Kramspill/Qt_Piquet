@@ -105,7 +105,6 @@ void KnowledgeBase::FlagDispensableCards(CardArray* cpuHand)
     for ( int index = 2; index >= 0; index-- )
     {
         card = cpuHand->GetCard(cardRanks[index]);
-        cpuHand->SetSelectionLimit(12);
 
         card->setSelected(true);
         emit SignalCardSelectionsChanged(card, CardArray::CPUHAND);
