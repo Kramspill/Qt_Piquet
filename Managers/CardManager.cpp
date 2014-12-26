@@ -80,7 +80,7 @@ void CardManager::TransferCards(CardArray* src, CardArray* dest,
     // Determine if we are transfering specific cards or not.
     if ( numCards == 0 )
     {
-        // Check if our destination is a player's hand and perform a deal if so.
+        // If our destination is a player's hand and perform a deal.
         if ( dest->GetType() == CardArray::PLAYERHAND ||
              dest->GetType() == CardArray::CPUHAND )
         {
@@ -89,7 +89,7 @@ void CardManager::TransferCards(CardArray* src, CardArray* dest,
         }
         else
         {
-            // In this case, we are transferring cards that have been selected.
+            // Here, we are transferring cards that have been selected.
             TransferSelectedCards(src, dest);
         }
     }
