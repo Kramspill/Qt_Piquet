@@ -33,6 +33,7 @@ class Scene : public QGraphicsScene
 {
     Q_OBJECT
 public:
+    Scene(QRectF rect);
     Scene(int x, int y, int width, int height);
     Scene(Scene&);
     ~Scene(void);
@@ -59,7 +60,7 @@ private:
 public slots:
     void         CreateDialog(Dialog::DialogType dialogType);
     void         SetUI(State phase);
-    void         RepositionObjects(void);
+    void         RepositionObjects(QSize rect);
     void         SetCardsMoveable(bool moveable);
     void         SetValidSelection(bool valid);
 

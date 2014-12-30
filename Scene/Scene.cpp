@@ -12,6 +12,17 @@
 //------------------------------------------------------------------------------
 // Constructor
 //------------------------------------------------------------------------------
+Scene::Scene(QRectF rect) :
+    QGraphicsScene(rect),
+    dialog(0),
+    xPos(rect.x()),
+    yPos(rect.y()),
+    width(rect.width()),
+    height(rect.height()),
+    cardsMoveable(false)
+{
+}
+
 Scene::Scene(int x, int y, int width, int height) :
     QGraphicsScene(x, y, width, height),
     dialog(0),
@@ -64,12 +75,51 @@ void Scene::Initialize(void)
     int x = (int)p.x();
     int y = (int)p.y();
 
-    // Position the items in the scene.
-    primaryAction->move(x+280, y+270);
-    secondaryAction->move(x+170, y+270);
-    title->move(x+220, y+200);
-    text->move(x+180, y+230);
-    log->move(x+130, y);
+    // Set the size and position of the items in the scene.
+    float  uiLeft = width - (width / 4);
+    QRectF uiArea = QRectF(uiLeft, 0, width - uiLeft, height);
+
+    // Score display.
+
+    // Action log.
+    log->setGeometry(uiArea.x()+5,     uiArea.height()/3,
+                     uiArea.width()-5, (uiArea.height()/3)-10);
+    log->setFontPointSize(16.0);
+
+    // Phase title.
+    title->setGeometry(uiArea.x() + (uiArea.width()/2 - 80),
+                       ((uiArea.height()/3)*2)+30,
+                       0,
+                       0);
+    QFont f = title->font();
+    f.setPointSizeF(18.0);
+    f.setBold(true);
+    f.setUnderline(true);
+    title->setFont(f);
+    title->setStyleSheet("QLabel { background-color : green; }");
+
+    // Phase message.
+    text->setGeometry(uiArea.x() + (uiArea.width()/2 - 120),
+                      ((uiArea.height()/3)*2)+80,
+                      uiArea.width()/2, 0);
+    f = text->font();
+    f.setPointSizeF(16.0);
+    text->setFont(f);
+    text->setStyleSheet("QLabel { background-color : green; }");
+
+    // Primary action.
+    primaryAction->setGeometry(uiArea.x()+180, ((uiArea.height()/3)*2)+170,
+                               130, 50);
+    f = primaryAction->font();
+    f.setPointSizeF(16.0);
+    primaryAction->setFont(f);
+
+    // Secondary action.
+    secondaryAction->setGeometry(uiArea.x()+30,   ((uiArea.height()/3)*2)+170,
+                                 130, 50);
+    f = secondaryAction->font();
+    f.setPointSizeF(14.0);
+    secondaryAction->setFont(f);
 
     // Set up the player trick area.
     playerTrickArea = new QRect(x-200, y-80, 170, 160);
@@ -268,7 +318,7 @@ void Scene::SetUI(State phase)
 
         case EXCHANGE:
             title->setText("Exchange Phase");
-            text->setText("Select cards from your hand\nto exchange with from the Talon.");
+            text->setText("Select cards from your hand to\nexchange with from the Talon.");
 
             primaryAction->setText("Exchange");
             primaryAction->setEnabled(false);
@@ -371,9 +421,11 @@ void Scene::SetUI(State phase)
 //------------------------------------------------------------------------------
 // RepositionObjects - Reposition the objects in the scene.
 //------------------------------------------------------------------------------
-void Scene::RepositionObjects(void)
+void Scene::RepositionObjects(QSize rect)
 {
-    primaryAction->move(primaryAction->pos().x()+1, primaryAction->pos().y());
+    int width = rect.width();
+
+    primaryAction->move(width, primaryAction->pos().y());
 }
 
 

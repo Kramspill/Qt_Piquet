@@ -42,13 +42,15 @@ void GameManager::Initialize(void)
     // Acquire the coordinates of the center of the available display.
     QDesktopWidget* desktop = QApplication::desktop();
 
-    int width  = 800;
+    /*int width  = 800;
     int height = 600;
     int xPos   = (desktop->width()  - width)  / 2;
-    int yPos   = (desktop->height() - height) / 2;
+    int yPos   = (desktop->height() - height) / 2;*/
+    QRectF rect = (QRectF)desktop->screenGeometry();
 
     // Initialize the Scene.
-    scene = new Scene(xPos, yPos, width, height);
+    //scene = new Scene(xPos, yPos, width, height);
+    scene = new Scene(rect);
     scene->Initialize();
 
     // Initialize the CardManager with the scene object.
@@ -111,9 +113,9 @@ void GameManager::ConnectSignals(void)
 
     // Connect the signals from the View.
     QObject::connect(view,
-                     SIGNAL(RepositionObjects()),
+                     SIGNAL(RepositionObjects(QSize)),
                      scene,
-                     SLOT(RepositionObjects()));
+                     SLOT(RepositionObjects(QSize)));
 
     // Connect the signals from player 1.
     QObject::connect(player1,
