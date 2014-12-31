@@ -10,7 +10,6 @@
 // Qt Header Files
 //------------------------------------------------------------------------------
 #include <QGraphicsView>
-#include <QResizeEvent>
 
 
 //------------------------------------------------------------------------------
@@ -26,9 +25,6 @@ public:
 
 protected:
     void resizeEvent(QResizeEvent* event);
-
-signals:
-    void RepositionObjects(QSize);
 };
 
 #endif // VIEW_H

@@ -23,17 +23,6 @@ Scene::Scene(QRectF rect) :
 {
 }
 
-Scene::Scene(int x, int y, int width, int height) :
-    QGraphicsScene(x, y, width, height),
-    dialog(0),
-    xPos(x),
-    yPos(y),
-    width(width),
-    height(height),
-    cardsMoveable(false)
-{
-}
-
 
 //------------------------------------------------------------------------------
 // Copy Constructor
@@ -101,7 +90,8 @@ void Scene::Initialize(void)
     // Phase message.
     text->setGeometry(uiArea.x() + (uiArea.width()/2 - 120),
                       ((uiArea.height()/3)*2)+80,
-                      uiArea.width()/2, 0);
+                      0,
+                      0);
     f = text->font();
     f.setPointSizeF(16.0);
     text->setFont(f);
@@ -318,7 +308,7 @@ void Scene::SetUI(State phase)
 
         case EXCHANGE:
             title->setText("Exchange Phase");
-            text->setText("Select cards from your hand to\nexchange with from the Talon.");
+            text->setText("Select cards from your hand\nto exchange with from the Talon.");
 
             primaryAction->setText("Exchange");
             primaryAction->setEnabled(false);
@@ -415,17 +405,6 @@ void Scene::SetUI(State phase)
             secondaryAction->setVisible(false);
             break;
     };
-}
-
-
-//------------------------------------------------------------------------------
-// RepositionObjects - Reposition the objects in the scene.
-//------------------------------------------------------------------------------
-void Scene::RepositionObjects(QSize rect)
-{
-    int width = rect.width();
-
-    primaryAction->move(width, primaryAction->pos().y());
 }
 
 

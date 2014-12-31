@@ -16,6 +16,7 @@ View::View(QGraphicsScene* scene) :
     QGraphicsView(scene)
 {
     setBackgroundBrush(QBrush(Qt::darkGreen, Qt::SolidPattern));
+    setMinimumSize(1280, 720);
 }
 
 
@@ -41,10 +42,6 @@ View::~View(void)
 //------------------------------------------------------------------------------
 void View::resizeEvent(QResizeEvent* event)
 {
-    QSize rect = event->size();
-
     QGraphicsView::resizeEvent(event);
     fitInView(sceneRect(), Qt::KeepAspectRatio);
-
-    //emit RepositionObjects(rect);
 }
