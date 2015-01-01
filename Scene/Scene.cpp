@@ -64,13 +64,16 @@ void Scene::Initialize(void)
     // Score display.
 
     // Action log.
-    log->setGeometry(uiArea.x()+5,     uiArea.height()/3,
-                     uiArea.width()-5, (uiArea.height()/3)-10);
+    log->setGeometry(uiArea.x()+5,
+                     uiArea.height()/3,
+                     uiArea.width()-5,
+                     (uiArea.height()/3)+50);
     log->setFontPointSize(16.0);
 
     // Phase title.
-    title->setGeometry(uiArea.x() + (uiArea.width()/2 - 80),
-                       ((uiArea.height()/3)*2)+30,
+    title->setGeometry(uiArea.x() +
+                       (uiArea.width()/2 - 80),
+                       ((uiArea.height()/4)*3),
                        0,
                        0);
     QFont f = title->font();
@@ -82,7 +85,7 @@ void Scene::Initialize(void)
 
     // Phase message.
     text->setGeometry(uiArea.x() + (uiArea.width()/2 - 120),
-                      ((uiArea.height()/3)*2)+80,
+                      ((uiArea.height()/4)*3)+50,
                       0,
                       0);
     f = text->font();
@@ -91,15 +94,19 @@ void Scene::Initialize(void)
     text->setStyleSheet("QLabel { background-color : green; }");
 
     // Primary action.
-    primaryAction->setGeometry(uiArea.x()+180, ((uiArea.height()/3)*2)+170,
-                               130, 50);
+    primaryAction->setGeometry(uiArea.x()+180,
+                               ((uiArea.height()/4)*3)+140,
+                               130,
+                               50);
     f = primaryAction->font();
     f.setPointSizeF(16.0);
     primaryAction->setFont(f);
 
     // Secondary action.
-    secondaryAction->setGeometry(uiArea.x()+30,   ((uiArea.height()/3)*2)+170,
-                                 130, 50);
+    secondaryAction->setGeometry(uiArea.x()+30,
+                                 ((uiArea.height()/4)*3)+140,
+                                 130,
+                                 50);
     f = secondaryAction->font();
     f.setPointSizeF(14.0);
     secondaryAction->setFont(f);
@@ -290,11 +297,20 @@ void Scene::CreateDialog(Dialog::DialogType dialogType)
 //------------------------------------------------------------------------------
 void Scene::SetUI(State phase)
 {
+    QFont        title_font  = title->font();
+    QFont        text_font   = text->font();
+    QFont        action_font = primaryAction->font();
+    QFontMetrics fmTitle(title_font);
+    QFontMetrics fmText(text_font);
+    QString      str;
+    float        uiLeft = width - (width / 4);
+    QRectF       uiArea = QRectF(uiLeft, 0, width - uiLeft, height);
+
     switch ( phase )
     {
         case DEAL:
             title->setText("Deal Phase");
-            text->setText("Click 'Deal' to have\nthe dealer deal the cards.");
+            text->setText("Click 'Deal' to have the dealer deal the cards.");
 
             primaryAction->setText("Deal");
             secondaryAction->setVisible(false);
@@ -302,13 +318,23 @@ void Scene::SetUI(State phase)
             title->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
             text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
 
+            // Position the items.
+            str = title->text();
+            title->move(uiArea.x()+((uiArea.width()-fmTitle.width(str))/2),
+                        title->y());
+            str = text->text();
+            text->move(uiArea.x()+((uiArea.width()-fmText.width(str))/2),
+                       text->y());
+            primaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/2,
+                                primaryAction->y());
+
             QObject::connect(primaryAction, SIGNAL(clicked()),
                              this,          SIGNAL(BeginDeal()));
             break;
 
         case EXCHANGE:
             title->setText("Exchange Phase");
-            text->setText("Select cards from your hand\nto exchange with from the Talon.");
+            text->setText("Select cards from your hand to\nexchange with from the Talon.");
 
             primaryAction->setText("Exchange");
             primaryAction->setEnabled(false);
@@ -317,6 +343,16 @@ void Scene::SetUI(State phase)
             primaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
             title->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
             text->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+
+            // Position the items.
+            str = title->text();
+            title->move(uiArea.x()+((uiArea.width()-fmTitle.width(str))/2),
+                        title->y());
+            str = text->text();
+            text->move(uiArea.x()+((uiArea.width()-fmText.width(str)/2)/2),
+                       text->y());
+            primaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/2,
+                                primaryAction->y());
 
             QObject::disconnect(primaryAction, SIGNAL(clicked()),
                                 this,          SIGNAL(BeginDeal()));
@@ -338,6 +374,18 @@ void Scene::SetUI(State phase)
             title->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
             text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
 
+            // Position the items.
+            str = title->text();
+            title->move(uiArea.x()+((uiArea.width()-fmTitle.width(str))/2),
+                        title->y());
+            str = text->text();
+            text->move(uiArea.x()+((uiArea.width()-fmText.width(str)/2)/2),
+                       text->y());
+            primaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/4,
+                                primaryAction->y());
+            secondaryAction->move(uiArea.x()+((uiArea.width()-secondaryAction->width())/4)*3,
+                                   secondaryAction->y());
+
             QObject::disconnect(primaryAction,   SIGNAL(clicked()),
                                 this,            SIGNAL(BeginExchange()));
             QObject::connect(   primaryAction,   SIGNAL(clicked()),
@@ -357,6 +405,18 @@ void Scene::SetUI(State phase)
             secondaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
             title->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
             text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+
+            // Position the items.
+            str = title->text();
+            title->move(uiArea.x()+((uiArea.width()-fmTitle.width(str))/2),
+                        title->y());
+            str = text->text();
+            text->move(uiArea.x()+((uiArea.width()-fmText.width(str)/2)/2),
+                       text->y());
+            primaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/4,
+                                primaryAction->y());
+            secondaryAction->move(uiArea.x()+((uiArea.width()-secondaryAction->width())/4)*3,
+                                   secondaryAction->y());
             break;
 
         case SET:
@@ -369,11 +429,23 @@ void Scene::SetUI(State phase)
             secondaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
             title->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
             text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+
+            // Position the items.
+            str = title->text();
+            title->move(uiArea.x()+((uiArea.width()-fmTitle.width(str))/2),
+                        title->y());
+            str = text->text();
+            text->move(uiArea.x()+((uiArea.width()-fmText.width(str)/2)/2),
+                       text->y());
+            primaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/4,
+                                primaryAction->y());
+            secondaryAction->move(uiArea.x()+((uiArea.width()-secondaryAction->width())/4)*3,
+                                   secondaryAction->y());
             break;
 
         case RESPOND:
             title->setText("Declaration Phase");
-            text->setText("Select cards of the same\nsuit for Point declaration.");
+            text->setText("Select cards of the same suit for Point declaration.");
 
             primaryAction->setEnabled(false);
 
@@ -395,6 +467,18 @@ void Scene::SetUI(State phase)
             secondaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
             title->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
             text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+
+            // Position the items.
+            str = title->text();
+            title->move(uiArea.x()+((uiArea.width()-fmTitle.width(str))/2),
+                        title->y());
+            str = text->text();
+            text->move(uiArea.x()+((uiArea.width()-fmText.width(str))/2),
+                       text->y());
+            primaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/4,
+                                primaryAction->y());
+            secondaryAction->move(uiArea.x()+((uiArea.width()-secondaryAction->width())/4)*3,
+                                   secondaryAction->y());
 
             QObject::disconnect(primaryAction,   SIGNAL(clicked()),
                                 this,            SIGNAL(Declare()));
