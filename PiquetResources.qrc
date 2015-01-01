@@ -42,4 +42,7 @@
         <file>Resources/Spades/KS.svg</file>
         <file>Resources/Spades/QS.svg</file>
     </qresource>
+    <qresource prefix="/Textures">
+        <file>Resources/Textures/felt.png</file>
+    </qresource>
 </RCC>

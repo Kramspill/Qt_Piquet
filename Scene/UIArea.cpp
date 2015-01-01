@@ -1,33 +1,29 @@
 //------------------------------------------------------------------------------
-// Filename: View.cpp
-// Description: Represents a view of the scene.
+// Filename: UIArea.cpp
+// Description: Represents the user interface area.
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
-#include "View.h"
+#include "UIArea.h"
 
 
 //------------------------------------------------------------------------------
 // Constructor
 //------------------------------------------------------------------------------
-View::View(QGraphicsScene* scene) :
-    QGraphicsView(scene)
+UIArea::UIArea(QWidget *parent) :
+    QWidget(parent)
 {
-    QBrush brush;
-    brush.setTexture(QPixmap(":/Textures/Resources/Textures/felt.png"));
-
-    setBackgroundBrush(brush);
-    setMinimumSize(1024, 576);
+    setStyleSheet("background: transparent");
+    setAttribute(Qt::WA_TranslucentBackground);
 }
 
 
 //------------------------------------------------------------------------------
 // Copy Constructor
 //------------------------------------------------------------------------------
-View::View(View&) :
-    QGraphicsView()
+UIArea::UIArea(UIArea&)
 {
 }
 
@@ -35,16 +31,19 @@ View::View(View&) :
 //------------------------------------------------------------------------------
 // Destructor
 //------------------------------------------------------------------------------
-View::~View(void)
+UIArea::~UIArea(void)
 {
 }
 
 
 //------------------------------------------------------------------------------
-// resizeEvent - Override of QGraphicsView::resizeEvent.
+// paintEvent - Called when this item needs repainting.
 //------------------------------------------------------------------------------
-void View::resizeEvent(QResizeEvent* event)
+void UIArea::paintEvent(QPaintEvent* event)
 {
-    QGraphicsView::resizeEvent(event);
-    fitInView(sceneRect(), Qt::KeepAspectRatio);
+    QRect rect(this->rect());
+
+    QPainter painter(this);
+    painter.fillRect(rect, QBrush(QColor(0, 0, 0, 210)));
+    //painter.drawRect(rect);
 }

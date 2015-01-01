@@ -57,10 +57,10 @@ void CardManager::Initialize(Scene* scene)
                                    (rect->x()+rect->width())*0.6,
                                    10);
     playerDiscards = new CardArray(CardArray::PLAYERDISCARDS,
-                                   rect->x()+rect->width()+80,
+                                   rect->x()+rect->width()+70,
                                    rect->y()+rect->height()+50);
     cpuDiscards    = new CardArray(CardArray::CPUDISCARDS,
-                                   rect->x()+rect->width()+80,
+                                   rect->x()+rect->width()+70,
                                    rect->y());
     playerTrick    = new CardArray(CardArray::PLAYERTRICK,
                                    (rect->x()+rect->width())*0.6,

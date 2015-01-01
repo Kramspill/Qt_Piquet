@@ -22,10 +22,11 @@
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
+#include "State/GlobalStateInfo.h"
+#include "UIArea.h"
 #include "Cards/Card.h"
 #include "Cards/CardArray.h"
 #include "Dialog.h"
-#include "State/GlobalStateInfo.h"
 
 
 //------------------------------------------------------------------------------
@@ -89,6 +90,7 @@ private:
     QLabel*       text;
     QTextEdit*    log;
     QTableWidget* table;
+    UIArea*       area;
     Dialog*       dialog;
     QRectF*       playerTrickArea;
     int           xPos;

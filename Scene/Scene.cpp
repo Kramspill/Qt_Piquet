@@ -53,10 +53,15 @@ void Scene::Initialize(void)
     text            = new QLabel();
     log             = new QTextEdit();
     table           = new QTableWidget();
+    area            = new UIArea();
 
     // Set the size and position of the items in the scene.
-    float  uiLeft = width - (width / 4);
-    QRectF uiArea = QRectF(uiLeft, 0, width - uiLeft, height);
+    float uiLeft = width - (width / 4);
+    QRect uiArea = QRect(uiLeft, 0, width - uiLeft, height);
+
+    // User Interface
+    QRect rect(uiLeft-10, -5, width-uiLeft+30, height+10);
+    area->setGeometry(rect);
 
     // Score display.
     table->setRowCount(6);
@@ -125,6 +130,7 @@ void Scene::Initialize(void)
     secondaryAction->setFont(f);
 
     // Add the items to the scene.
+    addWidget(area);
     addWidget(primaryAction);
     addWidget(secondaryAction);
     addWidget(title);

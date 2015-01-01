@@ -31,7 +31,8 @@ SOURCES +=\
     Players/AI.cpp \
     Players/KnowledgeBase.cpp \
     Players/Player.cpp \
-    State/GlobalStateInfo.cpp
+    State/GlobalStateInfo.cpp \
+    Scene/UIArea.cpp
 
 HEADERS  += \
     Managers/GameManager.h \
@@ -51,9 +52,12 @@ HEADERS  += \
     Players/AI.h \
     Players/KnowledgeBase.h \
     Players/Player.h \
-    State/GlobalStateInfo.h
+    State/GlobalStateInfo.h \
+    Scene/UIArea.h
 
 #FORMS    += MainWindow.ui
 
 RESOURCES += \
     PiquetResources.qrc
+
+OTHER_FILES +=
