@@ -39,19 +39,20 @@ CardManager::~CardManager(void)
 //------------------------------------------------------------------------------
 void CardManager::Initialize(Scene* scene)
 {
-    // Get the center position for card array placement.
-    QRectF* rect = scene->GetTrickArea();
+    // Get Rects for card array placement.
+    QRectF* rect   = scene->GetTrickArea();
+    float   uiLeft = scene->GetWidth() - (scene->GetWidth() / 4);
 
     // Initialize the CardArray member variables.
     deck           = new CardArray(CardArray::DECK,
                                    rect->x()+rect->width()/2,
                                    rect->y()+rect->height()/2);
     talon          = new CardArray(CardArray::TALON,
-                                   rect->x()-100,
+                                   10,
                                    rect->y()+rect->height()/2);
     playerHand     = new CardArray(CardArray::PLAYERHAND,
                                    (rect->x()+rect->width())*0.6,
-                                   rect->y()+rect->height()+200);
+                                   scene->GetHeight()-200);
     cpuHand        = new CardArray(CardArray::CPUHAND,
                                    (rect->x()+rect->width())*0.6,
                                    rect->y()-200);

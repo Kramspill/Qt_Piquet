@@ -46,6 +46,8 @@ public:
     void          SetTitle(const QString& newTitle);
     void          SetText(const QString& newText);
 
+    int           GetWidth(void);
+    int           GetHeight(void);
     QRectF*       GetTrickArea(void);
 
     void          UpdateLog(const QString& newMessage);
