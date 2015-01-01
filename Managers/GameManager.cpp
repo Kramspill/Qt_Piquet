@@ -40,8 +40,11 @@ GameManager::~GameManager(void)
 void GameManager::Initialize(void)
 {
     // Acquire the coordinates of the center of the available display.
-    QDesktopWidget* desktop = QApplication::desktop();
-    QRectF          rect    = (QRectF)desktop->screenGeometry();
+    QRectF rect;
+    rect.setX(0);
+    rect.setY(0);
+    rect.setWidth(1366);
+    rect.setHeight(768);
 
     // Initialize the Scene.
     scene = new Scene(rect);
