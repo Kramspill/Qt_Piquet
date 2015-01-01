@@ -48,19 +48,19 @@ void CardManager::Initialize(Scene* scene)
                                    rect->x()+rect->width()/2,
                                    rect->y()+rect->height()/2);
     talon          = new CardArray(CardArray::TALON,
-                                   10,
+                                   0,
                                    rect->y()+rect->height()/2);
     playerHand     = new CardArray(CardArray::PLAYERHAND,
                                    (rect->x()+rect->width())*0.6,
-                                   scene->GetHeight()-200);
+                                   scene->GetHeight()-170);
     cpuHand        = new CardArray(CardArray::CPUHAND,
                                    (rect->x()+rect->width())*0.6,
-                                   rect->y()-200);
+                                   10);
     playerDiscards = new CardArray(CardArray::PLAYERDISCARDS,
-                                   rect->x()+rect->width()+100,
+                                   rect->x()+rect->width()+80,
                                    rect->y()+rect->height()+50);
     cpuDiscards    = new CardArray(CardArray::CPUDISCARDS,
-                                   rect->x()+rect->width()+100,
+                                   rect->x()+rect->width()+80,
                                    rect->y());
     playerTrick    = new CardArray(CardArray::PLAYERTRICK,
                                    (rect->x()+rect->width())*0.6,
@@ -69,8 +69,8 @@ void CardManager::Initialize(Scene* scene)
                                    (rect->x()+rect->width())*0.6,
                                    (rect->y()+rect->height())*0.4);
     previousTricks = new CardArray(CardArray::PREVIOUSTRICKS,
-                                   rect->x()+70,
-                                   rect->y()-100);
+                                   rect->x()+50,
+                                   10);
 
     // Initialize the timer to allow animation to finish before informing of
     // state changes.
@@ -279,7 +279,7 @@ void CardManager::AddCardsToScene(Scene* scene)
     {
         card = deck->GetCard(index);
 
-        card->setScale(0.55);
+        card->setScale(0.5);
         scene->addItem(card);
     }
 }

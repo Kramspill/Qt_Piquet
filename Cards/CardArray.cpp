@@ -262,7 +262,7 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
 
                 // Update the position of the next card.
                 nextCardPosition = QPointF(shiftedPosition.x(),
-                                           shiftedPosition.y()+30);
+                                           shiftedPosition.y()+25);
             }
             else
             {
@@ -280,7 +280,7 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
 
                     // Get the original position of the card and shift it.
                     shiftedPosition.setX(initialCardPosition.x() -
-                                         (23*arraySize) + (index*50));
+                                         (18*arraySize) + (index*40));
                     shiftedPosition.setY(card->GetPosition().y());
 
                     // Set the new position of the card.
@@ -291,7 +291,7 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
                 }
 
                 // Update the position of the next card.
-                nextCardPosition = QPointF(shiftedPosition.x() + 50,
+                nextCardPosition = QPointF(shiftedPosition.x() + 40,
                                            shiftedPosition.y());
             }
             else
@@ -310,7 +310,7 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
 
                     // Get the original position of the card and shift it.
                     shiftedPosition.setX(initialCardPosition.x() +
-                                         (23*arraySize) - (index*50));
+                                         (18*arraySize) - (index*40));
                     shiftedPosition.setY(card->GetPosition().y());
 
                     // Set the new position of the card.
@@ -321,7 +321,7 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
                 }
 
                 // Update the position of the next card.
-                nextCardPosition = QPointF(shiftedPosition.x() - 50,
+                nextCardPosition = QPointF(shiftedPosition.x() - 40,
                                            shiftedPosition.y());
             }
             else

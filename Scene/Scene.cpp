@@ -109,8 +109,8 @@ void Scene::Initialize(void)
     // Primary action.
     primaryAction->setGeometry(uiArea.x()+180,
                                ((uiArea.height()/4)*3)+130,
-                               130,
-                               50);
+                               110,
+                               45);
     f = primaryAction->font();
     f.setPointSizeF(16.0);
     primaryAction->setFont(f);
@@ -118,8 +118,8 @@ void Scene::Initialize(void)
     // Secondary action.
     secondaryAction->setGeometry(uiArea.x()+30,
                                  ((uiArea.height()/4)*3)+130,
-                                 130,
-                                 50);
+                                 110,
+                                 45);
     f = secondaryAction->font();
     f.setPointSizeF(14.0);
     secondaryAction->setFont(f);
