@@ -40,20 +40,36 @@ CardManager::~CardManager(void)
 void CardManager::Initialize(Scene* scene)
 {
     // Get the center position for card array placement.
-    QPointF p = scene->GetCenterPos();
-    int x = (int)p.x();
-    int y = (int)p.y();
+    QRectF* rect = scene->GetTrickArea();
 
     // Initialize the CardArray member variables.
-    deck           = new CardArray(CardArray::DECK,            x-100,  y);
-    talon          = new CardArray(CardArray::TALON,           x-370,  y-70);
-    playerHand     = new CardArray(CardArray::PLAYERHAND,      x-130,  y+170);
-    cpuHand        = new CardArray(CardArray::CPUHAND,         x-150,  y-295);
-    playerDiscards = new CardArray(CardArray::PLAYERDISCARDS,  x+50,   y+20);
-    cpuDiscards    = new CardArray(CardArray::CPUDISCARDS,     x+50,   y-150);
-    playerTrick    = new CardArray(CardArray::PLAYERTRICK,     x-130,  y+20);
-    cpuTrick       = new CardArray(CardArray::CPUTRICK,        x-130,  y-130);
-    previousTricks = new CardArray(CardArray::PREVIOUSTRICKS,  x-300,  y-70);
+    deck           = new CardArray(CardArray::DECK,
+                                   rect->x()+rect->width()/2,
+                                   rect->y()+rect->height()/2);
+    talon          = new CardArray(CardArray::TALON,
+                                   rect->x()-100,
+                                   rect->y()+rect->height()/2);
+    playerHand     = new CardArray(CardArray::PLAYERHAND,
+                                   (rect->x()+rect->width())*0.6,
+                                   rect->y()+rect->height()+200);
+    cpuHand        = new CardArray(CardArray::CPUHAND,
+                                   (rect->x()+rect->width())*0.6,
+                                   rect->y()-200);
+    playerDiscards = new CardArray(CardArray::PLAYERDISCARDS,
+                                   rect->x()+rect->width()+100,
+                                   rect->y()+rect->height()+50);
+    cpuDiscards    = new CardArray(CardArray::CPUDISCARDS,
+                                   rect->x()+rect->width()+100,
+                                   rect->y());
+    playerTrick    = new CardArray(CardArray::PLAYERTRICK,
+                                   (rect->x()+rect->width())*0.6,
+                                   (rect->y()+rect->height())*0.9);
+    cpuTrick       = new CardArray(CardArray::CPUTRICK,
+                                   (rect->x()+rect->width())*0.6,
+                                   (rect->y()+rect->height())*0.4);
+    previousTricks = new CardArray(CardArray::PREVIOUSTRICKS,
+                                   rect->x()+70,
+                                   rect->y()-100);
 
     // Initialize the timer to allow animation to finish before informing of
     // state changes.
@@ -262,7 +278,7 @@ void CardManager::AddCardsToScene(Scene* scene)
     {
         card = deck->GetCard(index);
 
-        card->setScale(0.4);
+        card->setScale(0.65);
         scene->addItem(card);
     }
 }

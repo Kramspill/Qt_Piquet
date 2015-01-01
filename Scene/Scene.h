@@ -16,8 +16,6 @@
 #include <QLabel>
 #include <QTextEdit>
 
-#include <QPainter>
-
 
 //------------------------------------------------------------------------------
 // My Header Files
@@ -45,6 +43,8 @@ public:
 
     void         SetTitle(const QString& newTitle);
     void         SetText(const QString& newText);
+
+    QRectF*      GetTrickArea(void);
 
     void         UpdateLog(const QString& newMessage);
 
@@ -85,7 +85,7 @@ private:
     QLabel*      text;
     QTextEdit*   log;
     Dialog*      dialog;
-    QRect*       playerTrickArea;
+    QRectF*      playerTrickArea;
     int          xPos;
     int          yPos;
     int          width;

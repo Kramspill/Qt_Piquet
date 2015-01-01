@@ -53,10 +53,6 @@ void Scene::Initialize(void)
     text            = new QLabel();
     log             = new QTextEdit();
 
-    QPointF p = GetCenterPos();
-    int x = (int)p.x();
-    int y = (int)p.y();
-
     // Set the size and position of the items in the scene.
     float  uiLeft = width - (width / 4);
     QRectF uiArea = QRectF(uiLeft, 0, width - uiLeft, height);
@@ -119,7 +115,13 @@ void Scene::Initialize(void)
     addWidget(log);
 
     // Set up the player trick area.
-    playerTrickArea = new QRect(x-200, y-80, 170, 160);
+    QRectF playingArea;
+    playingArea.setWidth((width - uiArea.width()) * 0.8);
+    playingArea.setHeight(height * 0.6);
+    playingArea.setX((width - uiArea.width() - playingArea.width()) / 2);
+    playingArea.setY((height - playingArea.height()) / 2);
+
+    playerTrickArea = new QRectF(playingArea);
 
     // Connect the signals.
     ConnectSignals();
@@ -150,6 +152,15 @@ void Scene::SetTitle(const QString& newTitle)
 void Scene::SetText(const QString& newText)
 {
     text->setText(newText);
+}
+
+
+//------------------------------------------------------------------------------
+// GetTrickArea - Get the Trick area.
+//------------------------------------------------------------------------------
+QRectF* Scene::GetTrickArea(void)
+{
+    return playerTrickArea;
 }
 
 

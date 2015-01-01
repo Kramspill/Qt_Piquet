@@ -241,7 +241,6 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
             }
             break;
 
-        case PLAYERHAND:
         case PREVIOUSTRICKS:
             if ( arraySize > 0 )
             {
@@ -251,8 +250,7 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
                     card = GetCard(index);
 
                     // Get the original position of the card and shift it.
-                    shiftedPosition.setX(initialCardPosition.x() -
-                                         (10*arraySize) + (index*20));
+                    shiftedPosition.setX(card->GetPosition().x());
                     shiftedPosition.setY(card->GetPosition().y());
 
                     // Set the new position of the card.
@@ -263,7 +261,37 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
                 }
 
                 // Update the position of the next card.
-                nextCardPosition = QPointF(shiftedPosition.x() + 20,
+                nextCardPosition = QPointF(shiftedPosition.x(),
+                                           shiftedPosition.y()+30);
+            }
+            else
+            {
+                nextCardPosition = initialCardPosition;
+            }
+            break;
+
+        case PLAYERHAND:
+            if ( arraySize > 0 )
+            {
+                // Loop through the array of cards and shift them.
+                for ( int index = 0; index < arraySize; index++ )
+                {
+                    card = GetCard(index);
+
+                    // Get the original position of the card and shift it.
+                    shiftedPosition.setX(initialCardPosition.x() -
+                                         (23*arraySize) + (index*50));
+                    shiftedPosition.setY(card->GetPosition().y());
+
+                    // Set the new position of the card.
+                    card->SetPosition(shiftedPosition, index + 1);
+
+                    // Update the card's animation.
+                    card->UpdateAnimation(false);
+                }
+
+                // Update the position of the next card.
+                nextCardPosition = QPointF(shiftedPosition.x() + 50,
                                            shiftedPosition.y());
             }
             else
@@ -282,7 +310,7 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
 
                     // Get the original position of the card and shift it.
                     shiftedPosition.setX(initialCardPosition.x() +
-                                         (10*arraySize) - (index*20));
+                                         (23*arraySize) - (index*50));
                     shiftedPosition.setY(card->GetPosition().y());
 
                     // Set the new position of the card.
@@ -293,7 +321,7 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
                 }
 
                 // Update the position of the next card.
-                nextCardPosition = QPointF(shiftedPosition.x() - 20,
+                nextCardPosition = QPointF(shiftedPosition.x() - 50,
                                            shiftedPosition.y());
             }
             else
