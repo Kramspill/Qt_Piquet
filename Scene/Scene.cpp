@@ -52,12 +52,29 @@ void Scene::Initialize(void)
     title           = new QLabel();
     text            = new QLabel();
     log             = new QTextEdit();
+    table           = new QTableWidget();
 
     // Set the size and position of the items in the scene.
     float  uiLeft = width - (width / 4);
     QRectF uiArea = QRectF(uiLeft, 0, width - uiLeft, height);
 
     // Score display.
+    table->setRowCount(6);
+    table->setColumnCount(2);
+    table->setHorizontalHeaderLabels(QStringList()<<"Player 1"<<"Player 2");
+    for ( int i = 0; i < table->horizontalHeader()->count(); i++)
+    {
+        table->horizontalHeader()->setSectionResizeMode(i, QHeaderView::Stretch);
+    }
+    for (int i = 0; i < table->verticalHeader()->count(); i++)
+    {
+        table->verticalHeader()->setSectionResizeMode(i, QHeaderView::Stretch);
+    }
+    table->setGeometry(uiArea.x()+5,
+                       10,
+                       uiArea.width()-5,
+                       (uiArea.height()/3)-20);
+    table->setItem(0, 1, new QTableWidgetItem("Hello"));
 
     // Action log.
     log->setGeometry(uiArea.x()+5,
@@ -113,6 +130,7 @@ void Scene::Initialize(void)
     addWidget(title);
     addWidget(text);
     addWidget(log);
+    addWidget(table);
 
     // Set up the player trick area.
     QRectF playingArea;
