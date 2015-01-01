@@ -16,6 +16,8 @@
 #include <QLabel>
 #include <QTextEdit>
 
+#include <QPainter>
+
 
 //------------------------------------------------------------------------------
 // My Header Files

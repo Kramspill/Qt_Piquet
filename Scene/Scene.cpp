@@ -53,13 +53,6 @@ void Scene::Initialize(void)
     text            = new QLabel();
     log             = new QTextEdit();
 
-    // Add items to the scene.
-    addWidget(primaryAction);
-    addWidget(secondaryAction);
-    addWidget(title);
-    addWidget(text);
-    addWidget(log);
-
     QPointF p = GetCenterPos();
     int x = (int)p.x();
     int y = (int)p.y();
@@ -110,6 +103,13 @@ void Scene::Initialize(void)
     f = secondaryAction->font();
     f.setPointSizeF(14.0);
     secondaryAction->setFont(f);
+
+    // Add the items to the scene.
+    addWidget(primaryAction);
+    addWidget(secondaryAction);
+    addWidget(title);
+    addWidget(text);
+    addWidget(log);
 
     // Set up the player trick area.
     playerTrickArea = new QRect(x-200, y-80, 170, 160);
