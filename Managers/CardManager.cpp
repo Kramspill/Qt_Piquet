@@ -278,7 +278,7 @@ void CardManager::AddCardsToScene(Scene* scene)
     {
         card = deck->GetCard(index);
 
-        card->setScale(0.65);
+        card->setScale(0.55);
         scene->addItem(card);
     }
 }

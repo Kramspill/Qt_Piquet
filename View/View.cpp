@@ -16,7 +16,7 @@ View::View(QGraphicsScene* scene) :
     QGraphicsView(scene)
 {
     setBackgroundBrush(QBrush(Qt::darkGreen, Qt::SolidPattern));
-    setMinimumSize(1280, 720);
+    setMinimumSize(1024, 576);
 }
 
 

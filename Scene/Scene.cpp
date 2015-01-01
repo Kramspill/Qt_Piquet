@@ -108,7 +108,7 @@ void Scene::Initialize(void)
 
     // Primary action.
     primaryAction->setGeometry(uiArea.x()+180,
-                               ((uiArea.height()/4)*3)+140,
+                               ((uiArea.height()/4)*3)+130,
                                130,
                                50);
     f = primaryAction->font();
@@ -117,7 +117,7 @@ void Scene::Initialize(void)
 
     // Secondary action.
     secondaryAction->setGeometry(uiArea.x()+30,
-                                 ((uiArea.height()/4)*3)+140,
+                                 ((uiArea.height()/4)*3)+130,
                                  130,
                                  50);
     f = secondaryAction->font();
@@ -339,7 +339,7 @@ void Scene::SetUI(State phase)
     {
         case DEAL:
             title->setText("Deal Phase");
-            text->setText("Click 'Deal' to have the dealer deal the cards.");
+            text->setText("Click 'Deal' to have\nthe dealer deal the cards.");
 
             primaryAction->setText("Deal");
             secondaryAction->setVisible(false);
@@ -349,10 +349,10 @@ void Scene::SetUI(State phase)
 
             // Position the items.
             str = title->text();
-            title->move(uiArea.x()+((uiArea.width()-fmTitle.width(str))/2),
+            title->move(uiArea.x()+((uiArea.width()-fmText.width(str))/2),
                         title->y());
             str = text->text();
-            text->move(uiArea.x()+((uiArea.width()-fmText.width(str))/2),
+            text->move(uiArea.x()+((uiArea.width()-fmText.width(str)/2)/2),
                        text->y());
             primaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/2,
                                 primaryAction->y());
