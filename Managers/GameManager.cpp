@@ -192,9 +192,15 @@ void GameManager::ConnectSignals(void)
                      this,
                      SLOT(AnnounceDeclaration(State, PlayerNum)));
     QObject::connect(stateManager,
-                     SIGNAL(PlayTrick(PlayerNum)),
+                     SIGNAL(PlayTrick(PlayerNum, bool)),
                      this,
-                     SLOT(PlayTrick(PlayerNum)));
+                     SLOT(PlayTrick(PlayerNum, bool)));
+
+    // Connect the signals from the ScoreManager.
+    QObject::connect(scoreManager,
+                     SIGNAL(UpdateScores(int,int)),
+                     scene,
+                     SLOT(UpdateScores(int,int)));
 }
 
 
@@ -425,7 +431,7 @@ void GameManager::ResolveResponse(State phase, PlayerNum player)
 //------------------------------------------------------------------------------
 // PlayTrick - Inform a player to play a Trick.
 //------------------------------------------------------------------------------
-void GameManager::PlayTrick(PlayerNum player)
+void GameManager::PlayTrick(PlayerNum player, bool firstTrick)
 {
     CardArray* leadTrick;
     CardArray* followTrick;
@@ -469,11 +475,15 @@ void GameManager::PlayTrick(PlayerNum player)
     }
 
     // Score the Trick.
-    if ( leadTrick->GetSize() > 0 && followTrick->GetSize() > 0 )
+    if ( firstTrick )
     {
-        PlayerNum winner = scoreManager->ScoreTrick(leadTrick->GetCard(0),
-                                                    followTrick->GetCard(0),
-                                                    player);
+        scoreManager->ScoreTrick(player);
+    }
+    else if ( leadTrick->GetSize() > 0 && followTrick->GetSize() > 0 )
+    {
+        PlayerNum winner = scoreManager->ScoreTrick(player,
+                                                    leadTrick->GetCard(0),
+                                                    followTrick->GetCard(0));
 
         RequestCardTransfer(CardArray::PLAYERTRICK,
                             CardArray::PREVIOUSTRICKS, 1);

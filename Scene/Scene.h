@@ -68,6 +68,7 @@ public slots:
     void              SetUI(State phase);
     void              SetCardsMoveable(bool moveable);
     void              SetValidSelection(bool valid);
+    void              UpdateScores(int p1Score, int p2Score);
 
 signals:
     void              BeginDeal(void);

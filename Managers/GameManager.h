@@ -47,7 +47,7 @@ private slots:
     void          AnnounceDeclaration(State phase, PlayerNum player);
     void          DeclareSelection(State phase, PlayerNum player);
     void          ResolveResponse(State phase, PlayerNum player);
-    void          PlayTrick(PlayerNum player);
+    void          PlayTrick(PlayerNum player, bool firstTrick);
 
     void          RequestCardTransfer(CardArray::Type src,
                                       CardArray::Type dest,

@@ -54,12 +54,19 @@ struct DeclarationResults
     PlayerNum setWinner;
 };
 
+struct TrickResults
+{
+    int player1Wins = 0;
+    int player2Wins = 0;
+};
+
 extern PlayerNum           elder;
 extern PlayerNum           younger;
 extern PlayerNum           trickWinner;
 extern Declaration*        declaration;
 extern Response*           response;
 extern DeclarationResults* declarationResults;
+extern TrickResults*       trickResults;
 extern State               currentPhase;
 
 #endif // GLOBALSTATEINFO_H

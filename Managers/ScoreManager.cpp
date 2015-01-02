@@ -12,7 +12,9 @@
 //------------------------------------------------------------------------------
 // Constructor
 //------------------------------------------------------------------------------
-ScoreManager::ScoreManager(void)
+ScoreManager::ScoreManager(void) :
+    playerScore(0),
+    cpuScore(0)
 {
 }
 
@@ -252,29 +254,46 @@ void ScoreManager::ScoreDeclaration(State phase, PlayerNum player)
             }
         }
     }
+
+    // Update the score table.
+    emit UpdateScores(playerScore, cpuScore);
 }
 
 
 //------------------------------------------------------------------------------
 // ScoreTrick - Score the Tricks in play.
 //------------------------------------------------------------------------------
-PlayerNum ScoreManager::ScoreTrick(Card*     leadCard,
-                                   Card*     followCard,
-                                   PlayerNum player)
+PlayerNum ScoreManager::ScoreTrick(PlayerNum player,
+                                   Card*     leadCard,
+                                   Card*     followCard)
 {
     PlayerNum winner;
 
-    if ( leadCard->GetSuit() == followCard->GetSuit() &&
+    if ( !leadCard && !followCard )
+    {
+        (player == PLAYER1) ? playerScore++ : cpuScore++;
+    }
+    else if ( leadCard->GetSuit() == followCard->GetSuit() &&
          leadCard->GetRank() <  followCard->GetRank() )
     {
         (player == PLAYER1) ? playerScore++ : cpuScore++;
+        (player == PLAYER1) ? trickResults->player1Wins++ : trickResults->player2Wins++;
         winner = player;
     }
     else
     {
         (player == PLAYER1) ? cpuScore++ : playerScore++;
+        (player == PLAYER1) ? trickResults->player2Wins++ : trickResults->player1Wins++;
         winner = (player == PLAYER1) ? PLAYER2 : PLAYER1;
     }
+
+    if ( trickResults->player1Wins + trickResults->player2Wins == 12 )
+    {
+        (winner == PLAYER1) ? playerScore++ : cpuScore++;
+    }
+
+    // Update the score table.
+    emit UpdateScores(playerScore, cpuScore);
 
     return winner;
 }

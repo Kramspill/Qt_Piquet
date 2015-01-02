@@ -598,3 +598,20 @@ void Scene::SetValidSelection(bool valid)
     else
         primaryAction->setEnabled(false);
 }
+
+
+//------------------------------------------------------------------------------
+// UpdateScores - Set player1Score's and player2Score's value.
+//------------------------------------------------------------------------------
+void Scene::UpdateScores(int p1Score, int p2Score)
+{
+    char* str = new char(5);
+
+    sprintf(str,"%d",p1Score);
+    player1Score->setText(str);
+
+    sprintf(str,"%d",p2Score);
+    player2Score->setText(str);
+
+    delete str;
+}

@@ -36,7 +36,7 @@ public:
     void      CreateDeclaration(std::vector<Card*> cards, State phase);
     void      CreateResponse(std::vector<Card*> cards, State phase);
     void      ScoreDeclaration(State phase, PlayerNum player);
-    PlayerNum ScoreTrick(Card* leadCard, Card* followCard, PlayerNum player);
+    PlayerNum ScoreTrick(PlayerNum player, Card* leadCard = 0, Card* followCard = 0);
 
     int       GetPlayerScore(void);
     int       GetCPUScore(void);
@@ -49,6 +49,9 @@ private:
     void      GetResponse(std::vector<Card*> cards,
                           State phase,
                           char* destBuf);
+
+signals:
+    void      UpdateScores(int, int);
 
 private:
     int       playerScore;

@@ -43,7 +43,7 @@ private slots:
     void           PlayTricks(void);
 
 signals:
-    void           PlayTrick(PlayerNum);
+    void           PlayTrick(PlayerNum, bool);
     void           TricksComplete(void);
     void           TrickPhaseFinished(void);
 

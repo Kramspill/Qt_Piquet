@@ -94,13 +94,13 @@ void TrickPhase::PlayTricks(void)
     {
         if ( trickWinner == PLAYER1 )
         {
-            emit PlayTrick(PLAYER1);
-            emit PlayTrick(PLAYER2);
+            emit PlayTrick(PLAYER1, false);
+            emit PlayTrick(PLAYER2, false);
         }
         else
         {
-            emit PlayTrick(PLAYER2);
-            emit PlayTrick(PLAYER1);
+            emit PlayTrick(PLAYER2, false);
+            emit PlayTrick(PLAYER1, false);
         }
 
         count--;

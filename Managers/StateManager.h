@@ -47,7 +47,7 @@ signals:
 
     void              AnnounceDeclaration(State, PlayerNum);
 
-    void              PlayTrick(PlayerNum);
+    void              PlayTrick(PlayerNum, bool);
 
 private:
     QStateMachine*    stateMachine;
