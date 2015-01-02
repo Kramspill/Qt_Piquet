@@ -53,6 +53,8 @@ void Scene::Initialize(void)
     text            = new QLabel();
     log             = new QTextEdit();
     table           = new QTableWidget();
+    player1Score    = new QTableWidgetItem("0");
+    player2Score    = new QTableWidgetItem("0");
     area            = new UIArea();
 
     // Set the size and position of the items in the scene.
@@ -66,7 +68,10 @@ void Scene::Initialize(void)
     // Score display.
     table->setRowCount(6);
     table->setColumnCount(2);
+    table->setShowGrid(false);
     table->setHorizontalHeaderLabels(QStringList()<<"Player 1"<<"Player 2");
+    table->setVerticalHeaderLabels(QStringList()<<"Partie 1"<<"Partie 2"<<
+                                   "Partie 3"<<"Partie 4"<<"Partie 5"<<"Current");
     for ( int i = 0; i < table->horizontalHeader()->count(); i++)
     {
         table->horizontalHeader()->setSectionResizeMode(i, QHeaderView::Stretch);
@@ -79,7 +84,18 @@ void Scene::Initialize(void)
                        10,
                        uiArea.width()-5,
                        (uiArea.height()/3)-20);
-    table->setItem(0, 1, new QTableWidgetItem("Hello"));
+    table->setStyleSheet("QTableView { border: 2px solid gray; border-radius: 10px;"
+                         "background-color: QColor(20, 20, 20, 50); color: white; "
+                         "gridline-color: white; }"
+                         "QTableView QTableCornerButton::section { background: transparent; }"
+                         "QHeaderView { background: transparent; }"
+                         "QHeaderView::section { background-color: QColor(20, 20, 20, 240); color: white;"
+                         "padding: 2px; border: 2px solid gray; border-radius: 1px; }");
+    table->setEnabled(false);
+
+    table->setItem(5, 0, player1Score);
+    table->setItem(5, 1, player2Score);
+
 
     // Action log.
     log->setGeometry(uiArea.x(),

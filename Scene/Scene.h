@@ -40,64 +40,66 @@ public:
     Scene(Scene&);
     ~Scene(void);
 
-    void          Initialize(void);
+    void              Initialize(void);
 
-    QPointF       GetCenterPos(void);
+    QPointF           GetCenterPos(void);
 
-    void          SetTitle(const QString& newTitle);
-    void          SetText(const QString& newText);
+    void              SetTitle(const QString& newTitle);
+    void              SetText(const QString& newText);
 
-    int           GetWidth(void);
-    int           GetHeight(void);
-    QRectF*       GetTrickArea(void);
+    int               GetWidth(void);
+    int               GetHeight(void);
+    QRectF*           GetTrickArea(void);
 
-    void          UpdateLog(const QString& newMessage);
+    void              UpdateLog(const QString& newMessage);
 
 protected:
-    void          mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
-    void          mouseMoveEvent(QGraphicsSceneMouseEvent* mouseEvent);
-    void          mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent);
-    void          mouseDoubleClickEvent(QGraphicsSceneMouseEvent*mouseEvent);
+    void              mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
+    void              mouseMoveEvent(QGraphicsSceneMouseEvent* mouseEvent);
+    void              mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent);
+    void              mouseDoubleClickEvent(QGraphicsSceneMouseEvent*mouseEvent);
 
 private:
-    void          ConnectSignals(void);
-    bool          IsInsideTrickArea(QPointF p);
+    void              ConnectSignals(void);
+    bool              IsInsideTrickArea(QPointF p);
 
 public slots:
-    void          CreateDialog(Dialog::DialogType dialogType);
-    void          SetUI(State phase);
-    void          SetCardsMoveable(bool moveable);
-    void          SetValidSelection(bool valid);
+    void              CreateDialog(Dialog::DialogType dialogType);
+    void              SetUI(State phase);
+    void              SetCardsMoveable(bool moveable);
+    void              SetValidSelection(bool valid);
 
 signals:
-    void          BeginDeal(void);
-    void          BeginExchange(void);
-    void          Declare(void);
-    void          Skip(void);
-    void          TrickPlayed(void);
+    void              BeginDeal(void);
+    void              BeginExchange(void);
+    void              Declare(void);
+    void              Skip(void);
+    void              TrickPlayed(void);
 
 
-    void          RequestACardTransfer(CardArray::Type,
-                                       CardArray::Type,
-                                       Card*);
-    void          SignalCardSelectionsChanged(Card*);
-    void          ValidateSelection();
+    void              RequestACardTransfer(CardArray::Type,
+                                           CardArray::Type,
+                                           Card*);
+    void              SignalCardSelectionsChanged(Card*);
+    void              ValidateSelection();
 
 private:
-    QPushButton*  primaryAction;
-    QPushButton*  secondaryAction;
-    QLabel*       title;
-    QLabel*       text;
-    QTextEdit*    log;
-    QTableWidget* table;
-    UIArea*       area;
-    Dialog*       dialog;
-    QRectF*       playerTrickArea;
-    int           xPos;
-    int           yPos;
-    int           width;
-    int           height;
-    bool          cardsMoveable;
+    QPushButton*      primaryAction;
+    QPushButton*      secondaryAction;
+    QLabel*           title;
+    QLabel*           text;
+    QTextEdit*        log;
+    QTableWidget*     table;
+    QTableWidgetItem* player1Score;
+    QTableWidgetItem* player2Score;
+    UIArea*           area;
+    Dialog*           dialog;
+    QRectF*           playerTrickArea;
+    int               xPos;
+    int               yPos;
+    int               width;
+    int               height;
+    bool              cardsMoveable;
 };
 
 #endif // SCENE_H
