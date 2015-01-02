@@ -87,12 +87,19 @@ void Scene::Initialize(void)
     table->setStyleSheet("QTableView { border: 2px solid gray; border-radius: 10px;"
                          "background-color: QColor(20, 20, 20, 50); color: white; "
                          "gridline-color: white; }"
+                         "QTableView::item { border-left: 1px solid gray; border-right: 1px solid gray; }"
                          "QTableView QTableCornerButton::section { background: transparent; }"
                          "QHeaderView { background: transparent; }"
                          "QHeaderView::section { background-color: QColor(20, 20, 20, 240); color: white;"
                          "padding: 2px; border: 2px solid gray; border-radius: 1px; }");
     table->setEnabled(false);
 
+    QFont f = player1Score->font();
+    f.setPointSizeF(16.0);
+    player1Score->setFont(f);
+    player2Score->setFont(f);
+    player1Score->setTextAlignment(Qt::AlignCenter);
+    player2Score->setTextAlignment(Qt::AlignCenter);
     table->setItem(5, 0, player1Score);
     table->setItem(5, 1, player2Score);
 
@@ -113,7 +120,7 @@ void Scene::Initialize(void)
                        ((uiArea.height()/4)*3),
                        0,
                        0);
-    QFont f = title->font();
+    f = title->font();
     f.setPointSizeF(18.0);
     f.setBold(true);
     f.setUnderline(true);
