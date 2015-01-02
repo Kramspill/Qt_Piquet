@@ -60,7 +60,7 @@ void Scene::Initialize(void)
     QRect uiArea = QRect(uiLeft, 0, width - uiLeft, height);
 
     // User Interface
-    QRect rect(uiLeft-10, -5, width-uiLeft+30, height+10);
+    QRect rect(uiLeft-10, 0, width-uiLeft+15, height+1);
     area->setGeometry(rect);
 
     // Score display.
@@ -75,18 +75,21 @@ void Scene::Initialize(void)
     {
         table->verticalHeader()->setSectionResizeMode(i, QHeaderView::Stretch);
     }
-    table->setGeometry(uiArea.x()+5,
+    table->setGeometry(uiArea.x(),
                        10,
                        uiArea.width()-5,
                        (uiArea.height()/3)-20);
     table->setItem(0, 1, new QTableWidgetItem("Hello"));
 
     // Action log.
-    log->setGeometry(uiArea.x()+5,
+    log->setGeometry(uiArea.x(),
                      uiArea.height()/3,
                      uiArea.width()-5,
                      (uiArea.height()/3)+50);
     log->setFontPointSize(16.0);
+    log->setStyleSheet("QTextEdit { border: 2px solid gray; border-radius: 10px;"
+                                    "background-color: QColor(20, 20, 20, 50); color: white; }");
+    log->setEnabled(false);
 
     // Phase title.
     title->setGeometry(uiArea.x() +
@@ -99,7 +102,7 @@ void Scene::Initialize(void)
     f.setBold(true);
     f.setUnderline(true);
     title->setFont(f);
-    title->setStyleSheet("QLabel { background-color : green; }");
+    title->setStyleSheet("QLabel { background : transparent; color: white }");
 
     // Phase message.
     text->setGeometry(uiArea.x() + (uiArea.width()/2 - 120),
@@ -109,7 +112,7 @@ void Scene::Initialize(void)
     f = text->font();
     f.setPointSizeF(16.0);
     text->setFont(f);
-    text->setStyleSheet("QLabel { background-color : green; }");
+    text->setStyleSheet("QLabel { background : transparent; color: white }");
 
     // Primary action.
     primaryAction->setGeometry(uiArea.x()+180,
@@ -119,6 +122,10 @@ void Scene::Initialize(void)
     f = primaryAction->font();
     f.setPointSizeF(16.0);
     primaryAction->setFont(f);
+    primaryAction->setStyleSheet("QPushButton { border: 2px solid gray; border-radius: 10px;"
+                                 "background-color: QColor(40, 40, 40, 100); color: white; }"
+                                 "QPushButton:hover { background-color: QColor(60, 60, 60, 200); }"
+                                 "QPushButton:disabled { color: gray; }");
 
     // Secondary action.
     secondaryAction->setGeometry(uiArea.x()+30,
@@ -128,6 +135,10 @@ void Scene::Initialize(void)
     f = secondaryAction->font();
     f.setPointSizeF(14.0);
     secondaryAction->setFont(f);
+    secondaryAction->setStyleSheet("QPushButton { border: 2px solid gray; border-radius: 10px;"
+                                   "background-color: QColor(40, 40, 40, 100); color: white; }"
+                                   "QPushButton:hover { background-color: QColor(60, 60, 60, 200); }"
+                                   "QPushButton:disabled { color: gray; }");
 
     // Add the items to the scene.
     addWidget(area);

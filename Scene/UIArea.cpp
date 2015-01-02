@@ -15,7 +15,7 @@
 UIArea::UIArea(QWidget *parent) :
     QWidget(parent)
 {
-    setStyleSheet("background: transparent");
+    setStyleSheet("background: transparent;");
     setAttribute(Qt::WA_TranslucentBackground);
 }
 
@@ -44,6 +44,11 @@ void UIArea::paintEvent(QPaintEvent* event)
     QRect rect(this->rect());
 
     QPainter painter(this);
-    painter.fillRect(rect, QBrush(QColor(0, 0, 0, 210)));
-    //painter.drawRect(rect);
+    QPen     pen(Qt::gray);
+    pen.setWidth(5);
+
+    painter.setPen(pen);
+    painter.setBrush(QBrush(QColor(20, 20, 20, 250)));
+
+    painter.drawRoundedRect(rect, 10, 10);
 }
