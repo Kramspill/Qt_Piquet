@@ -50,6 +50,9 @@ private:
                           State phase,
                           char* destBuf);
 
+public slots:
+    void      ScoreCarteBlanche(void);
+
 signals:
     void      UpdateScores(int, int);
     void      UpdateLog(QString);

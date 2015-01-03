@@ -46,6 +46,7 @@ public:
     void                   AnnounceDeclaration(State phase);
     void                   Respond(State phase);
     void                   PlayTrick(void);
+    void                   CarteBlanche(void);
 
 
     void                   UpdateKnowledgeBase(Card* card, int index,
@@ -55,13 +56,16 @@ public:
     void                   SelectCardsToDiscard(void);
     void                   SelectTrickToPlay(void);
 
+protected:
+    void                   ExecuteCarteBlanche(void);
+
 private:
     void                   ConnectSignals(void);
 
 signals:
     void                   RequestCardPositions(PlayerNum player);
     void                   SignalCardSelectionsChanged(Card*,
-                                                      CardArray::Type);
+                                                       CardArray::Type);
     void                   AIProcessingComplete(void);
 
     void                   GoodResponse(void);

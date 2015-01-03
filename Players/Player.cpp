@@ -78,6 +78,10 @@ void Player::ExecuteDeal(void)
 //------------------------------------------------------------------------------
 void Player::ExecuteExchange(void)
 {
+    // Perform the Carte Blanche declaration if necessary.
+    if ( declarationResults->carteBlancheWinner == playerNumber )
+        ExecuteCarteBlanche();
+
     // Set the UI.
     emit SetUI(EXCHANGE);
 
@@ -160,11 +164,67 @@ void Player::PlayTrick(void)
 
 
 //------------------------------------------------------------------------------
+// CarteBlanche - Ask player if they wish to declare Carte Blanche.
+//------------------------------------------------------------------------------
+void Player::CarteBlanche(void)
+{
+    // Set the UI to the Response state.
+    emit SetUI(BLANCHE);
+
+    // Wait for user to make a response.
+    QEventLoop* loop = new QEventLoop();
+    connect(this, SIGNAL(Blanche()), loop, SLOT(quit()));
+    loop->exec();
+}
+
+
+//------------------------------------------------------------------------------
+// ExecuteCarteBlanche - Execute a Carte Blanche declaration.
+//------------------------------------------------------------------------------
+void Player::ExecuteCarteBlanche(void)
+{
+    for ( int i =0; i < 12; i++ )
+        emit RequestCardTransfer(CardArray::PLAYERHAND,
+                                 CardArray::PLAYERTRICK,
+                                 1);
+
+    emit RequestCardTransfer(CardArray::PLAYERTRICK,
+                             CardArray::PLAYERHAND,
+                             12);
+
+    emit ScoreCarteBlanche();
+
+    // Enable the players cards to be selectable again.
+    emit SetCardsSelectable(true, playerNumber);
+}
+
+
+//------------------------------------------------------------------------------
 // ConnectSignals - Connect the signals to/from this class.
 //------------------------------------------------------------------------------
 void Player::ConnectSignals(void)
 {
     connect(this, SIGNAL(Skip()), this, SLOT(SkipRequested()));
+}
+
+
+//------------------------------------------------------------------------------
+// CarteBlancheYes - User chose to declare Carte Blanche.
+//------------------------------------------------------------------------------
+void Player::CarteBlancheYes(void)
+{
+    declarationResults->carteBlancheWinner = playerNumber;
+    specialScores->carteBlancheScored      = true;
+    emit Blanche();
+}
+
+
+//------------------------------------------------------------------------------
+// CarteBlancheNo - User chose not to declare Carte Blanche.
+//------------------------------------------------------------------------------
+void Player::CarteBlancheNo(void)
+{
+    emit Blanche();
 }
 
 

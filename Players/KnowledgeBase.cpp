@@ -106,6 +106,7 @@ void KnowledgeBase::FlagDispensableCards(CardArray* cpuHand)
     {
         card = cpuHand->GetCard(cardRanks[index]);
 
+        card->setFlag(QGraphicsItem::ItemIsSelectable, true);
         card->setSelected(true);
         emit SignalCardSelectionsChanged(card, CardArray::CPUHAND);
     }

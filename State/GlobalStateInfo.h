@@ -24,7 +24,8 @@ enum State
     SEQUENCE,
     SET,
     RESPOND,
-    TRICK
+    TRICK,
+    BLANCHE
 };
 
 struct Declaration

@@ -44,6 +44,8 @@ public:
     CardArray*         GetCardArray(CardArray::Type type);
     std::vector<Card*> GetSelection(PlayerNum player);
 
+    PlayerNum          CheckCarteBlanche(void);
+
 private:
     void               InitializeCards(void);
     void               AddCardsToScene(Scene* scene);

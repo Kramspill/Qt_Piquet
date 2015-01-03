@@ -600,3 +600,18 @@ void ScoreManager::GetResponse(std::vector<Card*> cards,
             break;
     }
 }
+
+
+//------------------------------------------------------------------------------
+// ScoreCarteBlanche - Apply the Carte Blanche score.
+//------------------------------------------------------------------------------
+void ScoreManager::ScoreCarteBlanche(void)
+{
+    if ( declarationResults->carteBlancheWinner == PLAYER1 )
+        playerScore += 10;
+    else
+        cpuScore += 10;
+
+    // Update the score table.
+    emit UpdateScores(playerScore, cpuScore);
+}

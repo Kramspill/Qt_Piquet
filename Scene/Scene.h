@@ -74,6 +74,8 @@ signals:
     void              BeginExchange(void);
     void              Declare(void);
     void              Skip(void);
+    void              Yes(void);
+    void              No(void);
     void              TrickPlayed(void);
 
 

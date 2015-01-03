@@ -39,9 +39,17 @@ public:
     virtual void AnnounceDeclaration(State phase);
     virtual void Respond(State phase);
     virtual void PlayTrick(void);
+    virtual void CarteBlanche(void);
+
+protected:
+    virtual void ExecuteCarteBlanche(void);
 
 private:
     void         ConnectSignals(void);
+
+public slots:
+    void         CarteBlancheYes(void);
+    void         CarteBlancheNo(void);
 
 private slots:
     void         SkipRequested(void);
@@ -56,10 +64,14 @@ signals:
     void         Declare(void);
     void         Skip(void);
 
+    void         Blanche(void);
+    void         ScoreCarteBlanche(void);
+
     void         PrepForTrick(void);
     void         TrickPlayed(void);
 
     void         SetCardsMoveable(bool);
+    void         SetCardsSelectable(bool, PlayerNum);
     void         DeselectCards(void);
     void         RequestCardTransfer(CardArray::Type,
                                      CardArray::Type,
@@ -67,7 +79,7 @@ signals:
     void         SetUI(State);
 
 protected:
-    PlayerNum playerNumber;
+    PlayerNum    playerNumber;
 };
 
 #endif // PLAYER_H

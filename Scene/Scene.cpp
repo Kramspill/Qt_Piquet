@@ -439,8 +439,19 @@ void Scene::SetUI(State phase)
             primaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/2,
                                 primaryAction->y());
 
-            QObject::disconnect(primaryAction, SIGNAL(clicked()),
-                                this,          SIGNAL(BeginDeal()));
+            if ( declarationResults->carteBlancheWinner == PLAYER1 )
+            {
+                QObject::disconnect(primaryAction,   SIGNAL(clicked()),
+                                    this,            SIGNAL(Yes()));
+
+                QObject::disconnect(secondaryAction, SIGNAL(clicked()),
+                                    this,            SIGNAL(No()));
+            }
+            else
+            {
+                QObject::disconnect(primaryAction, SIGNAL(clicked()),
+                                    this,          SIGNAL(BeginDeal()));
+            }
             QObject::connect(   primaryAction, SIGNAL(clicked()),
                                 this,          SIGNAL(BeginExchange()));
             break;
@@ -466,10 +477,11 @@ void Scene::SetUI(State phase)
             str = text->text();
             text->move(uiArea.x()+((uiArea.width()-fmText.width(str)/2)/2),
                        text->y());
-            primaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/4,
-                                primaryAction->y());
-            secondaryAction->move(uiArea.x()+((uiArea.width()-secondaryAction->width())/4)*3,
-                                   secondaryAction->y());
+            primaryAction->move(uiArea.x()+((uiArea.width()-secondaryAction->width())/4)*3,
+                                secondaryAction->y());
+            secondaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/4,
+                                  primaryAction->y());
+
 
             QObject::disconnect(primaryAction,   SIGNAL(clicked()),
                                 this,            SIGNAL(BeginExchange()));
@@ -498,10 +510,10 @@ void Scene::SetUI(State phase)
             str = text->text();
             text->move(uiArea.x()+((uiArea.width()-fmText.width(str)/2)/2),
                        text->y());
-            primaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/4,
-                                primaryAction->y());
-            secondaryAction->move(uiArea.x()+((uiArea.width()-secondaryAction->width())/4)*3,
-                                   secondaryAction->y());
+            primaryAction->move(uiArea.x()+((uiArea.width()-secondaryAction->width())/4)*3,
+                                secondaryAction->y());
+            secondaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/4,
+                                  primaryAction->y());
             break;
 
         case SET:
@@ -522,10 +534,10 @@ void Scene::SetUI(State phase)
             str = text->text();
             text->move(uiArea.x()+((uiArea.width()-fmText.width(str)/2)/2),
                        text->y());
-            primaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/4,
-                                primaryAction->y());
-            secondaryAction->move(uiArea.x()+((uiArea.width()-secondaryAction->width())/4)*3,
-                                   secondaryAction->y());
+            primaryAction->move(uiArea.x()+((uiArea.width()-secondaryAction->width())/4)*3,
+                                secondaryAction->y());
+            secondaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/4,
+                                  primaryAction->y());
             break;
 
         case RESPOND:
@@ -560,10 +572,6 @@ void Scene::SetUI(State phase)
             str = text->text();
             text->move(uiArea.x()+((uiArea.width()-fmText.width(str))/2),
                        text->y());
-            primaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/4,
-                                primaryAction->y());
-            secondaryAction->move(uiArea.x()+((uiArea.width()-secondaryAction->width())/4)*3,
-                                   secondaryAction->y());
 
             QObject::disconnect(primaryAction,   SIGNAL(clicked()),
                                 this,            SIGNAL(Declare()));
@@ -572,6 +580,41 @@ void Scene::SetUI(State phase)
 
             primaryAction->setVisible(false);
             secondaryAction->setVisible(false);
+            break;
+
+        case BLANCHE:
+            title->setText("Carte Blanche");
+            text->setText("Do you wish to\ndeclare Carte Blanche?");
+
+            primaryAction->setText("Yes");
+            primaryAction->setEnabled(true);
+            secondaryAction->setText("No");
+            secondaryAction->setVisible(true);
+
+            primaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+            secondaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+            title->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+            text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+
+            // Position the items.
+            str = title->text();
+            title->move(uiArea.x()+((uiArea.width()-fmTitle.width(str))/2),
+                        title->y());
+            str = text->text();
+            text->move(uiArea.x()+((uiArea.width()-fmText.width(str)/2)/2),
+                       text->y());
+            primaryAction->move(uiArea.x()+((uiArea.width()-secondaryAction->width())/4)*3,
+                                secondaryAction->y());
+            secondaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/4,
+                                  primaryAction->y());
+
+            QObject::disconnect(primaryAction, SIGNAL(clicked()),
+                                this,          SIGNAL(BeginDeal()));
+            QObject::connect(   primaryAction,   SIGNAL(clicked()),
+                                this,            SIGNAL(Yes()));
+
+            QObject::connect(   secondaryAction, SIGNAL(clicked()),
+                                this,            SIGNAL(No()));
             break;
     };
 }
@@ -591,10 +634,13 @@ void Scene::SetCardsMoveable(bool moveable)
 //------------------------------------------------------------------------------
 void Scene::SetValidSelection(bool valid)
 {
-    if ( valid )
-        primaryAction->setEnabled(true);
-    else
-        primaryAction->setEnabled(false);
+    if ( primaryAction->text() != "Yes")
+    {
+        if ( valid )
+            primaryAction->setEnabled(true);
+        else
+            primaryAction->setEnabled(false);
+    }
 }
 
 

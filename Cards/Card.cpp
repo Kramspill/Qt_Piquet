@@ -231,6 +231,14 @@ void Card::Initialize(void)
                                   inCpuDiscardsState);
     inCpuHandState->addTransition(this, SIGNAL(InCpuTrick()),
                                   inCpuTrickState);
+
+    // Setup the transitions from the InPlayerTrick state.
+    inPlayerTrickState->addTransition(this, SIGNAL(InPlayerHand()),
+                                       inPlayerHandState);
+
+    // Setup the transitions from the InCpuTrick state.
+    inCpuTrickState->addTransition(this, SIGNAL(InCpuHand()),
+                                   inCpuHandState);
 /*
     // Setup the transitions from the InPlayerDiscards state.
     inPlayerDiscardsState->addTransition(SomeObject, SIGNAL(inDeck()),
@@ -240,7 +248,7 @@ void Card::Initialize(void)
     inCpuDiscardsState->addTransition(SomeObject, SIGNAL(inDeck()),
                                       inDeckState);
 
-    // Setup the transitions from the InCurrentTrick state.
+    // Setup the transitions from the InPlayerTrick state.
     inCurrentTrickState->addTransition(SomeObject, SIGNAL(inPreviousTricks()),
                                        inPreviousTricksState);
 

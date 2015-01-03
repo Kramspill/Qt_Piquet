@@ -198,6 +198,48 @@ std::vector<Card*> CardManager::GetSelection(PlayerNum player)
 
 
 //------------------------------------------------------------------------------
+// CheckCarteBlanche - Check if either play has a Carte Blanche.
+//------------------------------------------------------------------------------
+PlayerNum CardManager::CheckCarteBlanche(void)
+{
+    Card* card;
+    bool  carteBlanche = true;
+    PlayerNum p = NOPLAYER;
+
+    for ( int i = 0; i < playerHand->GetSize(); i++ )
+    {
+        card = playerHand->GetCard(i);
+
+        if ( card->GetRank() > 10 && card->GetRank() < 14 )
+            carteBlanche = false;
+    }
+
+    if ( carteBlanche )
+    {
+        p = PLAYER1;
+    }
+    else
+    {
+        carteBlanche = true;
+        for ( int i = 0; i < cpuHand->GetSize(); i++ )
+        {
+            card = cpuHand->GetCard(i);
+
+            if ( card->GetRank() > 10 && card->GetRank() < 14 )
+                carteBlanche = false;
+        }
+
+        if ( carteBlanche )
+        {
+            p = PLAYER2;
+        }
+    }
+
+    return p;
+}
+
+
+//------------------------------------------------------------------------------
 // InitializeCards - Create all the cards and add them to the deck.
 //------------------------------------------------------------------------------
 void CardManager::InitializeCards(void)

@@ -100,6 +100,14 @@ void GameManager::ConnectSignals(void)
                      player1,
                      SIGNAL(Skip()));
     QObject::connect(scene,
+                     SIGNAL(Yes()),
+                     player1,
+                     SLOT(CarteBlancheYes()));
+    QObject::connect(scene,
+                     SIGNAL(No()),
+                     player1,
+                     SLOT(CarteBlancheNo()));
+    QObject::connect(scene,
                      SIGNAL(TrickPlayed()),
                      player1,
                      SIGNAL(TrickPlayed()));
@@ -126,6 +134,10 @@ void GameManager::ConnectSignals(void)
                      cardManager,
                      SLOT(SetCardsMoveable(bool)));
     QObject::connect(player1,
+                     SIGNAL(SetCardsSelectable(bool,PlayerNum)),
+                     cardManager,
+                     SLOT(SetCardsSelectable(bool,PlayerNum)));
+    QObject::connect(player1,
                      SIGNAL(DeselectCards()),
                      cardManager,
                      SLOT(DeselectCards()));
@@ -141,6 +153,10 @@ void GameManager::ConnectSignals(void)
                      SLOT(RequestCardTransfer(CardArray::Type,
                                               CardArray::Type,
                                               int)));
+    QObject::connect(player1,
+                     SIGNAL(ScoreCarteBlanche()),
+                     scoreManager,
+                     SLOT(ScoreCarteBlanche()));
 
     // Connect the signals from player 2.
     QObject::connect(player2,
@@ -167,6 +183,10 @@ void GameManager::ConnectSignals(void)
                      SIGNAL(RequestCardPositions(PlayerNum)),
                      this,
                      SLOT(UpdateAI(PlayerNum)));
+    QObject::connect(player2,
+                     SIGNAL(ScoreCarteBlanche()),
+                     scoreManager,
+                     SLOT(ScoreCarteBlanche()));
 
     // Connect the signals from the CardManager.
     QObject::connect(cardManager,
@@ -231,6 +251,26 @@ void GameManager::ExecuteDeal(void)
 //------------------------------------------------------------------------------
 void GameManager::ExecuteExchange(void)
 {
+    // Check for potential Carte Blanche.
+    PlayerNum carteBlanche = cardManager->CheckCarteBlanche();
+
+    // Ask the player if they want to declare their Carte Blanche.
+    if ( carteBlanche == PLAYER1 )
+        player1->CarteBlanche();
+    else if ( carteBlanche == PLAYER2 )
+        player2->CarteBlanche();
+
+    // Update the log if Carte Blanche was declared.
+    if ( specialScores->carteBlancheScored )
+    {
+        char* str = new char[30];
+        snprintf(str, 30, "PLAYER %d: CARTE BLANCHE",
+                 declarationResults->carteBlancheWinner);
+
+        scene->UpdateLog(str);
+        delete[] str;
+    }
+
     if ( elder == PLAYER1 )
     {
         cardManager->SetCardsSelectable(true, PLAYER1);

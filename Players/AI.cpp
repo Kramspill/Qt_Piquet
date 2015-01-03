@@ -80,6 +80,10 @@ void AI::ExecuteDeal(void)
 //------------------------------------------------------------------------------
 void AI::ExecuteExchange(void)
 {
+    // Perform the Carte Blanche declaration if necessary.
+    if ( declarationResults->carteBlancheWinner == playerNumber )
+        ExecuteCarteBlanche();
+
     // Request information on card positions.
     emit RequestCardPositions(playerNumber);
 
@@ -150,6 +154,16 @@ void AI::PlayTrick(void)
 
 
 //------------------------------------------------------------------------------
+// CarteBlanche - Player declares Carte Blanche
+//------------------------------------------------------------------------------
+void AI::CarteBlanche(void)
+{
+    declarationResults->carteBlancheWinner = playerNumber;
+    specialScores->carteBlancheScored      = true;
+}
+
+
+//------------------------------------------------------------------------------
 // UpdateKnowledgeBase - Update the status of a card in the knowledge base.
 //------------------------------------------------------------------------------
 void AI::UpdateKnowledgeBase(Card* card, int index,
@@ -191,6 +205,24 @@ void AI::SelectTrickToPlay(void)
     knowledgeBase->SelectTrick(cpuHand);
 
     emit AIProcessingComplete();
+}
+
+
+//------------------------------------------------------------------------------
+// ExecuteCarteBlanche - Execute a Carte Blanche declaration.
+//------------------------------------------------------------------------------
+void AI::ExecuteCarteBlanche(void)
+{
+    for ( int i =0; i < 12; i++ )
+        emit RequestCardTransfer(CardArray::CPUHAND,
+                                 CardArray::CPUTRICK,
+                                 1);
+
+    emit RequestCardTransfer(CardArray::CPUTRICK,
+                             CardArray::CPUHAND,
+                             12);
+
+    emit ScoreCarteBlanche();
 }
 
 
