@@ -17,6 +17,7 @@ UIArea::UIArea(QWidget *parent) :
 {
     setStyleSheet("background: transparent;");
     setAttribute(Qt::WA_TranslucentBackground);
+    setEnabled(false);
 }
 
 

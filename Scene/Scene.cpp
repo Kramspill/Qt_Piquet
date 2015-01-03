@@ -66,12 +66,13 @@ void Scene::Initialize(void)
     area->setGeometry(rect);
 
     // Score display.
-    table->setRowCount(6);
+    table->setRowCount(7);
     table->setColumnCount(2);
     table->setShowGrid(false);
     table->setHorizontalHeaderLabels(QStringList()<<"Player 1"<<"Player 2");
     table->setVerticalHeaderLabels(QStringList()<<"Partie 1"<<"Partie 2"<<
-                                   "Partie 3"<<"Partie 4"<<"Partie 5"<<"Current");
+                                   "Partie 3"<<"Partie 4"<<"Partie 5"<<
+                                   "Partie 6"<<"Current");
     for ( int i = 0; i < table->horizontalHeader()->count(); i++)
     {
         table->horizontalHeader()->setSectionResizeMode(i, QHeaderView::Stretch);
@@ -100,8 +101,8 @@ void Scene::Initialize(void)
     player2Score->setFont(f);
     player1Score->setTextAlignment(Qt::AlignCenter);
     player2Score->setTextAlignment(Qt::AlignCenter);
-    table->setItem(5, 0, player1Score);
-    table->setItem(5, 1, player2Score);
+    table->setItem(6, 0, player1Score);
+    table->setItem(6, 1, player2Score);
 
 
     // Action log.

@@ -49,6 +49,7 @@ struct Response
 
 struct DeclarationResults
 {
+    PlayerNum carteBlancheWinner = NOPLAYER;
     PlayerNum pointWinner;
     PlayerNum sequenceWinner;
     PlayerNum setWinner;
@@ -60,6 +61,13 @@ struct TrickResults
     int player2Wins = 0;
 };
 
+struct SpecialScores
+{
+    bool carteBlancheScored = false;
+    bool repiqueScored = false;
+    bool piqueScored   = false;
+};
+
 extern PlayerNum           elder;
 extern PlayerNum           younger;
 extern PlayerNum           trickWinner;
@@ -67,6 +75,7 @@ extern Declaration*        declaration;
 extern Response*           response;
 extern DeclarationResults* declarationResults;
 extern TrickResults*       trickResults;
+extern SpecialScores*      specialScores;
 extern State               currentPhase;
 
 #endif // GLOBALSTATEINFO_H

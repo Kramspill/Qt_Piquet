@@ -255,6 +255,89 @@ void ScoreManager::ScoreDeclaration(State phase, PlayerNum player)
         }
     }
 
+    // Check for special case Repique.
+    if ( !specialScores->repiqueScored )
+    {
+        if ( playerScore >= 30 || cpuScore >= 30 )
+        {
+            char* str = new char[20];
+            bool repiquePotential = true;
+
+            if ( playerScore >= 30 )
+            {
+                if ( specialScores->carteBlancheScored &&
+                     declarationResults->carteBlancheWinner == PLAYER2 )
+                {
+                    repiquePotential = false;
+                }
+
+                if ( repiquePotential )
+                {
+                    switch ( phase )
+                    {
+                        case SEQUENCE:
+                            if ( declarationResults->pointWinner == PLAYER1 )
+                            {
+                                specialScores->repiqueScored = true;
+                                playerScore += 60;
+                                snprintf(str, 20, "PLAYER 1: REPIQUE");
+                                emit UpdateLog(str);
+                            }
+                            break;
+
+                        case SET:
+                            if ( declarationResults->pointWinner == PLAYER1 &&
+                                 declarationResults->sequenceWinner == PLAYER1 )
+                            {
+                                specialScores->repiqueScored = true;
+                                playerScore += 60;
+                                snprintf(str, 20, "PLAYER 1: REPIQUE");
+                                emit UpdateLog(str);
+                            }
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                if ( specialScores->carteBlancheScored &&
+                     declarationResults->carteBlancheWinner == PLAYER1 )
+                {
+                    repiquePotential = false;
+                }
+
+                if ( repiquePotential )
+                {
+                    switch ( phase )
+                    {
+                        case SEQUENCE:
+                            if ( declarationResults->pointWinner == PLAYER2 )
+                            {
+                                specialScores->repiqueScored = true;
+                                playerScore += 60;
+                                snprintf(str, 20, "PLAYER 2: REPIQUE");
+                                emit UpdateLog(str);
+                            }
+                            break;
+
+                        case SET:
+                            if ( declarationResults->pointWinner == PLAYER2 &&
+                                 declarationResults->sequenceWinner == PLAYER2 )
+                            {
+                                specialScores->repiqueScored = true;
+                                playerScore += 60;
+                                snprintf(str, 20, "PLAYER 2: REPIQUE");
+                                emit UpdateLog(str);
+                            }
+                            break;
+                    }
+                }
+            }
+
+            delete[] str;
+        }
+    }
+
     // Update the score table.
     emit UpdateScores(playerScore, cpuScore);
 }
@@ -286,9 +369,84 @@ PlayerNum ScoreManager::ScoreTrick(PlayerNum player,
         winner = (player == PLAYER1) ? PLAYER2 : PLAYER1;
     }
 
+    // Check for special case Pique.
+    if ( !specialScores->repiqueScored && !specialScores->piqueScored )
+    {
+        if ( playerScore >= 30 && cpuScore == 0 ||
+             cpuScore >= 30 && playerScore == 0 )
+        {
+            char* str = new char[20];
+            bool piquePotential = true;
+
+            if ( playerScore >= 30 )
+            {
+                if ( specialScores->carteBlancheScored &&
+                     declarationResults->carteBlancheWinner == PLAYER2 )
+                {
+                    piquePotential = false;
+                }
+
+                if ( piquePotential &&
+                     declarationResults->pointWinner == PLAYER1 &&
+                     declarationResults->sequenceWinner == PLAYER1 &&
+                     declarationResults->setWinner == PLAYER1 )
+                {
+                        specialScores->piqueScored = true;
+                        playerScore += 30;
+                        snprintf(str, 20, "PLAYER 1: PIQUE");
+                        emit UpdateLog(str);
+                }
+            }
+            else
+            {
+                if ( specialScores->carteBlancheScored &&
+                     declarationResults->carteBlancheWinner == PLAYER1 )
+                {
+                    piquePotential = false;
+                }
+
+                if ( piquePotential &&
+                     declarationResults->pointWinner == PLAYER2 &&
+                     declarationResults->sequenceWinner == PLAYER2 &&
+                     declarationResults->setWinner == PLAYER2 )
+                {
+                        specialScores->piqueScored = true;
+                        cpuScore += 30;
+                        snprintf(str, 20, "PLAYER 2: PIQUE");
+                        emit UpdateLog(str);
+                }
+            }
+
+            delete[] str;
+        }
+    }
+
+    // Final scoring (The cards/Capot).
     if ( trickResults->player1Wins + trickResults->player2Wins == 12 )
     {
         (winner == PLAYER1) ? playerScore++ : cpuScore++;
+
+        // Final check for Pique.
+        if ( !specialScores->repiqueScored &&
+             !specialScores->piqueScored )
+        {
+            char* str = new char[20];
+            if ( playerScore >= 30 && cpuScore == 0 )
+            {
+                specialScores->piqueScored = true;
+                playerScore += 30;
+                snprintf(str, 20, "PLAYER 1: PIQUE");
+                emit UpdateLog(str);
+            }
+            else if ( cpuScore >= 30 && playerScore == 0 )
+            {
+                specialScores->piqueScored = true;
+                cpuScore += 30;
+                snprintf(str, 20, "PLAYER 2: PIQUE");
+                emit UpdateLog(str);
+            }
+            delete[] str;
+        }
 
         char* str = new char[20];
 

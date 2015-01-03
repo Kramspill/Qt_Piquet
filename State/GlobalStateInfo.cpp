@@ -19,4 +19,5 @@ Declaration*        declaration        = new Declaration();
 Response*           response           = new Response();
 DeclarationResults* declarationResults = new DeclarationResults();
 TrickResults*       trickResults       = new TrickResults();
+SpecialScores*      specialScores      = new SpecialScores();
 State               currentPhase       = DEAL;
