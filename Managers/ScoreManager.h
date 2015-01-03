@@ -52,6 +52,7 @@ private:
 
 signals:
     void      UpdateScores(int, int);
+    void      UpdateLog(QString);
 
 private:
     int       playerScore;

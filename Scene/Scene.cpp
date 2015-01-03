@@ -174,10 +174,10 @@ void Scene::Initialize(void)
 
     // Set up the player trick area.
     QRectF playingArea;
-    playingArea.setWidth((width - uiArea.width()) * 0.8);
-    playingArea.setHeight(height * 0.6);
-    playingArea.setX((width - uiArea.width() - playingArea.width()) / 2);
-    playingArea.setY((height - playingArea.height()) / 2);
+    playingArea.setWidth((width - uiArea.width()) * 0.83);
+    playingArea.setHeight(height * 0.7);
+    playingArea.setX((width - uiArea.width() - playingArea.width())+100);
+    playingArea.setY(height - playingArea.height());
 
     playerTrickArea = new QRectF(playingArea);
 

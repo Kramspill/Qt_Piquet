@@ -51,8 +51,6 @@ public:
     int               GetHeight(void);
     QRectF*           GetTrickArea(void);
 
-    void              UpdateLog(const QString& newMessage);
-
 protected:
     void              mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
     void              mouseMoveEvent(QGraphicsSceneMouseEvent* mouseEvent);
@@ -64,6 +62,7 @@ private:
     bool              IsInsideTrickArea(QPointF p);
 
 public slots:
+    void              UpdateLog(const QString& newMessage);
     void              CreateDialog(Dialog::DialogType dialogType);
     void              SetUI(State phase);
     void              SetCardsMoveable(bool moveable);

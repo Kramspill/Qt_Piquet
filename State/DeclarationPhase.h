@@ -48,7 +48,7 @@ private slots:
 signals:
     void           AnnounceDeclaration(State, PlayerNum);
     void           DeclarationsComplete(void);
-    void           PlayTrick(PlayerNum, bool);
+    void           PlayTrick(PlayerNum);
     void           TrickComplete(void);
     void           DeclarationPhaseFinished(void);
 

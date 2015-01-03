@@ -122,7 +122,7 @@ void DeclarationPhase::ElderDeclarations(void)
 //------------------------------------------------------------------------------
 void DeclarationPhase::ElderTrick(void)
 {
-    emit PlayTrick(elder, true);
+    emit PlayTrick(elder);
     emit TrickComplete();
 }
 
@@ -150,6 +150,6 @@ void DeclarationPhase::YoungerDeclarations(void)
 //------------------------------------------------------------------------------
 void DeclarationPhase::YoungerTrick(void)
 {
-    emit PlayTrick(younger, false);
+    emit PlayTrick(younger);
     emit TrickComplete();
 }

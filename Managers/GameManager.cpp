@@ -192,15 +192,19 @@ void GameManager::ConnectSignals(void)
                      this,
                      SLOT(AnnounceDeclaration(State, PlayerNum)));
     QObject::connect(stateManager,
-                     SIGNAL(PlayTrick(PlayerNum, bool)),
+                     SIGNAL(PlayTrick(PlayerNum)),
                      this,
-                     SLOT(PlayTrick(PlayerNum, bool)));
+                     SLOT(PlayTrick(PlayerNum)));
 
     // Connect the signals from the ScoreManager.
     QObject::connect(scoreManager,
                      SIGNAL(UpdateScores(int,int)),
                      scene,
                      SLOT(UpdateScores(int,int)));
+    QObject::connect(scoreManager,
+                     SIGNAL(UpdateLog(QString)),
+                     scene,
+                     SLOT(UpdateLog(QString)));
 }
 
 
@@ -431,7 +435,7 @@ void GameManager::ResolveResponse(State phase, PlayerNum player)
 //------------------------------------------------------------------------------
 // PlayTrick - Inform a player to play a Trick.
 //------------------------------------------------------------------------------
-void GameManager::PlayTrick(PlayerNum player, bool firstTrick)
+void GameManager::PlayTrick(PlayerNum player)
 {
     CardArray* leadTrick;
     CardArray* followTrick;
@@ -474,12 +478,7 @@ void GameManager::PlayTrick(PlayerNum player, bool firstTrick)
         followTrick = cardManager->GetCardArray(CardArray::CPUTRICK);
     }
 
-    // Score the Trick.
-    if ( firstTrick )
-    {
-        scoreManager->ScoreTrick(player);
-    }
-    else if ( leadTrick->GetSize() > 0 && followTrick->GetSize() > 0 )
+    if ( leadTrick->GetSize() > 0 && followTrick->GetSize() > 0 )
     {
         PlayerNum winner = scoreManager->ScoreTrick(player,
                                                     leadTrick->GetCard(0),
@@ -491,6 +490,11 @@ void GameManager::PlayTrick(PlayerNum player, bool firstTrick)
                             CardArray::PREVIOUSTRICKS, 1);
 
         trickWinner = winner;
+    }
+    else
+    {
+        // Score the Trick.
+        scoreManager->ScoreTrick(player);
     }
 
 }

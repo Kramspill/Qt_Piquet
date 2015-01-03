@@ -282,7 +282,6 @@ PlayerNum ScoreManager::ScoreTrick(PlayerNum player,
     }
     else
     {
-        (player == PLAYER1) ? cpuScore++ : playerScore++;
         (player == PLAYER1) ? trickResults->player2Wins++ : trickResults->player1Wins++;
         winner = (player == PLAYER1) ? PLAYER2 : PLAYER1;
     }
@@ -290,6 +289,39 @@ PlayerNum ScoreManager::ScoreTrick(PlayerNum player,
     if ( trickResults->player1Wins + trickResults->player2Wins == 12 )
     {
         (winner == PLAYER1) ? playerScore++ : cpuScore++;
+
+        char* str = new char[20];
+
+        if ( trickResults->player1Wins > trickResults->player2Wins )
+        {
+            if ( trickResults->player2Wins == 0 )
+            {
+                snprintf(str, 20, "PLAYER 1: CAPOT");
+                playerScore += 40;
+            }
+            else
+            {
+                snprintf(str, 20, "PLAYER 1: THE CARDS");
+                playerScore += 10;
+            }
+        }
+        else if ( trickResults->player2Wins > trickResults->player1Wins )
+        {
+            if ( trickResults->player1Wins == 0 )
+            {
+                snprintf(str, 20, "PLAYER 2: CAPOT");
+                cpuScore += 40;
+            }
+            else
+            {
+                snprintf(str, 20, "PLAYER 2: THE CARDS");
+                cpuScore += 10;
+            }
+        }
+
+        emit UpdateLog(str);
+
+        delete[] str;
     }
 
     // Update the score table.
@@ -406,7 +438,7 @@ void ScoreManager::GetResponse(std::vector<Card*> cards,
             break;
 
         case SET:
-            snprintf(destBuf, 20, "%ss", cardNames[value-7]);
+            snprintf(destBuf, 20, "%s's", cardNames[value-7]);
             break;
     }
 }

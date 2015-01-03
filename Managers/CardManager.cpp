@@ -51,25 +51,25 @@ void CardManager::Initialize(Scene* scene)
                                    0,
                                    rect->y()+rect->height()/2);
     playerHand     = new CardArray(CardArray::PLAYERHAND,
-                                   (rect->x()+rect->width())*0.6,
+                                   (rect->x()+rect->width())*0.57,
                                    scene->GetHeight()-170);
     cpuHand        = new CardArray(CardArray::CPUHAND,
-                                   (rect->x()+rect->width())*0.6,
+                                   (rect->x()+rect->width())*0.57,
                                    10);
     playerDiscards = new CardArray(CardArray::PLAYERDISCARDS,
-                                   rect->x()+rect->width()+70,
-                                   rect->y()+rect->height()+50);
+                                   rect->x()+rect->width()+30,
+                                   rect->y()+rect->height()*0.65);
     cpuDiscards    = new CardArray(CardArray::CPUDISCARDS,
-                                   rect->x()+rect->width()+70,
-                                   rect->y());
+                                   rect->x()+rect->width()+30,
+                                   rect->y()*0.8);
     playerTrick    = new CardArray(CardArray::PLAYERTRICK,
                                    (rect->x()+rect->width())*0.6,
-                                   (rect->y()+rect->height())*0.9);
+                                   (rect->y()+rect->height())*0.7);
     cpuTrick       = new CardArray(CardArray::CPUTRICK,
                                    (rect->x()+rect->width())*0.6,
                                    (rect->y()+rect->height())*0.4);
     previousTricks = new CardArray(CardArray::PREVIOUSTRICKS,
-                                   rect->x()+50,
+                                   rect->x()*0.5,
                                    10);
 
     // Initialize the timer to allow animation to finish before informing of
@@ -310,6 +310,8 @@ void CardManager::DealOutCards(CardArray* src,
     {
         // Remove the card from the source array, and add it to the destination.
         Card* card = src->RemoveTopCard();
+        card->setFlag(QGraphicsItem::ItemIsSelectable, false);
+        card->setFlag(QGraphicsItem::ItemIsMovable,    false);
         dest->AddCard(card);
     }
 
@@ -344,6 +346,11 @@ void CardManager::TransferSelectedCards(CardArray* src,
             card->setFlag(QGraphicsItem::ItemIsSelectable, false);
             card->setFlag(QGraphicsItem::ItemIsMovable,    false);
             cards.push_back(card);
+        }
+        else
+        {
+            card->setFlag(QGraphicsItem::ItemIsSelectable, false);
+            card->setFlag(QGraphicsItem::ItemIsMovable,    false);
         }
     }
 
