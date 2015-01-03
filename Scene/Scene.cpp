@@ -293,17 +293,14 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
         // or we have set the cards to be moveable.
         if ( !card || cardsMoveable )
         {
-            if ( card && cardsMoveable )
+            if ( card && (card->flags() & QGraphicsItem::ItemIsMovable) &&
+                 cardsMoveable )
             {
                 if ( IsInsideTrickArea(mouseEvent->scenePos()) )
                 {
                     card->setFlag(QGraphicsItem::ItemIsSelectable, true);
                     card->setSelected(true);
                     emit TrickPlayed();
-                }
-                else
-                {
-                    card->UpdateAnimation(false);
                 }
             }
         }
