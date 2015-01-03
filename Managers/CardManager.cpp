@@ -49,7 +49,7 @@ void CardManager::Initialize(Scene* scene)
                                    rect->y()+rect->height()/2);
     talon          = new CardArray(CardArray::TALON,
                                    0,
-                                   rect->y()+rect->height()/2);
+                                   rect->y()+rect->height()*0.25);
     playerHand     = new CardArray(CardArray::PLAYERHAND,
                                    (rect->x()+rect->width())*0.57,
                                    scene->GetHeight()-170);
@@ -69,7 +69,7 @@ void CardManager::Initialize(Scene* scene)
                                    (rect->x()+rect->width())*0.6,
                                    (rect->y()+rect->height())*0.4);
     previousTricks = new CardArray(CardArray::PREVIOUSTRICKS,
-                                   rect->x()*0.5,
+                                   rect->x()*0.45,
                                    10);
 
     // Initialize the timer to allow animation to finish before informing of
