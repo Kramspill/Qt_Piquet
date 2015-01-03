@@ -276,7 +276,7 @@ void ScoreManager::ScoreDeclaration(State phase, PlayerNum player)
                     switch ( phase )
                     {
                         case SEQUENCE:
-                            if ( declarationResults->pointWinner == PLAYER1 )
+                            if ( declarationResults->pointWinner != PLAYER2 )
                             {
                                 specialScores->repiqueScored = true;
                                 playerScore += 60;
@@ -286,8 +286,8 @@ void ScoreManager::ScoreDeclaration(State phase, PlayerNum player)
                             break;
 
                         case SET:
-                            if ( declarationResults->pointWinner == PLAYER1 &&
-                                 declarationResults->sequenceWinner == PLAYER1 )
+                            if ( declarationResults->pointWinner != PLAYER2 &&
+                                 declarationResults->sequenceWinner != PLAYER2 )
                             {
                                 specialScores->repiqueScored = true;
                                 playerScore += 60;
@@ -311,7 +311,7 @@ void ScoreManager::ScoreDeclaration(State phase, PlayerNum player)
                     switch ( phase )
                     {
                         case SEQUENCE:
-                            if ( declarationResults->pointWinner == PLAYER2 )
+                            if ( declarationResults->pointWinner != PLAYER1 )
                             {
                                 specialScores->repiqueScored = true;
                                 playerScore += 60;
@@ -321,8 +321,8 @@ void ScoreManager::ScoreDeclaration(State phase, PlayerNum player)
                             break;
 
                         case SET:
-                            if ( declarationResults->pointWinner == PLAYER2 &&
-                                 declarationResults->sequenceWinner == PLAYER2 )
+                            if ( declarationResults->pointWinner != PLAYER1 &&
+                                 declarationResults->sequenceWinner != PLAYER1 )
                             {
                                 specialScores->repiqueScored = true;
                                 playerScore += 60;
@@ -387,9 +387,9 @@ PlayerNum ScoreManager::ScoreTrick(PlayerNum player,
                 }
 
                 if ( piquePotential &&
-                     declarationResults->pointWinner == PLAYER1 &&
-                     declarationResults->sequenceWinner == PLAYER1 &&
-                     declarationResults->setWinner == PLAYER1 )
+                     declarationResults->pointWinner != PLAYER2 &&
+                     declarationResults->sequenceWinner != PLAYER2 &&
+                     declarationResults->setWinner != PLAYER2 )
                 {
                         specialScores->piqueScored = true;
                         playerScore += 30;
@@ -406,9 +406,9 @@ PlayerNum ScoreManager::ScoreTrick(PlayerNum player,
                 }
 
                 if ( piquePotential &&
-                     declarationResults->pointWinner == PLAYER2 &&
-                     declarationResults->sequenceWinner == PLAYER2 &&
-                     declarationResults->setWinner == PLAYER2 )
+                     declarationResults->pointWinner != PLAYER1 &&
+                     declarationResults->sequenceWinner != PLAYER1 &&
+                     declarationResults->setWinner != PLAYER1 )
                 {
                         specialScores->piqueScored = true;
                         cpuScore += 30;
