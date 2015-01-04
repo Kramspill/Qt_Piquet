@@ -263,12 +263,12 @@ void GameManager::ResetGame(bool newGame)
     if ( newGame )
     {
         partieResults->currentDeal = 0;
+        scene->ResetTable();
     }
 
     // Reset managers.
-    //cardManager->Reset();
-    //scoreManager->Reset(newGame);
-    //stateManager->Reset(newGame);
+    cardManager->Reset();
+    scoreManager->Reset();
 }
 
 
@@ -626,11 +626,12 @@ void GameManager::ExecuteSummary(void)
     partieResults->deal[1][partieResults->currentDeal] = scoreManager->GetCPUScore();
 
     scene->PostScore(partieResults->currentDeal);
-    partieResults->currentDeal++;
 
     // If this was the last partie, execute a game summary.
     if ( partieResults->currentDeal == 5 )
     {
+        partieResults->currentDeal++;
+
         // If a user is playing, wait for then to select 'New Game'.
         if ( !dynamic_cast<AI*>(player1) )
         {
@@ -644,6 +645,8 @@ void GameManager::ExecuteSummary(void)
     }
     else
     {
+        partieResults->currentDeal++;
+
         // If a user is playing, wait for then to select 'Continue'.
         if ( !dynamic_cast<AI*>(player1) )
         {

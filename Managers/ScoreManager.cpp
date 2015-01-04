@@ -46,6 +46,17 @@ void ScoreManager::Initialize(void)
 
 
 //------------------------------------------------------------------------------
+// Reset - Reset the scores and post them to the score table.
+//------------------------------------------------------------------------------
+void ScoreManager::Reset(void)
+{
+    playerScore = 0;
+    cpuScore    = 0;
+    emit UpdateScores(0,0);
+}
+
+
+//------------------------------------------------------------------------------
 // CreateDeclaration - Create a Declaration from a selection.
 //------------------------------------------------------------------------------
 void ScoreManager::CreateDeclaration(std::vector<Card*> cards, State phase)

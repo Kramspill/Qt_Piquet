@@ -41,6 +41,7 @@ public:
     ~Scene(void);
 
     void              Initialize(void);
+    void              ResetTable(void);
 
     QPointF           GetCenterPos(void);
 

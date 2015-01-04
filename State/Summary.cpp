@@ -54,9 +54,6 @@ void Summary::Initialize(void)
     awaitingSignal->addTransition(this,
                                   SIGNAL(SummaryComplete()),
                                   finalState);
-
-    // Setup the work done in each state.
-    ConnectSignals();
 }
 
 
@@ -73,13 +70,12 @@ void Summary::onEntry(QEvent*)
 
 
 //------------------------------------------------------------------------------
-// ConnectSignals - Setup the work done in each state along with additional
-//                  necessary signals.
+// onExit - Override of QState::onExit.
 //------------------------------------------------------------------------------
-void Summary::ConnectSignals(void)
+void Summary::onExit(QEvent*)
 {
-    connect(stateMachine,
-            SIGNAL(finished()),
-            this,
-            SIGNAL(SummaryFinished()));
+    if ( partieResults->currentDeal == 0 )
+        emit NewGame();
+    else
+        emit NextHand();
 }

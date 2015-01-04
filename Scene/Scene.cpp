@@ -188,6 +188,20 @@ void Scene::Initialize(void)
 
 
 //------------------------------------------------------------------------------
+// ResetTable - Clear the table of previous scores.
+//------------------------------------------------------------------------------
+void Scene::ResetTable(void)
+{
+    table->removeRow(0);
+    table->removeRow(1);
+    table->removeRow(2);
+    table->removeRow(3);
+    table->removeRow(4);
+    table->removeRow(5);
+}
+
+
+//------------------------------------------------------------------------------
 // GetCenterPos - Get the coordinates of the center of the window.
 //------------------------------------------------------------------------------
 QPointF Scene::GetCenterPos(void)

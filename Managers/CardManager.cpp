@@ -89,6 +89,20 @@ void CardManager::Initialize(Scene* scene)
 
 
 //------------------------------------------------------------------------------
+// Reset - Return all cards to the deck.
+//------------------------------------------------------------------------------
+void CardManager::Reset(void)
+{
+    if ( talon->GetSize() > 0 )
+        TransferCards(talon, deck, talon->GetSize());
+
+    TransferCards(cpuDiscards,    deck, cpuDiscards->GetSize());
+    TransferCards(playerDiscards, deck, playerDiscards->GetSize());
+    TransferCards(previousTricks, deck, previousTricks->GetSize());
+}
+
+
+//------------------------------------------------------------------------------
 // TransferCards - Transfer cards between one CardArray and another.
 //------------------------------------------------------------------------------
 void CardManager::TransferCards(CardArray* src, CardArray* dest,

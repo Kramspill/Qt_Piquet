@@ -217,7 +217,7 @@ void Card::Initialize(void)
     inTalonState->addTransition(this, SIGNAL(InPlayerHand()),
                                 inPlayerHandState);
     inTalonState->addTransition(this, SIGNAL(InCpuHand()), inCpuHandState);
-    //inTalonState->addTransition(this, SIGNAL(InDeck()),    inDeckState);
+    inTalonState->addTransition(this, SIGNAL(InDeck()),    inDeckState);
 
 
     // Setup the transitions from the InPlayerHand state.
@@ -225,37 +225,40 @@ void Card::Initialize(void)
                                      inPlayerDiscardsState);
     inPlayerHandState->addTransition(this, SIGNAL(InPlayerTrick()),
                                      inPlayerTrickState);
+    inPlayerHandState->addTransition(this, SIGNAL(InDeck()), inDeckState);
 
     // Setup the transitions from the InCpuHand state.
     inCpuHandState->addTransition(this, SIGNAL(InCpuDiscards()),
                                   inCpuDiscardsState);
     inCpuHandState->addTransition(this, SIGNAL(InCpuTrick()),
                                   inCpuTrickState);
+    inCpuHandState->addTransition(this, SIGNAL(InDeck()), inDeckState);
+
+    // Setup the transitions from the InPlayerDiscards state.
+    inPlayerDiscardsState->addTransition(this, SIGNAL(inDeckState()),
+                                         inDeckState);
+
+    // Setup the transitions from the InCpuDiscards state.
+    inCpuDiscardsState->addTransition(this, SIGNAL(inDeckState()),
+                                      inDeckState);
 
     // Setup the transitions from the InPlayerTrick state.
     inPlayerTrickState->addTransition(this, SIGNAL(InPlayerHand()),
                                        inPlayerHandState);
+    inPlayerTrickState->addTransition(this, SIGNAL(InPreviousTricks()),
+                                      inPreviousTricksState);
+    inPlayerTrickState->addTransition(this, SIGNAL(InDeck()), inDeckState);
 
     // Setup the transitions from the InCpuTrick state.
     inCpuTrickState->addTransition(this, SIGNAL(InCpuHand()),
                                    inCpuHandState);
-/*
-    // Setup the transitions from the InPlayerDiscards state.
-    inPlayerDiscardsState->addTransition(SomeObject, SIGNAL(inDeck()),
-                                         inDeckState);
-
-    // Setup the transitions from the InCpuDiscards state.
-    inCpuDiscardsState->addTransition(SomeObject, SIGNAL(inDeck()),
-                                      inDeckState);
-
-    // Setup the transitions from the InPlayerTrick state.
-    inCurrentTrickState->addTransition(SomeObject, SIGNAL(inPreviousTricks()),
-                                       inPreviousTricksState);
+    inCpuTrickState->addTransition(this, SIGNAL(InPreviousTricks()),
+                                   inPreviousTricksState);
+    inCpuTrickState->addTransition(this, SIGNAL(InDeck()), inDeckState);
 
     // Setup the transitions from the InPreviousTricks state.
-    inPreviousTricksState->addTransition(SomeObject, SIGNAL(inDeck()),
+    inPreviousTricksState->addTransition(this, SIGNAL(inDeckState()),
                                          inDeckState);
-    */
 
     // Link the card to the signals from CardStates.
     connect(inPlayerHandState,  SIGNAL(entered()), this, SLOT(FlipCard()));

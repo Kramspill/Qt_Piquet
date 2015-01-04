@@ -36,6 +36,7 @@ public:
     ~CardManager(void);
 
     void               Initialize(Scene* scene);
+    void               Reset(void);
 
     void               TransferCards(CardArray* src,
                                      CardArray* dest,

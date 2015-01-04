@@ -80,6 +80,12 @@ void StateManager::Initialize(void)
     trickPhase->addTransition(      trickPhase,
                                     SIGNAL(TrickPhaseFinished()),
                                     summary);
+    summary->addTransition(         summary,
+                                    SIGNAL(NewGame()),
+                                    elderSelect);
+    summary->addTransition(         summary,
+                                    SIGNAL(NextHand()),
+                                    dealPhase);
 
     // Connect the various signals.
     ConnectSignals();

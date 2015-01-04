@@ -35,14 +35,13 @@ public:
 
 protected:
     void           onEntry(QEvent*);
-
-private:
-    void           ConnectSignals(void);
+    void           onExit(QEvent*);
 
 signals:
     void           ExecuteSummary(void);
     void           SummaryComplete(void);
-    void           SummaryFinished(void);
+    void           NewGame(void);
+    void           NextHand(void);
 
 private:
     QStateMachine* stateMachine;

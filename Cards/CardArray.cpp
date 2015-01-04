@@ -347,6 +347,10 @@ void CardArray::UpdateCardState(Card* card, bool noAnimation)
     // Emit a signal to tell the card to change states.
     switch ( type )
     {
+        case DECK:
+            emit card->InDeck();
+            break;
+
         case TALON:
             emit card->InTalon();
             break;
@@ -373,6 +377,10 @@ void CardArray::UpdateCardState(Card* card, bool noAnimation)
 
         case CPUTRICK:
             emit card->InCpuTrick();
+            break;
+
+        case PREVIOUSTRICKS:
+            emit card->InPreviousTricks();
             break;
 
         default:

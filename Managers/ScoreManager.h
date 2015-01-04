@@ -32,6 +32,7 @@ public:
     ~ScoreManager(void);
 
     void      Initialize(void);
+    void      Reset(void);
 
     void      CreateDeclaration(std::vector<Card*> cards, State phase);
     void      CreateResponse(std::vector<Card*> cards, State phase);

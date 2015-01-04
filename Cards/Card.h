@@ -82,6 +82,7 @@ private slots:
     void                FlipCard(void);
 
 signals:
+    void                InDeck(void);
     void                InTalon(void);
     void                InPlayerHand(void);
     void                InCpuHand(void);
@@ -89,6 +90,7 @@ signals:
     void                InCpuDiscards(void);
     void                InPlayerTrick(void);
     void                InCpuTrick(void);
+    void                InPreviousTricks(void);
 
 private:
     QSvgRenderer*       renderer;
