@@ -71,6 +71,12 @@ struct SpecialScores
     bool piqueScored   = false;
 };
 
+struct PartieResults
+{
+    int currentDeal = 0;
+    int deal[2][6];
+};
+
 extern PlayerNum           elder;
 extern PlayerNum           younger;
 extern PlayerNum           trickWinner;
@@ -79,6 +85,7 @@ extern Response*           response;
 extern DeclarationResults* declarationResults;
 extern TrickResults*       trickResults;
 extern SpecialScores*      specialScores;
+extern PartieResults*      partieResults;
 extern State               currentPhase;
 
 #endif // GLOBALSTATEINFO_H

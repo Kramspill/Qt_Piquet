@@ -66,13 +66,6 @@ signals:
     void                   RequestCardPositions(PlayerNum player);
     void                   SignalCardSelectionsChanged(Card*,
                                                        CardArray::Type);
-    void                   AIProcessingComplete(void);
-
-    void                   GoodResponse(void);
-    void                   NotGoodResponse(void);
-    void                   HowHighWinResponse(void);
-    void                   HowHighLossResponse(void);
-    void                   HowHighEvenResponse(void);
 
 private:
     KnowledgeBase*         knowledgeBase;

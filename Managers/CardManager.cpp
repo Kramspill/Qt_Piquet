@@ -544,6 +544,8 @@ void CardManager::ValidateSelection(void)
                 {
                     // Check if we are responding or not as we need to at least
                     // match the opponents point.
+                    if ( selectedCards.size() < declaration->numCards)
+                        valid = false;
                 }
             }
             break;
@@ -590,6 +592,8 @@ void CardManager::ValidateSelection(void)
                     {
                         // Check if we are responding or not as we need to at
                         // least match the opponents Sequence.
+                        if ( selectedCards.size() < declaration->numCards)
+                            valid = false;
                     }
                 }
             }
@@ -614,6 +618,8 @@ void CardManager::ValidateSelection(void)
                 {
                     // Check if we are responding or not as we need to at
                     // least match the opponents Sequence.
+                    if ( selectedCards.size() < declaration->numCards)
+                        valid = false;
                 }
             }
             break;

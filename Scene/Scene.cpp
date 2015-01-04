@@ -215,6 +215,27 @@ void Scene::SetText(const QString& newText)
 
 
 //------------------------------------------------------------------------------
+// PostScore - Post the partie score to the table.
+//------------------------------------------------------------------------------
+void Scene::PostScore(int partie)
+{
+    QTableWidgetItem* item1 = new QTableWidgetItem(player1Score->text());
+    QTableWidgetItem* item2 = new QTableWidgetItem(player2Score->text());
+
+    QFont f = item1->font();
+    f.setPointSizeF(16.0);
+    item1->setFont(f);
+    item2->setFont(f);
+    item1->setTextAlignment(Qt::AlignCenter);
+    item2->setTextAlignment(Qt::AlignCenter);
+
+    // Update the global state info.
+    table->setItem(partie, 0, item1);
+    table->setItem(partie, 1, item2);
+}
+
+
+//------------------------------------------------------------------------------
 // GetWidth - Get the Scene width.
 //------------------------------------------------------------------------------
 int Scene::GetWidth(void)
@@ -390,6 +411,8 @@ void Scene::SetUI(State phase)
     QString      str;
     float        uiLeft = width - (width / 4);
     QRectF       uiArea = QRectF(uiLeft, 0, width - uiLeft, height);
+    char* string = new char[40];
+    int   i   = 0;
 
     switch ( phase )
     {
@@ -654,7 +677,56 @@ void Scene::SetUI(State phase)
             QObject::connect(   secondaryAction, SIGNAL(clicked()),
                                 this,            SIGNAL(No()));
             break;
+
+        case SUMMARY:
+            title->setText("Results");
+
+            if ( partieResults->currentDeal == 6 )
+            {
+                int p1Final = 0;
+                int p2Final = 0;
+                for ( i = 0; i < 6; i++ )
+                {
+                    p1Final += partieResults->deal[0][i];
+                    p2Final += partieResults->deal[1][i];
+                }
+
+                snprintf(string, 40, "PLAYER 1: %d\nPLAYER 2: %d",
+                         p1Final, p2Final);
+                primaryAction->setText("New Game");
+            }
+            else
+            {
+                snprintf(string, 40, "PLAYER 1: %d\nPLAYER 2: %d",
+                         player1Score->text().toInt(),
+                         player2Score->text().toInt());
+                primaryAction->setText("Continue");
+            }
+
+            text->setText(string);
+
+            primaryAction->setVisible(true);
+            secondaryAction->setVisible(false);
+
+            title->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+            text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+
+            // Position the items.
+            str = title->text();
+            title->move(uiArea.x()+((uiArea.width()-fmText.width(str))/2),
+                        title->y());
+            str = text->text();
+            text->move(uiArea.x()+((uiArea.width()-fmText.width(str)/2)/2),
+                       text->y());
+            primaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/2,
+                                primaryAction->y());
+
+            QObject::connect(primaryAction, SIGNAL(clicked()),
+                             this,          SIGNAL(Continue()));
+            break;
     };
+
+    delete[] string;
 }
 
 
@@ -687,7 +759,7 @@ void Scene::SetValidSelection(bool valid)
 //------------------------------------------------------------------------------
 void Scene::UpdateScores(int p1Score, int p2Score)
 {
-    char* str = new char(5);
+    char* str = new char[5];
 
     sprintf(str,"%d",p1Score);
     player1Score->setText(str);
@@ -695,5 +767,5 @@ void Scene::UpdateScores(int p1Score, int p2Score)
     sprintf(str,"%d",p2Score);
     player2Score->setText(str);
 
-    delete str;
+    delete[] str;
 }

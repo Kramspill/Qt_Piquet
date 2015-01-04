@@ -192,8 +192,6 @@ void AI::UpdateHand(CardArray* newCpuHand)
 void AI::SelectCardsToDiscard(void)
 {
     knowledgeBase->FlagDispensableCards(cpuHand);
-
-    //emit AIProcessingComplete();
 }
 
 
@@ -203,8 +201,6 @@ void AI::SelectCardsToDiscard(void)
 void AI::SelectTrickToPlay(void)
 {
     knowledgeBase->SelectTrick(cpuHand);
-
-    emit AIProcessingComplete();
 }
 
 

@@ -77,11 +77,9 @@ void StateManager::Initialize(void)
     declarationPhase->addTransition(declarationPhase,
                                     SIGNAL(DeclarationPhaseFinished()),
                                     trickPhase);
-/*
     trickPhase->addTransition(      trickPhase,
                                     SIGNAL(TrickPhaseFinished()),
                                     summary);
-*/
 
     // Connect the various signals.
     ConnectSignals();
@@ -141,4 +139,14 @@ void StateManager::ConnectSignals(void)
                      SIGNAL(PlayTrick(PlayerNum)),
                      this,
                      SIGNAL(PlayTrick(PlayerNum)));
+
+    // Connect signals to/from the Summary state.
+    QObject::connect(summary,
+                     SIGNAL(ExecuteSummary()),
+                     this,
+                     SIGNAL(ExecuteSummary()));
+    QObject::connect(this,
+                     SIGNAL(SummaryComplete()),
+                     summary,
+                     SIGNAL(SummaryComplete()));
 }

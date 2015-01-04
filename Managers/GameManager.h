@@ -40,6 +40,7 @@ public:
 
 private:
     void          ConnectSignals(void);
+    void          ResetGame(bool newGame = false);
 
 private slots:
     void          ExecuteElderSelect(void);
@@ -49,6 +50,7 @@ private slots:
     void          DeclareSelection(State phase, PlayerNum player);
     void          ResolveResponse(State phase, PlayerNum player);
     void          PlayTrick(PlayerNum player);
+    void          ExecuteSummary(void);
 
     void          RequestCardTransfer(CardArray::Type src,
                                       CardArray::Type dest,

@@ -40,6 +40,7 @@ public:
     virtual void AnnounceDeclaration(State phase);
     virtual void Respond(State phase);
     virtual void PlayTrick(void);
+    virtual void Summary(void);
     virtual void CarteBlanche(void);
 
 protected:
@@ -66,6 +67,7 @@ signals:
 
     void         Declare(void);
     void         Skip(void);
+    void         Continue(void);
 
     void         Blanche(void);
     void         ScoreCarteBlanche(void);

@@ -20,4 +20,5 @@ Response*           response           = new Response();
 DeclarationResults* declarationResults = new DeclarationResults();
 TrickResults*       trickResults       = new TrickResults();
 SpecialScores*      specialScores      = new SpecialScores();
+PartieResults*      partieResults      = new PartieResults();
 State               currentPhase       = DEAL;

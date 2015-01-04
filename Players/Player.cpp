@@ -179,6 +179,21 @@ void Player::PlayTrick(void)
 
 
 //------------------------------------------------------------------------------
+// Summary - Player selects continue/new game.
+//------------------------------------------------------------------------------
+void Player::Summary(void)
+{
+    // Set the UI.
+    emit SetUI(SUMMARY);
+
+    // Wait for the user to select 'New Game/Continue'.
+    QEventLoop* loop = new QEventLoop();
+    connect(this, SIGNAL(Continue()), loop, SLOT(quit()));
+    loop->exec();
+}
+
+
+//------------------------------------------------------------------------------
 // CarteBlanche - Ask player if they wish to declare Carte Blanche.
 //------------------------------------------------------------------------------
 void Player::CarteBlanche(void)

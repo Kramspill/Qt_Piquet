@@ -116,6 +116,10 @@ void GameManager::ConnectSignals(void)
                      player1,
                      SIGNAL(TrickPlayed()));
     QObject::connect(scene,
+                     SIGNAL(Continue()),
+                     player1,
+                     SIGNAL(Continue()));
+    QObject::connect(scene,
                      SIGNAL(ValidateSelection()),
                      cardManager,
                      SLOT(ValidateSelection()));
@@ -223,6 +227,10 @@ void GameManager::ConnectSignals(void)
                      SIGNAL(PlayTrick(PlayerNum)),
                      this,
                      SLOT(PlayTrick(PlayerNum)));
+    QObject::connect(stateManager,
+                     SIGNAL(ExecuteSummary()),
+                     this,
+                     SLOT(ExecuteSummary()));
 
     // Connect the signals from the ScoreManager.
     QObject::connect(scoreManager,
@@ -233,6 +241,34 @@ void GameManager::ConnectSignals(void)
                      SIGNAL(UpdateLog(QString)),
                      scene,
                      SLOT(UpdateLog(QString)));
+}
+
+
+//------------------------------------------------------------------------------
+// ResetGame - Reset the game.
+//------------------------------------------------------------------------------
+void GameManager::ResetGame(bool newGame)
+{
+    // Reset global state info.
+    declarationResults->carteBlancheWinner = NOPLAYER;
+    declarationResults->pointWinner        = NOPLAYER;
+    declarationResults->sequenceWinner     = NOPLAYER;
+    declarationResults->setWinner          = NOPLAYER;
+    trickResults->player1Wins              = 0;
+    trickResults->player2Wins              = 0;
+    specialScores->carteBlancheScored      = false;
+    specialScores->repiqueScored           = false;
+    specialScores->piqueScored             = false;
+
+    if ( newGame )
+    {
+        partieResults->currentDeal = 0;
+    }
+
+    // Reset managers.
+    //cardManager->Reset();
+    //scoreManager->Reset(newGame);
+    //stateManager->Reset(newGame);
 }
 
 
@@ -577,6 +613,49 @@ void GameManager::PlayTrick(PlayerNum player)
         scoreManager->ScoreTrick(player);
     }
 
+}
+
+
+//------------------------------------------------------------------------------
+// ExecuteSummary - Execute a summary of a game/partie.
+//------------------------------------------------------------------------------
+void GameManager::ExecuteSummary(void)
+{
+    // Post the results.
+    partieResults->deal[0][partieResults->currentDeal] = scoreManager->GetPlayerScore();
+    partieResults->deal[1][partieResults->currentDeal] = scoreManager->GetCPUScore();
+
+    scene->PostScore(partieResults->currentDeal);
+    partieResults->currentDeal++;
+
+    // If this was the last partie, execute a game summary.
+    if ( partieResults->currentDeal == 5 )
+    {
+        // If a user is playing, wait for then to select 'New Game'.
+        if ( !dynamic_cast<AI*>(player1) )
+        {
+            player1->Summary();
+            ResetGame(true);
+        }
+        else if ( 0 )
+        {
+            // If the ai still has game's to play.
+        }
+    }
+    else
+    {
+        // If a user is playing, wait for then to select 'Continue'.
+        if ( !dynamic_cast<AI*>(player1) )
+        {
+            player1->Summary();
+        }
+
+        // Reset the state of the game to the deal phase and switch elder.
+        elder   = (elder   == PLAYER1) ? PLAYER2 : PLAYER1;
+        younger = (younger == PLAYER1) ? PLAYER2 : PLAYER1;
+
+        ResetGame();
+    }
 }
 
 

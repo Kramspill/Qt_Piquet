@@ -47,6 +47,8 @@ public:
     void              SetTitle(const QString& newTitle);
     void              SetText(const QString& newText);
 
+    void              PostScore(int partie);
+
     int               GetWidth(void);
     int               GetHeight(void);
     QRectF*           GetTrickArea(void);
@@ -78,7 +80,7 @@ signals:
     void              Yes(void);
     void              No(void);
     void              TrickPlayed(void);
-
+    void              Continue(void);
 
     void              RequestACardTransfer(CardArray::Type,
                                            CardArray::Type,
