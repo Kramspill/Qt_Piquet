@@ -16,10 +16,12 @@
 //------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
+#include "State/ElderSelect.h"
 #include "State/DealPhase.h"
 #include "State/ExchangePhase.h"
 #include "State/DeclarationPhase.h"
 #include "State/TrickPhase.h"
+#include "State/Summary.h"
 
 
 //------------------------------------------------------------------------------
@@ -39,6 +41,9 @@ private:
     void              ConnectSignals(void);
 
 signals:
+    void              ExecuteElderSelect(void);
+    void              ElderSelectComplete(void);
+
     void              ExecuteDeal(void);
     void              DealComplete(void);
 
@@ -51,10 +56,12 @@ signals:
 
 private:
     QStateMachine*    stateMachine;
+    ElderSelect*      elderSelect;
     DealPhase*        dealPhase;
     ExchangePhase*    exchangePhase;
     DeclarationPhase* declarationPhase;
     TrickPhase*       trickPhase;
+    Summary*          summary;
 };
 
 #endif // STATEMANAGER_H

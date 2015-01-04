@@ -43,6 +43,9 @@ void StateManager::Initialize(void)
     stateMachine = new QStateMachine();
 
     // Allocate memory to the phases and initialize them.
+    elderSelect = new ElderSelect(stateMachine);
+    elderSelect->Initialize();
+
     dealPhase = new DealPhase(stateMachine);
     dealPhase->Initialize();
 
@@ -55,10 +58,16 @@ void StateManager::Initialize(void)
     trickPhase = new TrickPhase(stateMachine);
     trickPhase->Initialize();
 
+    summary = new Summary(stateMachine);
+    summary->Initialize();
+
     // Set the initial state for the state machine.
-    stateMachine->setInitialState(dealPhase);
+    stateMachine->setInitialState(elderSelect);
 
     // Setup the transitions between the states.
+    elderSelect->addTransition(     elderSelect,
+                                    SIGNAL(ElderSelectFinished()),
+                                    dealPhase);
     dealPhase->addTransition(       dealPhase,
                                     SIGNAL(DealPhaseFinished()),
                                     exchangePhase);
@@ -69,9 +78,9 @@ void StateManager::Initialize(void)
                                     SIGNAL(DeclarationPhaseFinished()),
                                     trickPhase);
 /*
-    trickPhase->addTransition(      SomeObject,
-                                    SIGNAL(SomeSignal()),
-                                    playSummaryState);
+    trickPhase->addTransition(      trickPhase,
+                                    SIGNAL(TrickPhaseFinished()),
+                                    summary);
 */
 
     // Connect the various signals.
@@ -87,6 +96,16 @@ void StateManager::Initialize(void)
 //------------------------------------------------------------------------------
 void StateManager::ConnectSignals(void)
 {
+    // Connect signals to/from the Elder select state.
+    QObject::connect(elderSelect,
+                     SIGNAL(ExecuteElderSelect()),
+                     this,
+                     SIGNAL(ExecuteElderSelect()));
+    QObject::connect(this,
+                     SIGNAL(ElderSelectComplete()),
+                     elderSelect,
+                     SIGNAL(ElderSelectComplete()));
+
     // Connect signals to/from the Deal phase state.
     QObject::connect(dealPhase,
                      SIGNAL(ExecuteDeal()),

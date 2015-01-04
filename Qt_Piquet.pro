@@ -32,7 +32,9 @@ SOURCES +=\
     Players/KnowledgeBase.cpp \
     Players/Player.cpp \
     State/GlobalStateInfo.cpp \
-    Scene/UIArea.cpp
+    Scene/UIArea.cpp \
+    State/ElderSelect.cpp \
+    State/Summary.cpp
 
 HEADERS  += \
     Managers/GameManager.h \
@@ -53,7 +55,9 @@ HEADERS  += \
     Players/KnowledgeBase.h \
     Players/Player.h \
     State/GlobalStateInfo.h \
-    Scene/UIArea.h
+    Scene/UIArea.h \
+    State/ElderSelect.h \
+    State/Summary.h
 
 #FORMS    += MainWindow.ui
 

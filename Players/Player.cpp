@@ -46,6 +46,21 @@ void Player::Initialize(PlayerNum num)
 
 
 //------------------------------------------------------------------------------
+// SelectElder - Player executes an Elder selection.
+//------------------------------------------------------------------------------
+void Player::SelectElder(void)
+{
+    // Set the UI.
+    emit SetUI(ELDERSELECT);
+
+    // Wait for the user to select 'Randomize'.
+    QEventLoop* loop = new QEventLoop();
+    connect(this, SIGNAL(BeginElderSelect()), loop, SLOT(quit()));
+    loop->exec();
+}
+
+
+//------------------------------------------------------------------------------
 // ExecuteDeal - Player executes a deal.
 //------------------------------------------------------------------------------
 void Player::ExecuteDeal(void)

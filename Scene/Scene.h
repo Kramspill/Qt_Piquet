@@ -70,6 +70,7 @@ public slots:
     void              UpdateScores(int p1Score, int p2Score);
 
 signals:
+    void              BeginElderSelect(void);
     void              BeginDeal(void);
     void              BeginExchange(void);
     void              Declare(void);

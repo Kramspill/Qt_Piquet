@@ -249,7 +249,7 @@ void KnowledgeBase::SelectPoint(CardArray* hand)
 
 
 //------------------------------------------------------------------------------
-// SelectSequence - Calculate the cpu's best Sequence and select it..
+// SelectSequence - Calculate the cpu's best Sequence and select it.
 //------------------------------------------------------------------------------
 void KnowledgeBase::SelectSequence(CardArray* hand)
 {

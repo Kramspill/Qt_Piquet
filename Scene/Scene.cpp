@@ -393,6 +393,30 @@ void Scene::SetUI(State phase)
 
     switch ( phase )
     {
+        case ELDERSELECT:
+            title->setText("Elder Selection");
+            text->setText("Click 'Randomize' to\nrandomly select the Elder.");
+
+            primaryAction->setText("Randomize");
+            secondaryAction->setVisible(false);
+
+            title->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+            text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+
+            // Position the items.
+            str = title->text();
+            title->move(uiArea.x()+((uiArea.width()-fmText.width(str))/2),
+                        title->y());
+            str = text->text();
+            text->move(uiArea.x()+((uiArea.width()-fmText.width(str)/2)/2),
+                       text->y());
+            primaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/2,
+                                primaryAction->y());
+
+            QObject::connect(primaryAction, SIGNAL(clicked()),
+                             this,          SIGNAL(BeginElderSelect()));
+            break;
+
         case DEAL:
             title->setText("Deal Phase");
             text->setText("Click 'Deal' to have\nthe dealer deal the cards.");
@@ -413,8 +437,10 @@ void Scene::SetUI(State phase)
             primaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/2,
                                 primaryAction->y());
 
-            QObject::connect(primaryAction, SIGNAL(clicked()),
-                             this,          SIGNAL(BeginDeal()));
+            QObject::disconnect(primaryAction, SIGNAL(clicked()),
+                                this,          SIGNAL(BeginElderSelect()));
+            QObject::connect(   primaryAction, SIGNAL(clicked()),
+                                this,          SIGNAL(BeginDeal()));
             break;
 
         case EXCHANGE:
@@ -542,18 +568,30 @@ void Scene::SetUI(State phase)
 
         case RESPOND:
             title->setText("Declaration Phase");
-            text->setText("Select cards of the same suit for Point declaration.");
+            text->setText("Select cards to match or\nimprove on the declaration");
 
             primaryAction->setEnabled(false);
 
-            primaryAction->setText("Good");
-            secondaryAction->setText("Not Good");
+            primaryAction->setText("Not Good");
+            secondaryAction->setText("Good");
             secondaryAction->setVisible(true);
 
             primaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
             secondaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
             title->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
             text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+
+            // Position the items.
+            str = title->text();
+            title->move(uiArea.x()+((uiArea.width()-fmTitle.width(str))/2),
+                        title->y());
+            str = text->text();
+            text->move(uiArea.x()+((uiArea.width()-fmText.width(str)/2)/2),
+                       text->y());
+            primaryAction->move(uiArea.x()+((uiArea.width()-secondaryAction->width())/4)*3,
+                                secondaryAction->y());
+            secondaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/4,
+                                  primaryAction->y());
             break;
 
         case TRICK:

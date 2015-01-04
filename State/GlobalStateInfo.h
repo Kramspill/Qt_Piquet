@@ -18,6 +18,7 @@ enum PlayerNum
 
 enum State
 {
+    ELDERSELECT,
     DEAL,
     EXCHANGE,
     POINT,
@@ -25,6 +26,7 @@ enum State
     SET,
     RESPOND,
     TRICK,
+    SUMMARY,
     BLANCHE
 };
 

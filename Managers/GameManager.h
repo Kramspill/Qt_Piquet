@@ -42,6 +42,7 @@ private:
     void          ConnectSignals(void);
 
 private slots:
+    void          ExecuteElderSelect(void);
     void          ExecuteDeal(void);
     void          ExecuteExchange(void);
     void          AnnounceDeclaration(State phase, PlayerNum player);

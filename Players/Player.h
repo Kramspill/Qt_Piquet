@@ -34,6 +34,7 @@ public:
 
     virtual void Initialize(PlayerNum num);
 
+    virtual void SelectElder(void);
     virtual void ExecuteDeal(void);
     virtual void ExecuteExchange(void);
     virtual void AnnounceDeclaration(State phase);
@@ -55,6 +56,8 @@ private slots:
     void         SkipRequested(void);
 
 signals:
+    void         BeginElderSelect(void);
+
     void         BeginDeal(void);
     void         DealComplete(void);
 

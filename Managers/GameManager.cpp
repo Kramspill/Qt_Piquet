@@ -84,6 +84,10 @@ void GameManager::ConnectSignals(void)
 {
     // Connect the signals from the Scene.
     QObject::connect(scene,
+                     SIGNAL(BeginElderSelect()),
+                     player1,
+                     SIGNAL(BeginElderSelect()));
+    QObject::connect(scene,
                      SIGNAL(BeginDeal()),
                      player1,
                      SIGNAL(BeginDeal()));
@@ -200,6 +204,10 @@ void GameManager::ConnectSignals(void)
 
     // Connect the signals from the StateManager.
     QObject::connect(stateManager,
+                     SIGNAL(ExecuteElderSelect()),
+                     this,
+                     SLOT(ExecuteElderSelect()));
+    QObject::connect(stateManager,
                      SIGNAL(ExecuteDeal()),
                      this,
                      SLOT(ExecuteDeal()));
@@ -225,6 +233,38 @@ void GameManager::ConnectSignals(void)
                      SIGNAL(UpdateLog(QString)),
                      scene,
                      SLOT(UpdateLog(QString)));
+}
+
+
+//------------------------------------------------------------------------------
+// ExecuteElderSelect - Select who will be the Elder hand.
+//------------------------------------------------------------------------------
+void GameManager::ExecuteElderSelect(void)
+{
+    // If player 1 is a user, allow them to click a button.
+    if ( !dynamic_cast<AI*>(player1) )
+    {
+        player1->SelectElder();
+    }
+
+    // Randomly select the elder.
+    std::srand(std::time(0));
+    int r = rand() % 10 + 1;
+
+    if ( r < 6 )
+    {
+        elder   = PLAYER1;
+        younger = PLAYER2;
+        scene->UpdateLog("PLAYER 1: ELDER\nPLAYER 2: YOUNGER");
+    }
+    else
+    {
+        elder   = PLAYER2;
+        younger = PLAYER1;
+        scene->UpdateLog("PLAYER 1: YOUNGER\nPLAYER 2: ELDER");
+    }
+
+    emit stateManager->ElderSelectComplete();
 }
 
 
