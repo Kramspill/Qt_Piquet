@@ -459,6 +459,8 @@ void Scene::SetUI(State phase)
             primaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/2,
                                 primaryAction->y());
 
+            primaryAction->disconnect();
+            secondaryAction->disconnect();
             QObject::connect(primaryAction, SIGNAL(clicked()),
                              this,          SIGNAL(BeginElderSelect()));
             break;
@@ -483,8 +485,8 @@ void Scene::SetUI(State phase)
             primaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/2,
                                 primaryAction->y());
 
-            QObject::disconnect(primaryAction, SIGNAL(clicked()),
-                                this,          SIGNAL(BeginElderSelect()));
+            primaryAction->disconnect();
+            secondaryAction->disconnect();
             QObject::connect(   primaryAction, SIGNAL(clicked()),
                                 this,          SIGNAL(BeginDeal()));
             break;
@@ -511,19 +513,8 @@ void Scene::SetUI(State phase)
             primaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/2,
                                 primaryAction->y());
 
-            if ( declarationResults->carteBlancheWinner == PLAYER1 )
-            {
-                QObject::disconnect(primaryAction,   SIGNAL(clicked()),
-                                    this,            SIGNAL(Yes()));
-
-                QObject::disconnect(secondaryAction, SIGNAL(clicked()),
-                                    this,            SIGNAL(No()));
-            }
-            else
-            {
-                QObject::disconnect(primaryAction, SIGNAL(clicked()),
-                                    this,          SIGNAL(BeginDeal()));
-            }
+            primaryAction->disconnect();
+            secondaryAction->disconnect();
             QObject::connect(   primaryAction, SIGNAL(clicked()),
                                 this,          SIGNAL(BeginExchange()));
             break;
@@ -554,9 +545,8 @@ void Scene::SetUI(State phase)
             secondaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/4,
                                   primaryAction->y());
 
-
-            QObject::disconnect(primaryAction,   SIGNAL(clicked()),
-                                this,            SIGNAL(BeginExchange()));
+            primaryAction->disconnect();
+            secondaryAction->disconnect();
             QObject::connect(   primaryAction,   SIGNAL(clicked()),
                                 this,            SIGNAL(Declare()));
 
@@ -568,7 +558,10 @@ void Scene::SetUI(State phase)
             title->setText("Declaration Phase");
             text->setText("Select cards of the same\nsuit for Sequence declaration.");
 
+            primaryAction->setText("Declare");
             primaryAction->setEnabled(false);
+            secondaryAction->setText("Skip");
+            secondaryAction->setVisible(true);
 
             primaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
             secondaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
@@ -586,13 +579,24 @@ void Scene::SetUI(State phase)
                                 secondaryAction->y());
             secondaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/4,
                                   primaryAction->y());
+
+            primaryAction->disconnect();
+            secondaryAction->disconnect();
+            QObject::connect(   primaryAction,   SIGNAL(clicked()),
+                                this,            SIGNAL(Declare()));
+
+            QObject::connect(   secondaryAction, SIGNAL(clicked()),
+                                this,            SIGNAL(Skip()));
             break;
 
         case SET:
             title->setText("Declaration Phase");
             text->setText("Select cards of the same\nsuit for Set declaration.");
 
+            primaryAction->setText("Declare");
             primaryAction->setEnabled(false);
+            secondaryAction->setText("Skip");
+            secondaryAction->setVisible(true);
 
             primaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
             secondaryAction->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
@@ -610,6 +614,14 @@ void Scene::SetUI(State phase)
                                 secondaryAction->y());
             secondaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/4,
                                   primaryAction->y());
+
+            primaryAction->disconnect();
+            secondaryAction->disconnect();
+            QObject::connect(   primaryAction,   SIGNAL(clicked()),
+                                this,            SIGNAL(Declare()));
+
+            QObject::connect(   secondaryAction, SIGNAL(clicked()),
+                                this,            SIGNAL(Skip()));
             break;
 
         case RESPOND:
@@ -638,6 +650,14 @@ void Scene::SetUI(State phase)
                                 secondaryAction->y());
             secondaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/4,
                                   primaryAction->y());
+
+            primaryAction->disconnect();
+            secondaryAction->disconnect();
+            QObject::connect(   primaryAction,   SIGNAL(clicked()),
+                                this,            SIGNAL(Declare()));
+
+            QObject::connect(   secondaryAction, SIGNAL(clicked()),
+                                this,            SIGNAL(Skip()));
             break;
 
         case TRICK:
@@ -657,10 +677,8 @@ void Scene::SetUI(State phase)
             text->move(uiArea.x()+((uiArea.width()-fmText.width(str))/2),
                        text->y());
 
-            QObject::disconnect(primaryAction,   SIGNAL(clicked()),
-                                this,            SIGNAL(Declare()));
-            QObject::disconnect(secondaryAction, SIGNAL(clicked()),
-                                this,            SIGNAL(Skip()));
+            primaryAction->disconnect();
+            secondaryAction->disconnect();
 
             primaryAction->setVisible(false);
             secondaryAction->setVisible(false);
@@ -692,8 +710,8 @@ void Scene::SetUI(State phase)
             secondaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/4,
                                   primaryAction->y());
 
-            QObject::disconnect(primaryAction, SIGNAL(clicked()),
-                                this,          SIGNAL(BeginDeal()));
+            primaryAction->disconnect();
+            secondaryAction->disconnect();
             QObject::connect(   primaryAction,   SIGNAL(clicked()),
                                 this,            SIGNAL(Yes()));
 
@@ -744,6 +762,8 @@ void Scene::SetUI(State phase)
             primaryAction->move(uiArea.x()+(uiArea.width()-primaryAction->width())/2,
                                 primaryAction->y());
 
+            primaryAction->disconnect();
+            secondaryAction->disconnect();
             QObject::connect(primaryAction, SIGNAL(clicked()),
                              this,          SIGNAL(Continue()));
             break;

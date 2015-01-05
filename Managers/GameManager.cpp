@@ -421,6 +421,24 @@ void GameManager::AnnounceDeclaration(State phase, PlayerNum player)
         // Younger makes his response if needed.
         if ( declaration->notSkipped )
         {
+            if ( dynamic_cast<AI*>(elderPlayer) )
+            {
+                switch ( phase )
+                {
+                    case POINT:
+                        pointDeclaration->numCards = declaration->numCards;
+                        break;
+
+                    case SEQUENCE:
+                        seqDeclaration->numCards = declaration->numCards;
+                        break;
+
+                    case SET:
+                        setDeclaration->numCards = declaration->numCards;
+                        break;
+                }
+            }
+
             cardManager->SetCardsSelectable(true, younger);
             youngerPlayer->Respond(phase);
             ResolveResponse(phase, younger);
@@ -439,6 +457,23 @@ void GameManager::AnnounceDeclaration(State phase, PlayerNum player)
                     DeclareSelection(phase, elder);
                     response->good = true;
                     scoreManager->ScoreDeclaration(phase, elder);
+                }
+            }
+            else if ( dynamic_cast<AI*>(elderPlayer) )
+            {
+                switch ( phase )
+                {
+                    case POINT:
+                        pointDeclaration->numCards = response->numCards;
+                        break;
+
+                    case SEQUENCE:
+                        seqDeclaration->numCards = response->numCards;
+                        break;
+
+                    case SET:
+                        setDeclaration->numCards = response->numCards;
+                        break;
                 }
             }
         }
