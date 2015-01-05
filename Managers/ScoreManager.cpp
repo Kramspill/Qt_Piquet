@@ -41,7 +41,8 @@ ScoreManager::~ScoreManager(void)
 //------------------------------------------------------------------------------
 void ScoreManager::Initialize(void)
 {
-
+    playerScore = 0;
+    cpuScore    = 0;
 }
 
 
@@ -63,6 +64,10 @@ void ScoreManager::CreateDeclaration(std::vector<Card*> cards, State phase)
 {
     Declaration d;
     d.value = 0;
+    d.score = 0;
+    d.declaration;
+    d.response;
+    d.numCards = 0;
 
     // Check if player just skipped.
     if ( cards.size() != 0 )
@@ -92,6 +97,9 @@ void ScoreManager::CreateDeclaration(std::vector<Card*> cards, State phase)
             case SET:
                 d.score = (d.numCards == 3) ? 3 : 14;
                 break;
+
+            default:
+                break;
         }
     }
     else
@@ -100,11 +108,11 @@ void ScoreManager::CreateDeclaration(std::vector<Card*> cards, State phase)
     }
 
     declaration->declaration = d.declaration;
-    declaration->response = d.response;
-    declaration->numCards = d.numCards;
-    declaration->value = d.value;
-    declaration->score = d.score;
-    declaration->notSkipped = d.notSkipped;
+    declaration->response    = d.response;
+    declaration->numCards    = d.numCards;
+    declaration->value       = d.value;
+    declaration->score       = d.score;
+    declaration->notSkipped  = d.notSkipped;
 }
 
 
@@ -119,7 +127,7 @@ void ScoreManager::CreateResponse(std::vector<Card*> cards, State phase)
     r.score    = 0;
 
     // Check if player responded 'Not Good'.
-    if ( cards.size() >= declaration->numCards )
+    if ( (int)cards.size() >= declaration->numCards )
     {
         // Set the number of cards.
         r.numCards    = cards.size();
@@ -139,6 +147,9 @@ void ScoreManager::CreateResponse(std::vector<Card*> cards, State phase)
 
             case SET:
                 r.score = (r.numCards == 3) ? 3 : 14;
+                break;
+
+            default:
                 break;
         }
 
@@ -215,6 +226,9 @@ void ScoreManager::ScoreDeclaration(State phase, PlayerNum player)
             case SET:
                 declarationResults->setWinner = player;
                 break;
+
+            default:
+                break;
         }
     }
     else
@@ -234,6 +248,9 @@ void ScoreManager::ScoreDeclaration(State phase, PlayerNum player)
 
                 case SET:
                     declarationResults->setWinner = NOPLAYER;
+                    break;
+
+                default:
                     break;
             }
         }
@@ -261,6 +278,9 @@ void ScoreManager::ScoreDeclaration(State phase, PlayerNum player)
                         declarationResults->setWinner = PLAYER2;
                     else
                         declarationResults->setWinner = PLAYER1;
+                    break;
+
+                default:
                     break;
             }
         }
@@ -306,6 +326,9 @@ void ScoreManager::ScoreDeclaration(State phase, PlayerNum player)
                                 emit UpdateLog(str);
                             }
                             break;
+
+                        default:
+                            break;
                     }
                 }
             }
@@ -325,7 +348,7 @@ void ScoreManager::ScoreDeclaration(State phase, PlayerNum player)
                             if ( declarationResults->pointWinner != PLAYER1 )
                             {
                                 specialScores->repiqueScored = true;
-                                playerScore += 60;
+                                cpuScore += 60;
                                 snprintf(str, 20, "PLAYER 2: REPIQUE");
                                 emit UpdateLog(str);
                             }
@@ -336,10 +359,13 @@ void ScoreManager::ScoreDeclaration(State phase, PlayerNum player)
                                  declarationResults->sequenceWinner != PLAYER1 )
                             {
                                 specialScores->repiqueScored = true;
-                                playerScore += 60;
+                                cpuScore += 60;
                                 snprintf(str, 20, "PLAYER 2: REPIQUE");
                                 emit UpdateLog(str);
                             }
+                            break;
+
+                        default:
                             break;
                     }
                 }
@@ -361,7 +387,7 @@ PlayerNum ScoreManager::ScoreTrick(PlayerNum player,
                                    Card*     leadCard,
                                    Card*     followCard)
 {
-    PlayerNum winner;
+    PlayerNum winner = NOPLAYER;
 
     if ( !leadCard && !followCard )
     {
@@ -383,8 +409,8 @@ PlayerNum ScoreManager::ScoreTrick(PlayerNum player,
     // Check for special case Pique.
     if ( !specialScores->repiqueScored && !specialScores->piqueScored )
     {
-        if ( playerScore >= 30 && cpuScore == 0 ||
-             cpuScore >= 30 && playerScore == 0 )
+        if ( (playerScore >= 30 && cpuScore == 0) ||
+             (cpuScore >= 30 && playerScore == 0) )
         {
             char* str = new char[20];
             bool piquePotential = true;
@@ -530,7 +556,7 @@ int ScoreManager::GetValue(std::vector<Card*> cards, State phase)
     {
         case POINT:
             // Set the value for draws (total value).
-            for ( int i = 0; i < cards.size(); i++ )
+            for ( int i = 0; i < (int)cards.size(); i++ )
             {
                 value += cards[i]->GetValue();
             }
@@ -542,7 +568,7 @@ int ScoreManager::GetValue(std::vector<Card*> cards, State phase)
             value       = highestCard;
 
             // Set the value for draws (highest card).
-            for ( int i = 1; i < cards.size(); i++ )
+            for ( int i = 1; i < (int)cards.size(); i++ )
             {
                 if ( cards[i]->GetRank() > highestCard )
                 {
@@ -550,6 +576,9 @@ int ScoreManager::GetValue(std::vector<Card*> cards, State phase)
                     value       = highestCard;
                 }
             }
+            break;
+
+        default:
             break;
     }
 
@@ -581,6 +610,9 @@ void ScoreManager::GetDeclaration(std::vector<Card*> cards,
         case SET:
             snprintf(destBuf, 20, "%s", setNames[cards.size()-3]);
             break;
+
+        default:
+            break;
     }
 }
 
@@ -608,6 +640,9 @@ void ScoreManager::GetResponse(std::vector<Card*> cards,
 
         case SET:
             snprintf(destBuf, 20, "%s's", cardNames[value-7]);
+            break;
+
+        default:
             break;
     }
 }
