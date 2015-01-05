@@ -483,14 +483,17 @@ void GameManager::AnnounceDeclaration(State phase, PlayerNum player)
             {
                 case POINT:
                     declarationResults->pointWinner = younger;
+                    pointDeclaration->numCards = 0;
                     break;
 
                 case SEQUENCE:
                     declarationResults->sequenceWinner = younger;
+                    seqDeclaration->numCards = 0;
                     break;
 
                 case SET:
                     declarationResults->setWinner = younger;
+                    setDeclaration->numCards = 0;
                     break;
             }
         }
