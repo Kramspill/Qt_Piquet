@@ -97,6 +97,19 @@ void Scene::Initialize(void)
 
     QFont f = player1Score->font();
     f.setPointSizeF(16.0);
+    for ( int i = 0; i < 2; i++ )
+    {
+        for ( int j = 0; j < 6; j++ )
+        {
+            tableScores[i][j] = new QTableWidgetItem("0");
+            tableScores[i][j]->setFont(f);
+            tableScores[i][j]->setTextAlignment(Qt::AlignCenter);
+            table->setItem(j, i, tableScores[i][j]);
+        }
+    }
+
+    f = player1Score->font();
+    f.setPointSizeF(16.0);
     player1Score->setFont(f);
     player2Score->setFont(f);
     player1Score->setTextAlignment(Qt::AlignCenter);
@@ -192,12 +205,9 @@ void Scene::Initialize(void)
 //------------------------------------------------------------------------------
 void Scene::ResetTable(void)
 {
-    table->removeRow(0);
-    table->removeRow(1);
-    table->removeRow(2);
-    table->removeRow(3);
-    table->removeRow(4);
-    table->removeRow(5);
+    for ( int i = 0; i < 2; i++ )
+        for ( int j = 0; j < 6; j++ )
+            tableScores[i][j]->setText("0");
 }
 
 
@@ -233,19 +243,8 @@ void Scene::SetText(const QString& newText)
 //------------------------------------------------------------------------------
 void Scene::PostScore(int partie)
 {
-    QTableWidgetItem* item1 = new QTableWidgetItem(player1Score->text());
-    QTableWidgetItem* item2 = new QTableWidgetItem(player2Score->text());
-
-    QFont f = item1->font();
-    f.setPointSizeF(16.0);
-    item1->setFont(f);
-    item2->setFont(f);
-    item1->setTextAlignment(Qt::AlignCenter);
-    item2->setTextAlignment(Qt::AlignCenter);
-
-    // Update the global state info.
-    table->setItem(partie, 0, item1);
-    table->setItem(partie, 1, item2);
+    tableScores[0][partie]->setText(player1Score->text());
+    tableScores[1][partie]->setText(player2Score->text());
 }
 
 

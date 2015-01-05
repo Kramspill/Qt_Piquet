@@ -98,6 +98,7 @@ private:
     QTextEdit*        log;
     QTableWidget*     table;
     QTableWidgetItem* player1Score;
+    QTableWidgetItem* tableScores[2][6];
     QTableWidgetItem* player2Score;
     UIArea*           area;
     Dialog*           dialog;

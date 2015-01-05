@@ -98,7 +98,14 @@ void CardManager::Reset(void)
 
     TransferCards(cpuDiscards,    deck, cpuDiscards->GetSize());
     TransferCards(playerDiscards, deck, playerDiscards->GetSize());
-    TransferCards(previousTricks, deck, previousTricks->GetSize());
+
+    int size = previousTricks->GetSize();
+
+    for ( int i = 0; i < size/3; i++ )
+        TransferCards(previousTricks, deck, 3);
+
+    if ( previousTricks->GetSize() > 0 )
+        TransferCards(previousTricks, deck, previousTricks->GetSize());
 
     ShuffleDeck();
 }
