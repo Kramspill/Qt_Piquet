@@ -40,6 +40,7 @@ public:
     ~AI(void);
 
     void                   Initialize(PlayerNum num);
+    void                   Reset(void);
 
     void                   ExecuteDeal(void);
     void                   ExecuteExchange(void);

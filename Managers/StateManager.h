@@ -55,7 +55,6 @@ signals:
     void              PlayTrick(PlayerNum);
 
     void              ExecuteSummary(void);
-    void              SummaryComplete(void);
 
 private:
     QStateMachine*    stateMachine;

@@ -66,14 +66,7 @@ void Summary::onEntry(QEvent*)
 
     stateMachine->start();
     emit ExecuteSummary();
-}
-
-
-//------------------------------------------------------------------------------
-// onExit - Override of QState::onExit.
-//------------------------------------------------------------------------------
-void Summary::onExit(QEvent*)
-{
+    emit SummaryComplete();
     if ( partieResults->currentDeal == 0 )
         emit NewGame();
     else

@@ -35,7 +35,6 @@ public:
 
 protected:
     void           onEntry(QEvent*);
-    void           onExit(QEvent*);
 
 signals:
     void           ExecuteSummary(void);

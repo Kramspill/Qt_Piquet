@@ -435,13 +435,14 @@ PlayerNum ScoreManager::ScoreTrick(PlayerNum player,
     // Final scoring (The cards/Capot).
     if ( trickResults->player1Wins + trickResults->player2Wins == 12 )
     {
+        char* str = new char[20];
+
         (winner == PLAYER1) ? playerScore++ : cpuScore++;
 
         // Final check for Pique.
         if ( !specialScores->repiqueScored &&
              !specialScores->piqueScored )
         {
-            char* str = new char[20];
             if ( playerScore >= 30 && cpuScore == 0 )
             {
                 specialScores->piqueScored = true;
@@ -456,10 +457,7 @@ PlayerNum ScoreManager::ScoreTrick(PlayerNum player,
                 snprintf(str, 20, "PLAYER 2: PIQUE");
                 emit UpdateLog(str);
             }
-            delete[] str;
         }
-
-        char* str = new char[20];
 
         if ( trickResults->player1Wins > trickResults->player2Wins )
         {
@@ -473,6 +471,8 @@ PlayerNum ScoreManager::ScoreTrick(PlayerNum player,
                 snprintf(str, 20, "PLAYER 1: THE CARDS");
                 playerScore += 10;
             }
+
+            emit UpdateLog(str);
         }
         else if ( trickResults->player2Wins > trickResults->player1Wins )
         {
@@ -486,9 +486,9 @@ PlayerNum ScoreManager::ScoreTrick(PlayerNum player,
                 snprintf(str, 20, "PLAYER 2: THE CARDS");
                 cpuScore += 10;
             }
-        }
 
-        emit UpdateLog(str);
+            emit UpdateLog(str);
+        }
 
         delete[] str;
     }

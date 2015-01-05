@@ -235,12 +235,10 @@ void Card::Initialize(void)
     inCpuHandState->addTransition(this, SIGNAL(InDeck()), inDeckState);
 
     // Setup the transitions from the InPlayerDiscards state.
-    inPlayerDiscardsState->addTransition(this, SIGNAL(inDeckState()),
-                                         inDeckState);
+    inPlayerDiscardsState->addTransition(this, SIGNAL(InDeck()), inDeckState);
 
     // Setup the transitions from the InCpuDiscards state.
-    inCpuDiscardsState->addTransition(this, SIGNAL(inDeckState()),
-                                      inDeckState);
+    inCpuDiscardsState->addTransition(this, SIGNAL(InDeck()), inDeckState);
 
     // Setup the transitions from the InPlayerTrick state.
     inPlayerTrickState->addTransition(this, SIGNAL(InPlayerHand()),
@@ -257,8 +255,7 @@ void Card::Initialize(void)
     inCpuTrickState->addTransition(this, SIGNAL(InDeck()), inDeckState);
 
     // Setup the transitions from the InPreviousTricks state.
-    inPreviousTricksState->addTransition(this, SIGNAL(inDeckState()),
-                                         inDeckState);
+    inPreviousTricksState->addTransition(this, SIGNAL(InDeck()), inDeckState);
 
     // Link the card to the signals from CardStates.
     connect(inPlayerHandState,  SIGNAL(entered()), this, SLOT(FlipCard()));
@@ -267,6 +264,8 @@ void Card::Initialize(void)
     connect(inPlayerTrickState, SIGNAL(exited()),  this, SLOT(FlipCard()));
     connect(inCpuTrickState,    SIGNAL(entered()), this, SLOT(FlipCard()));
     connect(inCpuTrickState,    SIGNAL(exited()),  this, SLOT(FlipCard()));
+    connect(inPreviousTricksState, SIGNAL(entered()), this, SLOT(FlipCard()));
+    connect(inPreviousTricksState, SIGNAL(exited()),  this, SLOT(FlipCard()));
 
     connect(inCpuHandState, SIGNAL(entered()), this, SLOT(FlipCard()));
     connect(inCpuHandState, SIGNAL(exited()), this, SLOT(FlipCard()));

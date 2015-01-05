@@ -287,6 +287,14 @@ void KnowledgeBase::SelectSequence(CardArray* hand)
             }
         }
 
+        // For the case when Ace is last card.
+        if ( count >= 3 && count >= currentNumCards )
+        {
+            currentNumCards = count;
+            currentValue    = 14;
+            count           = 0;
+        }
+
         // Check if this is now the best Sequence.
         if ( currentNumCards >= bestNumCards )
         {

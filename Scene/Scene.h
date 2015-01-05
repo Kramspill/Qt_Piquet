@@ -49,6 +49,7 @@ public:
     void              SetText(const QString& newText);
 
     void              PostScore(int partie);
+    void              ClearLog(void);
 
     int               GetWidth(void);
     int               GetHeight(void);

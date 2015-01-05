@@ -33,6 +33,7 @@ public:
     ~Player(void);
 
     virtual void Initialize(PlayerNum num);
+    virtual void Reset(void);
 
     virtual void SelectElder(void);
     virtual void ExecuteDeal(void);

@@ -151,8 +151,4 @@ void StateManager::ConnectSignals(void)
                      SIGNAL(ExecuteSummary()),
                      this,
                      SIGNAL(ExecuteSummary()));
-    QObject::connect(this,
-                     SIGNAL(SummaryComplete()),
-                     summary,
-                     SIGNAL(SummaryComplete()));
 }

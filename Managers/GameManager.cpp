@@ -269,6 +269,22 @@ void GameManager::ResetGame(bool newGame)
     // Reset managers.
     cardManager->Reset();
     scoreManager->Reset();
+    scene->ClearLog();
+
+    if ( !newGame )
+    {
+        if ( elder == PLAYER2 )
+            scene->UpdateLog("PLAYER 1: YOUNGER\nPLAYER 2: ELDER");
+        else
+            scene->UpdateLog("PLAYER 1: ELDER\nPLAYER 2: YOUNGER");
+    }
+
+    player2->Reset();
+    if ( dynamic_cast<AI*>(player1) )
+    {
+        player1->Reset();
+    }
+
 }
 
 
