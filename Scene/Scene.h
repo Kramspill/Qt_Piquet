@@ -12,6 +12,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsItem>
+#include <QPushButton>
 #include <QRect>
 #include <QLabel>
 #include <QTextEdit>
@@ -26,7 +27,6 @@
 #include "UIArea.h"
 #include "Cards/Card.h"
 #include "Cards/CardArray.h"
-#include "Dialog.h"
 
 
 //------------------------------------------------------------------------------
@@ -67,7 +67,6 @@ private:
 
 public slots:
     void              UpdateLog(const QString& newMessage);
-    void              CreateDialog(Dialog::DialogType dialogType);
     void              SetUI(State phase);
     void              SetCardsMoveable(bool moveable);
     void              SetValidSelection(bool valid);
@@ -101,7 +100,6 @@ private:
     QTableWidgetItem* tableScores[2][6];
     QTableWidgetItem* player2Score;
     UIArea*           area;
-    Dialog*           dialog;
     QRectF*           playerTrickArea;
     int               xPos;
     int               yPos;

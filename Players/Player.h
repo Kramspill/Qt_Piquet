@@ -39,7 +39,7 @@ public:
     virtual void ExecuteDeal(void);
     virtual void ExecuteExchange(void);
     virtual void AnnounceDeclaration(State phase);
-    virtual void Respond(State phase);
+    virtual void Respond(State);
     virtual void PlayTrick(void);
     virtual void Summary(void);
     virtual void CarteBlanche(void);

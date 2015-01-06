@@ -140,7 +140,7 @@ void Card::UpdateAnimation(bool noAnimation)
 //------------------------------------------------------------------------------
 // mousePressEvent - Handle mouse press events.
 //------------------------------------------------------------------------------
-void Card::mousePressEvent(QGraphicsSceneMouseEvent* event)
+void Card::mousePressEvent(QGraphicsSceneMouseEvent*)
 {
     if ( isEnabled() && (flags() & QGraphicsItem::ItemIsSelectable))
     {

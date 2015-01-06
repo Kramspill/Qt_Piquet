@@ -24,7 +24,8 @@ UIArea::UIArea(QWidget *parent) :
 //------------------------------------------------------------------------------
 // Copy Constructor
 //------------------------------------------------------------------------------
-UIArea::UIArea(UIArea&)
+UIArea::UIArea(UIArea&) :
+    QWidget()
 {
 }
 
@@ -40,7 +41,7 @@ UIArea::~UIArea(void)
 //------------------------------------------------------------------------------
 // paintEvent - Called when this item needs repainting.
 //------------------------------------------------------------------------------
-void UIArea::paintEvent(QPaintEvent* event)
+void UIArea::paintEvent(QPaintEvent*)
 {
     QRect rect(this->rect());
 

@@ -146,7 +146,7 @@ void Player::AnnounceDeclaration(State phase)
 //------------------------------------------------------------------------------
 // Respond - Player responds to a declaration.
 //------------------------------------------------------------------------------
-void Player::Respond(State phase)
+void Player::Respond(State)
 {
     // Set the UI to the Response state.
     emit SetUI(RESPOND);

@@ -32,8 +32,8 @@ enum State
 
 struct Declaration
 {
-    char* declaration = new char[20]; // REFACTOR
-    char* response    = new char[20];
+    char* declaration;
+    char* response;
     int   numCards;
     int   value;
     int   score;
@@ -52,7 +52,7 @@ struct Response
 
 struct DeclarationResults
 {
-    PlayerNum carteBlancheWinner = NOPLAYER;
+    PlayerNum carteBlancheWinner;
     PlayerNum pointWinner;
     PlayerNum sequenceWinner;
     PlayerNum setWinner;
@@ -60,20 +60,20 @@ struct DeclarationResults
 
 struct TrickResults
 {
-    int player1Wins = 0;
-    int player2Wins = 0;
+    int player1Wins;
+    int player2Wins;
 };
 
 struct SpecialScores
 {
-    bool carteBlancheScored = false;
-    bool repiqueScored = false;
-    bool piqueScored   = false;
+    bool carteBlancheScored;
+    bool repiqueScored;
+    bool piqueScored;
 };
 
 struct PartieResults
 {
-    int currentDeal = 0;
+    int currentDeal;
     int deal[2][6];
 };
 

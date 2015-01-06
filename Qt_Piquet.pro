@@ -27,7 +27,6 @@ SOURCES +=\
     State/DeclarationPhase.cpp \
     State/ExchangePhase.cpp \
     State/TrickPhase.cpp \
-    Scene/Dialog.cpp \
     Players/AI.cpp \
     Players/KnowledgeBase.cpp \
     Players/Player.cpp \
@@ -50,7 +49,6 @@ HEADERS  += \
     State/DeclarationPhase.h \
     State/ExchangePhase.h \
     State/TrickPhase.h \
-    Scene/Dialog.h \
     Players/AI.h \
     Players/KnowledgeBase.h \
     Players/Player.h \

@@ -14,7 +14,6 @@
 //------------------------------------------------------------------------------
 Scene::Scene(QRectF rect) :
     QGraphicsScene(rect),
-    dialog(0),
     xPos(rect.x()),
     yPos(rect.y()),
     width(rect.width()),
@@ -399,24 +398,6 @@ bool Scene::IsInsideTrickArea(QPointF p)
     }
 
     return result;
-}
-
-
-//------------------------------------------------------------------------------
-// CreateDialog - Create and display a dialog to allow user interaction.
-//------------------------------------------------------------------------------
-void Scene::CreateDialog(Dialog::DialogType dialogType)
-{
-    dialog = new Dialog();
-    dialog->Initialize(dialogType);
-
-    int result = dialog->exec();
-
-    if ( result == 1 )
-    {
-        //emit ExecuteDeal();
-        //emit DialogAccepted(dialogType);
-    }
 }
 
 

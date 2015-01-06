@@ -41,7 +41,6 @@ void CardManager::Initialize(Scene* scene)
 {
     // Get Rects for card array placement.
     QRectF* rect   = scene->GetTrickArea();
-    float   uiLeft = scene->GetWidth() - (scene->GetWidth() / 4);
 
     // Initialize the CardArray member variables.
     deck           = new CardArray(CardArray::DECK,
@@ -541,7 +540,7 @@ void CardManager::ValidateSelection(void)
         case EXCHANGE:
             if ( selectedCards.size() < 1 ||
                  selectedCards.size() > 5 ||
-                 selectedCards.size() > talon->GetSize() )
+                 (int)selectedCards.size() > talon->GetSize() )
             {
                 valid = false;
             }
@@ -557,7 +556,7 @@ void CardManager::ValidateSelection(void)
                 suit = selectedCards[i]->GetSuit();
 
                 // First check it's a valid Point.
-                while ( i < selectedCards.size() && valid )
+                while ( i < (int)selectedCards.size() && valid )
                 {
                     if ( selectedCards[i++]->GetSuit() != suit )
                         valid = false;
@@ -567,7 +566,7 @@ void CardManager::ValidateSelection(void)
                 {
                     // Check if we are responding or not as we need to at least
                     // match the opponents point.
-                    if ( selectedCards.size() < pointDeclaration->numCards)
+                    if ( (int)selectedCards.size() < pointDeclaration->numCards)
                         valid = false;
                 }
             }
@@ -584,7 +583,7 @@ void CardManager::ValidateSelection(void)
                 suit = selectedCards[i]->GetSuit();
 
                 // First check the cards are of the same suit.
-                while ( i < selectedCards.size() && valid )
+                while ( i < (int)selectedCards.size() && valid )
                 {
                     // Place the card in it's bucket.
                     cardBuckets[selectedCards[i]->GetRank()-7] = true;
@@ -607,7 +606,7 @@ void CardManager::ValidateSelection(void)
                         j++;
                     }
 
-                    if ( j < selectedCards.size() )
+                    if ( j < (int)selectedCards.size() )
                     {
                         valid = false;
                     }
@@ -615,7 +614,7 @@ void CardManager::ValidateSelection(void)
                     {
                         // Check if we are responding or not as we need to at
                         // least match the opponents Sequence.
-                        if ( selectedCards.size() < seqDeclaration->numCards)
+                        if ( (int)selectedCards.size() < seqDeclaration->numCards)
                             valid = false;
                     }
                 }
@@ -631,7 +630,7 @@ void CardManager::ValidateSelection(void)
             {
                 rank = selectedCards[i]->GetRank();
 
-                while ( i < selectedCards.size() && valid )
+                while ( i < (int)selectedCards.size() && valid )
                 {
                     if ( selectedCards[i++]->GetRank() != rank )
                         valid = false;
@@ -641,7 +640,7 @@ void CardManager::ValidateSelection(void)
                 {
                     // Check if we are responding or not as we need to at
                     // least match the opponents Sequence.
-                    if ( selectedCards.size() < setDeclaration->numCards)
+                    if ( (int)selectedCards.size() < setDeclaration->numCards)
                         valid = false;
                 }
             }

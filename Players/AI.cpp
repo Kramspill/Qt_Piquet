@@ -132,6 +132,9 @@ void AI::AnnounceDeclaration(State phase)
         case SET:
             knowledgeBase->SelectSet(cpuHand);
             break;
+
+        default:
+            break;
     }
 }
 

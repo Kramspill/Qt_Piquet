@@ -12,16 +12,16 @@
 //------------------------------------------------------------------------------
 // Global Variables
 //------------------------------------------------------------------------------
-PlayerNum           elder              = PLAYER1;
-PlayerNum           younger            = PLAYER2;
-PlayerNum           trickWinner        = PLAYER1;
-Declaration*        declaration        = new Declaration();
-Declaration*        pointDeclaration   = new Declaration();
-Declaration*        seqDeclaration     = new Declaration();
-Declaration*        setDeclaration     = new Declaration();
-Response*           response           = new Response();
-DeclarationResults* declarationResults = new DeclarationResults();
-TrickResults*       trickResults       = new TrickResults();
-SpecialScores*      specialScores      = new SpecialScores();
-PartieResults*      partieResults      = new PartieResults();
-State               currentPhase       = DEAL;
+PlayerNum           elder;
+PlayerNum           younger;
+PlayerNum           trickWinner;
+Declaration*        declaration;
+Declaration*        pointDeclaration;
+Declaration*        seqDeclaration ;
+Declaration*        setDeclaration;
+Response*           response;
+DeclarationResults* declarationResults;
+TrickResults*       trickResults;
+SpecialScores*      specialScores;
+PartieResults*      partieResults;
+State               currentPhase;

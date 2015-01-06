@@ -39,12 +39,15 @@ GameManager::~GameManager(void)
 //------------------------------------------------------------------------------
 void GameManager::Initialize(void)
 {
-    // Acquire the coordinates of the center of the available display.
+    // Setup the display rect.
     QRectF rect;
     rect.setX(0);
     rect.setY(0);
     rect.setWidth(1366);
     rect.setHeight(768);
+
+    // Initialize the global state info.
+    InitGlobalState();
 
     // Initialize the Scene.
     scene = new Scene(rect);
@@ -74,6 +77,43 @@ void GameManager::Initialize(void)
 
     // Connect the various signals to their managers.
     ConnectSignals();
+}
+
+
+//------------------------------------------------------------------------------
+// InitGlobalState - Initialize the global state info.
+//------------------------------------------------------------------------------
+void GameManager::InitGlobalState(void)
+{
+    elder                                  = PLAYER1;
+    younger                                = PLAYER2;
+    trickWinner                            = PLAYER1;
+
+    declaration                            = new Declaration();
+    declaration->declaration               = new char[20];
+    declaration->response                  = new char[20];
+
+    pointDeclaration                       = new Declaration();
+    seqDeclaration                         = new Declaration();
+    setDeclaration                         = new Declaration();
+    response                               = new Response();
+
+    declarationResults                     = new DeclarationResults();
+    declarationResults->carteBlancheWinner = NOPLAYER;
+
+    trickResults                           = new TrickResults();
+    trickResults->player1Wins              = 0;
+    trickResults->player2Wins              = 0;
+
+    specialScores                          = new SpecialScores();
+    specialScores->carteBlancheScored      = false;
+    specialScores->repiqueScored           = false;
+    specialScores->piqueScored             = false;
+
+    partieResults                          = new PartieResults();
+    partieResults->currentDeal             = 0;
+
+    currentPhase                           = DEAL;
 }
 
 
@@ -436,6 +476,9 @@ void GameManager::AnnounceDeclaration(State phase, PlayerNum player)
                     case SET:
                         setDeclaration->numCards = declaration->numCards;
                         break;
+
+                    default:
+                        break;
                 }
             }
 
@@ -474,6 +517,9 @@ void GameManager::AnnounceDeclaration(State phase, PlayerNum player)
                     case SET:
                         setDeclaration->numCards = response->numCards;
                         break;
+
+                    default:
+                        break;
                 }
             }
         }
@@ -494,6 +540,9 @@ void GameManager::AnnounceDeclaration(State phase, PlayerNum player)
                 case SET:
                     declarationResults->setWinner = younger;
                     setDeclaration->numCards = 0;
+                    break;
+
+                default:
                     break;
             }
         }
@@ -541,7 +590,7 @@ void GameManager::DeclareSelection(State phase, PlayerNum player)
     std::vector<Card*> selectedCards = cardManager->GetSelection(player);
 
     // Create a declaration from the selection and store it in the global state.
-    scoreManager->CreateDeclaration(selectedCards, phase);
+    scoreManager->CreateDeclaration(phase, selectedCards);
 
     // Output the declaration (if applicable).
     if ( declaration->notSkipped )
@@ -554,7 +603,7 @@ void GameManager::DeclareSelection(State phase, PlayerNum player)
     }
 
     // Disable the selected cards.
-    for ( int i = 0; i < selectedCards.size(); i++ )
+    for ( int i = 0; i < (int)selectedCards.size(); i++ )
         selectedCards[i]->setFlag(QGraphicsItem::ItemIsSelectable, false);
 }
 
@@ -568,7 +617,7 @@ void GameManager::ResolveResponse(State phase, PlayerNum player)
     std::vector<Card*> selectedCards = cardManager->GetSelection(player);
 
     // Create a response from the selection and store it in the global state.
-    scoreManager->CreateResponse(selectedCards, phase);
+    scoreManager->CreateResponse(phase, selectedCards);
 
     char* str = new char[30];
 

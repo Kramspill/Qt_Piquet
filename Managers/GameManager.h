@@ -39,6 +39,7 @@ public:
     void          Initialize(void);
 
 private:
+    void          InitGlobalState(void);
     void          ConnectSignals(void);
     void          ResetGame(bool newGame = false);
 

@@ -71,7 +71,7 @@ public:
     void                UpdateAnimation(bool noAnimation);
 
 protected:
-    void                mousePressEvent(QGraphicsSceneMouseEvent* event);
+    void                mousePressEvent(QGraphicsSceneMouseEvent*);
     void                mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
 
 private:

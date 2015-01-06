@@ -34,22 +34,20 @@ public:
     void      Initialize(void);
     void      Reset(void);
 
-    void      CreateDeclaration(std::vector<Card*> cards, State phase);
-    void      CreateResponse(std::vector<Card*> cards, State phase);
-    void      ScoreDeclaration(State phase, PlayerNum player);
-    PlayerNum ScoreTrick(PlayerNum player, Card* leadCard = 0, Card* followCard = 0);
+    void      CreateDeclaration(State phase, std::vector<Card*> cards);
+    void      CreateResponse(   State phase, std::vector<Card*> cards);
+    void      ScoreDeclaration( State phase, PlayerNum player);
+    PlayerNum ScoreTrick(PlayerNum player,
+                         Card*     leadCard = 0,
+                         Card*     followCard = 0);
 
     int       GetPlayerScore(void);
     int       GetCPUScore(void);
 
 private:
-    int       GetValue(std::vector<Card*> cards, State phase);
-    void      GetDeclaration(std::vector<Card*> cards,
-                             State phase,
-                             char* destBuf);
-    void      GetResponse(std::vector<Card*> cards,
-                          State phase,
-                          char* destBuf);
+    int       GetValue(      State phase, std::vector<Card*> cards);
+    void      GetDeclaration(State phase, int numCards);
+    void      GetResponse(   State phase, int value);
 
 public slots:
     void      ScoreCarteBlanche(void);

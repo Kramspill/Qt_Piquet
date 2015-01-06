@@ -28,7 +28,7 @@ public:
     ~UIArea(void);
 
 protected:
-    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *);
 
 };
 

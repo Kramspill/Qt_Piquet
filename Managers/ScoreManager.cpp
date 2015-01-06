@@ -60,93 +60,97 @@ void ScoreManager::Reset(void)
 //------------------------------------------------------------------------------
 // CreateDeclaration - Create a Declaration from a selection.
 //------------------------------------------------------------------------------
-void ScoreManager::CreateDeclaration(std::vector<Card*> cards, State phase)
+void ScoreManager::CreateDeclaration(State phase, std::vector<Card*> cards)
 {
-    Declaration d;
-    d.value = 0;
-    d.score = 0;
-    d.declaration;
-    d.response;
-    d.numCards = 0;
+    // Initialize the declaration.
+    declaration->numCards   = 0;
+    declaration->value      = 0;
+    declaration->score      = 0;
+    declaration->notSkipped = false;
 
     // Check if player just skipped.
     if ( cards.size() != 0 )
     {
         // Set the number of cards.
-        d.numCards    = cards.size();
+        declaration->numCards = cards.size();
 
         // Set the value.
-        d.value       = GetValue(cards, phase);
+        declaration->value = GetValue(phase, cards);
 
         // Set the declaration text.
-        GetDeclaration(cards, phase, d.declaration);
-        GetResponse(cards, phase, d.response);
+        GetDeclaration(phase, cards.size());
+        GetResponse(phase, declaration->value);
 
-        d.notSkipped = true;
+        declaration->notSkipped = true;
 
+        // Set the score based on the phase we are declaring for.
         switch ( phase )
         {
             case POINT:
-                d.score = d.numCards;
+                declaration->score = declaration->numCards;
                 break;
 
             case SEQUENCE:
-                d.score = (d.numCards < 5) ? d.numCards : d.numCards + 10;
+                if ( declaration->numCards < 5 )
+                    declaration->score  = declaration->numCards;
+                else
+                    declaration->score = declaration->numCards + 10;
                 break;
 
             case SET:
-                d.score = (d.numCards == 3) ? 3 : 14;
+                if ( declaration->numCards == 3 )
+                    declaration->score = 3;
+                else
+                    declaration->score = 14;
                 break;
 
             default:
                 break;
         }
     }
-    else
-    {
-        d.notSkipped = false;
-    }
-
-    declaration->declaration = d.declaration;
-    declaration->response    = d.response;
-    declaration->numCards    = d.numCards;
-    declaration->value       = d.value;
-    declaration->score       = d.score;
-    declaration->notSkipped  = d.notSkipped;
 }
 
 
 //------------------------------------------------------------------------------
 // CreateResponse - Create a Response from a selection.
 //------------------------------------------------------------------------------
-void ScoreManager::CreateResponse(std::vector<Card*> cards, State phase)
+void ScoreManager::CreateResponse(State phase, std::vector<Card*> cards)
 {
-    Response r;
-    r.value    = 0;
-    r.numCards = 0;
-    r.score    = 0;
+    // Initialize the response.
+    response->good        = true;
+    response->even        = false;
+    response->hasQuestion = false;
+    response->numCards    = 0;
+    response->value       = 0;
+    response->score       = 0;
 
     // Check if player responded 'Not Good'.
     if ( (int)cards.size() >= declaration->numCards )
     {
         // Set the number of cards.
-        r.numCards    = cards.size();
+        response->numCards = cards.size();
 
         // Set the value.
-        r.value       = GetValue(cards, phase);
+        response->value    = GetValue(phase, cards);
 
         switch ( phase )
         {
             case POINT:
-                r.score = r.numCards;
+                response->score = response->numCards;
                 break;
 
             case SEQUENCE:
-                r.score = (r.numCards < 5) ? r.numCards : r.numCards + 10;
+                if ( response->numCards < 5 )
+                    response->score = response->numCards;
+                else
+                    response->score = response->numCards + 10;
                 break;
 
             case SET:
-                r.score = (r.numCards == 3) ? 3 : 14;
+                if ( response->numCards == 3 )
+                    response->score =  3;
+                else
+                    response->score = 14;
                 break;
 
             default:
@@ -154,49 +158,36 @@ void ScoreManager::CreateResponse(std::vector<Card*> cards, State phase)
         }
 
         // Compare the scores to determine the exact response.
-        if ( r.numCards > declaration->numCards )
+        if ( response->numCards > declaration->numCards )
         {
-            r.good        = false;
-            r.even        = false;
-            r.hasQuestion = false;
+            response->good        = false;
+            response->even        = false;
+            response->hasQuestion = false;
         }
         else
         {
-            r.hasQuestion = true;
+            response->hasQuestion = true;
 
-            if ( r.value > declaration->value )
+            if ( response->value > declaration->value )
             {
-                r.good = false;
-                r.even = false;
+                response->good = false;
+                response->even = false;
             }
             else
             {
-                if ( r.value == declaration->value )
+                if ( response->value == declaration->value )
                 {
-                    r.good = false;
-                    r.even = true;
+                    response->good = false;
+                    response->even = true;
                 }
                 else
                 {
-                    r.good = true;
-                    r.even = false;
+                    response->good = true;
+                    response->even = false;
                 }
             }
         }
     }
-    else
-    {
-        r.good        = true;
-        r.even        = false;
-        r.hasQuestion = false;
-    }
-
-    response->good = r.good;
-    response->even = r.even;
-    response->hasQuestion = r.hasQuestion;
-    response->numCards = r.numCards;
-    response->value = r.value;
-    response->score = r.score;
 }
 
 
@@ -397,12 +388,14 @@ PlayerNum ScoreManager::ScoreTrick(PlayerNum player,
          leadCard->GetRank() <  followCard->GetRank() )
     {
         (player == PLAYER1) ? playerScore++ : cpuScore++;
-        (player == PLAYER1) ? trickResults->player1Wins++ : trickResults->player2Wins++;
+        (player == PLAYER1) ? trickResults->player1Wins++ :
+                              trickResults->player2Wins++;
         winner = player;
     }
     else
     {
-        (player == PLAYER1) ? trickResults->player2Wins++ : trickResults->player1Wins++;
+        (player == PLAYER1) ? trickResults->player2Wins++ :
+                              trickResults->player1Wins++;
         winner = (player == PLAYER1) ? PLAYER2 : PLAYER1;
     }
 
@@ -547,7 +540,7 @@ int ScoreManager::GetCPUScore(void)
 //------------------------------------------------------------------------------
 // GetValue - Helper for CreateDeclaration to return the value.
 //------------------------------------------------------------------------------
-int ScoreManager::GetValue(std::vector<Card*> cards, State phase)
+int ScoreManager::GetValue(State phase, std::vector<Card*> cards)
 {
     int value = 0;
     Card::Rank highestCard;
@@ -589,26 +582,24 @@ int ScoreManager::GetValue(std::vector<Card*> cards, State phase)
 //------------------------------------------------------------------------------
 // GetDeclaration - Helper for CreateDeclaration to return the Declaration text.
 //------------------------------------------------------------------------------
-void ScoreManager::GetDeclaration(std::vector<Card*> cards,
-                                  State              phase,
-                                  char*              destBuf)
+void ScoreManager::GetDeclaration(State phase, int numCards)
 {
-    char* seqNames[6] = { "TIERCE",  "QUARTE",   "QUINTE",
-                          "SIXIÉME", "SEPTIÉME", "HUITIÉME" };
-    char* setNames[2] = { "TRIO", "QUATORZE" };
+    const char* seqNames[6] = { "TIERCE",  "QUARTE",   "QUINTE",
+                                "SIXIÉME", "SEPTIÉME", "HUITIÉME" };
+    const char* setNames[2] = { "TRIO", "QUATORZE" };
 
     switch ( phase )
     {
         case POINT:
-            snprintf(destBuf, 20, "POINT OF %d", cards.size());
+            snprintf(declaration->declaration, 20, "POINT OF %d", numCards);
             break;
 
         case SEQUENCE:
-            snprintf(destBuf, 20, "%s", seqNames[cards.size()-3]);
+            snprintf(declaration->declaration, 20, "%s", seqNames[numCards-3]);
             break;
 
         case SET:
-            snprintf(destBuf, 20, "%s", setNames[cards.size()-3]);
+            snprintf(declaration->declaration, 20, "%s", setNames[numCards-3]);
             break;
 
         default:
@@ -620,26 +611,23 @@ void ScoreManager::GetDeclaration(std::vector<Card*> cards,
 //------------------------------------------------------------------------------
 // GetResponse - Helper for CreateDeclaration to return the Response text.
 //------------------------------------------------------------------------------
-void ScoreManager::GetResponse(std::vector<Card*> cards,
-                               State              phase,
-                               char*              destBuf)
+void ScoreManager::GetResponse(State phase, int value)
 {
-    int   value        = GetValue(cards, phase);
-    char* cardNames[8] = { "SEVEN", "EIGHT", "NINE", "TEN",
-                           "JACK", "QUEEN", "KING", "ACE" };
+    const char* cards[8] = { "SEVEN", "EIGHT", "NINE", "TEN",
+                             "JACK", "QUEEN", "KING", "ACE" };
 
     switch ( phase )
     {
         case POINT:
-            snprintf(destBuf, 20, "MAKING %d", value);
+            snprintf(declaration->response, 20, "MAKING %d", value);
             break;
 
         case SEQUENCE:
-            snprintf(destBuf, 20, "TO THE %s", cardNames[value-7]);
+            snprintf(declaration->response, 20, "TO THE %s", cards[value-7]);
             break;
 
         case SET:
-            snprintf(destBuf, 20, "%s's", cardNames[value-7]);
+            snprintf(declaration->response, 20, "%s's", cards[value-7]);
             break;
 
         default:
