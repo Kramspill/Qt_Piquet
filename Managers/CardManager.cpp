@@ -403,9 +403,14 @@ void CardManager::DealOutCards(CardArray* src,
     {
         // Remove the card from the source array, and add it to the destination.
         Card* card = src->RemoveTopCard();
-        card->setFlag(QGraphicsItem::ItemIsSelectable, false);
-        card->setFlag(QGraphicsItem::ItemIsMovable,    false);
-        dest->AddCard(card);
+
+        // Fix crash on quit.
+        if ( card )
+        {
+            card->setFlag(QGraphicsItem::ItemIsSelectable, false);
+            card->setFlag(QGraphicsItem::ItemIsMovable,    false);
+            dest->AddCard(card);
+        }
     }
 
     // Delay the signal of transfer completion for animation purposes.
