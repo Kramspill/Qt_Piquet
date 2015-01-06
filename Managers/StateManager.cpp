@@ -96,6 +96,28 @@ void StateManager::Initialize(void)
 
 
 //------------------------------------------------------------------------------
+// Destroy - Free up the memory associated with an object of this type.
+//------------------------------------------------------------------------------
+void StateManager::Destroy(void)
+{
+    elderSelect->Destroy();
+    dealPhase->Destroy();
+    exchangePhase->Destroy();
+    declarationPhase->Destroy();
+    trickPhase->Destroy();
+    summary->Destroy();
+
+    delete elderSelect;         elderSelect      = 0;
+    delete dealPhase;           dealPhase        = 0;
+    delete exchangePhase;       exchangePhase    = 0;
+    delete declarationPhase;    declarationPhase = 0;
+    delete trickPhase;          trickPhase       = 0;
+    delete summary;             summary          = 0;
+    delete stateMachine;        stateMachine     = 0;
+}
+
+
+//------------------------------------------------------------------------------
 // ConnectSignals - Connect the signals to/from this class.
 //------------------------------------------------------------------------------
 void StateManager::ConnectSignals(void)

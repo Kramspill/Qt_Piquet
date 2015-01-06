@@ -58,6 +58,17 @@ void Summary::Initialize(void)
 
 
 //------------------------------------------------------------------------------
+// Destroy - Free up the memory associated with an object of this type.
+//------------------------------------------------------------------------------
+void Summary::Destroy(void)
+{
+    delete awaitingSignal;  awaitingSignal = 0;
+    delete finalState;      finalState     = 0;
+    delete stateMachine;    stateMachine   = 0;
+}
+
+
+//------------------------------------------------------------------------------
 // onEntry - Override of QState::onEntry.
 //------------------------------------------------------------------------------
 void Summary::onEntry(QEvent*)

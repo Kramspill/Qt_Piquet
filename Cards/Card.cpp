@@ -50,6 +50,26 @@ Card::~Card(void)
 
 
 //------------------------------------------------------------------------------
+// Destroy - Free up the memory associated with an object of this type.
+//------------------------------------------------------------------------------
+void Card::Destroy(void)
+{
+    delete renderer;                renderer              = 0;
+    delete transitionAnimation;     transitionAnimation   = 0;
+    delete stateMachine;            stateMachine          = 0;
+    delete inDeckState;             inDeckState           = 0;
+    delete inTalonState;            inTalonState          = 0;
+    delete inPlayerHandState;       inPlayerHandState     = 0;
+    delete inCpuHandState;          inCpuHandState        = 0;
+    delete inPlayerDiscardsState;   inPlayerDiscardsState = 0;
+    delete inCpuDiscardsState;      inCpuDiscardsState    = 0;
+    delete inPlayerTrickState;      inPlayerTrickState    = 0;
+    delete inCpuTrickState;         inCpuTrickState       = 0;
+    delete inPreviousTricksState;   inPreviousTricksState = 0;
+}
+
+
+//------------------------------------------------------------------------------
 // GetSuit - Accessor for Card's suit member variable.
 //------------------------------------------------------------------------------
 Card::Suit Card::GetSuit(void)
@@ -184,15 +204,15 @@ void Card::Initialize(void)
     stateMachine        = new QStateMachine();
 
     // Initialize the various states that a Card can be in.
-    InDeckState*           inDeckState           = new InDeckState();
-    InTalonState*          inTalonState          = new InTalonState();
-    InPlayerHandState*     inPlayerHandState     = new InPlayerHandState();
-    InCpuHandState*        inCpuHandState        = new InCpuHandState();
-    InPlayerDiscardsState* inPlayerDiscardsState = new InPlayerDiscardsState();
-    InCpuDiscardsState*    inCpuDiscardsState    = new InCpuDiscardsState();
-    InPlayerTrickState*    inPlayerTrickState    = new InPlayerTrickState();
-    InCpuTrickState*       inCpuTrickState       = new InCpuTrickState();
-    InPreviousTricksState* inPreviousTricksState = new InPreviousTricksState();
+    inDeckState           = new InDeckState();
+    inTalonState          = new InTalonState();
+    inPlayerHandState     = new InPlayerHandState();
+    inCpuHandState        = new InCpuHandState();
+    inPlayerDiscardsState = new InPlayerDiscardsState();
+    inCpuDiscardsState    = new InCpuDiscardsState();
+    inPlayerTrickState    = new InPlayerTrickState();
+    inCpuTrickState       = new InCpuTrickState();
+    inPreviousTricksState = new InPreviousTricksState();
 
     // Add the states to the state machine.
     stateMachine->addState(inDeckState);

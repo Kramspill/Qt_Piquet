@@ -40,6 +40,7 @@ public:
     ~AI(void);
 
     void                   Initialize(PlayerNum num);
+    void                   Destroy(void);
     void                   Reset(void);
 
     void                   ExecuteDeal(void);

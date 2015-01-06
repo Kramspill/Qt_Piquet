@@ -32,6 +32,7 @@ public:
     ~ElderSelect(void);
 
     void           Initialize(void);
+    void           Destroy(void);
 
 protected:
     void           onEntry(QEvent*);

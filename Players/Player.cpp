@@ -46,6 +46,15 @@ void Player::Initialize(PlayerNum num)
 
 
 //------------------------------------------------------------------------------
+// Destroy - Free up the memory associated with an object of this type.
+//------------------------------------------------------------------------------
+void Player::Destroy(void)
+{
+
+}
+
+
+//------------------------------------------------------------------------------
 // Reset - Reset itself.
 //------------------------------------------------------------------------------
 void Player::Reset(void)
@@ -66,6 +75,7 @@ void Player::SelectElder(void)
     QEventLoop* loop = new QEventLoop();
     connect(this, SIGNAL(BeginElderSelect()), loop, SLOT(quit()));
     loop->exec();
+    delete loop;
 }
 
 
@@ -81,6 +91,7 @@ void Player::ExecuteDeal(void)
     QEventLoop* loop = new QEventLoop();
     connect(this, SIGNAL(BeginDeal()), loop, SLOT(quit()));
     loop->exec();
+    delete loop;
 
     // Begin dealing out the cards.
     emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
@@ -113,6 +124,7 @@ void Player::ExecuteExchange(void)
     QEventLoop* loop = new QEventLoop();
     connect(this, SIGNAL(BeginExchange()), loop, SLOT(quit()));
     loop->exec();
+    delete loop;
 
     // Transfer the cards.
     emit RequestCardTransfer(CardArray::PLAYERHAND,
@@ -140,6 +152,7 @@ void Player::AnnounceDeclaration(State phase)
     QEventLoop* loop = new QEventLoop();
     connect(this, SIGNAL(Declare()), loop, SLOT(quit()));
     loop->exec();
+    delete loop;
 }
 
 
@@ -155,6 +168,7 @@ void Player::Respond(State)
     QEventLoop* loop = new QEventLoop();
     connect(this, SIGNAL(Declare()), loop, SLOT(quit()));
     loop->exec();
+    delete loop;
 }
 
 
@@ -176,6 +190,7 @@ void Player::PlayTrick(void)
     QEventLoop* loop = new QEventLoop();
     connect(this, SIGNAL(TrickPlayed()), loop, SLOT(quit()));
     loop->exec();
+    delete loop;
 
     // Finish up the exchange.
     emit RequestCardTransfer(CardArray::PLAYERHAND,
@@ -199,6 +214,7 @@ void Player::Summary(void)
     QEventLoop* loop = new QEventLoop();
     connect(this, SIGNAL(Continue()), loop, SLOT(quit()));
     loop->exec();
+    delete loop;
 }
 
 
@@ -214,6 +230,7 @@ void Player::CarteBlanche(void)
     QEventLoop* loop = new QEventLoop();
     connect(this, SIGNAL(Blanche()), loop, SLOT(quit()));
     loop->exec();
+    delete loop;
 }
 
 

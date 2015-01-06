@@ -37,9 +37,11 @@ public:
     ~GameManager(void);
 
     void          Initialize(void);
+    void          Destroy(void);
 
 private:
     void          InitGlobalState(void);
+    void          DestroyGlobalState(void);
     void          ConnectSignals(void);
     void          ResetGame(bool newGame = false);
 

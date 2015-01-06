@@ -53,6 +53,17 @@ void AI::Initialize(PlayerNum num)
 
 
 //------------------------------------------------------------------------------
+// Destroy - Free up the memory associated with an object of this type.
+//------------------------------------------------------------------------------
+void AI::Destroy(void)
+{
+    knowledgeBase->Destroy();
+
+    delete knowledgeBase;   knowledgeBase = 0;
+}
+
+
+//------------------------------------------------------------------------------
 // Reset - Reset itself.
 //------------------------------------------------------------------------------
 void AI::Reset(void)

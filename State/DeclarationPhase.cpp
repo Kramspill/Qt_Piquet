@@ -76,6 +76,20 @@ void DeclarationPhase::Initialize(void)
 
 
 //------------------------------------------------------------------------------
+// Destroy - Free up the memory associated with an object of this type.
+//------------------------------------------------------------------------------
+void DeclarationPhase::Destroy(void)
+{
+    delete elderDeclarations;    elderDeclarations   = 0;
+    delete elderTrick;           elderTrick          = 0;
+    delete youngerDeclarations;  youngerDeclarations = 0;
+    delete youngerTrick;         youngerTrick        = 0;
+    delete finalState;           finalState          = 0;
+    delete stateMachine;         stateMachine        = 0;
+}
+
+
+//------------------------------------------------------------------------------
 // onEntry - Override of QState::onEntry.
 //------------------------------------------------------------------------------
 void DeclarationPhase::onEntry(QEvent*)

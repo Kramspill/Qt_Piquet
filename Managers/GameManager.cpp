@@ -81,6 +81,29 @@ void GameManager::Initialize(void)
 
 
 //------------------------------------------------------------------------------
+// Destroy - Free up the memory associated with an object of this type.
+//------------------------------------------------------------------------------
+void GameManager::Destroy(void)
+{
+    scene->Destroy();
+    cardManager->Destroy();
+    player1->Destroy();
+    player2->Destroy();
+    stateManager->Destroy();
+
+    delete scene;           scene        = 0;
+    delete cardManager;     cardManager  = 0;
+    delete player1;         player1      = 0;
+    delete player2;         player2      = 0;
+    delete stateManager;    stateManager = 0;
+    delete scoreManager;    scoreManager = 0;
+    delete view;            view         = 0;
+
+    DestroyGlobalState();
+}
+
+
+//------------------------------------------------------------------------------
 // InitGlobalState - Initialize the global state info.
 //------------------------------------------------------------------------------
 void GameManager::InitGlobalState(void)
@@ -114,6 +137,30 @@ void GameManager::InitGlobalState(void)
     partieResults->currentDeal             = 0;
 
     currentPhase                           = DEAL;
+}
+
+
+//------------------------------------------------------------------------------
+// DestroyGlobalState - Free up the memory associated the global state.
+//------------------------------------------------------------------------------
+void GameManager::DestroyGlobalState(void)
+{
+    delete declaration;                 declaration              = 0;
+    delete declaration->declaration;    declaration->declaration = 0;
+    delete declaration->response;       declaration->response    = 0;
+
+    delete pointDeclaration;            pointDeclaration         = 0;
+    delete seqDeclaration;              seqDeclaration           = 0;
+    delete setDeclaration;              setDeclaration           = 0;
+    delete response;                    response                 = 0;
+
+    delete declarationResults;          declarationResults       = 0;
+
+    delete trickResults;                trickResults             = 0;
+
+    delete specialScores;               specialScores            = 0;
+
+    delete partieResults;               partieResults            = 0;
 }
 
 

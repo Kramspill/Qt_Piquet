@@ -59,6 +59,8 @@ public:
     CardArray(CardArray&);
     ~CardArray(void);
 
+    void               Destroy(void);
+
     void               AddCard(Card* newCard,
                                bool initialCardCreation = false);
     void               RemoveCard(Card* aCard);

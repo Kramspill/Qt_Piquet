@@ -47,6 +47,29 @@ CardArray::~CardArray(void)
 
 
 //------------------------------------------------------------------------------
+// Destroy - Free up the memory associated with an object of this type.
+//------------------------------------------------------------------------------
+void CardArray::Destroy(void)
+{
+    Card* card;
+
+    while ( cards.size() > 0 )
+    {
+        card = cards.back();
+
+        // Remove the card.
+        cards.pop_back();
+
+        // Free the memory.
+        card->Destroy();
+        delete card;
+    }
+
+    card = 0;
+}
+
+
+//------------------------------------------------------------------------------
 // AddCard - Add a card to the CardArray.
 //------------------------------------------------------------------------------
 void CardArray::AddCard(Card* newCard, bool initialCardCreation)

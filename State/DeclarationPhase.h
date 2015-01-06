@@ -32,6 +32,7 @@ public:
     ~DeclarationPhase(void);
 
     void           Initialize(void);
+    void           Destroy(void);
 
 protected:
     void           onEntry(QEvent*);

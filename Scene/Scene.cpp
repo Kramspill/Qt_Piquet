@@ -200,6 +200,33 @@ void Scene::Initialize(void)
 
 
 //------------------------------------------------------------------------------
+// Destroy - Free up the memory associated with an object of this type.
+//------------------------------------------------------------------------------
+void Scene::Destroy(void)
+{
+    delete primaryAction;       primaryAction   = 0;
+    delete secondaryAction;     secondaryAction = 0;
+    delete title;               title           = 0;
+    delete text;                text            = 0;
+    delete log;                 log             = 0;
+    delete player1Score;        player1Score    = 0;
+    delete player2Score;        player2Score    = 0;
+    delete area;                area            = 0;
+    delete playerTrickArea;     playerTrickArea = 0;
+
+    for ( int i = 0; i < 2; i++ )
+    {
+        for ( int j = 0; j < 6; j++ )
+        {
+            delete tableScores[i][j]; tableScores[i][j] = 0;
+        }
+    }
+
+    delete table;               table           = 0;
+}
+
+
+//------------------------------------------------------------------------------
 // ResetTable - Clear the table of previous scores.
 //------------------------------------------------------------------------------
 void Scene::ResetTable(void)

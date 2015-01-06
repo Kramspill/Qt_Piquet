@@ -40,6 +40,7 @@ public:
     ~KnowledgeBase(void);
 
     void                     Initialize(void);
+    void                     Destroy(void);
     void                     UpdateCard(Card::Suit suit, Card::Rank rank,
                                         int index,
                                         CardArray::Type location);

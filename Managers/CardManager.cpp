@@ -88,6 +88,35 @@ void CardManager::Initialize(Scene* scene)
 
 
 //------------------------------------------------------------------------------
+// Destroy - Free up the memory associated with an object of this type.
+//------------------------------------------------------------------------------
+void CardManager::Destroy(void)
+{
+    // First remove any cards in the arrays.
+    deck->Destroy();
+    talon->Destroy();
+    playerHand->Destroy();
+    cpuHand->Destroy();
+    playerDiscards->Destroy();
+    cpuDiscards->Destroy();
+    playerTrick->Destroy();
+    cpuTrick->Destroy();
+    previousTricks->Destroy();
+
+    delete deck;                deck            = 0;
+    delete talon;               talon           = 0;
+    delete playerHand;          playerHand      = 0;
+    delete cpuHand;             cpuHand         = 0;
+    delete playerDiscards;      playerDiscards  = 0;
+    delete cpuDiscards;         cpuDiscards     = 0;
+    delete playerTrick;         playerTrick     = 0;
+    delete cpuTrick;            cpuTrick        = 0;
+    delete previousTricks;      previousTricks  = 0;
+    delete transitionTimer;     transitionTimer = 0;
+}
+
+
+//------------------------------------------------------------------------------
 // Reset - Return all cards to the deck.
 //------------------------------------------------------------------------------
 void CardManager::Reset(void)
@@ -386,6 +415,7 @@ void CardManager::DealOutCards(CardArray* src,
     QEventLoop* loop = new QEventLoop();
     connect(transitionTimer, SIGNAL(timeout()), loop, SLOT(quit()));
     loop->exec();
+    delete loop;
 }
 
 
@@ -440,6 +470,7 @@ void CardManager::TransferSelectedCards(CardArray* src,
     QEventLoop* loop = new QEventLoop();
     connect(transitionTimer, SIGNAL(timeout()), loop, SLOT(quit()));
     loop->exec();
+    delete loop;
 }
 
 

@@ -79,6 +79,22 @@ void KnowledgeBase::Initialize(void)
 
 
 //------------------------------------------------------------------------------
+// Destroy - Free up the memory associated with an object of this type.
+//------------------------------------------------------------------------------
+void KnowledgeBase::Destroy(void)
+{
+    for ( int outerIndex = 0; outerIndex < 4; outerIndex++ )
+    {
+        for ( int innerIndex = 0; innerIndex < 8; innerIndex++ )
+        {
+            delete cardStatus[outerIndex][innerIndex];
+            cardStatus[outerIndex][innerIndex] = 0;
+        }
+    }
+}
+
+
+//------------------------------------------------------------------------------
 // UpdateCard - Update the status of a card.
 //------------------------------------------------------------------------------
 void KnowledgeBase::UpdateCard(Card::Suit suit, Card::Rank rank, int index,

@@ -36,6 +36,7 @@ public:
     ~StateManager(void);
 
     void              Initialize(void);
+    void              Destroy(void);
 
 private:
     void              ConnectSignals(void);

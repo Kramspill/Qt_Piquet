@@ -61,49 +61,60 @@ public:
     Card(Card&);
     ~Card(void);
 
-    Suit                GetSuit(void);
-    Rank                GetRank(void);
-    int                 GetValue(void);
-    QPointF             GetPosition(void);
+    void                   Destroy(void);
 
-    void                UpdateSelection(void);
-    void                SetPosition(QPointF newPosition, int zPosition = -1);
-    void                UpdateAnimation(bool noAnimation);
+    Suit                   GetSuit(void);
+    Rank                   GetRank(void);
+    int                    GetValue(void);
+    QPointF                GetPosition(void);
+
+    void                   UpdateSelection(void);
+    void                   SetPosition(QPointF newPosition, int zPosition = -1);
+    void                   UpdateAnimation(bool noAnimation);
 
 protected:
-    void                mousePressEvent(QGraphicsSceneMouseEvent*);
-    void                mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
+    void                   mousePressEvent(QGraphicsSceneMouseEvent*);
+    void                   mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
 
 private:
-    void                Initialize(void);
-    void                SetValue(void);
+    void                   Initialize(void);
+    void                   SetValue(void);
 
 private slots:
-    void                FlipCard(void);
+    void                   FlipCard(void);
 
 signals:
-    void                InDeck(void);
-    void                InTalon(void);
-    void                InPlayerHand(void);
-    void                InCpuHand(void);
-    void                InPlayerDiscards(void);
-    void                InCpuDiscards(void);
-    void                InPlayerTrick(void);
-    void                InCpuTrick(void);
-    void                InPreviousTricks(void);
+    void                   InDeck(void);
+    void                   InTalon(void);
+    void                   InPlayerHand(void);
+    void                   InCpuHand(void);
+    void                   InPlayerDiscards(void);
+    void                   InCpuDiscards(void);
+    void                   InPlayerTrick(void);
+    void                   InCpuTrick(void);
+    void                   InPreviousTricks(void);
 
 private:
-    QSvgRenderer*       renderer;
-    QString             frontImage;
-    QString             backImage;
-    bool                facedown;
-    Suit                suit;
-    Rank                rank;
-    int                 value;
-    QPointF             position;
-    QPointF             origPosition;
-    QStateMachine*      stateMachine;
-    QPropertyAnimation* transitionAnimation;
+    QSvgRenderer*          renderer;
+    QString                frontImage;
+    QString                backImage;
+    bool                   facedown;
+    Suit                   suit;
+    Rank                   rank;
+    int                    value;
+    QPointF                position;
+    QPointF                origPosition;
+    QStateMachine*         stateMachine;
+    InDeckState*           inDeckState;
+    InTalonState*          inTalonState;
+    InPlayerHandState*     inPlayerHandState;
+    InCpuHandState*        inCpuHandState;
+    InPlayerDiscardsState* inPlayerDiscardsState;
+    InCpuDiscardsState*    inCpuDiscardsState;
+    InPlayerTrickState*    inPlayerTrickState;
+    InCpuTrickState*       inCpuTrickState;
+    InPreviousTricksState* inPreviousTricksState;
+    QPropertyAnimation*    transitionAnimation;
 };
 
 #endif // CARD_H

@@ -59,6 +59,17 @@ void TrickPhase::Initialize(void)
 
 
 //------------------------------------------------------------------------------
+// Destroy - Free up the memory associated with an object of this type.
+//------------------------------------------------------------------------------
+void TrickPhase::Destroy(void)
+{
+    delete playTricks;      playTricks   = 0;
+    delete finalState;      finalState   = 0;
+    delete stateMachine;    stateMachine = 0;
+}
+
+
+//------------------------------------------------------------------------------
 // onEntry - Override of QState::onEntry.
 //------------------------------------------------------------------------------
 void TrickPhase::onEntry(QEvent*)
