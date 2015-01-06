@@ -30,5 +30,12 @@ int main(int argc, char *argv[])
     gameManager->Initialize();
 
     // Execute the application.
-    return piquetGame.exec();
+    int exitCode = piquetGame.exec();
+
+    // Free the memory.
+    gameManager->Destroy();
+    delete gameManager;
+    gameManager = 0;
+
+    return exitCode;
 }

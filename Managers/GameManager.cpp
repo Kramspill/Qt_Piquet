@@ -145,9 +145,9 @@ void GameManager::InitGlobalState(void)
 //------------------------------------------------------------------------------
 void GameManager::DestroyGlobalState(void)
 {
-    delete declaration;                 declaration              = 0;
     delete declaration->declaration;    declaration->declaration = 0;
     delete declaration->response;       declaration->response    = 0;
+    delete declaration;                 declaration              = 0;
 
     delete pointDeclaration;            pointDeclaration         = 0;
     delete seqDeclaration;              seqDeclaration           = 0;

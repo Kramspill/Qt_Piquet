@@ -56,7 +56,6 @@ void Card::Destroy(void)
 {
     delete renderer;                renderer              = 0;
     delete transitionAnimation;     transitionAnimation   = 0;
-    delete stateMachine;            stateMachine          = 0;
     delete inDeckState;             inDeckState           = 0;
     delete inTalonState;            inTalonState          = 0;
     delete inPlayerHandState;       inPlayerHandState     = 0;
@@ -66,6 +65,7 @@ void Card::Destroy(void)
     delete inPlayerTrickState;      inPlayerTrickState    = 0;
     delete inCpuTrickState;         inCpuTrickState       = 0;
     delete inPreviousTricksState;   inPreviousTricksState = 0;
+    delete stateMachine;            stateMachine          = 0;
 }
 
 
