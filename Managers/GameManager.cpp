@@ -402,7 +402,7 @@ void GameManager::ExecuteElderSelect(void)
         younger = PLAYER1;
         scene->UpdateLog("PLAYER 1: YOUNGER\nPLAYER 2: ELDER");
     }
-    scene->UpdateLog("P\nP\nP\nP\nP\nP\nP\nP\nP\nP\nP\nP");
+
     emit stateManager->ElderSelectComplete();
 }
 
