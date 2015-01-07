@@ -78,8 +78,8 @@ void Scene::Initialize(void)
                            "color: white; }"
                            "QMenu:selected {"
                            "background-color: QColor(70, 70, 70, 250); }");
-    QMenu* menu = menuBar->addMenu("Game");
-    menu->addAction("New Game");
+    QMenu*   menu   = menuBar->addMenu("Game");
+    QAction* action = menu->addAction("New Game");
 
     // Score display.
     table->setRowCount(7);
@@ -226,9 +226,6 @@ void Scene::Initialize(void)
     playingArea.setY(height - playingArea.height());
 
     playerTrickArea = new QRectF(playingArea);
-
-    // Connect the signals.
-    ConnectSignals();
 }
 
 
@@ -430,16 +427,6 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* mouseEvent)
     {
         QGraphicsScene::mousePressEvent(mouseEvent);
     }
-}
-
-
-//------------------------------------------------------------------------------
-// ConnectSignals - Connect various signals to/from this class.
-//------------------------------------------------------------------------------
-void Scene::ConnectSignals(void)
-{
-    /*QObject::connect(dialog, SIGNAL(ExecuteDeal()),
-                     this,   SIGNAL(ExecuteDeal()));*/
 }
 
 

@@ -65,7 +65,6 @@ protected:
     void              mouseDoubleClickEvent(QGraphicsSceneMouseEvent*mouseEvent);
 
 private:
-    void              ConnectSignals(void);
     bool              IsInsideTrickArea(QPointF p);
 
 public slots:
