@@ -84,6 +84,7 @@ signals:
     void              No(void);
     void              TrickPlayed(void);
     void              Continue(void);
+    void              NewGame(void);
 
     void              RequestACardTransfer(CardArray::Type,
                                            CardArray::Type,

@@ -80,6 +80,7 @@ void Scene::Initialize(void)
                            "background-color: QColor(70, 70, 70, 250); }");
     QMenu*   menu   = menuBar->addMenu("Game");
     QAction* action = menu->addAction("New Game");
+    connect(action, SIGNAL(triggered()), this, SIGNAL(NewGame()));
 
     // Score display.
     table->setRowCount(7);

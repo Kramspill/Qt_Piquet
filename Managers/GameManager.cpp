@@ -207,6 +207,10 @@ void GameManager::ConnectSignals(void)
                      player1,
                      SIGNAL(Continue()));
     QObject::connect(scene,
+                     SIGNAL(NewGame()),
+                     this,
+                     SLOT(NewGame()));
+    QObject::connect(scene,
                      SIGNAL(ValidateSelection()),
                      cardManager,
                      SLOT(ValidateSelection()));
@@ -809,6 +813,16 @@ void GameManager::ExecuteSummary(void)
 
         ResetGame();
     }
+}
+
+
+//------------------------------------------------------------------------------
+// NewGame - Reset the program and begin a new game.
+//------------------------------------------------------------------------------
+void GameManager::NewGame(void)
+{
+    //Destroy();
+    //Initialize();
 }
 
 

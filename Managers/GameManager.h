@@ -10,6 +10,7 @@
 // Qt Header Files
 //------------------------------------------------------------------------------
 #include <QObject>
+#include <QApplication>
 
 
 //------------------------------------------------------------------------------
@@ -54,6 +55,7 @@ private slots:
     void          ResolveResponse(State phase, PlayerNum player);
     void          PlayTrick(PlayerNum player);
     void          ExecuteSummary(void);
+    void          NewGame(void);
 
     void          RequestCardTransfer(CardArray::Type src,
                                       CardArray::Type dest,
