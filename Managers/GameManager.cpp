@@ -355,6 +355,7 @@ void GameManager::ResetGame(bool newGame)
     {
         partieResults->currentDeal = 0;
         scene->ResetTable();
+        stateManager->Reset();
     }
 
     // Reset managers.
@@ -821,8 +822,7 @@ void GameManager::ExecuteSummary(void)
 //------------------------------------------------------------------------------
 void GameManager::NewGame(void)
 {
-    //Destroy();
-    //Initialize();
+    ResetGame(true);
 }
 
 

@@ -42,29 +42,38 @@ void StateManager::Initialize(void)
     // Setup the state machine of the game.
     stateMachine = new QStateMachine();
 
+    // Top level state.
+    topLevelState = new QState(stateMachine);
+
     // Allocate memory to the phases and initialize them.
-    elderSelect = new ElderSelect(stateMachine);
+    elderSelect = new ElderSelect(topLevelState);
     elderSelect->Initialize();
 
-    dealPhase = new DealPhase(stateMachine);
+    dealPhase = new DealPhase(topLevelState);
     dealPhase->Initialize();
 
-    exchangePhase = new ExchangePhase(stateMachine);
+    exchangePhase = new ExchangePhase(topLevelState);
     exchangePhase->Initialize();
 
-    declarationPhase = new DeclarationPhase(stateMachine);
+    declarationPhase = new DeclarationPhase(topLevelState);
     declarationPhase->Initialize();
 
-    trickPhase = new TrickPhase(stateMachine);
+    trickPhase = new TrickPhase(topLevelState);
     trickPhase->Initialize();
 
-    summary = new Summary(stateMachine);
+    summary = new Summary(topLevelState);
     summary->Initialize();
 
+    finalState = new QFinalState(stateMachine);
+
     // Set the initial state for the state machine.
-    stateMachine->setInitialState(elderSelect);
+    topLevelState->setInitialState(elderSelect);
+    stateMachine->setInitialState(topLevelState);
 
     // Setup the transitions between the states.
+    topLevelState->addTransition(   this,
+                                    SIGNAL(ResetState()),
+                                    finalState);
     elderSelect->addTransition(     elderSelect,
                                     SIGNAL(ElderSelectFinished()),
                                     dealPhase);
@@ -114,6 +123,16 @@ void StateManager::Destroy(void)
     delete trickPhase;          trickPhase       = 0;
     delete summary;             summary          = 0;
     delete stateMachine;        stateMachine     = 0;
+}
+
+
+//------------------------------------------------------------------------------
+// Reset - Reset the state manager.
+//------------------------------------------------------------------------------
+void StateManager::Reset(void)
+{
+    emit ResetState();
+    //stateMachine->start();
 }
 
 
@@ -173,4 +192,15 @@ void StateManager::ConnectSignals(void)
                      SIGNAL(ExecuteSummary()),
                      this,
                      SIGNAL(ExecuteSummary()));
+
+    // Connect signals to/from the final state.
+    QObject::connect(stateMachine,
+                     SIGNAL(finished()),
+                     this,
+                     SLOT(Test()));
+}
+
+void StateManager::Test()
+{
+    int x = 0;
 }

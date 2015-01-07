@@ -121,16 +121,49 @@ void CardManager::Destroy(void)
 //------------------------------------------------------------------------------
 void CardManager::Reset(void)
 {
+    int size;
+
     if ( talon->GetSize() > 0 )
         TransferCards(talon, deck, talon->GetSize());
 
     TransferCards(cpuDiscards,    deck, cpuDiscards->GetSize());
     TransferCards(playerDiscards, deck, playerDiscards->GetSize());
 
-    int size = previousTricks->GetSize();
+    if ( cpuTrick->GetSize() > 0 )
+        TransferCards(cpuTrick, deck, cpuTrick->GetSize());
 
+    if ( playerTrick->GetSize() > 0 )
+        TransferCards(playerTrick, deck, playerTrick->GetSize());
+
+    size = playerHand->GetSize();
+
+    // Remove cards from the player hand.
     for ( int i = 0; i < size/3; i++ )
+    {
+        TransferCards(playerHand, deck, 3);
+    }
+
+    if ( playerHand->GetSize() > 0 )
+        TransferCards(playerHand, deck, playerHand->GetSize());
+
+    size = cpuHand->GetSize();
+
+    // Remove cards from the cpu hand.
+    for ( int i = 0; i < size/3; i++ )
+    {
+        TransferCards(cpuHand, deck, 3);
+    }
+
+    if ( cpuHand->GetSize() > 0 )
+        TransferCards(cpuHand, deck, cpuHand->GetSize());
+
+    size = previousTricks->GetSize();
+
+    // Remove cards from the previous tricks.
+    for ( int i = 0; i < size/3; i++ )
+    {
         TransferCards(previousTricks, deck, 3);
+    }
 
     if ( previousTricks->GetSize() > 0 )
         TransferCards(previousTricks, deck, previousTricks->GetSize());

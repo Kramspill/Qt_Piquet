@@ -37,9 +37,13 @@ public:
 
     void              Initialize(void);
     void              Destroy(void);
+    void              Reset(void);
 
 private:
     void              ConnectSignals(void);
+
+public slots:
+    void Test();
 
 signals:
     void              ExecuteElderSelect(void);
@@ -57,14 +61,18 @@ signals:
 
     void              ExecuteSummary(void);
 
+    void              ResetState(void);
+
 private:
     QStateMachine*    stateMachine;
+    QState*           topLevelState;
     ElderSelect*      elderSelect;
     DealPhase*        dealPhase;
     ExchangePhase*    exchangePhase;
     DeclarationPhase* declarationPhase;
     TrickPhase*       trickPhase;
     Summary*          summary;
+    QFinalState*      finalState;
 };
 
 #endif // STATEMANAGER_H
