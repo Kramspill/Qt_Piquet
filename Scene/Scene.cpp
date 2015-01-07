@@ -124,8 +124,23 @@ void Scene::Initialize(void)
                      (uiArea.height()/3)+50);
     log->setFontPointSize(16.0);
     log->setStyleSheet("QTextEdit { border: 2px solid gray; border-radius: 10px;"
-                                    "background-color: QColor(20, 20, 20, 50); color: white; }");
-    log->setEnabled(false);
+                                   "background-color: QColor(20, 20, 20, 50); color: white; }"
+                       "QScrollBar { border: none; border-radius: 1px; margin: 20px 1px 20px 0;"
+                                    "background: transparent; width: 18px;}"
+                       "QScrollBar::handle { background: QColor(50, 50, 50, 150);"
+                                            "border: 2px solid grey; border-radius: 1px;"
+                                            "min-height: 20px; }"
+                       "QScrollBar::add-line { width: 20px; height: 20px; border-style: none;"
+                                              "subcontrol-position: bottom;"
+                                              "subcontrol-origin: margin; }"
+                       "QScrollBar::sub-line { width: 20px; height: 20px; border-style: none;"
+                                              "subcontrol-position: top;"
+                                              "subcontrol-origin: margin; }"
+                       "QScrollBar::up-arrow,"
+                       "QScrollBar::down-arrow{ width: 13px; height: 13px; margin: 37px 1px 38px 0;"
+                                               "border: 2px solid gray; border-radius: 1px; }"
+                       "QScrollBar::add-page, QScrollBar::sub-page { background: none; }");
+    log->setReadOnly(true);
 
     // Phase title.
     title->setGeometry(uiArea.x() +
