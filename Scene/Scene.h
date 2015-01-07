@@ -18,6 +18,8 @@
 #include <QTextEdit>
 #include <QTableWidget>
 #include <QHeaderView>
+#include <QMenu>
+#include <QMenuBar>
 
 
 //------------------------------------------------------------------------------
@@ -101,6 +103,7 @@ private:
     QTableWidgetItem* tableScores[2][6];
     QTableWidgetItem* player2Score;
     UIArea*           area;
+    QMenuBar*         menuBar;
     QRectF*           playerTrickArea;
     int               xPos;
     int               yPos;

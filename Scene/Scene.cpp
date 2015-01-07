@@ -64,6 +64,23 @@ void Scene::Initialize(void)
     QRect rect(uiLeft-10, 0, width-uiLeft+15, height+1);
     area->setGeometry(rect);
 
+    // Menu bar.
+    menuBar = new QMenuBar();
+    menuBar->setStyleSheet("QMenuBar { background: transparent; }"
+                           "QMenuBar::item { border: 1px solid gray;"
+                           "border-radius: 1px; padding: 2px 4px; margin-top: 1px;"
+                           "background-color: QColor(20, 20, 20, 170);"
+                           "color: white; }"
+                           "QMenuBar::item:selected { "
+                           "background-color: QColor(60, 60, 60, 240); }"
+                           "QMenu { border: 1px solid gray; border-radius: 1px;"
+                           "background-color: QColor(50, 50, 50, 170);"
+                           "color: white; }"
+                           "QMenu:selected {"
+                           "background-color: QColor(70, 70, 70, 250); }");
+    QMenu* menu = menuBar->addMenu("Game");
+    menu->addAction("New Game");
+
     // Score display.
     table->setRowCount(7);
     table->setColumnCount(2);
@@ -192,6 +209,7 @@ void Scene::Initialize(void)
                                    "QPushButton:disabled { color: gray; }");
 
     // Add the items to the scene.
+    addWidget(menuBar);
     addWidget(area);
     addWidget(primaryAction);
     addWidget(secondaryAction);
@@ -219,6 +237,7 @@ void Scene::Initialize(void)
 //------------------------------------------------------------------------------
 void Scene::Destroy(void)
 {
+    delete menuBar;             menuBar         = 0;
     delete primaryAction;       primaryAction   = 0;
     delete secondaryAction;     secondaryAction = 0;
     delete title;               title           = 0;
