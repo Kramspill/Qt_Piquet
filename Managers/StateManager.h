@@ -42,8 +42,8 @@ public:
 private:
     void              ConnectSignals(void);
 
-public slots:
-    void Test();
+private slots:
+    void              RestartStateMachine(void);
 
 signals:
     void              ExecuteElderSelect(void);

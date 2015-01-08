@@ -132,7 +132,6 @@ void StateManager::Destroy(void)
 void StateManager::Reset(void)
 {
     emit ResetState();
-    //stateMachine->start();
 }
 
 
@@ -200,7 +199,12 @@ void StateManager::ConnectSignals(void)
                      SLOT(Test()));
 }
 
-void StateManager::Test()
+
+//------------------------------------------------------------------------------
+// RestartStateMachine - Reset the state machine of this class.
+//------------------------------------------------------------------------------
+void StateManager::RestartStateMachine(void)
 {
-    int x = 0;
+    Destroy();
+    Initialize();
 }
