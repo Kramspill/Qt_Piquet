@@ -84,6 +84,7 @@ signals:
                                      CardArray::Type,
                                      int);
     void         SetUI(State);
+    void         ExitLoop(void);
 
 protected:
     PlayerNum    playerNumber;

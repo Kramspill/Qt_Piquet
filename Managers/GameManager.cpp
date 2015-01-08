@@ -322,6 +322,10 @@ void GameManager::ConnectSignals(void)
                      SIGNAL(ExecuteSummary()),
                      this,
                      SLOT(ExecuteSummary()));
+    QObject::connect(stateManager,
+                     SIGNAL(ExitLoop()),
+                     player1,
+                     SIGNAL(ExitLoop()));
 
     // Connect the signals from the ScoreManager.
     QObject::connect(scoreManager,
@@ -351,17 +355,17 @@ void GameManager::ResetGame(bool newGame)
     specialScores->repiqueScored           = false;
     specialScores->piqueScored             = false;
 
+    // Reset managers.
+    cardManager->Reset();
+    scoreManager->Reset();
+    scene->ClearLog();
+
     if ( newGame )
     {
         partieResults->currentDeal = 0;
         scene->ResetTable();
         stateManager->Reset();
     }
-
-    // Reset managers.
-    cardManager->Reset();
-    scoreManager->Reset();
-    scene->ClearLog();
 
     if ( !newGame )
     {

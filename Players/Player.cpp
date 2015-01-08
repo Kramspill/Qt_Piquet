@@ -74,6 +74,7 @@ void Player::SelectElder(void)
     // Wait for the user to select 'Randomize'.
     QEventLoop* loop = new QEventLoop();
     connect(this, SIGNAL(BeginElderSelect()), loop, SLOT(quit()));
+    connect(this, SIGNAL(ExitLoop()), loop, SLOT(quit()));
     loop->exec();
     delete loop;
 }
@@ -90,6 +91,7 @@ void Player::ExecuteDeal(void)
     // Wait for the user to select 'Deal'.
     QEventLoop* loop = new QEventLoop();
     connect(this, SIGNAL(BeginDeal()), loop, SLOT(quit()));
+    connect(this, SIGNAL(ExitLoop()), loop, SLOT(quit()));
     loop->exec();
     delete loop;
 
@@ -123,6 +125,7 @@ void Player::ExecuteExchange(void)
     // Wait for the user to select 'Exchange'.
     QEventLoop* loop = new QEventLoop();
     connect(this, SIGNAL(BeginExchange()), loop, SLOT(quit()));
+    connect(this, SIGNAL(ExitLoop()), loop, SLOT(quit()));
     loop->exec();
     delete loop;
 
@@ -151,6 +154,7 @@ void Player::AnnounceDeclaration(State phase)
     // Wait for the user to select 'Declare' or 'Skip'.
     QEventLoop* loop = new QEventLoop();
     connect(this, SIGNAL(Declare()), loop, SLOT(quit()));
+    connect(this, SIGNAL(ExitLoop()), loop, SLOT(quit()));
     loop->exec();
     delete loop;
 }
@@ -167,6 +171,7 @@ void Player::Respond(State)
     // Wait for user to make a response.
     QEventLoop* loop = new QEventLoop();
     connect(this, SIGNAL(Declare()), loop, SLOT(quit()));
+    connect(this, SIGNAL(ExitLoop()), loop, SLOT(quit()));
     loop->exec();
     delete loop;
 }
@@ -189,6 +194,7 @@ void Player::PlayTrick(void)
     // Wait for user to make a response.
     QEventLoop* loop = new QEventLoop();
     connect(this, SIGNAL(TrickPlayed()), loop, SLOT(quit()));
+    connect(this, SIGNAL(ExitLoop()), loop, SLOT(quit()));
     loop->exec();
     delete loop;
 
@@ -213,6 +219,7 @@ void Player::Summary(void)
     // Wait for the user to select 'New Game/Continue'.
     QEventLoop* loop = new QEventLoop();
     connect(this, SIGNAL(Continue()), loop, SLOT(quit()));
+    connect(this, SIGNAL(ExitLoop()), loop, SLOT(quit()));
     loop->exec();
     delete loop;
 }
@@ -229,6 +236,7 @@ void Player::CarteBlanche(void)
     // Wait for user to make a response.
     QEventLoop* loop = new QEventLoop();
     connect(this, SIGNAL(Blanche()), loop, SLOT(quit()));
+    connect(this, SIGNAL(ExitLoop()), loop, SLOT(quit()));
     loop->exec();
     delete loop;
 }

@@ -473,6 +473,8 @@ void Scene::SetUI(State phase)
             text->setText("Click 'Randomize' to\nrandomly select the Elder.");
 
             primaryAction->setText("Randomize");
+            primaryAction->setVisible(true);
+            primaryAction->setEnabled(true);
             secondaryAction->setVisible(false);
 
             title->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);

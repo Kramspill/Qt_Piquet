@@ -62,6 +62,7 @@ signals:
     void              ExecuteSummary(void);
 
     void              ResetState(void);
+    void              ExitLoop(void);
 
 private:
     QStateMachine*    stateMachine;

@@ -131,6 +131,7 @@ void StateManager::Destroy(void)
 //------------------------------------------------------------------------------
 void StateManager::Reset(void)
 {
+    emit ExitLoop();
     emit ResetState();
 }
 
@@ -196,7 +197,7 @@ void StateManager::ConnectSignals(void)
     QObject::connect(stateMachine,
                      SIGNAL(finished()),
                      this,
-                     SLOT(Test()));
+                     SLOT(RestartStateMachine()));
 }
 
 
