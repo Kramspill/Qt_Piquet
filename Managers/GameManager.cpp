@@ -211,6 +211,10 @@ void GameManager::ConnectSignals(void)
                      this,
                      SLOT(NewGame()));
     QObject::connect(scene,
+                     SIGNAL(TestAi()),
+                     this,
+                     SLOT(TestAi()));
+    QObject::connect(scene,
                      SIGNAL(ValidateSelection()),
                      cardManager,
                      SLOT(ValidateSelection()));
@@ -376,11 +380,7 @@ void GameManager::ResetGame(bool newGame)
     }
 
     player2->Reset();
-    if ( dynamic_cast<AI*>(player1) )
-    {
-        player1->Reset();
-    }
-
+    player1->Reset();
 }
 
 
@@ -827,6 +827,15 @@ void GameManager::ExecuteSummary(void)
 void GameManager::NewGame(void)
 {
     ResetGame(true);
+}
+
+
+//------------------------------------------------------------------------------
+// TestAi - Test an ai by pitting it against another ai.
+//------------------------------------------------------------------------------
+void GameManager::TestAi(void)
+{
+
 }
 
 

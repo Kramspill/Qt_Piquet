@@ -66,9 +66,9 @@ void Scene::Initialize(void)
 
     // Menu bar.
     menuBar = new QMenuBar();
-    menuBar->setStyleSheet("QMenuBar { background: transparent; }"
+    menuBar->setStyleSheet("QMenuBar { background: transparent; spacing: 1px; }"
                            "QMenuBar::item { border: 1px solid gray;"
-                           "border-radius: 1px; padding: 2px 4px; margin-top: 1px;"
+                           "border-radius: 1px; padding: 4px 15px; margin-top: 1px;"
                            "background-color: QColor(20, 20, 20, 170);"
                            "color: white; }"
                            "QMenuBar::item:selected { "
@@ -78,9 +78,13 @@ void Scene::Initialize(void)
                            "color: white; }"
                            "QMenu:selected {"
                            "background-color: QColor(70, 70, 70, 250); }");
-    QMenu*   menu   = menuBar->addMenu("Game");
-    QAction* action = menu->addAction("New Game");
-    connect(action, SIGNAL(triggered()), this, SIGNAL(NewGame()));
+    QMenu*   gameMenu   = menuBar->addMenu("Game");
+    QAction* nGAction   = gameMenu->addAction("New Game");
+    connect(nGAction, SIGNAL(triggered()), this, SIGNAL(NewGame()));
+
+    QMenu*   aiMenu     = menuBar->addMenu("AI");
+    QAction* tAiAction  = aiMenu->addAction("Test AI");
+    connect(tAiAction, SIGNAL(triggered()), this, SIGNAL(TestAi()));
 
     // Score display.
     table->setRowCount(7);

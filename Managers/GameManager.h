@@ -56,6 +56,7 @@ private slots:
     void          PlayTrick(PlayerNum player);
     void          ExecuteSummary(void);
     void          NewGame(void);
+    void          TestAi(void);
 
     void          RequestCardTransfer(CardArray::Type src,
                                       CardArray::Type dest,
