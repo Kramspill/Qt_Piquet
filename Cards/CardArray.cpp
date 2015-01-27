@@ -250,7 +250,6 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
     {
         case DECK:
         case TALON:
-        case PLAYERDISCARDS:
         case CPUDISCARDS:
             if ( newCardAdded )
             {
@@ -264,6 +263,7 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
             }
             break;
 
+        case PLAYERDISCARDS:
         case PREVIOUSTRICKS:
             if ( arraySize > 0 )
             {
@@ -284,8 +284,12 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
                 }
 
                 // Update the position of the next card.
-                nextCardPosition = QPointF(shiftedPosition.x(),
-                                           shiftedPosition.y()+25);
+                if ( type == PLAYERDISCARDS )
+                    nextCardPosition = QPointF(shiftedPosition.x(),
+                                               shiftedPosition.y()+40);
+                else
+                    nextCardPosition = QPointF(shiftedPosition.x(),
+                                               shiftedPosition.y()+27);
             }
             else
             {

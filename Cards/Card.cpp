@@ -278,14 +278,16 @@ void Card::Initialize(void)
     inPreviousTricksState->addTransition(this, SIGNAL(InDeck()), inDeckState);
 
     // Link the card to the signals from CardStates.
-    connect(inPlayerHandState,  SIGNAL(entered()), this, SLOT(FlipCard()));
-    connect(inPlayerHandState,  SIGNAL(exited()),  this, SLOT(FlipCard()));
-    connect(inPlayerTrickState, SIGNAL(entered()), this, SLOT(FlipCard()));
-    connect(inPlayerTrickState, SIGNAL(exited()),  this, SLOT(FlipCard()));
-    connect(inCpuTrickState,    SIGNAL(entered()), this, SLOT(FlipCard()));
-    connect(inCpuTrickState,    SIGNAL(exited()),  this, SLOT(FlipCard()));
-    connect(inPreviousTricksState, SIGNAL(entered()), this, SLOT(FlipCard()));
-    connect(inPreviousTricksState, SIGNAL(exited()),  this, SLOT(FlipCard()));
+    connect(inPlayerHandState,     SIGNAL(entered()), this, SLOT(FlipCard()));
+    connect(inPlayerHandState,     SIGNAL(exited()),  this, SLOT(FlipCard()));
+    connect(inPlayerTrickState,    SIGNAL(entered()), this, SLOT(FlipCard()));
+    connect(inPlayerTrickState,    SIGNAL(exited()),  this, SLOT(FlipCard()));
+    connect(inCpuTrickState,       SIGNAL(entered()), this, SLOT(FlipCard()));
+    connect(inCpuTrickState,       SIGNAL(exited()),  this, SLOT(FlipCard()));
+    connect(inPreviousTricksState, SIGNAL(entered()), this, SLOT(Display()));
+    connect(inPreviousTricksState, SIGNAL(exited()),  this, SLOT(Display()));
+    connect(inPlayerDiscardsState, SIGNAL(entered()), this, SLOT(FlipCard()));
+    connect(inPlayerDiscardsState, SIGNAL(exited()),  this, SLOT(FlipCard()));
 
     connect(inCpuHandState, SIGNAL(entered()), this, SLOT(FlipCard()));
     connect(inCpuHandState, SIGNAL(exited()), this, SLOT(FlipCard()));
@@ -338,4 +340,21 @@ void Card::FlipCard(void)
     // Reset the renderer to update the change and update the facedown status.
     this->setSharedRenderer(renderer);
     facedown = !facedown;
+}
+
+
+//------------------------------------------------------------------------------
+// FlipCard - Flip the card and resize for display purposes.
+//------------------------------------------------------------------------------
+void Card::Display(void)
+{
+    // Flip the card.
+    FlipCard();
+
+    // If the card is now facedown, it is leaving a display cardArray so we
+    // correct the resize, else we apply a resize.
+    if ( facedown )
+        this->setScale(0.5);
+    else
+        this->setScale(0.35);
 }

@@ -82,6 +82,7 @@ private:
 
 private slots:
     void                   FlipCard(void);
+    void                   Display(void);
 
 signals:
     void                   InDeck(void);
