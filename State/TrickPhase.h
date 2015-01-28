@@ -36,6 +36,7 @@ public:
 
 protected:
     void           onEntry(QEvent*);
+    void           onExit(QEvent*);
 
 private:
     void           ConnectSignals(void);

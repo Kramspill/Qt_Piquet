@@ -206,6 +206,7 @@ void StateManager::ConnectSignals(void)
 //------------------------------------------------------------------------------
 void StateManager::RestartStateMachine(void)
 {
-    Destroy();
-    Initialize();
+    while ( stateMachine->isRunning() ) {}
+
+    stateMachine->start();
 }

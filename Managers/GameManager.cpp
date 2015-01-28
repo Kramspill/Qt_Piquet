@@ -361,8 +361,6 @@ void GameManager::ResetGame(bool newGame)
 
     // Reset managers.
     cardManager->Reset();
-    scoreManager->Reset();
-    scene->ClearLog();
 
     if ( newGame )
     {
@@ -379,6 +377,8 @@ void GameManager::ResetGame(bool newGame)
             scene->UpdateLog("PLAYER 1: ELDER\nPLAYER 2: YOUNGER");
     }
 
+    scoreManager->Reset();
+    scene->ClearLog();
     player2->Reset();
     player1->Reset();
 }

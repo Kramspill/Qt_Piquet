@@ -81,6 +81,16 @@ void TrickPhase::onEntry(QEvent*)
 
 
 //------------------------------------------------------------------------------
+// onExit - Override of QState::onExit.
+//------------------------------------------------------------------------------
+void TrickPhase::onExit(QEvent*)
+{
+    if ( stateMachine->isRunning() )
+        stateMachine->stop();
+}
+
+
+//------------------------------------------------------------------------------
 // ConnectSignals - Setup the work done in each state along with additional
 //                  necessary signals.
 //------------------------------------------------------------------------------

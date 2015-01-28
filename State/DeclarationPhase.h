@@ -12,6 +12,7 @@
 #include <QState>
 #include <QFinalState>
 #include <QStateMachine>
+#include <QCoreApplication>
 
 
 //------------------------------------------------------------------------------
@@ -36,6 +37,7 @@ public:
 
 protected:
     void           onEntry(QEvent*);
+    void           onExit(QEvent*);
 
 private:
     void           ConnectSignals(void);
