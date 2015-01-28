@@ -73,6 +73,23 @@ void AI::Reset(void)
 
 
 //------------------------------------------------------------------------------
+// SelectElder - Player executes an Elder selection.
+//------------------------------------------------------------------------------
+void AI::SelectElder(void)
+{
+    // Set the UI.
+    emit SetUI(ELDERSELECT);
+
+    // Wait for the user to select 'Randomize'.
+    QEventLoop* loop = new QEventLoop();
+    connect(this, SIGNAL(BeginElderSelect()), loop, SLOT(quit()));
+    connect(this, SIGNAL(ExitLoop()), loop, SLOT(quit()));
+    loop->exec();
+    delete loop;
+}
+
+
+//------------------------------------------------------------------------------
 // ExecuteDeal - Player executes a deal.
 //------------------------------------------------------------------------------
 void AI::ExecuteDeal(void)
@@ -81,15 +98,30 @@ void AI::ExecuteDeal(void)
     emit SetUI(DEAL);
 
     // Begin dealing out the cards.
-    emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
-    emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
-    emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
-    emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
-    emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
-    emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
-    emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
-    emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
-    emit RequestCardTransfer(CardArray::DECK, CardArray::TALON,      8);
+    if ( playerNumber == PLAYER1 )
+    {
+        emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::TALON,      8);
+    }
+    else
+    {
+        emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::TALON,      8);
+    }
 
     emit DealComplete();
 }
@@ -110,12 +142,24 @@ void AI::ExecuteExchange(void)
     // Select the cards to exchange.
     SelectCardsToDiscard();
 
-    emit RequestCardTransfer(CardArray::CPUHAND,
-                             CardArray::CPUDISCARDS,
-                             0);
-    emit RequestCardTransfer(CardArray::TALON,
-                             CardArray::CPUHAND,
-                             0);
+    if ( playerNumber == PLAYER1 )
+    {
+        emit RequestCardTransfer(CardArray::PLAYERHAND,
+                                 CardArray::PLAYERDISCARDS,
+                                 0);
+        emit RequestCardTransfer(CardArray::TALON,
+                                 CardArray::PLAYERHAND,
+                                 0);
+    }
+    else
+    {
+        emit RequestCardTransfer(CardArray::CPUHAND,
+                                 CardArray::CPUDISCARDS,
+                                 0);
+        emit RequestCardTransfer(CardArray::TALON,
+                                 CardArray::CPUHAND,
+                                 0);
+    }
 
     // Update information on card positions.
     emit RequestCardPositions(playerNumber);
@@ -170,9 +214,18 @@ void AI::PlayTrick(void)
 
     knowledgeBase->SelectTrick(cpuHand);
 
-    emit RequestCardTransfer(CardArray::CPUHAND,
-                             CardArray::CPUTRICK,
-                             0);
+    if ( playerNumber == PLAYER1 )
+    {
+        emit RequestCardTransfer(CardArray::PLAYERHAND,
+                                 CardArray::PLAYERTRICK,
+                                 0);
+    }
+    else
+    {
+        emit RequestCardTransfer(CardArray::CPUHAND,
+                                 CardArray::CPUTRICK,
+                                 0);
+    }
 }
 
 
@@ -233,13 +286,33 @@ void AI::SelectTrickToPlay(void)
 void AI::ExecuteCarteBlanche(void)
 {
     for ( int i =0; i < 12; i++ )
-        emit RequestCardTransfer(CardArray::CPUHAND,
-                                 CardArray::CPUTRICK,
-                                 1);
+    {
+        if ( playerNumber == PLAYER1 )
+        {
+            emit RequestCardTransfer(CardArray::PLAYERHAND,
+                                     CardArray::PLAYERTRICK,
+                                     1);
+        }
+        else
+        {
+            emit RequestCardTransfer(CardArray::CPUHAND,
+                                     CardArray::CPUTRICK,
+                                     1);
+        }
+    }
 
-    emit RequestCardTransfer(CardArray::CPUTRICK,
-                             CardArray::CPUHAND,
-                             12);
+    if ( playerNumber == PLAYER1 )
+    {
+        emit RequestCardTransfer(CardArray::PLAYERTRICK,
+                                 CardArray::PLAYERHAND,
+                                 12);
+    }
+    else
+    {
+        emit RequestCardTransfer(CardArray::CPUTRICK,
+                                 CardArray::CPUHAND,
+                                 12);
+    }
 
     emit ScoreCarteBlanche();
 }
@@ -250,10 +323,4 @@ void AI::ExecuteCarteBlanche(void)
 //------------------------------------------------------------------------------
 void AI::ConnectSignals(void)
 {
-    connect(knowledgeBase,
-            SIGNAL(SignalCardSelectionsChanged(Card*,
-                                               CardArray::Type)),
-            this,
-            SIGNAL(SignalCardSelectionsChanged(Card*,
-                                               CardArray::Type)));
 }

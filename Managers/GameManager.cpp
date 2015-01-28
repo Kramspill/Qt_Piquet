@@ -58,7 +58,7 @@ void GameManager::Initialize(void)
     cardManager->Initialize(scene);
 
     // Initialize the players (default is player vs cpu).
-    player1 = new Player();
+    player1 = new AI();
     player1->Initialize(PLAYER1);
     player2 = new AI();
     player2->Initialize(PLAYER2);
@@ -260,6 +260,10 @@ void GameManager::ConnectSignals(void)
                      SIGNAL(ScoreCarteBlanche()),
                      scoreManager,
                      SLOT(ScoreCarteBlanche()));
+    QObject::connect(player1,
+                     SIGNAL(RequestCardPositions(PlayerNum)),
+                     this,
+                     SLOT(UpdateAI(PlayerNum)));
 
     // Connect the signals from player 2.
     QObject::connect(player2,
@@ -390,10 +394,10 @@ void GameManager::ResetGame(bool newGame)
 void GameManager::ExecuteElderSelect(void)
 {
     // If player 1 is a user, allow them to click a button.
-    if ( !dynamic_cast<AI*>(player1) )
-    {
+    //if ( !dynamic_cast<AI*>(player1) )
+    //{
         player1->SelectElder();
-    }
+    //}
 
     // Randomly select the elder.
     std::srand(std::time(0));
@@ -791,22 +795,23 @@ void GameManager::ExecuteSummary(void)
     {
         partieResults->currentDeal++;
 
-        // If a user is playing, wait for then to select 'New Game'.
+        // If a user is playing, wait for them to select 'New Game'.
         if ( !dynamic_cast<AI*>(player1) )
         {
             player1->Summary();
             ResetGame(true);
         }
-        else if ( 0 )
+        else if ( 1 )
         {
             // If the ai still has game's to play.
+            int x = 0;
         }
     }
     else
     {
         partieResults->currentDeal++;
 
-        // If a user is playing, wait for then to select 'Continue'.
+        // If a user is playing, wait for them to select 'Continue'.
         if ( !dynamic_cast<AI*>(player1) )
         {
             player1->Summary();
@@ -867,7 +872,10 @@ void GameManager::UpdateAI(PlayerNum player)
     AI* ai = player == PLAYER1 ? (AI*)player1 : (AI*)player2;
 
     // Retrieve the cpu's hand and update the ai's knowledge base.
-    cardArray = cardManager->GetCardArray(CardArray::CPUHAND);
+    if ( player == PLAYER1 )
+        cardArray = cardManager->GetCardArray(CardArray::PLAYERHAND);
+    else
+        cardArray = cardManager->GetCardArray(CardArray::CPUHAND);
     size      = cardArray->GetSize();
 
     for ( int index = 0; index < size; index++ )
@@ -880,7 +888,10 @@ void GameManager::UpdateAI(PlayerNum player)
     ai->UpdateHand(cardArray);
 
     // Retrieve the cpu's discards and update the ai's knowledge base.
-    cardArray = cardManager->GetCardArray(CardArray::CPUDISCARDS);
+    if ( player == PLAYER1 )
+        cardArray = cardManager->GetCardArray(CardArray::PLAYERDISCARDS);
+    else
+        cardArray = cardManager->GetCardArray(CardArray::CPUDISCARDS);
     size      = cardArray->GetSize();
 
     for ( int index = 0; index < size; index++ )
@@ -900,7 +911,10 @@ void GameManager::UpdateAI(PlayerNum player)
     }
 
     // Retrieve the current trick and update the ai's knowledge base.
-    cardArray = cardManager->GetCardArray(CardArray::PLAYERTRICK);
+    if ( player == PLAYER1 )
+        cardArray = cardManager->GetCardArray(CardArray::CPUTRICK);
+    else
+        cardArray = cardManager->GetCardArray(CardArray::PLAYERTRICK);
     size      = cardArray->GetSize();
 
     for ( int index = 0; index < size; index++ )

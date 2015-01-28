@@ -90,7 +90,6 @@ signals:
     void              RequestACardTransfer(CardArray::Type,
                                            CardArray::Type,
                                            Card*);
-    void              SignalCardSelectionsChanged(Card*);
     void              ValidateSelection();
 
 private:

@@ -59,10 +59,6 @@ private:
     void                     RankSequences(void);
     void                     FinishRanking(void);
 
-signals:
-    void                     SignalCardSelectionsChanged(Card*,
-                                                      CardArray::Type);
-
 private:
     KnowledgeItem*           cardStatus[4][8];
     int                      cardRanks[12];

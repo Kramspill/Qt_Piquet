@@ -43,6 +43,7 @@ public:
     void                   Destroy(void);
     void                   Reset(void);
 
+    void                   SelectElder(void);
     void                   ExecuteDeal(void);
     void                   ExecuteExchange(void);
     void                   AnnounceDeclaration(State phase);
@@ -66,8 +67,6 @@ private:
 
 signals:
     void                   RequestCardPositions(PlayerNum player);
-    void                   SignalCardSelectionsChanged(Card*,
-                                                       CardArray::Type);
 
 private:
     KnowledgeBase*         knowledgeBase;

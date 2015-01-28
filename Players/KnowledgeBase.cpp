@@ -124,7 +124,6 @@ void KnowledgeBase::FlagDispensableCards(CardArray* cpuHand)
 
         card->setFlag(QGraphicsItem::ItemIsSelectable, true);
         card->setSelected(true);
-        emit SignalCardSelectionsChanged(card, CardArray::CPUHAND);
     }
 }
 
@@ -201,7 +200,6 @@ void KnowledgeBase::SelectTrick(CardArray* cpuHand)
     }
 
     card->setSelected(true);
-    emit SignalCardSelectionsChanged(card, CardArray::CPUHAND);
 }
 
 
