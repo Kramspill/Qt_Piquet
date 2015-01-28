@@ -90,5 +90,6 @@ extern TrickResults*       trickResults;
 extern SpecialScores*      specialScores;
 extern PartieResults*      partieResults;
 extern State               currentPhase;
+extern bool                testingAi;
 
 #endif // GLOBALSTATEINFO_H

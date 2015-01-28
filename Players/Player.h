@@ -85,6 +85,7 @@ signals:
                                      int);
     void         SetUI(State);
     void         ExitLoop(void);
+    void         RequestCardPositions(PlayerNum player);
 
 protected:
     PlayerNum    playerNumber;

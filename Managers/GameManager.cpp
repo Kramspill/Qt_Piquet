@@ -58,7 +58,7 @@ void GameManager::Initialize(void)
     cardManager->Initialize(scene);
 
     // Initialize the players (default is player vs cpu).
-    player1 = new AI();
+    player1 = new Player();
     player1->Initialize(PLAYER1);
     player2 = new AI();
     player2->Initialize(PLAYER2);
@@ -137,6 +137,7 @@ void GameManager::InitGlobalState(void)
     partieResults->currentDeal             = 0;
 
     currentPhase                           = DEAL;
+    testingAi                              = false;
 }
 
 
@@ -398,6 +399,14 @@ void GameManager::ExecuteElderSelect(void)
     //{
         player1->SelectElder();
     //}
+
+    // Check for ai tests
+    if ( testingAi && !dynamic_cast<AI*>(player1) )
+    {
+        delete player1;
+        player1 = new AI();
+        player1->Initialize(PLAYER1);
+    }
 
     // Randomly select the elder.
     std::srand(std::time(0));
@@ -806,6 +815,15 @@ void GameManager::ExecuteSummary(void)
             // If the ai still has game's to play.
             int x = 0;
         }
+        else
+        {
+            // The ai is done.
+            testingAi = false;
+
+            delete player1;
+            player1 = new Player();
+            player1->Initialize(PLAYER1);
+        }
     }
     else
     {
@@ -831,6 +849,7 @@ void GameManager::ExecuteSummary(void)
 //------------------------------------------------------------------------------
 void GameManager::NewGame(void)
 {
+    testingAi = false;
     ResetGame(true);
 }
 
@@ -840,7 +859,8 @@ void GameManager::NewGame(void)
 //------------------------------------------------------------------------------
 void GameManager::TestAi(void)
 {
-
+    testingAi = true;
+    ResetGame(true);
 }
 
 

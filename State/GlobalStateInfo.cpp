@@ -25,3 +25,4 @@ TrickResults*       trickResults;
 SpecialScores*      specialScores;
 PartieResults*      partieResults;
 State               currentPhase;
+bool                testingAi;

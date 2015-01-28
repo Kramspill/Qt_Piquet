@@ -65,9 +65,6 @@ protected:
 private:
     void                   ConnectSignals(void);
 
-signals:
-    void                   RequestCardPositions(PlayerNum player);
-
 private:
     KnowledgeBase*         knowledgeBase;
     CardArray*             cpuHand;
