@@ -177,6 +177,10 @@ void GameManager::ConnectSignals(void)
                      player1,
                      SIGNAL(BeginElderSelect()));
     QObject::connect(scene,
+                     SIGNAL(BeginElderSelect()),
+                     player2,
+                     SIGNAL(BeginElderSelect()));
+    QObject::connect(scene,
                      SIGNAL(BeginDeal()),
                      player1,
                      SIGNAL(BeginDeal()));
@@ -262,6 +266,10 @@ void GameManager::ConnectSignals(void)
                      SIGNAL(ScoreCarteBlanche()),
                      scoreManager,
                      SLOT(ScoreCarteBlanche()));
+    QObject::connect(player1,
+                     SIGNAL(RequestCardPositions(PlayerNum)),
+                     this,
+                     SLOT(UpdateAI(PlayerNum)));
 
     // Connect the signals from player 2.
     QObject::connect(player2,
@@ -292,6 +300,10 @@ void GameManager::ConnectSignals(void)
                      SIGNAL(ScoreCarteBlanche()),
                      scoreManager,
                      SLOT(ScoreCarteBlanche()));
+    QObject::connect(player2,
+                     SIGNAL(SetUI(State)),
+                     scene,
+                     SLOT(SetUI(State)));
 
     // Connect the signals from the CardManager.
     QObject::connect(cardManager,
@@ -387,29 +399,126 @@ void GameManager::ResetGame(bool newGame)
 
 
 //------------------------------------------------------------------------------
+// ConnectPlayer - Reconnect player 1's signals for ai test/revert.
+//------------------------------------------------------------------------------
+void GameManager::ConnectPlayer(void)
+{
+    // Reconnect the signals.
+    QObject::connect(scene,
+                     SIGNAL(BeginElderSelect()),
+                     player1,
+                     SIGNAL(BeginElderSelect()));
+    QObject::connect(scene,
+                     SIGNAL(BeginDeal()),
+                     player1,
+                     SIGNAL(BeginDeal()));
+    QObject::connect(scene,
+                     SIGNAL(BeginExchange()),
+                     player1,
+                     SIGNAL(BeginExchange()));
+    QObject::connect(scene,
+                     SIGNAL(Declare()),
+                     player1,
+                     SIGNAL(Declare()));
+    QObject::connect(scene,
+                     SIGNAL(Skip()),
+                     player1,
+                     SIGNAL(Skip()));
+    QObject::connect(scene,
+                     SIGNAL(Yes()),
+                     player1,
+                     SLOT(CarteBlancheYes()));
+    QObject::connect(scene,
+                     SIGNAL(No()),
+                     player1,
+                     SLOT(CarteBlancheNo()));
+    QObject::connect(scene,
+                     SIGNAL(TrickPlayed()),
+                     player1,
+                     SIGNAL(TrickPlayed()));
+    QObject::connect(scene,
+                     SIGNAL(Continue()),
+                     player1,
+                     SIGNAL(Continue()));
+    QObject::connect(player1,
+                     SIGNAL(DealComplete()),
+                     stateManager,
+                     SIGNAL(DealComplete()));
+    QObject::connect(player1,
+                     SIGNAL(ExchangeComplete()),
+                     stateManager,
+                     SIGNAL(ExchangeComplete()));
+    QObject::connect(player1,
+                     SIGNAL(PrepForTrick()),
+                     cardManager,
+                     SLOT(PrepForTrick()));
+    QObject::connect(player1,
+                     SIGNAL(SetCardsMoveable(bool)),
+                     cardManager,
+                     SLOT(SetCardsMoveable(bool)));
+    QObject::connect(player1,
+                     SIGNAL(SetCardsSelectable(bool,PlayerNum)),
+                     cardManager,
+                     SLOT(SetCardsSelectable(bool,PlayerNum)));
+    QObject::connect(player1,
+                     SIGNAL(DeselectCards()),
+                     cardManager,
+                     SLOT(DeselectCards()));
+    QObject::connect(player1,
+                     SIGNAL(SetUI(State)),
+                     scene,
+                     SLOT(SetUI(State)));
+    QObject::connect(player1,
+                     SIGNAL(RequestCardTransfer(CardArray::Type,
+                                                CardArray::Type,
+                                                int)),
+                     this,
+                     SLOT(RequestCardTransfer(CardArray::Type,
+                                              CardArray::Type,
+                                              int)));
+    QObject::connect(player1,
+                     SIGNAL(ScoreCarteBlanche()),
+                     scoreManager,
+                     SLOT(ScoreCarteBlanche()));
+    QObject::connect(player1,
+                     SIGNAL(RequestCardPositions(PlayerNum)),
+                     this,
+                     SLOT(UpdateAI(PlayerNum)));
+    QObject::connect(stateManager,
+                     SIGNAL(ExitLoop()),
+                     player1,
+                     SIGNAL(ExitLoop()));
+}
+
+
+//------------------------------------------------------------------------------
 // ExecuteElderSelect - Select who will be the Elder hand.
 //------------------------------------------------------------------------------
 void GameManager::ExecuteElderSelect(void)
 {
     restarting = false;
+
     // Check for ai tests
-    /*if ( testingAi && !dynamic_cast<AI*>(player1) )
+    if ( testingAi && !dynamic_cast<AI*>(player1) )
     {
         delete player1;
         player1 = new AI();
         player1->Initialize(PLAYER1);
-
-        QObject::connect(player1,
-                         SIGNAL(RequestCardPositions(PlayerNum)),
-                         this,
-                         SLOT(UpdateAI(PlayerNum)));
-    }*/
+        ConnectPlayer();
+    }
+    else if ( !testingAi && dynamic_cast<AI*>(player1) )
+    {
+        delete player1;
+        player1 = new Player();
+        player1->Initialize(PLAYER1);
+        ConnectPlayer();
+    }
 
     // If player 1 is a user, allow them to click a button.
-    if ( !dynamic_cast<AI*>(player1) )
-    {
+    //if ( !dynamic_cast<AI*>(player1) )
+    //{
         player1->SelectElder();
-    }
+    //}
 
     // Check for a restart.
     if ( restarting )

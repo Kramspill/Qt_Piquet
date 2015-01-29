@@ -45,6 +45,7 @@ private:
     void          DestroyGlobalState(void);
     void          ConnectSignals(void);
     void          ResetGame(bool newGame = false);
+    void          ConnectPlayer(void);
 
 private slots:
     void          ExecuteElderSelect(void);
