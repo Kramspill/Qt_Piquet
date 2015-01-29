@@ -43,7 +43,6 @@ public:
     void                   Destroy(void);
     void                   Reset(void);
 
-    void                   SelectElder(void);
     void                   ExecuteDeal(void);
     void                   ExecuteExchange(void);
     void                   AnnounceDeclaration(State phase);
