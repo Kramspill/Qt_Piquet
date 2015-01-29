@@ -96,17 +96,20 @@ void Player::ExecuteDeal(void)
     delete loop;
 
     // Begin dealing out the cards.
-    emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
-    emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
-    emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
-    emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
-    emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
-    emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
-    emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
-    emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
-    emit RequestCardTransfer(CardArray::DECK, CardArray::TALON,      8);
+    if ( !restarting )
+    {
+        emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::CPUHAND,    3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::PLAYERHAND, 3);
+        emit RequestCardTransfer(CardArray::DECK, CardArray::TALON,      8);
 
-    emit DealComplete();
+        emit DealComplete();
+    }
 }
 
 

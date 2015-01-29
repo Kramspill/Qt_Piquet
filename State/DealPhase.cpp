@@ -76,8 +76,11 @@ void DealPhase::onEntry(QEvent*)
 {
     currentPhase = DEAL;
 
-    stateMachine->start();
-    emit ExecuteDeal();
+    if ( !restarting )
+    {
+        stateMachine->start();
+        emit ExecuteDeal();
+    }
 }
 
 

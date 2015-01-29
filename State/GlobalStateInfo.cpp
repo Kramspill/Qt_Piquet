@@ -26,3 +26,4 @@ SpecialScores*      specialScores;
 PartieResults*      partieResults;
 State               currentPhase;
 bool                testingAi;
+bool                restarting;

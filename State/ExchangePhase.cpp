@@ -76,8 +76,11 @@ void ExchangePhase::onEntry(QEvent*)
 {
     currentPhase = EXCHANGE;
 
-    stateMachine->start();
-    emit ExecuteExchange();
+    if ( !restarting )
+    {
+        stateMachine->start();
+        emit ExecuteExchange();
+    }
 }
 
 

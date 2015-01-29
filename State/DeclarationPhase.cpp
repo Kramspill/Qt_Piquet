@@ -94,7 +94,8 @@ void DeclarationPhase::Destroy(void)
 //------------------------------------------------------------------------------
 void DeclarationPhase::onEntry(QEvent*)
 {
-    stateMachine->start();
+    if ( !restarting )
+        stateMachine->start();
 }
 
 
@@ -133,9 +134,14 @@ void DeclarationPhase::ConnectSignals(void)
 //------------------------------------------------------------------------------
 void DeclarationPhase::ElderDeclarations(void)
 {
-    emit AnnounceDeclaration(POINT,    elder);
-    emit AnnounceDeclaration(SEQUENCE, elder);
-    emit AnnounceDeclaration(SET,      elder);
+    if ( !restarting )
+        emit AnnounceDeclaration(POINT,    elder);
+
+    if ( !restarting )
+        emit AnnounceDeclaration(SEQUENCE, elder);
+
+    if ( !restarting )
+        emit AnnounceDeclaration(SET,      elder);
 
     emit DeclarationsComplete();
 }
@@ -156,13 +162,16 @@ void DeclarationPhase::ElderTrick(void)
 //------------------------------------------------------------------------------
 void DeclarationPhase::YoungerDeclarations(void)
 {
-    if ( declarationResults->pointWinner == younger )
+    if ( declarationResults->pointWinner == younger &&
+         !restarting )
         emit AnnounceDeclaration(POINT, younger);
 
-    if ( declarationResults->sequenceWinner == younger )
+    if ( declarationResults->sequenceWinner == younger &&
+         !restarting )
         emit AnnounceDeclaration(SEQUENCE, younger);
 
-    if ( declarationResults->setWinner == younger )
+    if ( declarationResults->setWinner == younger &&
+         !restarting )
         emit AnnounceDeclaration(SET, younger);
 
     emit DeclarationsComplete();

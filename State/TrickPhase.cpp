@@ -76,7 +76,8 @@ void TrickPhase::onEntry(QEvent*)
 {
     currentPhase = TRICK;
 
-    stateMachine->start();
+    if ( !restarting )
+        stateMachine->start();
 }
 
 
@@ -115,13 +116,19 @@ void TrickPhase::PlayTricks(void)
     {
         if ( trickWinner == PLAYER1 )
         {
-            emit PlayTrick(PLAYER1);
-            emit PlayTrick(PLAYER2);
+            if ( !restarting )
+                emit PlayTrick(PLAYER1);
+
+            if ( !restarting )
+                emit PlayTrick(PLAYER2);
         }
         else
         {
-            emit PlayTrick(PLAYER2);
-            emit PlayTrick(PLAYER1);
+            if ( !restarting )
+                emit PlayTrick(PLAYER2);
+
+            if ( !restarting )
+                emit PlayTrick(PLAYER1);
         }
 
         count--;

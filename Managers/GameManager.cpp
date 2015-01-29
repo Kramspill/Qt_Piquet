@@ -138,6 +138,7 @@ void GameManager::InitGlobalState(void)
 
     currentPhase                           = DEAL;
     testingAi                              = false;
+    restarting                             = false;
 }
 
 
@@ -363,6 +364,7 @@ void GameManager::ResetGame(bool newGame)
     specialScores->carteBlancheScored      = false;
     specialScores->repiqueScored           = false;
     specialScores->piqueScored             = false;
+    restarting                             = false;
 
     // Reset managers.
     cardManager->Reset();
@@ -408,24 +410,32 @@ void GameManager::ExecuteElderSelect(void)
         player1->Initialize(PLAYER1);
     }
 
-    // Randomly select the elder.
-    std::srand(std::time(0));
-    int r = rand() % 10 + 1;
-
-    if ( r < 6 )
+    // Check for a restart.
+    if ( restarting )
     {
-        elder   = PLAYER1;
-        younger = PLAYER2;
-        scene->UpdateLog("PLAYER 1: ELDER\nPLAYER 2: YOUNGER");
+        ResetGame(true);
     }
     else
     {
-        elder   = PLAYER2;
-        younger = PLAYER1;
-        scene->UpdateLog("PLAYER 1: YOUNGER\nPLAYER 2: ELDER");
-    }
+        // Randomly select the elder.
+        std::srand(std::time(0));
+        int r = rand() % 10 + 1;
 
-    emit stateManager->ElderSelectComplete();
+        if ( r < 6 )
+        {
+            elder   = PLAYER1;
+            younger = PLAYER2;
+            scene->UpdateLog("PLAYER 1: ELDER\nPLAYER 2: YOUNGER");
+        }
+        else
+        {
+            elder   = PLAYER2;
+            younger = PLAYER1;
+            scene->UpdateLog("PLAYER 1: YOUNGER\nPLAYER 2: ELDER");
+        }
+
+        emit stateManager->ElderSelectComplete();
+    }
 }
 
 
@@ -444,6 +454,12 @@ void GameManager::ExecuteDeal(void)
         player2->ExecuteDeal();
         scene->UpdateLog("PLAYER 2: DEAL");
     }
+
+    // Check for restart.
+    if ( restarting )
+    {
+        ResetGame(true);
+    }
 }
 
 
@@ -461,36 +477,67 @@ void GameManager::ExecuteExchange(void)
     else if ( carteBlanche == PLAYER2 )
         player2->CarteBlanche();
 
-    // Update the log if Carte Blanche was declared.
-    if ( specialScores->carteBlancheScored )
+    // Check for restart.
+    if ( restarting )
     {
-        char* str = new char[30];
-        snprintf(str, 30, "PLAYER %d: CARTE BLANCHE",
-                 declarationResults->carteBlancheWinner);
-
-        scene->UpdateLog(str);
-        delete[] str;
-    }
-
-    if ( elder == PLAYER1 )
-    {
-        cardManager->SetCardsSelectable(true, PLAYER1);
-        player1->ExecuteExchange();
-        cardManager->SetCardsSelectable(false, PLAYER1);
-
-        cardManager->SetCardsSelectable(true, PLAYER2);
-        player2->ExecuteExchange();
-        cardManager->SetCardsSelectable(false, PLAYER2);
+        ResetGame(true);
     }
     else
     {
-        cardManager->SetCardsSelectable(true, PLAYER2);
-        player2->ExecuteExchange();
-        cardManager->SetCardsSelectable(false, PLAYER2);
 
-        cardManager->SetCardsSelectable(true, PLAYER1);
-        player1->ExecuteExchange();
-        cardManager->SetCardsSelectable(false, PLAYER1);
+        // Update the log if Carte Blanche was declared.
+        if ( specialScores->carteBlancheScored )
+        {
+            char* str = new char[30];
+            snprintf(str, 30, "PLAYER %d: CARTE BLANCHE",
+                     declarationResults->carteBlancheWinner);
+
+            scene->UpdateLog(str);
+            delete[] str;
+        }
+
+        if ( elder == PLAYER1 )
+        {
+            cardManager->SetCardsSelectable(true, PLAYER1);
+            player1->ExecuteExchange();
+            cardManager->SetCardsSelectable(false, PLAYER1);
+
+            // Check for restart.
+            if ( restarting )
+            {
+                ResetGame(true);
+            }
+            else
+            {
+                cardManager->SetCardsSelectable(true, PLAYER2);
+                player2->ExecuteExchange();
+                cardManager->SetCardsSelectable(false, PLAYER2);
+            }
+        }
+        else
+        {
+            cardManager->SetCardsSelectable(true, PLAYER2);
+            player2->ExecuteExchange();
+            cardManager->SetCardsSelectable(false, PLAYER2);
+
+            // Check for restart.
+            if ( restarting )
+            {
+                ResetGame(true);
+            }
+            else
+            {
+                cardManager->SetCardsSelectable(true, PLAYER1);
+                player1->ExecuteExchange();
+                cardManager->SetCardsSelectable(false, PLAYER1);
+            }
+        }
+
+        // Check for restart.
+        if ( restarting )
+        {
+            ResetGame(true);
+        }
     }
 }
 
@@ -525,126 +572,175 @@ void GameManager::AnnounceDeclaration(State phase, PlayerNum player)
         // Elder makes his declaration.
         cardManager->SetCardsSelectable(true, elder);
         elderPlayer->AnnounceDeclaration(phase);
-        DeclareSelection(phase, elder);
 
-        // Younger makes his response if needed.
-        if ( declaration->notSkipped )
+        // Check for restart.
+        if ( restarting )
         {
-            if ( dynamic_cast<AI*>(elderPlayer) )
-            {
-                switch ( phase )
-                {
-                    case POINT:
-                        pointDeclaration->numCards = declaration->numCards;
-                        break;
-
-                    case SEQUENCE:
-                        seqDeclaration->numCards = declaration->numCards;
-                        break;
-
-                    case SET:
-                        setDeclaration->numCards = declaration->numCards;
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-
-            cardManager->SetCardsSelectable(true, younger);
-            youngerPlayer->Respond(phase);
-            ResolveResponse(phase, younger);
-            cardManager->SetCardsSelectable(false, younger);
-
-            // Score the declaration.
-            scoreManager->ScoreDeclaration(phase, elder);
-
-            // If elder won their declaration and this isn't the Point,
-            // elder may make as many declarations as they like/can.
-            if ( response->good && phase != POINT )
-            {
-                while ( declaration->notSkipped )
-                {
-                    elderPlayer->AnnounceDeclaration(phase);
-                    DeclareSelection(phase, elder);
-                    response->good = true;
-                    scoreManager->ScoreDeclaration(phase, elder);
-                }
-            }
-            else if ( dynamic_cast<AI*>(elderPlayer) )
-            {
-                switch ( phase )
-                {
-                    case POINT:
-                        pointDeclaration->numCards = response->numCards;
-                        break;
-
-                    case SEQUENCE:
-                        seqDeclaration->numCards = response->numCards;
-                        break;
-
-                    case SET:
-                        setDeclaration->numCards = response->numCards;
-                        break;
-
-                    default:
-                        break;
-                }
-            }
+            cardManager->SetCardsSelectable(false, elder);
+            ResetGame(true);
         }
         else
         {
-            switch ( phase )
+            DeclareSelection(phase, elder);
+
+            // Younger makes his response if needed.
+            if ( declaration->notSkipped )
             {
-                case POINT:
-                    declarationResults->pointWinner = younger;
-                    pointDeclaration->numCards = 0;
-                    break;
+                if ( dynamic_cast<AI*>(elderPlayer) )
+                {
+                    switch ( phase )
+                    {
+                        case POINT:
+                            pointDeclaration->numCards = declaration->numCards;
+                            break;
 
-                case SEQUENCE:
-                    declarationResults->sequenceWinner = younger;
-                    seqDeclaration->numCards = 0;
-                    break;
+                        case SEQUENCE:
+                            seqDeclaration->numCards = declaration->numCards;
+                            break;
 
-                case SET:
-                    declarationResults->setWinner = younger;
-                    setDeclaration->numCards = 0;
-                    break;
+                        case SET:
+                            setDeclaration->numCards = declaration->numCards;
+                            break;
 
-                default:
-                    break;
+                        default:
+                            break;
+                    }
+                }
+
+                cardManager->SetCardsSelectable(true, younger);
+                youngerPlayer->Respond(phase);
+
+                // Check for restart.
+                if ( restarting )
+                {
+                    cardManager->SetCardsSelectable(false, elder);
+                    cardManager->SetCardsSelectable(false, younger);
+                    ResetGame(true);
+                }
+                else
+                {
+                    ResolveResponse(phase, younger);
+                    cardManager->SetCardsSelectable(false, younger);
+
+                    // Score the declaration.
+                    scoreManager->ScoreDeclaration(phase, elder);
+
+                    // If elder won their declaration and this isn't the Point,
+                    // elder may make as many declarations as they like/can.
+                    if ( response->good && phase != POINT )
+                    {
+                        while ( declaration->notSkipped )
+                        {
+                            elderPlayer->AnnounceDeclaration(phase);
+                            // Check for restart.
+                            if ( restarting )
+                            {
+                                cardManager->SetCardsSelectable(false, elder);
+                                ResetGame(true);
+                            }
+                            else
+                            {
+                                DeclareSelection(phase, elder);
+                                response->good = true;
+                                scoreManager->ScoreDeclaration(phase, elder);
+                            }
+                        }
+                    }
+                    else if ( dynamic_cast<AI*>(elderPlayer) )
+                    {
+                        switch ( phase )
+                        {
+                            case POINT:
+                                pointDeclaration->numCards = response->numCards;
+                                break;
+
+                            case SEQUENCE:
+                                seqDeclaration->numCards = response->numCards;
+                                break;
+
+                            case SET:
+                                setDeclaration->numCards = response->numCards;
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+                }
             }
+            else
+            {
+                switch ( phase )
+                {
+                    case POINT:
+                        declarationResults->pointWinner = younger;
+                        pointDeclaration->numCards = 0;
+                        break;
+
+                    case SEQUENCE:
+                        declarationResults->sequenceWinner = younger;
+                        seqDeclaration->numCards = 0;
+                        break;
+
+                    case SET:
+                        declarationResults->setWinner = younger;
+                        setDeclaration->numCards = 0;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+            if ( dynamic_cast<AI*>(elderPlayer) )
+                UpdateAI(elder);
+
+            cardManager->SetCardsSelectable(false, elder);
         }
-
-        if ( dynamic_cast<AI*>(elderPlayer) )
-            UpdateAI(elder);
-
-        cardManager->SetCardsSelectable(false, elder);
     }
     else
     {
         // Younger announces their declarations and scores for it.
         cardManager->SetCardsSelectable(true, younger);
         youngerPlayer->AnnounceDeclaration(phase);
-        DeclareSelection(phase, younger);
-        response->good = true;
-        scoreManager->ScoreDeclaration(phase, younger);
 
-        if ( phase != POINT )
+        // Check for restart.
+        if ( restarting )
         {
-            while ( declaration->notSkipped )
-            {
-                youngerPlayer->AnnounceDeclaration(phase);
-                DeclareSelection(phase, younger);
-                response->good = true;
-                scoreManager->ScoreDeclaration(phase, younger);
-            }
+            cardManager->SetCardsSelectable(false, younger);
+            ResetGame(true);
         }
+        else
+        {
+            DeclareSelection(phase, younger);
+            response->good = true;
+            scoreManager->ScoreDeclaration(phase, younger);
 
-        if ( dynamic_cast<AI*>(youngerPlayer) )
-            UpdateAI(younger);
+            if ( phase != POINT )
+            {
+                while ( declaration->notSkipped )
+                {
+                    youngerPlayer->AnnounceDeclaration(phase);
+                    // Check for restart.
+                    if ( restarting )
+                    {
+                        cardManager->SetCardsSelectable(false, younger);
+                        ResetGame(true);
+                    }
+                    else
+                    {
+                        DeclareSelection(phase, younger);
+                        response->good = true;
+                        scoreManager->ScoreDeclaration(phase, younger);
+                    }
+                }
+            }
 
-        cardManager->SetCardsSelectable(false, younger);
+            if ( dynamic_cast<AI*>(youngerPlayer) )
+                UpdateAI(younger);
+
+            cardManager->SetCardsSelectable(false, younger);
+        }
     }
 }
 
@@ -785,6 +881,12 @@ void GameManager::PlayTrick(PlayerNum player)
         scoreManager->ScoreTrick(player);
     }
 
+    // Check for restart.
+    if ( restarting )
+    {
+        ResetGame(true);
+    }
+
 }
 
 
@@ -850,7 +952,9 @@ void GameManager::ExecuteSummary(void)
 void GameManager::NewGame(void)
 {
     testingAi = false;
-    ResetGame(true);
+    restarting = true;
+
+    emit stateManager->ExitLoop();
 }
 
 
@@ -860,7 +964,9 @@ void GameManager::NewGame(void)
 void GameManager::TestAi(void)
 {
     testingAi = true;
-    ResetGame(true);
+    restarting = true;
+
+    emit stateManager->ExitLoop();
 }
 
 

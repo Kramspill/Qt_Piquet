@@ -91,5 +91,6 @@ extern SpecialScores*      specialScores;
 extern PartieResults*      partieResults;
 extern State               currentPhase;
 extern bool                testingAi;
+extern bool                restarting;
 
 #endif // GLOBALSTATEINFO_H

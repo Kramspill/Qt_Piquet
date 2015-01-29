@@ -131,7 +131,6 @@ void StateManager::Destroy(void)
 //------------------------------------------------------------------------------
 void StateManager::Reset(void)
 {
-    emit ExitLoop();
     emit ResetState();
 }
 
