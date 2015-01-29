@@ -73,23 +73,6 @@ void AI::Reset(void)
 
 
 //------------------------------------------------------------------------------
-// SelectElder - Player executes an Elder selection.
-//------------------------------------------------------------------------------
-void AI::SelectElder(void)
-{
-    // Set the UI.
-    emit SetUI(ELDERSELECT);
-
-    // Wait for the user to select 'Randomize'.
-    QEventLoop* loop = new QEventLoop();
-    connect(this, SIGNAL(BeginElderSelect()), loop, SLOT(quit()));
-    connect(this, SIGNAL(ExitLoop()), loop, SLOT(quit()));
-    loop->exec();
-    delete loop;
-}
-
-
-//------------------------------------------------------------------------------
 // ExecuteDeal - Player executes a deal.
 //------------------------------------------------------------------------------
 void AI::ExecuteDeal(void)

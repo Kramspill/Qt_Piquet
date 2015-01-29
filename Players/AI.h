@@ -43,7 +43,6 @@ public:
     void                   Destroy(void);
     void                   Reset(void);
 
-    void                   SelectElder(void);
     void                   ExecuteDeal(void);
     void                   ExecuteExchange(void);
     void                   AnnounceDeclaration(State phase);
@@ -64,6 +63,9 @@ protected:
 
 private:
     void                   ConnectSignals(void);
+
+signals:
+    void                   RequestCardPositions(PlayerNum player);
 
 private:
     KnowledgeBase*         knowledgeBase;

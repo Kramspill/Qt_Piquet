@@ -262,10 +262,6 @@ void GameManager::ConnectSignals(void)
                      SIGNAL(ScoreCarteBlanche()),
                      scoreManager,
                      SLOT(ScoreCarteBlanche()));
-    QObject::connect(player1,
-                     SIGNAL(RequestCardPositions(PlayerNum)),
-                     this,
-                     SLOT(UpdateAI(PlayerNum)));
 
     // Connect the signals from player 2.
     QObject::connect(player2,
@@ -364,7 +360,6 @@ void GameManager::ResetGame(bool newGame)
     specialScores->carteBlancheScored      = false;
     specialScores->repiqueScored           = false;
     specialScores->piqueScored             = false;
-    restarting                             = false;
 
     // Reset managers.
     cardManager->Reset();
@@ -396,18 +391,24 @@ void GameManager::ResetGame(bool newGame)
 //------------------------------------------------------------------------------
 void GameManager::ExecuteElderSelect(void)
 {
-    // If player 1 is a user, allow them to click a button.
-    //if ( !dynamic_cast<AI*>(player1) )
-    //{
-        player1->SelectElder();
-    //}
-
+    restarting = false;
     // Check for ai tests
-    if ( testingAi && !dynamic_cast<AI*>(player1) )
+    /*if ( testingAi && !dynamic_cast<AI*>(player1) )
     {
         delete player1;
         player1 = new AI();
         player1->Initialize(PLAYER1);
+
+        QObject::connect(player1,
+                         SIGNAL(RequestCardPositions(PlayerNum)),
+                         this,
+                         SLOT(UpdateAI(PlayerNum)));
+    }*/
+
+    // If player 1 is a user, allow them to click a button.
+    if ( !dynamic_cast<AI*>(player1) )
+    {
+        player1->SelectElder();
     }
 
     // Check for a restart.

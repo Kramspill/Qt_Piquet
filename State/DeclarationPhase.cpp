@@ -152,7 +152,9 @@ void DeclarationPhase::ElderDeclarations(void)
 //------------------------------------------------------------------------------
 void DeclarationPhase::ElderTrick(void)
 {
-    emit PlayTrick(elder);
+    if ( !restarting )
+        emit PlayTrick(elder);
+
     emit TrickComplete();
 }
 
@@ -162,16 +164,13 @@ void DeclarationPhase::ElderTrick(void)
 //------------------------------------------------------------------------------
 void DeclarationPhase::YoungerDeclarations(void)
 {
-    if ( declarationResults->pointWinner == younger &&
-         !restarting )
+    if ( declarationResults->pointWinner == younger && !restarting )
         emit AnnounceDeclaration(POINT, younger);
 
-    if ( declarationResults->sequenceWinner == younger &&
-         !restarting )
+    if ( declarationResults->sequenceWinner == younger && !restarting )
         emit AnnounceDeclaration(SEQUENCE, younger);
 
-    if ( declarationResults->setWinner == younger &&
-         !restarting )
+    if ( declarationResults->setWinner == younger && !restarting )
         emit AnnounceDeclaration(SET, younger);
 
     emit DeclarationsComplete();
@@ -183,6 +182,8 @@ void DeclarationPhase::YoungerDeclarations(void)
 //------------------------------------------------------------------------------
 void DeclarationPhase::YoungerTrick(void)
 {
-    emit PlayTrick(younger);
+    if ( !restarting )
+        emit PlayTrick(younger);
+
     emit TrickComplete();
 }

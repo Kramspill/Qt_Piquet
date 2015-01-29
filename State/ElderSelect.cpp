@@ -78,11 +78,8 @@ void ElderSelect::onEntry(QEvent*)
 {
     currentPhase = ELDERSELECT;
 
-    if ( !restarting )
-    {
-        stateMachine->start();
-        emit ExecuteElderSelect();
-    }
+    stateMachine->start();
+    emit ExecuteElderSelect();
 }
 
 
