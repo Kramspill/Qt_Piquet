@@ -27,7 +27,8 @@ enum State
     RESPOND,
     TRICK,
     SUMMARY,
-    BLANCHE
+    BLANCHE,
+    AITEST
 };
 
 struct Declaration
@@ -92,5 +93,8 @@ extern PartieResults*      partieResults;
 extern State               currentPhase;
 extern bool                testingAi;
 extern bool                restarting;
+extern int                 player1Wins;
+extern int                 player2Wins;
+extern int                 numGames;
 
 #endif // GLOBALSTATEINFO_H

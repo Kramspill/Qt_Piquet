@@ -139,6 +139,9 @@ void GameManager::InitGlobalState(void)
     currentPhase                           = DEAL;
     testingAi                              = false;
     restarting                             = false;
+    player1Wins                            = 0;
+    player2Wins                            = 0;
+    numGames                               = 2;
 }
 
 
@@ -521,6 +524,7 @@ void GameManager::ExecuteElderSelect(void)
     }
     else
     {
+        scene->SetUI(AITEST);
         QCoreApplication::processEvents();
     }
 
@@ -531,21 +535,39 @@ void GameManager::ExecuteElderSelect(void)
     }
     else
     {
-        // Randomly select the elder.
-        std::srand(std::time(0));
-        int r = rand() % 10 + 1;
-
-        if ( r < 6 )
+        if ( testingAi )
         {
-            elder   = PLAYER1;
-            younger = PLAYER2;
-            scene->UpdateLog("PLAYER 1: ELDER\nPLAYER 2: YOUNGER");
+            if ( elder == PLAYER1 )
+            {
+                elder   = PLAYER2;
+                younger = PLAYER1;
+                scene->UpdateLog("PLAYER 1: YOUNGER\nPLAYER 2: ELDER");
+            }
+            else
+            {
+                elder   = PLAYER1;
+                younger = PLAYER2;
+                scene->UpdateLog("PLAYER 1: ELDER\nPLAYER 2: YOUNGER");
+            }
         }
         else
         {
-            elder   = PLAYER2;
-            younger = PLAYER1;
-            scene->UpdateLog("PLAYER 1: YOUNGER\nPLAYER 2: ELDER");
+            // Randomly select the elder.
+            std::srand(std::time(0));
+            int r = rand() % 10 + 1;
+
+            if ( r < 6 )
+            {
+                elder   = PLAYER1;
+                younger = PLAYER2;
+                scene->UpdateLog("PLAYER 1: ELDER\nPLAYER 2: YOUNGER");
+            }
+            else
+            {
+                elder   = PLAYER2;
+                younger = PLAYER1;
+                scene->UpdateLog("PLAYER 1: YOUNGER\nPLAYER 2: ELDER");
+            }
         }
 
         emit stateManager->ElderSelectComplete();
@@ -1026,19 +1048,27 @@ void GameManager::ExecuteSummary(void)
             player1->Summary();
             ResetGame(true);
         }
-        else if ( 1 )
+        else if ( numGames > 0 )
         {
             // If the ai still has game's to play.
-            int x = 0;
+            if ( scoreManager->GetPlayerScore() > scoreManager->GetCPUScore() )
+                player1Wins++;
+            else if ( scoreManager->GetPlayerScore() < scoreManager->GetCPUScore() )
+                player2Wins++;
+
+            numGames--;
+            ResetGame(true);
         }
         else
         {
-            // The ai is done.
-            testingAi = false;
+            player1->Summary();
+            testingAi   = false;
+            restarting  = true;
 
-            delete player1;
-            player1 = new Player();
-            player1->Initialize(PLAYER1);
+            player1Wins = 0;
+            player2Wins = 0;
+            numGames    = 10;
+            ResetGame(true);
         }
     }
     else
@@ -1068,6 +1098,10 @@ void GameManager::NewGame(void)
     testingAi = false;
     restarting = true;
 
+    player1Wins = 0;
+    player2Wins = 0;
+    numGames    = 10;
+
     emit stateManager->ExitLoop();
 }
 
@@ -1079,6 +1113,10 @@ void GameManager::TestAi(void)
 {
     testingAi = true;
     restarting = true;
+
+    player1Wins = 0;
+    player2Wins = 0;
+    numGames    = 2;
 
     emit stateManager->ExitLoop();
 }

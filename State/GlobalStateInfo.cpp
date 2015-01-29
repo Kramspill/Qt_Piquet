@@ -27,3 +27,6 @@ PartieResults*      partieResults;
 State               currentPhase;
 bool                testingAi;
 bool                restarting;
+int                 player1Wins;
+int                 player2Wins;
+int                 numGames;

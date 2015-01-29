@@ -759,16 +759,24 @@ void Scene::SetUI(State phase)
 
             if ( partieResults->currentDeal == 6 )
             {
-                int p1Final = 0;
-                int p2Final = 0;
-                for ( i = 0; i < 6; i++ )
+                if ( testingAi )
                 {
-                    p1Final += partieResults->deal[0][i];
-                    p2Final += partieResults->deal[1][i];
+                    snprintf(string, 40, "Player 1 wins: %d\nPlayer 2 wins: %d",
+                             player1Wins, player2Wins);
                 }
+                else
+                {
+                    int p1Final = 0;
+                    int p2Final = 0;
+                    for ( i = 0; i < 6; i++ )
+                    {
+                        p1Final += partieResults->deal[0][i];
+                        p2Final += partieResults->deal[1][i];
+                    }
 
-                snprintf(string, 40, "PLAYER 1: %d\nPLAYER 2: %d",
-                         p1Final, p2Final);
+                    snprintf(string, 40, "PLAYER 1: %d\nPLAYER 2: %d",
+                             p1Final, p2Final);
+                }
                 primaryAction->setText("New Game");
             }
             else
@@ -801,6 +809,19 @@ void Scene::SetUI(State phase)
             secondaryAction->disconnect();
             QObject::connect(primaryAction, SIGNAL(clicked()),
                              this,          SIGNAL(Continue()));
+            break;
+
+        case AITEST:
+            title->setText("AI Test");
+            snprintf(string, 40, "Player 1 wins: %d\nPlayer 2 wins: %d",
+                     player1Wins, player2Wins);
+            text->setText(string);
+
+            title->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+            text->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+
+            primaryAction->setVisible(false);
+            secondaryAction->setVisible(false);
             break;
     };
 

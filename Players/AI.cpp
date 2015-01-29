@@ -77,9 +77,6 @@ void AI::Reset(void)
 //------------------------------------------------------------------------------
 void AI::ExecuteDeal(void)
 {
-    // Set the UI.
-    emit SetUI(DEAL);
-
     // Begin dealing out the cards.
     if ( playerNumber == PLAYER1 )
     {
