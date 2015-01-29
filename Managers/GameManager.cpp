@@ -515,10 +515,14 @@ void GameManager::ExecuteElderSelect(void)
     }
 
     // If player 1 is a user, allow them to click a button.
-    //if ( !dynamic_cast<AI*>(player1) )
-    //{
+    if ( !dynamic_cast<AI*>(player1) )
+    {
         player1->SelectElder();
-    //}
+    }
+    else
+    {
+        QCoreApplication::processEvents();
+    }
 
     // Check for a restart.
     if ( restarting )
