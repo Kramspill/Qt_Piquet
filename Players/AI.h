@@ -53,10 +53,10 @@ public:
 
     void                   UpdateKnowledgeBase(Card* card, int index,
                                              CardArray::Type location);
+    void                   UpdateScores(int myScore, int oppScore);
     void                   UpdateHand(CardArray* newCpuHand);
 
     void                   SelectCardsToDiscard(void);
-    void                   SelectTrickToPlay(void);
 
 protected:
     void                   ExecuteCarteBlanche(void);

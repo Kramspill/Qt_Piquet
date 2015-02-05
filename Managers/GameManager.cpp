@@ -1200,4 +1200,15 @@ void GameManager::UpdateAI(PlayerNum player)
         card = cardArray->GetCard(index);
         ai->UpdateKnowledgeBase(card, index, CardArray::PLAYERTRICK);
     }
+
+    if ( player == PLAYER1 )
+    {
+        ai->UpdateScores(scoreManager->GetPlayerScore(),
+                         scoreManager->GetCPUScore());
+    }
+    else
+    {
+        ai->UpdateScores(scoreManager->GetCPUScore(),
+                         scoreManager->GetPlayerScore());
+    }
 }

@@ -192,7 +192,10 @@ void AI::PlayTrick(void)
 {
     emit RequestCardPositions(playerNumber);
 
-    knowledgeBase->SelectTrick(cpuHand);
+    if ( 1 )
+        knowledgeBase->SelectMMTrick(cpuHand, playerNumber);
+    else
+        knowledgeBase->SelectTrick(cpuHand);
 
     if ( playerNumber == PLAYER1 )
     {
@@ -234,6 +237,15 @@ void AI::UpdateKnowledgeBase(Card* card, int index,
 
 
 //------------------------------------------------------------------------------
+// UpdateScores - Update the score knowledge.
+//------------------------------------------------------------------------------
+void AI::UpdateScores(int myScore, int oppScore)
+{
+    knowledgeBase->SetScores(myScore, oppScore);
+}
+
+
+//------------------------------------------------------------------------------
 // UpdateHand - Provide the ai with up-to-date information on it's cards.
 //------------------------------------------------------------------------------
 void AI::UpdateHand(CardArray* newCpuHand)
@@ -248,15 +260,6 @@ void AI::UpdateHand(CardArray* newCpuHand)
 void AI::SelectCardsToDiscard(void)
 {
     knowledgeBase->FlagDispensableCards(cpuHand);
-}
-
-
-//------------------------------------------------------------------------------
-// SelectTrickToPlay - Select a cars to play for the Trick phase.
-//------------------------------------------------------------------------------
-void AI::SelectTrickToPlay(void)
-{
-    knowledgeBase->SelectTrick(cpuHand);
 }
 
 

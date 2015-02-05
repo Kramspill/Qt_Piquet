@@ -204,6 +204,83 @@ void KnowledgeBase::SelectTrick(CardArray* cpuHand)
 
 
 //------------------------------------------------------------------------------
+// SelectMMTrick - Choose a card from the cpu's hand to play. Uses imp-minimax.
+//------------------------------------------------------------------------------
+void KnowledgeBase::SelectMMTrick(CardArray* cpuHand, PlayerNum n)
+{
+    Node* root;
+    int max = -1000;
+    Card* card = cpuHand->GetCard(0);
+
+    // Create a node based on current state.
+    root              = new Node();
+    root->payoff      = 0;
+    root->myTurnNext  = true;
+    root->myWins      = (n == PLAYER1) ? trickResults->player1Wins : trickResults->player2Wins;
+    root->oppWins     = (n == PLAYER1) ? trickResults->player2Wins : trickResults->player1Wins;
+    root->piquetGiven = specialScores->piqueScored;
+    root->myScore     = myScore;
+    root->oppScore    = oppScore;
+
+    // Allocate space for state.
+    root->state = new CardArray::Type*[4];
+    for ( int i = 0; i < 4; i++ )
+        root->state[i] = new CardArray::Type[8];
+
+    // Initialize state.
+    for ( int i = 0; i < 4; i++ )
+    {
+        for (int j = 0; j < 8; j++ )
+        {
+            root->state[i][j] = cardStatus[i][j]->location;
+        }
+    }
+
+    // Call the imp-minimax function to determine the next move.
+    ImpMinimax(root, DEPTH, true, n);
+
+    // Select the move from the tree.
+    Node* move;
+    for ( int i = 0; i < (int)root->children.size(); i++ )
+    {
+        Node* n = root->children[i];
+
+        if ( n->payoff > max )
+        {
+            max = n->payoff;
+            move = n;
+        }
+    }
+
+    for ( int i = 0; i < 4; i++ )
+    {
+        for ( int j = 0; j < 8; j++ )
+        {
+            CardArray::Type type = move->state[i][j];
+            if ( (type == CardArray::PLAYERTRICK && n == PLAYER1) ||
+                 (type == CardArray::CPUTRICK && n == PLAYER2) )
+            {
+                int n = 0;
+                while ( card != NULL && (card->GetSuit() != i && card->GetValue() != j) )
+                {
+                    n++;
+                    card = cpuHand->GetCard(n);
+                }
+
+                if ( card )
+                    card->setSelected(true);
+
+                break;
+            }
+        }
+    }
+
+    // Free the memory allocated for the tree.
+    FreeTree(root);
+}
+
+
+//------------------------------------------------------------------------------
 // SelectPoint - Calculate the cpu's best Point and select it.
 //------------------------------------------------------------------------------
 void KnowledgeBase::SelectPoint(CardArray* hand)
@@ -411,6 +488,16 @@ void KnowledgeBase::SelectSet(CardArray* hand)
             }
         }
     }
+}
+
+
+//------------------------------------------------------------------------------
+// UpdateScores - Update the score knowledge.
+//------------------------------------------------------------------------------
+void KnowledgeBase::SetScores(int myScore, int oppScore)
+{
+    this->myScore  = myScore;
+    this->oppScore = oppScore;
 }
 
 
@@ -658,4 +745,593 @@ void KnowledgeBase::FinishRanking(void)
             }
         }
     }
+}
+
+
+//------------------------------------------------------------------------------
+// ImpMinimax - Implementation of imperfect-info minimax for trick play.
+//------------------------------------------------------------------------------
+int KnowledgeBase::ImpMinimax(KnowledgeBase::Node* n,
+                              int                  depth,
+                              bool                 myMove,
+                              PlayerNum            p)
+{
+    int bestValue;
+    int value;
+
+    // Generate the list of possible moves we can make.
+    GenerateMoves(n, p);
+
+    // Check for terminal/zero depth
+    if ( n->children.size() > 0 && depth > 0 )
+    {
+        // Check whether we are maximizing or minimizing at this node.
+        if ( myMove )
+        {
+            bestValue = -1000;
+
+            // Recurse on child nodes.
+            for ( int i = 0; i < (int)n->children.size(); i++ )
+            {
+                Node* child = n->children[i];
+
+                value     = ImpMinimax(child, depth-1, n->myTurnNext, p);
+                bestValue = std::max(bestValue, value);
+            }
+
+        }
+        else
+        {
+            bestValue = 1000;
+
+            // Recurse on child nodes.
+            for ( int i = 0; i < (int)n->children.size(); i++ )
+            {
+                Node* child = n->children[i];
+
+                value     = ImpMinimax(child, depth-1, n->myTurnNext, p);
+                bestValue = std::min(bestValue, value);
+            }
+        }
+
+        // Store the best payoff at this node.
+        n->payoff = bestValue;
+    }
+    else
+    {
+        bestValue = n->payoff;
+    }
+
+    return bestValue;
+}
+
+
+//------------------------------------------------------------------------------
+// GenerateMoves - Generate a list of possible children of the given node.
+//------------------------------------------------------------------------------
+void KnowledgeBase::GenerateMoves(KnowledgeBase::Node* parent, PlayerNum p)
+{
+    bool oppTrick = false;
+    bool myTrick  = false;
+
+    int  oppTrickLoc[2];
+    int  myTrickLoc[2];
+
+    // Check if there are tricks in play.
+    for ( int i = 0; i < 4; i++ )
+    {
+        for ( int j = 0; j < 8; j++ )
+        {
+            if ( (parent->state[i][j] == CardArray::PLAYERTRICK &&
+                  p == PLAYER2) ||
+                 (parent->state[i][j] == CardArray::CPUTRICK &&
+                  p == PLAYER1) )
+            {
+                oppTrick = true;
+                oppTrickLoc[0] = i;
+                oppTrickLoc[1] = j;
+            }
+            else if ( (parent->state[i][j] == CardArray::PLAYERTRICK &&
+                       p == PLAYER1) ||
+                      (parent->state[i][j] == CardArray::CPUTRICK &&
+                       p == PLAYER2) )
+            {
+                myTrick = true;
+                myTrickLoc[0] = i;
+                myTrickLoc[1] = j;
+            }
+        }
+    }
+
+    // Check if the children are of the ai's moves or not.
+    if ( parent->myTurnNext )
+    {
+        // If there are two tricks in play, we are starting a new trick.
+        if ( myTrick || !oppTrick )
+        {
+            for ( int i = 0; i < 4; i++ )
+            {
+                for ( int j = 0; j < 8; j++ )
+                {
+                    if ( (parent->state[i][j] == CardArray::PLAYERHAND &&
+                          p == PLAYER1) ||
+                         (parent->state[i][j] == CardArray::CPUHAND &&
+                          p == PLAYER2) )
+                    {
+                        Node* child = new Node();
+
+                        // Allocate space for state.
+                        child->state = new CardArray::Type*[4];
+                        for ( int m = 0; m < 4; m++ )
+                            child->state[m] = new CardArray::Type[8];
+
+                        // Initialize the state.
+                        for ( int k = 0; k < 4; k++ )
+                        {
+                            for ( int l = 0; l < 8; l++ )
+                            {
+                                child->state[k][l] = parent->state[k][l];
+                                if ( child->state[k][l] == CardArray::PLAYERTRICK ||
+                                     child->state[k][l] == CardArray::CPUTRICK )
+                                {
+                                    child->state[k][l] = CardArray::PREVIOUSTRICKS;
+                                }
+                            }
+                        }
+
+                        if ( p == PLAYER1 )
+                            child->state[i][j] = CardArray::PLAYERTRICK;
+                        else
+                            child->state[i][j] = CardArray::CPUTRICK;
+
+                        // Update node information.
+                        child->myTurnNext  = false;
+                        child->piquetGiven = parent->piquetGiven;
+                        child->myWins      = parent->myWins;
+                        child->oppWins     = parent->oppWins;
+                        child->myScore     = parent->myScore + 1;
+                        child->oppScore    = parent->oppScore;
+                        child->payoff      = parent->payoff + 1;
+
+                        // Special score modifiers.
+                        if ( !child->piquetGiven &&
+                             (child->myScore >= 30 && child->oppScore == 0) )
+                        {
+                            child->myScore += 30;
+                            child->payoff  += 30;
+                            child->piquetGiven = true;
+                        }
+
+                        // Add the child.
+                        parent->children.push_back(child);
+                    }
+                }
+            }
+        }
+        else
+        {
+            bool restricted = false;
+
+            // Determine if our moves are restricted to a suit.
+            for ( int j = 0; j < 8; j++ )
+            {
+                if ( (parent->state[oppTrickLoc[0]][j] == CardArray::PLAYERHAND &&
+                      p == PLAYER1) ||
+                     (parent->state[oppTrickLoc[0]][j] == CardArray::CPUHAND &&
+                      p == PLAYER2) )
+                {
+                    restricted = true;
+
+                    Node* child = new Node();
+
+                    // Allocate space for state.
+                    child->state = new CardArray::Type*[4];
+                    for ( int i = 0; i < 4; i++ )
+                        child->state[i] = new CardArray::Type[8];
+
+                    // Initialize the state.
+                    for ( int k = 0; k < 4; k++ )
+                    {
+                        for ( int l = 0; l < 8; l++ )
+                        {
+                            child->state[k][l] = parent->state[k][l];
+                        }
+                    }
+
+                    if ( p == PLAYER1 )
+                        child->state[oppTrickLoc[0]][j] = CardArray::PLAYERTRICK;
+                    else
+                        child->state[oppTrickLoc[0]][j] = CardArray::CPUTRICK;
+
+                    // Update node information.
+                    child->piquetGiven = parent->piquetGiven;
+
+                    // Set the payoff.
+                    if ( oppTrickLoc[1] < j )
+                    {
+                        child->myTurnNext  = true;
+                        child->myWins      = parent->myWins + 1;
+                        child->myScore     = parent->myScore + 1;
+                        child->oppWins     = parent->oppWins;
+                        child->oppScore    = parent->oppScore;
+                        child->payoff      = parent->payoff + 1;
+
+                        // Check for final victory.
+                        if ( child->myWins + child->oppWins == 12 )
+                        {
+                           child->myScore++;
+                           child->payoff++;
+                        }
+
+                        // Special score modifiers.
+                        if ( !child->piquetGiven &&
+                             (child->myScore >= 30 && child->oppScore == 0) )
+                        {
+                            child->myScore += 30;
+                            child->payoff  += 30;
+                            child->piquetGiven = true;
+                        }
+                    }
+                    else
+                    {
+                        child->myTurnNext  = false;
+                        child->myWins      = parent->myWins;
+                        child->myScore     = parent->myScore;
+                        child->oppWins     = parent->oppWins + 1;
+                        child->oppScore    = parent->oppScore;
+                        child->payoff      = parent->payoff - 1;
+
+                        // Check for final victory.
+                        if ( child->myWins + child->oppWins == 12 )
+                        {
+                           child->oppScore++;
+                           child->payoff--;
+
+                           // Special score modifiers.
+                           if ( !child->piquetGiven &&
+                                (child->oppScore >= 30 && child->myScore == 0) )
+                           {
+                               child->oppScore += 30;
+                               child->payoff   -= 30;
+                               child->piquetGiven = true;
+                           }
+                        }
+                    }
+
+                    // Check for final special scores.
+                    if ( child->myWins + child->oppWins == 12 )
+                    {
+                       if ( child->myWins > child->oppWins )
+                       {
+                           if ( child->oppWins == 0 )
+                           {
+                               child->myScore += 40;
+                               child->payoff  += 40;
+                           }
+                           else
+                           {
+                               child->myScore += 10;
+                               child->payoff  += 10;
+                           }
+                       }
+                       else if ( child->myWins < child->oppWins )
+                       {
+                           if ( child->myWins == 0 )
+                           {
+                               child->oppScore += 40;
+                               child->payoff   -= 40;
+                           }
+                           else
+                           {
+                               child->oppScore += 10;
+                               child->payoff   -= 10;
+                           }
+                       }
+                    }
+
+                    // Add the child.
+                    parent->children.push_back(child);
+                }
+            }
+
+            if ( !restricted )
+            {
+                for ( int i = 0; i < 4; i++ )
+                {
+                    for ( int j = 0; j < 8; j++ )
+                    {
+                        if ( (parent->state[i][j] == CardArray::PLAYERHAND &&
+                              p == PLAYER1) ||
+                             (parent->state[i][j] == CardArray::CPUHAND &&
+                              p == PLAYER2) )
+                        {
+                            Node* child = new Node();
+
+                            // Allocate space for state.
+                            child->state = new CardArray::Type*[4];
+                            for ( int m = 0; m < 4; m++ )
+                                child->state[m] = new CardArray::Type[8];
+
+                            // Initialize the state.
+                            for ( int k = 0; k < 4; k++ )
+                            {
+                                for ( int l = 0; l < 8; l++ )
+                                {
+                                    child->state[k][l] = parent->state[k][l];
+                                }
+                            }
+
+                            if ( p == PLAYER1 )
+                                child->state[i][j] = CardArray::PLAYERTRICK;
+                            else
+                                child->state[i][j] = CardArray::CPUTRICK;
+
+                            // Update node information.
+                            child->myTurnNext  = false;
+                            child->myWins      = parent->myWins;
+                            child->myScore     = parent->myScore;
+                            child->oppWins     = parent->oppWins + 1;
+                            child->oppScore    = parent->oppScore;
+                            child->payoff      = parent->payoff - 1;
+
+                            // Check for final victory.
+                            if ( child->myWins + child->oppWins == 12 )
+                            {
+                               child->oppScore++;
+                               child->payoff--;
+
+                               // Special score modifiers.
+                               if ( !child->piquetGiven &&
+                                    (child->oppScore >= 30 && child->myScore == 0) )
+                               {
+                                   child->oppScore += 30;
+                                   child->payoff   -= 30;
+                                   child->piquetGiven = true;
+                               }
+
+                               if ( child->myWins > child->oppWins )
+                               {
+                                   if ( child->oppWins == 0 )
+                                   {
+                                       child->myScore += 40;
+                                       child->payoff  += 40;
+                                   }
+                                   else
+                                   {
+                                       child->myScore += 10;
+                                       child->payoff  += 10;
+                                   }
+                               }
+                               else if ( child->myWins < child->oppWins )
+                               {
+                                   if ( child->myWins == 0 )
+                                   {
+                                       child->oppScore += 40;
+                                       child->payoff   -= 40;
+                                   }
+                                   else
+                                   {
+                                       child->oppScore += 10;
+                                       child->payoff   -= 10;
+                                   }
+                               }
+                            }
+
+                            // Add the child.
+                            parent->children.push_back(child);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        // If there are two tricks in play, they are starting a new trick.
+        if ( oppTrick || !myTrick )
+        {
+            for ( int i = 0; i < 4; i++ )
+            {
+                for ( int j = 0; j < 8; j++ )
+                {
+                    if ( parent->state[i][j] == CardArray::UNKNOWN )
+                    {
+                        Node* child = new Node();
+
+                        // Allocate space for state.
+                        child->state = new CardArray::Type*[4];
+                        for ( int m = 0; m < 4; m++ )
+                            child->state[m] = new CardArray::Type[8];
+
+                        // Initialize the state.
+                        for ( int k = 0; k < 4; k++ )
+                        {
+                            for ( int l = 0; l < 8; l++ )
+                            {
+                                child->state[k][l] = parent->state[k][l];
+                                if ( child->state[k][l] == CardArray::PLAYERTRICK ||
+                                     child->state[k][l] == CardArray::CPUTRICK )
+                                {
+                                    child->state[k][l] = CardArray::PREVIOUSTRICKS;
+                                }
+                            }
+                        }
+
+                        if ( p == PLAYER2 )
+                            child->state[i][j] = CardArray::PLAYERTRICK;
+                        else
+                            child->state[i][j] = CardArray::CPUTRICK;
+
+                        // Update node information.
+                        child->myTurnNext  = true;
+                        child->piquetGiven = parent->piquetGiven;
+                        child->myWins      = parent->myWins;
+                        child->oppWins     = parent->oppWins;
+                        child->myScore     = parent->myScore;
+                        child->oppScore    = parent->oppScore + 1;
+                        child->payoff      = parent->payoff - 1;
+
+                        // Special score modifiers.
+                        if ( !child->piquetGiven &&
+                             (child->oppScore >= 30 && child->myScore == 0) )
+                        {
+                            child->oppScore += 30;
+                            child->payoff   -= 30;
+                            child->piquetGiven = true;
+                        }
+
+                        // Add the child.
+                        parent->children.push_back(child);
+                    }
+                }
+            }
+        }
+        else
+        {
+            for ( int i = 0; i < 4; i++ )
+            {
+                for ( int j = 0; j < 8; j++ )
+                {
+                    if ( parent->state[i][j] == CardArray::UNKNOWN )
+                    {
+                        Node* child = new Node();
+
+                        // Allocate space for state.
+                        child->state = new CardArray::Type*[4];
+                        for ( int m = 0; m < 4; m++ )
+                            child->state[m] = new CardArray::Type[8];
+
+                        // Initialize the state.
+                        for ( int k = 0; k < 4; k++ )
+                        {
+                            for ( int l = 0; l < 8; l++ )
+                            {
+                                child->state[k][l] = parent->state[k][l];
+                            }
+                        }
+
+                        if ( p == PLAYER1 )
+                            child->state[i][j] = CardArray::PLAYERTRICK;
+                        else
+                            child->state[i][j] = CardArray::CPUTRICK;
+
+                        // Set the payoff.
+                        if ( myTrickLoc[0] == i && myTrickLoc[1] < j )
+                        {
+                            child->myTurnNext  = false;
+                            child->myWins      = parent->myWins;
+                            child->myScore     = parent->myScore;
+                            child->oppWins     = parent->oppWins + 1;
+                            child->oppScore    = parent->oppScore + 1;
+                            child->payoff      = parent->payoff - 1;
+
+                            // Check for final victory.
+                            if ( child->myWins + child->oppWins == 12 )
+                            {
+                               child->oppScore++;
+                               child->payoff--;
+                            }
+
+                            // Special score modifiers.
+                            if ( !child->piquetGiven &&
+                                 (child->oppScore >= 30 && child->myScore == 0) )
+                            {
+                                child->oppScore += 30;
+                                child->payoff   -= 30;
+                                child->piquetGiven = true;
+                            }
+                        }
+                        else
+                        {
+                            child->myTurnNext  = true;
+                            child->myWins      = parent->myWins + 1;
+                            child->myScore     = parent->myScore;
+                            child->oppWins     = parent->oppWins;
+                            child->oppScore    = parent->oppScore;
+                            child->payoff      = parent->payoff + 1;
+
+                            // Check for final victory.
+                            if ( child->myWins + child->oppWins == 12 )
+                            {
+                               child->myScore++;
+                               child->payoff++;
+
+                               // Special score modifiers.
+                               if ( !child->piquetGiven &&
+                                    (child->myScore >= 30 && child->oppScore == 0) )
+                               {
+                                   child->myScore += 30;
+                                   child->payoff  += 30;
+                                   child->piquetGiven = true;
+                               }
+                            }
+                        }
+
+                        // Check for final special scores.
+                        if ( child->myWins + child->oppWins == 12 )
+                        {
+                           if ( child->myWins > child->oppWins )
+                           {
+                               if ( child->oppWins == 0 )
+                               {
+                                   child->myScore += 40;
+                                   child->payoff  += 40;
+                               }
+                               else
+                               {
+                                   child->myScore += 10;
+                                   child->payoff  += 10;
+                               }
+                           }
+                           else if ( child->myWins < child->oppWins )
+                           {
+                               if ( child->myWins == 0 )
+                               {
+                                   child->oppScore += 40;
+                                   child->payoff   -= 40;
+                               }
+                               else
+                               {
+                                   child->oppScore += 10;
+                                   child->payoff   -= 10;
+                               }
+                           }
+                        }
+
+                        // Add the child.
+                        parent->children.push_back(child);
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+//------------------------------------------------------------------------------
+// FreeTree - Free memory allocated to a set of nodes.
+//------------------------------------------------------------------------------
+void KnowledgeBase::FreeTree(KnowledgeBase::Node* root)
+{
+    Node* n;
+    for ( int i = 0; i < (int)root->children.size(); i++ )
+    {
+        n = root->children[i];
+
+        FreeTree(n);
+    }
+
+    // Free the memory.
+    for ( int m = 0; m < 4; m++ )
+    {
+        delete[] root->state[m];
+        root->state[m] = 0;
+    }
+
+    delete root->state;
+    root->state = 0;
+
+    delete root;
+    root = 0;
 }
