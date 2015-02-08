@@ -252,7 +252,6 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
     {
         case DECK:
         case TALON:
-        case CPUDISCARDS:
             if ( newCardAdded )
             {
                 nextCardPosition = QPointF(nextCardPosition.x(),
@@ -265,6 +264,7 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
             }
             break;
 
+        case CPUDISCARDS:
         case PLAYERDISCARDS:
         case PREVIOUSTRICKS:
             if ( arraySize > 0 )
