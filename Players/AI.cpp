@@ -259,7 +259,19 @@ void AI::UpdateHand(CardArray* newCpuHand)
 //------------------------------------------------------------------------------
 void AI::SelectCardsToDiscard(void)
 {
-    knowledgeBase->FlagDispensableCards(cpuHand);
+    if ( 1 )
+        knowledgeBase->SelectExchanges(cpuHand, talonSize);
+    else
+        knowledgeBase->FlagDispensableCards(cpuHand);
+}
+
+
+//------------------------------------------------------------------------------
+// SetTalonSize - Set the talon size for discard limit.
+//------------------------------------------------------------------------------
+void AI::SetTalonSize(int newSize)
+{
+    talonSize = newSize;
 }
 
 

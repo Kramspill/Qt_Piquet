@@ -57,6 +57,7 @@ public:
     void                   UpdateHand(CardArray* newCpuHand);
 
     void                   SelectCardsToDiscard(void);
+    void                   SetTalonSize(int newSize);
 
 protected:
     void                   ExecuteCarteBlanche(void);
@@ -67,6 +68,7 @@ private:
 private:
     KnowledgeBase*         knowledgeBase;
     CardArray*             cpuHand;
+    int                    talonSize;
 };
 
 #endif // AI_H

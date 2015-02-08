@@ -129,6 +129,92 @@ void KnowledgeBase::FlagDispensableCards(CardArray* cpuHand)
 
 
 //------------------------------------------------------------------------------
+// SelectExchanges - Select cards to discard based on hand evaluation.
+//------------------------------------------------------------------------------
+void KnowledgeBase::SelectExchanges(CardArray* cpuHand, int talonSize)
+{
+    // Initialize a new hand so the passed in CardArray doesn't get changed.
+    CardArray* hand = new CardArray();
+    for ( int i = 0; i < cpuHand->GetSize(); i++ )
+    {
+        Card* c = new Card();
+
+        c->SetSuit(cpuHand->GetCard(i)->GetSuit());
+        c->SetRank(cpuHand->GetCard(i)->GetRank());
+
+        hand->AddCard(c, false, true);
+    }
+
+    // Calculate the possible cards that can be added.
+    CardArray* possibleCards = new CardArray();
+    for ( int i = 0; i < 4; i++ )
+    {
+        for ( int j = 0; j < 8; j++ )
+        {
+            if ( cardStatus[i][j]->location == CardArray::UNKNOWN )
+            {
+                Card* card = new Card();
+
+                card->SetSuit((Card::Suit)i);
+                card->SetRank((Card::Rank)(j+7));
+
+                possibleCards->AddCard(card, false, true);
+            }
+        }
+    }
+
+    // Array to store removed cards.
+    CardArray* removedCards  = new CardArray();
+
+    // Evaluate the current hand.
+    float e    = Evaluate(hand);
+    SelectCardRemovals(e, hand, possibleCards, removedCards);
+
+    // Select the chosen cards.
+    Card* card;
+    int i = 0;
+    int numDiscards = (talonSize > 5) ? 5 : talonSize;
+    while ( i < numDiscards && i < removedCards->GetSize() )
+    {
+        int j = 0;
+        while( (cpuHand->GetCard(j)->GetSuit() != removedCards->GetCard(i)->GetSuit()) &&
+               (cpuHand->GetCard(j)->GetRank() != removedCards->GetCard(i)->GetRank()) )
+        {
+            j++;
+        }
+        i++;
+        card = cpuHand->GetCard(j);
+
+        card->setFlag(QGraphicsItem::ItemIsSelectable, true);
+        card->setSelected(true);
+    }
+
+    // Free the memory.
+    int size = hand->GetSize();
+    for ( int i = 0; i < size; i++ )
+    {
+        card = hand->GetCard(0);
+        hand->RemoveCard(card, true);
+
+        delete card;
+    }
+    delete hand;
+
+    size = possibleCards->GetSize();
+    for ( int i = 0; i < size; i++ )
+    {
+        card = possibleCards->GetCard(0);
+        possibleCards->RemoveCard(card, true);
+
+        delete card;
+    }
+    delete possibleCards;
+
+    delete removedCards;
+}
+
+
+//------------------------------------------------------------------------------
 // SelectTrick - Choose a card from the cpu's hand to play.
 //------------------------------------------------------------------------------
 void KnowledgeBase::SelectTrick(CardArray* cpuHand)
@@ -1334,4 +1420,185 @@ void KnowledgeBase::FreeTree(KnowledgeBase::Node* root)
 
     delete root;
     root = 0;
+}
+
+
+//------------------------------------------------------------------------------
+// SelectCardRemovals - Determine the possible cards to be removed.
+//------------------------------------------------------------------------------
+void KnowledgeBase::SelectCardRemovals(float      e,
+                                       CardArray* hand,
+                                       CardArray* possibleCards,
+                                       CardArray* removedCards)
+{
+    std::vector<CardEvals*> cardSets;
+
+    // For each card in the hand, evaluate removing it.
+    Card* c;
+    Card* posCard;
+    for ( int i = 0; i < hand->GetSize(); i++ )
+    {
+        std::vector<float> max;
+        std::vector<float> min;
+
+        c = hand->GetCard(0);
+        hand->RemoveCard(c, true);
+
+        // Replace the removed card with all possible cards.
+        for ( int j = 0; j < possibleCards->GetSize(); j++ )
+        {
+            posCard = possibleCards->GetCard(j);
+            hand->AddCard(posCard, false, true);
+
+            float temp = Evaluate(hand);
+
+            if ( temp > e )
+                max.push_back(temp);
+            else
+                min.push_back(temp);
+
+            hand->RemoveCard(posCard, true);
+        }
+
+        // Weight the evaluation with the probability that it will improve/not.
+        float maxProb = (float)max.size() / (max.size() + min.size());
+        float minProb = (float)min.size() / (max.size() + min.size());
+
+        // Calculate max average.
+        float sum = 0;
+        for ( int k = 0; k < (int)max.size(); k++ )
+            sum += max[k];
+
+        float maxAverage = e;
+        if ( max.size() > 0 )
+            maxAverage = sum / max.size();
+
+        // Calculate min average.
+        sum = 0;
+        for ( int k = 0; k < (int)min.size(); k++ )
+            sum += min[k];
+
+        float minAverage = e;
+        if ( min.size() > 0 )
+            minAverage = sum / min.size();
+
+        float anE = e + ((maxAverage-e) * maxProb) - ((e-minAverage) * minProb);
+
+        // Return the card.
+        hand->AddCard(c, false, true);
+
+        // Determine if the card evaluation is better.
+        if ( anE > e )
+        {
+            CardEvals* ev = new CardEvals();
+
+            ev->eval = anE;
+            ev->card = c;
+
+            cardSets.push_back(ev);
+        }
+    }
+
+    // Sort the potentially removable cards.
+    std::sort(cardSets.begin(), cardSets.end(), SortFunction);
+
+    // Add potential cards to be removed to the removed CardArray.
+    for ( int i = 0; i < (int)cardSets.size(); i++ )
+    {
+        Card* aCard = cardSets[i]->card;
+        removedCards->AddCard(aCard, false, true);
+    }
+
+    // Free the memory.
+    int size = cardSets.size();
+    for ( int i = size-1; i > 0; i-- )
+    {
+        CardEvals* ev = cardSets[i];
+
+        cardSets.pop_back();
+        delete ev;
+    }
+}
+
+
+//------------------------------------------------------------------------------
+// Evaluate - Perform a score evaluation on a given hand.
+//------------------------------------------------------------------------------
+float KnowledgeBase::Evaluate(CardArray* hand)
+{
+    // Gather information about the given hand.
+    // Calculate an offset based on the point value of the cards to avoid
+    // equivalent hand evaluations.
+    float e = 0;
+    int  handSuits[4] = { 0 };
+    bool handStatus[4][8] = { false };
+    int  handValue = 0;
+    for ( int i = 0; i < hand->GetSize(); i++ )
+    {
+        Card* c = hand->GetCard(i);
+
+        handSuits[c->GetSuit()]++;
+        handStatus[c->GetSuit()][c->GetRank()-7] = true;
+
+        handValue += c->GetRank();
+    }
+
+    // Evaluation based on high cards.
+    e += handValue;
+
+    // Calculate the point.
+    int max = 0;
+    for ( int i = 0; i < 4; i++ )
+    {
+        if ( handSuits[i] > max )
+            max = handSuits[i];
+    }
+
+    e += max;
+
+    // Calculate the sequences.
+    max = 0;
+    for ( int i = 0; i < 4; i++ )
+    {
+        int seq = 0;
+        for ( int j = 0; j < 8; j++ )
+        {
+            if ( handStatus[i][j] )
+            {
+                seq++;
+                if ( j == 7 && seq >= 3 )
+                    max += (seq < 5) ? seq : seq + 10;
+            }
+            else if ( seq >= 3 )
+            {
+                max += (seq < 5) ? seq : seq + 10;
+                seq = 0;
+            }
+            else
+            {
+                seq = 0;
+            }
+        }
+    }
+
+    e += max;
+
+    // Calculate the sets.
+    max = 0;
+    for ( int i = 3; i < 8; i++ )
+    {
+        int set = 0;
+        for ( int j = 0; j < 4; j++ )
+        {
+            if ( handStatus[i][j] )
+                set++;
+        }
+
+        if ( set >= 3 )
+            max += (set == 3) ? 3 : 14;
+    }
+
+    e += max;
+
+    return e;
 }

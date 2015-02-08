@@ -27,6 +27,17 @@ const int DEPTH = 4;
 
 
 //------------------------------------------------------------------------------
+// Static Functions
+//------------------------------------------------------------------------------
+struct CardEvals
+{
+    Card* card;
+    float eval;
+};
+static bool SortFunction(CardEvals* i, CardEvals* j) { return i->eval > j->eval; }
+
+
+//------------------------------------------------------------------------------
 // Class: KnowledgeBase
 //------------------------------------------------------------------------------
 class KnowledgeBase : public QObject
@@ -65,6 +76,7 @@ public:
                                         int index,
                                         CardArray::Type location);
     void                     FlagDispensableCards(CardArray* cpuHand);
+    void                     SelectExchanges(CardArray* cpuHand, int talonSize);
     void                     SelectTrick(CardArray* cpuHand);
     void                     SelectMMTrick(CardArray* cpuHand, PlayerNum n);
 
@@ -83,6 +95,11 @@ private:
     int                      ImpMinimax(Node* n, int depth, bool myMove, PlayerNum p);
     void                     GenerateMoves(Node* parent, PlayerNum p);
     void                     FreeTree(Node* root);
+    void                     SelectCardRemovals(float      e,
+                                                CardArray* hand,
+                                                CardArray* possibleCards,
+                                                CardArray* removedCards);
+    float                    Evaluate(CardArray* hand);
 
 private:
     KnowledgeItem*           cardStatus[4][8];

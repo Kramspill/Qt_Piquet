@@ -62,8 +62,9 @@ public:
     void               Destroy(void);
 
     void               AddCard(Card* newCard,
-                               bool initialCardCreation = false);
-    void               RemoveCard(Card* aCard);
+                               bool initialCardCreation = false,
+                               bool doNothing = false);
+    void               RemoveCard(Card* aCard, bool doNothing = false);
     Card*              RemoveTopCard(void);
     Card*              GetCard(int index);
 

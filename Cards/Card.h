@@ -68,6 +68,9 @@ public:
     int                    GetValue(void);
     QPointF                GetPosition(void);
 
+    void                   SetSuit(Suit newSuit);
+    void                   SetRank(Rank newRank);
+
     void                   UpdateSelection(void);
     void                   SetPosition(QPointF newPosition, int zPosition = -1);
     void                   UpdateAnimation(bool noAnimation);

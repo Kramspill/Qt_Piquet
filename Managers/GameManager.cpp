@@ -1211,4 +1211,7 @@ void GameManager::UpdateAI(PlayerNum player)
         ai->UpdateScores(scoreManager->GetCPUScore(),
                          scoreManager->GetPlayerScore());
     }
+
+    // Set the talon size for exchanges.
+    ai->SetTalonSize(cardManager->GetCardArray(CardArray::TALON)->GetSize());
 }

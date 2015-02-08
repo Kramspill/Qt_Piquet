@@ -72,13 +72,14 @@ void CardArray::Destroy(void)
 //------------------------------------------------------------------------------
 // AddCard - Add a card to the CardArray.
 //------------------------------------------------------------------------------
-void CardArray::AddCard(Card* newCard, bool initialCardCreation)
+void CardArray::AddCard(Card* newCard, bool initialCardCreation, bool doNothing)
 {
     // Add the new card to the array.
     cards.push_back(newCard);
 
     // Update the position and state of the cards.
-    UpdateCardPositions(newCard, initialCardCreation);
+    if ( !doNothing )
+        UpdateCardPositions(newCard, initialCardCreation);
 }
 
 
@@ -86,7 +87,7 @@ void CardArray::AddCard(Card* newCard, bool initialCardCreation)
 // RemoveCard - Remove a given card from this array. Doesn't free the memory
 //              associated with the card.
 //------------------------------------------------------------------------------
-void CardArray::RemoveCard(Card* aCard)
+void CardArray::RemoveCard(Card* aCard, bool doNothing)
 {
     std::vector<Card*>::iterator iterator;
 
@@ -94,7 +95,8 @@ void CardArray::RemoveCard(Card* aCard)
     iterator = std::find(cards.begin(), cards.end(), aCard);
     cards.erase(iterator);
 
-    UpdateCardPositions();
+    if ( !doNothing )
+        UpdateCardPositions();
 }
 
 
