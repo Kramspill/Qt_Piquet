@@ -215,6 +215,76 @@ void KnowledgeBase::SelectExchanges(CardArray* cpuHand, int talonSize)
 
 
 //------------------------------------------------------------------------------
+// SelectMcsExchange - Choose cards to discard for the Exchange. Uses Monte
+//                     Carlo Sampling.
+//------------------------------------------------------------------------------
+void KnowledgeBase::SelectMcsExchange(CardArray* cpuHand, int talonSize)
+{
+    // Create an array of pointers to elements representing the cpu's hand.
+    std::vector<McsElement*> myHand = GenerateElementArray(cpuHand);
+
+    // Generate a set of hands for the opponent.
+    std::vector<std::vector<McsElement*> > oppHands = GenOppHands(50);
+
+    // Determine the selected cards.
+    int numSimulations = 0;
+    while ( numSimulations < 1000 )
+    {
+        Mcs(myHand, oppHands, talonSize, numSimulations);
+        numSimulations += 50;
+    }
+
+    // Go through 'myHand' and select cards that were chosen the most.
+    int maxPlays    = 0;
+    int maxIndex    = 0;
+    for ( int i = 0; i < 5; i++ )
+    {
+        if ( myHand[i]->numPlays > maxPlays )
+        {
+            maxPlays = myHand[i]->numPlays;
+            maxIndex = i;
+        }
+    }
+    int numDiscards = myHand[maxIndex]->numDiscards;
+
+    int selectedIndex[5];
+    int selectedPlays[5];
+    for ( int i = 0; i < 5; i++ )
+    {
+        selectedIndex[i] = -1;
+        selectedPlays[i] = -1;
+    }
+
+    for ( int i = 5; i < myHand.size(); i++ )
+    {
+        int numPlays = myHand[i]->numPlays;
+
+        int  j    = 0;
+        bool done = false;
+        while ( j < numDiscards && !done )
+        {
+            if ( numPlays > selectedPlays[j] )
+            {
+                selectedPlays[j] = numPlays;
+                selectedIndex[j] = i-5;
+                done = true;
+            }
+            j++;
+        }
+    }
+
+    // Select the chosen cards.
+    for ( int i = 0; i < numDiscards; i++ )
+    {
+        Card* card = cpuHand->GetCard(selectedIndex[i]);
+
+        card->setFlag(QGraphicsItem::ItemIsSelectable, true);
+        card->setSelected(true);
+    }
+}
+
+
+//------------------------------------------------------------------------------
 // SelectTrick - Choose a card from the cpu's hand to play.
 //------------------------------------------------------------------------------
 void KnowledgeBase::SelectTrick(CardArray* cpuHand)
@@ -1601,4 +1671,534 @@ float KnowledgeBase::Evaluate(CardArray* hand)
     e += max;
 
     return e;
+}
+
+
+//------------------------------------------------------------------------------
+// GenerateElementArray - Generate a vector of items representing the cpu' hand.
+//------------------------------------------------------------------------------
+std::vector<KnowledgeBase::McsElement*> KnowledgeBase::GenerateElementArray(CardArray* cpuHand)
+{
+    std::vector<McsElement*> hand;
+    McsElement* e;
+
+    // Add an additional items for choosing not to discard max elements.
+    for ( int i = 0; i < 5; i++ )
+    {
+        e              = new McsElement();
+        e->suit        = Card::NOSUIT;
+        e->rank        = Card::NORANK;
+        e->numWins     = 0;
+        e->numPlays    = 0;
+        e->numDiscards = 5-i;
+
+        hand.push_back(e);
+    }
+
+    for ( int i = 0; i < cpuHand->GetSize(); i++ )
+    {
+        e = new McsElement();
+
+        e->suit        = cpuHand->GetCard(i)->GetSuit();
+        e->rank        = cpuHand->GetCard(i)->GetRank();
+        e->numWins     = 0;
+        e->numPlays    = 0;
+        e->numDiscards = 0;
+
+        hand.push_back(e);
+    }
+
+    return hand;
+}
+
+
+//------------------------------------------------------------------------------
+// GenOppHands - Generate a vector of items representing a set of possible
+//               hands the opponent could have.
+//------------------------------------------------------------------------------
+std::vector<std::vector<KnowledgeBase::McsElement*> > KnowledgeBase::GenOppHands(int numHands)
+{
+    std::vector<McsElement*> possCards;
+
+    // Create a vector of possible cards to choose.
+    for ( int i = 0; i < 4; i++ )
+    {
+        for ( int j = 0; j < 8; j++ )
+        {
+            if ( cardStatus[i][j]->location == CardArray::UNKNOWN )
+            {
+                McsElement* e = new McsElement();
+
+                e->suit        = (Card::Suit)i;
+                e->rank        = (Card::Rank)(j+7);
+                e->numWins     = 0;
+                e->numPlays    = 0;
+                e->numDiscards = 0;
+
+                possCards.push_back(e);
+            }
+        }
+    }
+
+    // Shuffle the possible cards and create a set of hands.
+    std::vector<std::vector<McsElement*> > possHands;
+    for ( int i = 0; i < numHands; i++ )
+    {
+        std::vector<McsElement*> v;
+
+        std::srand(time(0));
+        std::random_shuffle(possCards.begin(), possCards.end());
+
+        for ( int j = 0; j < 12; j++ )
+        {
+            v.push_back(possCards[j]);
+        }
+
+        possHands.push_back(v);
+    }
+
+    return possHands;
+}
+
+
+//------------------------------------------------------------------------------
+// Mcs - Modified Monte Carlo method for selecting cards to exchange.
+//------------------------------------------------------------------------------
+void KnowledgeBase::Mcs(std::vector<KnowledgeBase::McsElement*> myHand,
+                        std::vector<std::vector<KnowledgeBase::McsElement*> > oppHands,
+                        int talonSize, int numSimulations)
+{
+    // For each possible opponent hands
+    for ( int i = 0; i < oppHands.size(); i++ )
+    {
+        std::vector<McsElement*> possHand;
+        for ( int j = 0; j < 12; j++ )
+        {
+            possHand.push_back(oppHands.at(i).at(j));
+        }
+        bool seenCards[4][8] = { false };
+
+        // Determine possible cards we could pick up.
+        for ( int j = 0; j < myHand.size(); j++ )
+        {
+            McsElement* e = myHand[j];
+
+            if ( e->suit != Card::NOSUIT )
+                seenCards[(int)e->suit][(int)(e->rank-7)] = true;
+        }
+
+        for ( int j = 0; j < possHand.size(); j++ )
+        {
+            McsElement* e = possHand.at(j);
+
+            if ( e->suit != Card::NOSUIT )
+                seenCards[(int)e->suit][(int)(e->rank-7)] = true;
+        }
+
+        std::vector<McsElement*> possCards;
+        for ( int j = 0; j < 4; j++ )
+        {
+            for ( int k = 0; k < 8; k++ )
+            {
+                if ( !seenCards[j][k] )
+                {
+                    McsElement* e = new McsElement();
+
+                    e->suit        = (Card::Suit)j;
+                    e->rank        = (Card::Rank)(k+7);
+                    e->numWins     = 0;
+                    e->numPlays    = 0;
+                    e->numDiscards = 0;
+
+                    possCards.push_back(e);
+                }
+            }
+        }
+
+        // Randomize the vector of possible cards.
+        std::srand(time(0));
+        std::random_shuffle(possCards.begin(), possCards.end());
+
+        // Select cards to discard based on UCT. Start by determining how
+        // many cards we are discarding.
+        int min = (talonSize < 5) ? (5 - talonSize) : 0;
+        int selectedIndex[6]  = { -1 };
+        float selectedScores[6] = { -1 };
+        for ( int j = min; j < 5; j++ )
+        {
+            float u = Uct(myHand[j], numSimulations);
+            if ( u > selectedScores[0] )
+            {
+                selectedScores[0] = u;
+                selectedIndex[0]  = j;
+            }
+        }
+
+        for ( int j = 5; j < myHand.size(); j++ )
+        {
+            float u = Uct(myHand[j], numSimulations);
+
+            int  k    = 1;
+            bool done = false;
+            while ( k < 6 && !done )
+            {
+                if ( u > selectedScores[k] )
+                {
+                    selectedScores[k] = u;
+                    selectedIndex[k]  = j;
+                    done = true;
+                }
+                k++;
+            }
+        }
+
+        // Determine the winner of that hand based on declarations, replacing
+        // discarded cards by an equal number of random possible cards.
+        // Start by sorting the scores in case we are discarding less than 5.
+        for ( int j = 2; j < 6; j++ )
+        {
+            int score = selectedScores[j];
+            int index = selectedIndex[j];
+
+            int innerIndex = j;
+            while ( innerIndex > 1 && score > selectedScores[innerIndex-1] )
+            {
+                // Swap the scores.
+                selectedScores[innerIndex] = selectedScores[innerIndex-1];
+
+                // Swap the corresponding indexes.
+                selectedIndex[innerIndex]  = selectedIndex[innerIndex-1];
+
+                innerIndex--;
+            }
+
+            // Put the score and index in it's correct place.
+            selectedScores[innerIndex] = score;
+            selectedIndex[innerIndex]  = index;
+        }
+
+        // Now replace the selected cards with an equal number of possible cards.
+        int numCards = myHand[selectedIndex[0]]->numDiscards;
+        std::vector<McsElement*> newHand;
+        for ( int j = 5; j < myHand.size(); j++ )
+        {
+            newHand.push_back(myHand[j]);
+        }
+
+        for ( int j = 1; j <= numCards; j++ )
+        {
+            newHand[selectedIndex[j]-5] = possCards[j-1];
+        }
+
+        // Now play out the declarations to determine the winner.
+        bool win = ExecuteDecTest(newHand, possHand);
+
+        // Update the information.
+        for ( int j = 0; j <= numCards; j++ )
+        {
+            myHand[selectedIndex[j]]->numPlays++;
+
+            if ( win )
+                myHand[selectedIndex[j]]->numWins++;
+        }
+
+        // Free the possible cards vector.
+        int max = possCards.size();
+        for ( int j = max; j >= 0; j-- )
+        {
+            possCards.pop_back();
+        }
+
+        numSimulations++;
+    }
+}
+
+
+//------------------------------------------------------------------------------
+// Uct - Uct algorithm.
+//------------------------------------------------------------------------------
+float KnowledgeBase::Uct(KnowledgeBase::McsElement* e, int numSim)
+{
+    float exploitation = 0;
+    float exploration  = 0;
+
+    if ( e->numPlays == 0 )
+    {
+        exploitation = 0;
+        if ( numSim == 0)
+            exploration  = sqrt(2);
+        else
+            exploration  = 5;
+    }
+    else
+    {
+        exploitation = (float)e->numWins / e->numPlays;
+        exploration  = sqrt(2) * sqrt(log(numSim) / e->numPlays);
+    }
+
+    return (exploitation + exploration);
+}
+
+
+//------------------------------------------------------------------------------
+// ExecuteDecTest - Execute declarations to determine the winner.
+//------------------------------------------------------------------------------
+bool KnowledgeBase::ExecuteDecTest(std::vector<KnowledgeBase::McsElement*> myHand,
+                                   std::vector<KnowledgeBase::McsElement*> oppHand)
+{
+    int l_myScore  = 0;
+    int l_oppScore = 0;
+
+    // Gather information about the given hands.
+    int  myHandSuits[4]      = { 0 };
+    bool myHandStatus[4][8]  = { false };
+    int  oppHandSuits[4]     = { 0 };
+    bool oppHandStatus[4][8] = { false };
+
+    for ( int i = 0; i < myHand.size(); i++ )
+    {
+        McsElement* e1 = myHand[i];
+        McsElement* e2 = oppHand[i];
+
+        myHandSuits[e1->suit]++;
+        myHandStatus[e1->suit][e1->rank-7] = true;
+        oppHandSuits[e2->suit]++;
+        oppHandStatus[e2->suit][e2->rank-7] = true;
+    }
+
+    // Calculate the point winner.
+    int myMax       = 0;
+    int myBestSuit  = -1;
+    int oppMax      = 0;
+    int oppBestSuit = -1;
+    for ( int i = 0; i < 4; i++ )
+    {
+        if ( myHandSuits[i] > myMax )
+        {
+            myMax      = myHandSuits[i];
+            myBestSuit = i;
+        }
+        if ( oppHandSuits[i] > oppMax )
+        {
+            oppMax      = oppHandSuits[i];
+            oppBestSuit = i;
+        }
+    }
+
+    // Check for draws.
+    if ( myMax == oppMax && myMax != 0 )
+    {
+        int myTotal  = 0;
+        int oppTotal = 0;
+
+        for ( int i = 0; i < 8; i++ )
+        {
+            if ( myHandStatus[myBestSuit][i] )
+            {
+                if ( i < 4 )
+                    myTotal += (i+7);
+                else if ( i < 7 )
+                    myTotal += 10;
+                else
+                    myTotal += 11;
+            }
+
+            if ( oppHandStatus[oppBestSuit][i] )
+            {
+                if ( i < 4 )
+                    oppTotal += (i+7);
+                else if ( i < 7 )
+                    oppTotal += 10;
+                else
+                    oppTotal += 11;
+            }
+        }
+
+        if ( myTotal >= oppTotal )
+        {
+            if ( myTotal > oppTotal )
+                oppMax = 0;
+        }
+        else
+        {
+            myMax = 0;
+        }
+    }
+
+    // Update score.
+    if ( myMax >= oppMax )
+    {
+        if ( myMax > oppMax )
+            l_myScore += myMax;
+    }
+    else
+    {
+        l_oppScore += oppMax;
+    }
+
+    // Calculate the sequence.
+    myMax  = 0;
+    oppMax = 0;
+    for ( int i = 0; i < 4; i++ )
+    {
+        int mySeq  = 0;
+        int oppSeq = 0;
+        for ( int j = 0; j < 8; j++ )
+        {
+            // My Sequence.
+            if ( myHandStatus[i][j] )
+            {
+                mySeq++;
+                if ( j == 7 && mySeq > myMax && mySeq >= 3 )
+                {
+                    myBestSuit = i;
+                    myMax = mySeq;
+                }
+            }
+            else if ( mySeq > myMax && mySeq >= 3 )
+            {
+                myBestSuit = i;
+                myMax = mySeq;
+                mySeq = 0;
+            }
+            else
+            {
+                mySeq = 0;
+            }
+
+            // Opp Sequences.
+            if ( oppHandStatus[i][j] )
+            {
+                oppSeq++;
+                if ( j == 7 && oppSeq > oppMax && oppSeq >= 3 )
+                {
+                    oppBestSuit = i;
+                    oppMax = oppSeq;
+                }
+            }
+            else if ( oppSeq > oppMax && oppSeq >= 3 )
+            {
+                oppBestSuit = i;
+                oppMax = oppSeq;
+                oppSeq = 0;
+            }
+            else
+            {
+                oppSeq = 0;
+            }
+        }
+    }
+
+    myMax  = (myMax < 5)  ? myMax  : myMax  + 10;
+    oppMax = (oppMax < 5) ? oppMax : oppMax + 10;
+
+    // Check for draws.
+    if ( myMax == oppMax && myMax != 0 )
+    {
+        int i = 7;
+        bool found = false;
+        while ( i >= 0 && !found )
+        {
+            if ( myHandStatus[myBestSuit][i] )
+            {
+                found = true;
+                i++;
+            }
+            i--;
+        }
+
+        int j = 7;
+        found = false;
+        while ( j >= 0 && !found )
+        {
+            if ( oppHandStatus[myBestSuit][j] )
+            {
+                found = true;
+                j++;
+            }
+            j--;
+        }
+
+        if ( i >= j )
+        {
+            if ( i > j )
+                oppMax = 0;
+        }
+        else
+        {
+            myMax = 0;
+        }
+    }
+
+    // Update score.
+    if ( myMax >= oppMax )
+    {
+        if ( myMax > oppMax )
+            l_myScore += myMax;
+    }
+    else
+    {
+        l_oppScore += oppMax;
+    }
+
+    // Calculate the sets.
+    myMax  = 0;
+    oppMax = 0;
+    int myHiCard  = 0;
+    int oppHiCard = 0;
+    for ( int i = 3; i < 8; i++ )
+    {
+        int mySet  = 0;
+        int oppSet = 0;
+        for ( int j = 0; j < 4; j++ )
+        {
+            if ( myHandStatus[i][j] )
+                mySet++;
+
+            if ( oppHandStatus[i][j] )
+                oppSet++;
+        }
+
+        if ( mySet > myMax && mySet >= 3 )
+        {
+            myHiCard = i;
+            myMax = mySet;
+        }
+
+        if ( oppSet > oppMax && oppSet >= 3 )
+        {
+            oppHiCard = i;
+            oppMax = oppSet;
+        }
+    }
+
+    myMax  = (myMax == 3)  ? myMax  : myMax  + 10;
+    oppMax = (oppMax < 5) ? oppMax : oppMax + 10;
+
+    // Check for draws.
+    if ( myMax == oppMax && myMax != 0 )
+    {
+        if ( myHiCard >= oppHiCard )
+        {
+            if ( myHiCard > oppHiCard )
+                oppMax = 0;
+        }
+        else
+        {
+            myMax = 0;
+        }
+    }
+
+    // Update score.
+    if ( myMax >= oppMax )
+    {
+        if ( myMax > oppMax )
+            l_myScore += myMax;
+    }
+    else
+    {
+        l_oppScore += oppMax;
+    }
+
+    return (l_myScore > l_oppScore);
 }

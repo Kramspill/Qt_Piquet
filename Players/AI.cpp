@@ -260,9 +260,12 @@ void AI::UpdateHand(CardArray* newCpuHand)
 void AI::SelectCardsToDiscard(void)
 {
     if ( 1 )
-        knowledgeBase->SelectExchanges(cpuHand, talonSize);
+        knowledgeBase->SelectMcsExchange(cpuHand, talonSize);
     else
+    {
+        knowledgeBase->SelectExchanges(cpuHand, talonSize);
         knowledgeBase->FlagDispensableCards(cpuHand);
+    }
 }
 
 

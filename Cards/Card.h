@@ -30,6 +30,7 @@ class Card : public QGraphicsSvgItem
 public:
     enum Suit
     {
+        NOSUIT   = -1,
         CLUBS    = 0,
         DIAMONDS = 1,
         HEARTS   = 2,
@@ -38,6 +39,7 @@ public:
 
     enum Rank
     {
+        NORANK  = -1,
         SEVEN   = 7,
         EIGHT   = 8,
         NINE    = 9,

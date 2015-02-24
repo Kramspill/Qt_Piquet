@@ -13,6 +13,12 @@
 
 
 //------------------------------------------------------------------------------
+// System Header Files
+//------------------------------------------------------------------------------
+#include <cmath>
+
+
+//------------------------------------------------------------------------------
 // My Header Files
 //------------------------------------------------------------------------------
 #include "State/GlobalStateInfo.h"
@@ -57,6 +63,15 @@ public:
         int                oppScore;
     };
 
+    struct McsElement
+    {
+        Card::Suit   suit;
+        Card::Rank   rank;
+        int          numWins;
+        int          numPlays;
+        int          numDiscards;
+    };
+
     struct KnowledgeItem
     {
         CardArray::Type location;
@@ -77,6 +92,7 @@ public:
                                         CardArray::Type location);
     void                     FlagDispensableCards(CardArray* cpuHand);
     void                     SelectExchanges(CardArray* cpuHand, int talonSize);
+    void                     SelectMcsExchange(CardArray* cpuHand, int talonSize);
     void                     SelectTrick(CardArray* cpuHand);
     void                     SelectMMTrick(CardArray* cpuHand, PlayerNum n);
 
@@ -100,6 +116,14 @@ private:
                                                 CardArray* possibleCards,
                                                 CardArray* removedCards);
     float                    Evaluate(CardArray* hand);
+    std::vector<McsElement*> GenerateElementArray(CardArray* cpuHand);
+    std::vector<std::vector<McsElement*> > GenOppHands(int numHands);
+    void                     Mcs(std::vector<McsElement*> myHand,
+                                 std::vector<std::vector<McsElement*> > oppHands,
+                                 int talonSize, int numSimulations);
+    float                    Uct(McsElement* e, int numSim);
+    bool                     ExecuteDecTest(std::vector<McsElement*> myHand,
+                                            std::vector<McsElement*> oppHand);
 
 private:
     KnowledgeItem*           cardStatus[4][8];
