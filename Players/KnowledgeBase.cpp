@@ -1058,7 +1058,7 @@ void KnowledgeBase::GenerateMoves(KnowledgeBase::Node* parent, PlayerNum p)
                         child->oppWins     = parent->oppWins;
                         child->myScore     = parent->myScore + 1;
                         child->oppScore    = parent->oppScore;
-                        child->payoff      = parent->payoff + 1;
+                        child->payoff      = parent->payoff + j;
 
                         // Special score modifiers.
                         if ( !child->piquetGiven &&
@@ -1121,7 +1121,7 @@ void KnowledgeBase::GenerateMoves(KnowledgeBase::Node* parent, PlayerNum p)
                         child->myScore     = parent->myScore + 1;
                         child->oppWins     = parent->oppWins;
                         child->oppScore    = parent->oppScore;
-                        child->payoff      = parent->payoff + 1;
+                        child->payoff      = parent->payoff + (8 - (j - oppTrickLoc[1]));
 
                         // Check for final victory.
                         if ( child->myWins + child->oppWins == 12 )
@@ -1239,7 +1239,7 @@ void KnowledgeBase::GenerateMoves(KnowledgeBase::Node* parent, PlayerNum p)
                             child->myScore     = parent->myScore;
                             child->oppWins     = parent->oppWins + 1;
                             child->oppScore    = parent->oppScore;
-                            child->payoff      = parent->payoff - 1;
+                            child->payoff      = parent->payoff - j;
 
                             // Check for final victory.
                             if ( child->myWins + child->oppWins == 12 )
@@ -1625,7 +1625,7 @@ float KnowledgeBase::Evaluate(CardArray* hand)
     }
 
     // Evaluation based on high cards.
-    e += (handValue / 156.0);
+    e += ((handValue / 156.0) * 11);
 
     // Calculate the point.
     int max = 0;
