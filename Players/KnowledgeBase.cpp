@@ -171,26 +171,37 @@ void KnowledgeBase::SelectExchanges(CardArray* cpuHand, int talonSize)
     SelectCardRemovals(e, hand, possibleCards, removedCards);
 
     // Select the chosen cards.
-    Card* card;
+    Card* card; Card* c; Card* r;
     int i = 0;
     int numDiscards = (talonSize > 5) ? 5 : talonSize;
-    while ( i < numDiscards && i < removedCards->GetSize() )
+    int size = removedCards->GetSize();
+    while ( i < numDiscards && i < size )
     {
-        int j = 0;
-        while( (cpuHand->GetCard(j)->GetSuit() != removedCards->GetCard(i)->GetSuit()) &&
-               (cpuHand->GetCard(j)->GetRank() != removedCards->GetCard(i)->GetRank()) )
+        int  j     = 0;
+        bool found = false;
+        while ( !found )
         {
-            j++;
+            c = cpuHand->GetCard(j);
+            r = removedCards->GetCard(i);
+
+            if ( c->GetSuit() == r->GetSuit() && c->GetRank() == r->GetRank() )
+                found = true;
+            else
+                j++;
         }
         i++;
-        card = cpuHand->GetCard(j);
 
-        card->setFlag(QGraphicsItem::ItemIsSelectable, true);
-        card->setSelected(true);
+        if ( found )
+        {
+            card = cpuHand->GetCard(j);
+
+            card->setFlag(QGraphicsItem::ItemIsSelectable, true);
+            card->setSelected(true);
+        }
     }
 
     // Free the memory.
-    int size = hand->GetSize();
+    size = hand->GetSize();
     for ( int i = 0; i < size; i++ )
     {
         card = hand->GetCard(0);
@@ -1614,7 +1625,7 @@ float KnowledgeBase::Evaluate(CardArray* hand)
     }
 
     // Evaluation based on high cards.
-    e += handValue;
+    e += (handValue / 156.0);
 
     // Calculate the point.
     int max = 0;
