@@ -255,7 +255,7 @@ void KnowledgeBase::SelectMcsExchange(CardArray* cpuHand, int talonSize)
         selectedPlays[i] = -1;
     }
 
-    for ( int i = 5; i < myHand.size(); i++ )
+    for ( int i = 5; i < (int)myHand.size(); i++ )
     {
         int numPlays = myHand[i]->numPlays;
 
@@ -1769,7 +1769,7 @@ void KnowledgeBase::Mcs(std::vector<KnowledgeBase::McsElement*> myHand,
                         int talonSize, int numSimulations)
 {
     // For each possible opponent hands
-    for ( int i = 0; i < oppHands.size(); i++ )
+    for ( int i = 0; i < (int)oppHands.size(); i++ )
     {
         std::vector<McsElement*> possHand;
         for ( int j = 0; j < 12; j++ )
@@ -1779,7 +1779,7 @@ void KnowledgeBase::Mcs(std::vector<KnowledgeBase::McsElement*> myHand,
         bool seenCards[4][8] = { false };
 
         // Determine possible cards we could pick up.
-        for ( int j = 0; j < myHand.size(); j++ )
+        for ( int j = 0; j < (int)myHand.size(); j++ )
         {
             McsElement* e = myHand[j];
 
@@ -1787,7 +1787,7 @@ void KnowledgeBase::Mcs(std::vector<KnowledgeBase::McsElement*> myHand,
                 seenCards[(int)e->suit][(int)(e->rank-7)] = true;
         }
 
-        for ( int j = 0; j < possHand.size(); j++ )
+        for ( int j = 0; j < (int)possHand.size(); j++ )
         {
             McsElement* e = possHand.at(j);
 
@@ -1834,7 +1834,7 @@ void KnowledgeBase::Mcs(std::vector<KnowledgeBase::McsElement*> myHand,
             }
         }
 
-        for ( int j = 5; j < myHand.size(); j++ )
+        for ( int j = 5; j < (int)myHand.size(); j++ )
         {
             float u = Uct(myHand[j], numSimulations);
 
@@ -1880,7 +1880,7 @@ void KnowledgeBase::Mcs(std::vector<KnowledgeBase::McsElement*> myHand,
         // Now replace the selected cards with an equal number of possible cards.
         int numCards = myHand[selectedIndex[0]]->numDiscards;
         std::vector<McsElement*> newHand;
-        for ( int j = 5; j < myHand.size(); j++ )
+        for ( int j = 5; j < (int)myHand.size(); j++ )
         {
             newHand.push_back(myHand[j]);
         }
@@ -1955,7 +1955,7 @@ bool KnowledgeBase::ExecuteDecTest(std::vector<KnowledgeBase::McsElement*> myHan
     int  oppHandSuits[4]     = { 0 };
     bool oppHandStatus[4][8] = { false };
 
-    for ( int i = 0; i < myHand.size(); i++ )
+    for ( int i = 0; i < (int)myHand.size(); i++ )
     {
         McsElement* e1 = myHand[i];
         McsElement* e2 = oppHand[i];
