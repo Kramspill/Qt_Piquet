@@ -377,7 +377,6 @@ void KnowledgeBase::SelectMMTrick(CardArray* cpuHand, PlayerNum n)
 {
     Node* root;
     int max = -1000;
-    Card* card = cpuHand->GetCard(0);
 
     // Create a node based on current state.
     root              = new Node();
@@ -427,11 +426,16 @@ void KnowledgeBase::SelectMMTrick(CardArray* cpuHand, PlayerNum n)
             if ( (type == CardArray::PLAYERTRICK && n == PLAYER1) ||
                  (type == CardArray::CPUTRICK && n == PLAYER2) )
             {
-                int n = 0;
-                while ( card != NULL && (card->GetSuit() != i && card->GetValue() != j) )
+                int   k     = 0;
+                bool  found = false;
+                Card* card  = cpuHand->GetCard(0);
+                while ( card != NULL && !found )
                 {
-                    n++;
-                    card = cpuHand->GetCard(n);
+                    card = cpuHand->GetCard(k);
+
+                    if ( card->GetSuit() == i && card->GetRank() == (j+7))
+                        found = true;
+                    k++;
                 }
 
                 if ( card )
@@ -1058,7 +1062,7 @@ void KnowledgeBase::GenerateMoves(KnowledgeBase::Node* parent, PlayerNum p)
                         child->oppWins     = parent->oppWins;
                         child->myScore     = parent->myScore + 1;
                         child->oppScore    = parent->oppScore;
-                        child->payoff      = parent->payoff + j;
+                        child->payoff      = parent->payoff + 1 + j;
 
                         // Special score modifiers.
                         if ( !child->piquetGiven &&
