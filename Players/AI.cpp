@@ -255,6 +255,16 @@ void AI::UpdateHand(CardArray* newCpuHand)
 
 
 //------------------------------------------------------------------------------
+// ClearSuit - Update the knowledge base to inform the ai that the player has
+//             run out of cards of a particular suit.
+//------------------------------------------------------------------------------
+void AI::ClearSuit(Card::Suit suit)
+{
+    knowledgeBase->ClearSuit(suit);
+}
+
+
+//------------------------------------------------------------------------------
 // SelectCardsToDiscard - Select cards to discard for the Exchange phase.
 //------------------------------------------------------------------------------
 void AI::SelectCardsToDiscard(void)

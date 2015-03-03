@@ -673,6 +673,21 @@ void KnowledgeBase::SetScores(int myScore, int oppScore)
 
 
 //------------------------------------------------------------------------------
+// ClearSuit - Update the knowledge base to inform the ai that the player has
+//             run out of cards of a particular suit.
+//------------------------------------------------------------------------------
+void KnowledgeBase::ClearSuit(Card::Suit suit)
+{
+    for ( int i = 0; i < 8; i++ )
+    {
+        // Actual location doesn't matter as long as it's not 'Unknown'.
+        if ( cardStatus[suit][i]->location == CardArray::UNKNOWN )
+            cardStatus[suit][i]->location = CardArray::CPUDISCARDS;
+    }
+}
+
+
+//------------------------------------------------------------------------------
 // RankCards - Rank the cards in the cpu's hand based on it's usefulness.
 //------------------------------------------------------------------------------
 void KnowledgeBase::RankCards(CardArray* cpuHand)
@@ -1062,7 +1077,19 @@ void KnowledgeBase::GenerateMoves(KnowledgeBase::Node* parent, PlayerNum p)
                         child->oppWins     = parent->oppWins;
                         child->myScore     = parent->myScore + 1;
                         child->oppScore    = parent->oppScore;
-                        child->payoff      = parent->payoff + 1 + j;
+
+                        // Known results score higher.
+                        bool best = true;
+                        for ( int l = (j+1); l < 8; l++ )
+                        {
+                            if ( child->state[i][l] == CardArray::UNKNOWN )
+                                best = false;
+                        }
+
+                        if ( best )
+                            child->payoff = parent->payoff + 1 + j;
+                        else
+                            child->payoff = parent->payoff - 7 + (7-j);
 
                         // Special score modifiers.
                         if ( !child->piquetGiven &&
@@ -1629,7 +1656,7 @@ float KnowledgeBase::Evaluate(CardArray* hand)
     }
 
     // Evaluation based on high cards.
-    e += ((handValue / 156.0) * 15);
+    e += ((handValue / 156.0) * 10);
 
     // Calculate the point.
     int max = 0;

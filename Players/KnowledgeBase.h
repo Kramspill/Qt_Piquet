@@ -101,6 +101,8 @@ public:
     void                     SelectSet(CardArray* hand);
     void                     SetScores(int myScore, int oppScore);
 
+    void                     ClearSuit(Card::Suit suit);
+
 private:
     void                     RankCards(CardArray* cpuHand);
     void                     CalculateSuitValues(CardArray* cpuHand);

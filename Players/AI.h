@@ -55,6 +55,7 @@ public:
                                              CardArray::Type location);
     void                   UpdateScores(int myScore, int oppScore);
     void                   UpdateHand(CardArray* newCpuHand);
+    void                   ClearSuit(Card::Suit suit);
 
     void                   SelectCardsToDiscard(void);
     void                   SetTalonSize(int newSize);

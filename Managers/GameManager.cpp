@@ -1004,10 +1004,20 @@ void GameManager::PlayTrick(PlayerNum player)
                                                     leadTrick->GetCard(0),
                                                     followTrick->GetCard(0));
 
-        RequestCardTransfer(CardArray::PLAYERTRICK,
-                            CardArray::PREVIOUSTRICKS, 1);
-        RequestCardTransfer(CardArray::CPUTRICK,
-                            CardArray::PREVIOUSTRICKS, 1);
+        if ( player == PLAYER1 && winner == PLAYER1 )
+        {
+            RequestCardTransfer(CardArray::PLAYERTRICK,
+                                CardArray::PREVIOUSTRICKS, 1);
+            RequestCardTransfer(CardArray::CPUTRICK,
+                                CardArray::PREVIOUSTRICKS, 1);
+        }
+        else
+        {
+            RequestCardTransfer(CardArray::CPUTRICK,
+                                CardArray::PREVIOUSTRICKS, 1);
+            RequestCardTransfer(CardArray::PLAYERTRICK,
+                                CardArray::PREVIOUSTRICKS, 1);
+        }
 
         trickWinner = winner;
     }
@@ -1143,6 +1153,7 @@ void GameManager::RequestCardTransfer(CardArray::Type src,
 void GameManager::UpdateAI(PlayerNum player)
 {
     Card*      card;
+    Card*      prevCard;
     CardArray* cardArray;
     int        size = 0;
 
@@ -1186,6 +1197,15 @@ void GameManager::UpdateAI(PlayerNum player)
     {
         card = cardArray->GetCard(index);
         ai->UpdateKnowledgeBase(card, index, CardArray::PREVIOUSTRICKS);
+
+        // If there's a difference in suit between an even and odd number,
+        // then the opponent no longer has cards in that suit.
+        if ( (index % 2) != 0 && prevCard->GetSuit() != card->GetSuit() )
+        {
+            ai->ClearSuit(prevCard->GetSuit());
+        }
+
+        prevCard = card;
     }
 
     // Retrieve the current trick and update the ai's knowledge base.
