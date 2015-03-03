@@ -1153,7 +1153,7 @@ void GameManager::RequestCardTransfer(CardArray::Type src,
 void GameManager::UpdateAI(PlayerNum player)
 {
     Card*      card;
-    Card*      prevCard;
+    Card*      prevCard = 0;
     CardArray* cardArray;
     int        size = 0;
 

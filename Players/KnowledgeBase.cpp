@@ -406,7 +406,7 @@ void KnowledgeBase::SelectMMTrick(CardArray* cpuHand, PlayerNum n)
     ImpMinimax(root, DEPTH, true, n);
 
     // Select the move from the tree.
-    Node* move;
+    Node* move = 0;
     for ( int i = 0; i < (int)root->children.size(); i++ )
     {
         Node* n = root->children[i];
@@ -433,7 +433,7 @@ void KnowledgeBase::SelectMMTrick(CardArray* cpuHand, PlayerNum n)
                 {
                     card = cpuHand->GetCard(k);
 
-                    if ( card->GetSuit() == i && card->GetRank() == (j+7))
+                    if ( card && card->GetSuit() == i && card->GetRank() == (j+7))
                         found = true;
                     k++;
                 }
@@ -1000,8 +1000,8 @@ void KnowledgeBase::GenerateMoves(KnowledgeBase::Node* parent, PlayerNum p)
     bool oppTrick = false;
     bool myTrick  = false;
 
-    int  oppTrickLoc[2];
-    int  myTrickLoc[2];
+    int  oppTrickLoc[2] = { -1, -1 };
+    int  myTrickLoc[2]  = { -1, -1 };
 
     // Check if there are tricks in play.
     for ( int i = 0; i < 4; i++ )
@@ -1643,7 +1643,11 @@ float KnowledgeBase::Evaluate(CardArray* hand)
     // equivalent hand evaluations.
     float e = 0;
     int  handSuits[4] = { 0 };
-    bool handStatus[4][8] = { false };
+    bool handStatus[4][8];
+    for ( int i = 0; i < 4; i++ )
+        for ( int j = 0; j < 8; j++ )
+            handStatus[i][j] = false;
+
     int  handValue = 0;
     for ( int i = 0; i < hand->GetSize(); i++ )
     {
@@ -1702,7 +1706,7 @@ float KnowledgeBase::Evaluate(CardArray* hand)
         int set = 0;
         for ( int j = 0; j < 4; j++ )
         {
-            if ( handStatus[i][j] )
+            if ( handStatus[j][i] )
                 set++;
         }
 
@@ -2243,4 +2247,13 @@ bool KnowledgeBase::ExecuteDecTest(std::vector<KnowledgeBase::McsElement*> myHan
     }
 
     return (l_myScore > l_oppScore);
+}
+
+
+//------------------------------------------------------------------------------
+// SortFunction - Sort function for CardEvals.
+//------------------------------------------------------------------------------
+bool SortFunction(CardEvals* i, CardEvals* j)
+{
+    return i->eval > j->eval;
 }

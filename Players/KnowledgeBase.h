@@ -29,7 +29,7 @@
 //------------------------------------------------------------------------------
 // Variables/Constants
 //------------------------------------------------------------------------------
-const int DEPTH = 2;
+const int DEPTH = 4;
 
 
 //------------------------------------------------------------------------------
@@ -40,7 +40,8 @@ struct CardEvals
     Card* card;
     float eval;
 };
-static bool SortFunction(CardEvals* i, CardEvals* j) { return i->eval > j->eval; }
+
+bool SortFunction(CardEvals* i, CardEvals* j);
 
 
 //------------------------------------------------------------------------------
