@@ -77,7 +77,7 @@ void CardArray::AddCard(Card* newCard, bool initialCardCreation, bool doNothing)
     // Add the new card to the array.
     cards.push_back(newCard);
 
-    if ( /*type == CPUHAND ||*/ type == PLAYERHAND )
+    if ( type == CPUHAND || type == PLAYERHAND )
         Sort();
 
     // Update the position and state of the cards.

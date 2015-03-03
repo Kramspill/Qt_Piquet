@@ -1660,7 +1660,7 @@ float KnowledgeBase::Evaluate(CardArray* hand)
     }
 
     // Evaluation based on high cards.
-    e += ((handValue / 156.0) * 10);
+    e += ((handValue / 156.0) * 7);
 
     // Calculate the point.
     int max = 0;
