@@ -77,7 +77,7 @@ void CardArray::AddCard(Card* newCard, bool initialCardCreation, bool doNothing)
     // Add the new card to the array.
     cards.push_back(newCard);
 
-    if ( type == CPUHAND || type == PLAYERHAND )
+    if ( /*type == CPUHAND ||*/ type == PLAYERHAND )
         Sort();
 
     // Update the position and state of the cards.
@@ -290,7 +290,7 @@ void CardArray::CleanUpCardPositions(bool newCardAdded)
                 }
 
                 // Update the position of the next card.
-                if ( type == PLAYERDISCARDS )
+                if ( type == PLAYERDISCARDS || type == CPUDISCARDS )
                     nextCardPosition = QPointF(shiftedPosition.x(),
                                                shiftedPosition.y()+40);
                 else
