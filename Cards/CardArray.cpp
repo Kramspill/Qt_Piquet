@@ -77,6 +77,9 @@ void CardArray::AddCard(Card* newCard, bool initialCardCreation, bool doNothing)
     // Add the new card to the array.
     cards.push_back(newCard);
 
+    if ( type == CPUHAND || type == PLAYERHAND )
+        Sort();
+
     // Update the position and state of the cards.
     if ( !doNothing )
         UpdateCardPositions(newCard, initialCardCreation);
@@ -153,7 +156,8 @@ void CardArray::Shuffle(void)
 //------------------------------------------------------------------------------
 void CardArray::Sort(void)
 {
-
+    std::sort(cards.begin(), cards.end(), CardSort);
+    ResetZPositions();
 }
 
 
@@ -431,4 +435,25 @@ void CardArray::ResetZPositions(void)
         card = GetCard(index);
         card->SetPosition(card->GetPosition(), index + 1);
     }
+}
+
+
+//------------------------------------------------------------------------------
+// CardSort - Used to sort cards.
+//------------------------------------------------------------------------------
+bool CardSort(Card* i, Card* j)
+{
+    bool result = false;
+
+    if ( i->GetSuit() < j->GetSuit() )
+    {
+        result = true;
+    }
+    else if ( i->GetSuit() == j->GetSuit() )
+    {
+        if ( i->GetRank() < j->GetRank() )
+            result = true;
+    }
+
+    return result;
 }
