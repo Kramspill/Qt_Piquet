@@ -1170,7 +1170,10 @@ void GameManager::UpdateAI(PlayerNum player)
     for ( int index = 0; index < size; index++ )
     {
         card = cardArray->GetCard(index);
-        ai->UpdateKnowledgeBase(card, index, CardArray::CPUHAND);
+        if ( player == PLAYER1 )
+            ai->UpdateKnowledgeBase(card, index, CardArray::PLAYERHAND);
+        else
+            ai->UpdateKnowledgeBase(card, index, CardArray::CPUHAND);
     }
 
     // Provide the ai with a pointer to the cpu's hand.
@@ -1186,7 +1189,10 @@ void GameManager::UpdateAI(PlayerNum player)
     for ( int index = 0; index < size; index++ )
     {
         card = cardArray->GetCard(index);
-        ai->UpdateKnowledgeBase(card, index, CardArray::CPUDISCARDS);
+        if ( player == PLAYER1 )
+            ai->UpdateKnowledgeBase(card, index, CardArray::PLAYERDISCARDS);
+        else
+            ai->UpdateKnowledgeBase(card, index, CardArray::CPUDISCARDS);
     }
 
     // Retrieve the previous tricks and update the ai's knowledge base.
@@ -1218,7 +1224,10 @@ void GameManager::UpdateAI(PlayerNum player)
     for ( int index = 0; index < size; index++ )
     {
         card = cardArray->GetCard(index);
-        ai->UpdateKnowledgeBase(card, index, CardArray::PLAYERTRICK);
+        if ( player == PLAYER1 )
+            ai->UpdateKnowledgeBase(card, index, CardArray::CPUTRICK);
+        else
+            ai->UpdateKnowledgeBase(card, index, CardArray::PLAYERTRICK);
     }
 
     if ( player == PLAYER1 )
