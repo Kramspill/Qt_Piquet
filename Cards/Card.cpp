@@ -167,7 +167,7 @@ void Card::UpdateAnimation(bool noAnimation)
     }
     else
     {
-        transitionAnimation->setDuration(100);
+        transitionAnimation->setDuration(200);
     }
 
     transitionAnimation->setEndValue(position);

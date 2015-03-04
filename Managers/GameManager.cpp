@@ -141,7 +141,7 @@ void GameManager::InitGlobalState(void)
     restarting                             = false;
     player1Wins                            = 0;
     player2Wins                            = 0;
-    numGames                               = 2;
+    numGames                               = 1;
 
     p1Exchange                             = 0;
     p2Exchange                             = 0;
@@ -1062,7 +1062,7 @@ void GameManager::ExecuteSummary(void)
             player1->Summary();
             ResetGame(true);
         }
-        else if ( numGames > 0 )
+        else if ( (numGames-1) > 0 )
         {
             // If the ai still has game's to play.
             if ( scoreManager->GetPlayerScore() > scoreManager->GetCPUScore() )
@@ -1075,6 +1075,11 @@ void GameManager::ExecuteSummary(void)
         }
         else
         {
+            if ( scoreManager->GetPlayerScore() > scoreManager->GetCPUScore() )
+                player1Wins++;
+            else if ( scoreManager->GetPlayerScore() < scoreManager->GetCPUScore() )
+                player2Wins++;
+
             player1->Summary();
             testingAi   = false;
             restarting  = true;
@@ -1130,7 +1135,7 @@ void GameManager::TestAi(void)
 
     player1Wins = 0;
     player2Wins = 0;
-    numGames    = 2;
+    numGames    = 1;
 
     emit stateManager->ExitLoop();
 }

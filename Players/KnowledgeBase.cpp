@@ -287,10 +287,13 @@ void KnowledgeBase::SelectMcsExchange(CardArray* cpuHand, int talonSize)
     // Select the chosen cards.
     for ( int i = 0; i < numDiscards; i++ )
     {
-        Card* card = cpuHand->GetCard(selectedIndex[i]);
+        if ( selectedIndex[i] >= 0 )
+        {
+            Card* card = cpuHand->GetCard(selectedIndex[i]);
 
-        card->setFlag(QGraphicsItem::ItemIsSelectable, true);
-        card->setSelected(true);
+            card->setFlag(QGraphicsItem::ItemIsSelectable, true);
+            card->setSelected(true);
+        }
     }
 }
 
@@ -1816,6 +1819,7 @@ void KnowledgeBase::Mcs(std::vector<KnowledgeBase::McsElement*> myHand,
 {
     std::vector<McsElement*> newHand;
     std::vector<McsElement*> possCards;
+    McsElement* element = 0;
 
     // For each possible opponent hands
     for ( int i = 0; i < (int)oppHands.size(); i++ )
@@ -1839,21 +1843,27 @@ void KnowledgeBase::Mcs(std::vector<KnowledgeBase::McsElement*> myHand,
                 seenCards[(int)e->suit][(int)(e->rank-7)] = true;
         }
 
+        if ( element )
+        {
+            delete element;
+            element = 0;
+        }
+
         for ( int j = 0; j < 4; j++ )
         {
             for ( int k = 0; k < 8; k++ )
             {
                 if ( !seenCards[j][k] )
                 {
-                    McsElement* e = new McsElement();
+                    element = new McsElement();
 
-                    e->suit        = (Card::Suit)j;
-                    e->rank        = (Card::Rank)(k+7);
-                    e->numWins     = 0;
-                    e->numPlays    = 0;
-                    e->numDiscards = 0;
+                    element->suit        = (Card::Suit)j;
+                    element->rank        = (Card::Rank)(k+7);
+                    element->numWins     = 0;
+                    element->numPlays    = 0;
+                    element->numDiscards = 0;
 
-                    possCards.push_back(e);
+                    possCards.push_back(element);
                 }
             }
         }
