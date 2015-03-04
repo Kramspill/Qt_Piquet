@@ -1814,14 +1814,12 @@ void KnowledgeBase::Mcs(std::vector<KnowledgeBase::McsElement*> myHand,
                         std::vector<std::vector<KnowledgeBase::McsElement*> > oppHands,
                         int talonSize, int numSimulations)
 {
+    std::vector<McsElement*> newHand;
+    std::vector<McsElement*> possCards;
+
     // For each possible opponent hands
     for ( int i = 0; i < (int)oppHands.size(); i++ )
     {
-        std::vector<McsElement*> possHand;
-        for ( int j = 0; j < 12; j++ )
-        {
-            possHand.push_back(oppHands.at(i).at(j));
-        }
         bool seenCards[4][8] = { false };
 
         // Determine possible cards we could pick up.
@@ -1833,15 +1831,14 @@ void KnowledgeBase::Mcs(std::vector<KnowledgeBase::McsElement*> myHand,
                 seenCards[(int)e->suit][(int)(e->rank-7)] = true;
         }
 
-        for ( int j = 0; j < (int)possHand.size(); j++ )
+        for ( int j = 0; j < (int)oppHands.at(i).size(); j++ )
         {
-            McsElement* e = possHand.at(j);
+            McsElement* e = oppHands.at(i).at(j);
 
             if ( e->suit != Card::NOSUIT )
                 seenCards[(int)e->suit][(int)(e->rank-7)] = true;
         }
 
-        std::vector<McsElement*> possCards;
         for ( int j = 0; j < 4; j++ )
         {
             for ( int k = 0; k < 8; k++ )
@@ -1925,7 +1922,6 @@ void KnowledgeBase::Mcs(std::vector<KnowledgeBase::McsElement*> myHand,
 
         // Now replace the selected cards with an equal number of possible cards.
         int numCards = myHand[selectedIndex[0]]->numDiscards;
-        std::vector<McsElement*> newHand;
         for ( int j = 5; j < (int)myHand.size(); j++ )
         {
             newHand.push_back(myHand[j]);
@@ -1937,7 +1933,7 @@ void KnowledgeBase::Mcs(std::vector<KnowledgeBase::McsElement*> myHand,
         }
 
         // Now play out the declarations to determine the winner.
-        bool win = ExecuteDecTest(newHand, possHand);
+        bool win = ExecuteDecTest(newHand, oppHands.at(i));
 
         // Update the information.
         for ( int j = 0; j <= numCards; j++ )
@@ -1949,11 +1945,8 @@ void KnowledgeBase::Mcs(std::vector<KnowledgeBase::McsElement*> myHand,
         }
 
         // Free the possible cards vector.
-        int max = possCards.size();
-        for ( int j = max; j >= 0; j-- )
-        {
-            possCards.pop_back();
-        }
+        newHand.clear();
+        possCards.clear();
 
         numSimulations++;
     }

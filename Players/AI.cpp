@@ -41,7 +41,7 @@ AI::~AI(void)
 //------------------------------------------------------------------------------
 void AI::Initialize(PlayerNum num)
 {
-    playerNumber = num;
+    playerNumber   = num;
 
     // Initialize the knowledge base.
     knowledgeBase = new KnowledgeBase();
@@ -269,9 +269,24 @@ void AI::ClearSuit(Card::Suit suit)
 //------------------------------------------------------------------------------
 void AI::SelectCardsToDiscard(void)
 {
-    knowledgeBase->SelectExchanges(cpuHand, talonSize);
-    //knowledgeBase->SelectMcsExchange(cpuHand, talonSize);
-    //knowledgeBase->FlagDispensableCards(cpuHand);
+    if ( playerNumber == 1 )
+    {
+        if ( p1Exchange == 0 )
+            knowledgeBase->SelectExchanges(cpuHand, talonSize);
+        else if ( p1Exchange == 1 )
+            knowledgeBase->SelectMcsExchange(cpuHand, talonSize);
+        else
+            knowledgeBase->FlagDispensableCards(cpuHand);
+    }
+    else
+    {
+        if ( p2Exchange == 0 )
+            knowledgeBase->SelectExchanges(cpuHand, talonSize);
+        else if ( p2Exchange == 1 )
+            knowledgeBase->SelectMcsExchange(cpuHand, talonSize);
+        else
+            knowledgeBase->FlagDispensableCards(cpuHand);
+    }
 }
 
 

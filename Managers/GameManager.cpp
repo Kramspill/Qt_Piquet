@@ -142,6 +142,9 @@ void GameManager::InitGlobalState(void)
     player1Wins                            = 0;
     player2Wins                            = 0;
     numGames                               = 2;
+
+    p1Exchange                             = 0;
+    p2Exchange                             = 0;
 }
 
 
@@ -507,6 +510,7 @@ void GameManager::ExecuteElderSelect(void)
         delete player1;
         player1 = new AI();
         player1->Initialize(PLAYER1);
+        p1Exchange = 1;
         ConnectPlayer();
     }
     else if ( !testingAi && dynamic_cast<AI*>(player1) )

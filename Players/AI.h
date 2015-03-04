@@ -50,7 +50,6 @@ public:
     void                   PlayTrick(void);
     void                   CarteBlanche(void);
 
-
     void                   UpdateKnowledgeBase(Card* card, int index,
                                              CardArray::Type location);
     void                   UpdateScores(int myScore, int oppScore);

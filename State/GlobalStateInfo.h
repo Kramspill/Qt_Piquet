@@ -96,5 +96,7 @@ extern bool                restarting;
 extern int                 player1Wins;
 extern int                 player2Wins;
 extern int                 numGames;
+extern int                 p1Exchange;
+extern int                 p2Exchange;
 
 #endif // GLOBALSTATEINFO_H
