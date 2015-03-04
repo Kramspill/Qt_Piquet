@@ -57,6 +57,16 @@ void KnowledgeBase::Initialize(void)
     suitRanks[2] = 2;
     suitRanks[3] = 3;
 
+    // Initialize the suitValues array.
+    suitValues[0] = 0;
+    suitValues[1] = 0;
+    suitValues[2] = 0;
+    suitValues[3] = 0;
+
+    // Initialize the cardRanks array.
+    for ( int i = 0; i < 12; i ++ )
+        cardRanks[i] = 0;
+
     // Initialize the currentRank.
     currentRank = 11;
 
@@ -110,12 +120,12 @@ void KnowledgeBase::UpdateCard(Card::Suit suit, Card::Rank rank, int index,
 // FlagDispensableCards - Flag cards that have no value to the cpu so that they
 //                        may be exchanged.
 //------------------------------------------------------------------------------
-void KnowledgeBase::FlagDispensableCards(CardArray* cpuHand)
+void KnowledgeBase::FlagDispensableCards(CardArray* cpuHand, PlayerNum p)
 {
     Card* card;
 
     // Rank the cards.
-    RankCards(cpuHand);
+    RankCards(cpuHand, p);
 
     // Select 3 cards for now.
     for ( int index = 2; index >= 0; index-- )
@@ -457,7 +467,7 @@ void KnowledgeBase::SelectMMTrick(CardArray* cpuHand, PlayerNum n)
 //------------------------------------------------------------------------------
 // SelectPoint - Calculate the cpu's best Point and select it.
 //------------------------------------------------------------------------------
-void KnowledgeBase::SelectPoint(CardArray* hand)
+void KnowledgeBase::SelectPoint(CardArray* hand, PlayerNum p)
 {
     int currentNumCards = 0;
     int bestNumCards    = 0;
@@ -475,7 +485,8 @@ void KnowledgeBase::SelectPoint(CardArray* hand)
         {
             KnowledgeItem* item = cardStatus[suitIndex][valueIndex];
 
-            if ( item->location == CardArray::CPUHAND )
+            if ( (p == PLAYER2 && item->location == CardArray::CPUHAND) ||
+                 (p == PLAYER1 && item->location == CardArray::PLAYERHAND) )
             {
                 currentNumCards++;
                 currentValue   += pointValues[valueIndex];
@@ -516,7 +527,7 @@ void KnowledgeBase::SelectPoint(CardArray* hand)
 //------------------------------------------------------------------------------
 // SelectSequence - Calculate the cpu's best Sequence and select it.
 //------------------------------------------------------------------------------
-void KnowledgeBase::SelectSequence(CardArray* hand)
+void KnowledgeBase::SelectSequence(CardArray* hand, PlayerNum p)
 {
     int currentNumCards = 0;
     int bestNumCards    = 0;
@@ -535,8 +546,9 @@ void KnowledgeBase::SelectSequence(CardArray* hand)
         {
             KnowledgeItem* item = cardStatus[suitIndex][valueIndex];
 
-            if ( item->location == CardArray::CPUHAND &&
-                 item->selected == false )
+            if ( ((p == PLAYER2 && item->location == CardArray::CPUHAND) ||
+                  (p == PLAYER1 && item->location == CardArray::PLAYERHAND) ) &&
+                  item->selected == false )
             {
                 count++;
             }
@@ -600,7 +612,7 @@ void KnowledgeBase::SelectSequence(CardArray* hand)
 //------------------------------------------------------------------------------
 // SelectSet - Calculate the cpu's best Set and select it.
 //------------------------------------------------------------------------------
-void KnowledgeBase::SelectSet(CardArray* hand)
+void KnowledgeBase::SelectSet(CardArray* hand, PlayerNum p)
 {
     int currentNumCards = 0;
     int bestNumCards    = 0;
@@ -618,8 +630,9 @@ void KnowledgeBase::SelectSet(CardArray* hand)
         {
             KnowledgeItem* item = cardStatus[suitIndex][valueIndex];
 
-            if ( item->location == CardArray::CPUHAND &&
-                 item->selected == false )
+            if ( ((p == PLAYER2 && item->location == CardArray::CPUHAND) ||
+                  (p == PLAYER1 && item->location == CardArray::PLAYERHAND) ) &&
+                  item->selected == false )
             {
                 count++;
             }
@@ -693,22 +706,22 @@ void KnowledgeBase::ClearSuit(Card::Suit suit)
 //------------------------------------------------------------------------------
 // RankCards - Rank the cards in the cpu's hand based on it's usefulness.
 //------------------------------------------------------------------------------
-void KnowledgeBase::RankCards(CardArray* cpuHand)
+void KnowledgeBase::RankCards(CardArray* cpuHand, PlayerNum p)
 {
     // Determine the cpu's best and worst suits.
     CalculateSuitValues(cpuHand);
 
     // Rank the 'Stoppers'.
-    RankStoppers();
+    RankStoppers(p);
 
     // Rank the Cards that help with Sets.
-    RankSets();
+    RankSets(p);
 
     // Rank the Cards that help with Sequences.
-    RankSequences();
+    RankSequences(p);
 
     // Rank the last of the cards.
-    FinishRanking();
+    FinishRanking(p);
 }
 
 
@@ -756,7 +769,7 @@ void KnowledgeBase::CalculateSuitValues(CardArray* cpuHand)
 //------------------------------------------------------------------------------
 // RankStoppers - Rank the cards that can act as 'Stoppers'.
 //------------------------------------------------------------------------------
-void KnowledgeBase::RankStoppers(void)
+void KnowledgeBase::RankStoppers(PlayerNum p)
 {
     bool stopperNotFound = true;
 
@@ -771,11 +784,15 @@ void KnowledgeBase::RankStoppers(void)
 
             // If the item at this location is in the cpuHand then a stopper
             // has been found.
-            if ( item && item->location == CardArray::CPUHAND )
+            if ( item )
             {
-                item->rank               = currentRank;
-                cardRanks[currentRank--] = item->index;
-                stopperNotFound          = false;
+                if ( (p == PLAYER2 && item->location == CardArray::CPUHAND) ||
+                     (p == PLAYER1 && item->location == CardArray::PLAYERHAND) )
+                {
+                    item->rank               = currentRank;
+                    cardRanks[currentRank--] = item->index;
+                    stopperNotFound          = false;
+                }
             }
 
             cardValue--;
@@ -793,12 +810,16 @@ void KnowledgeBase::RankStoppers(void)
                 KnowledgeItem* item =
                         cardStatus[suitRanks[index]][cardValue];
 
-                if ( item && item->location == CardArray::CPUHAND )
+                if ( item )
                 {
-                    item->rank               = currentRank;
-                    cardRanks[currentRank--] = item->index;
+                    if ( (p == PLAYER2 && item->location == CardArray::CPUHAND) ||
+                         (p == PLAYER1 && item->location == CardArray::PLAYERHAND) )
+                    {
+                        item->rank               = currentRank;
+                        cardRanks[currentRank--] = item->index;
 
-                    additionalCards--;
+                        additionalCards--;
+                    }
                 }
 
                 cardValue--;
@@ -813,7 +834,7 @@ void KnowledgeBase::RankStoppers(void)
 //------------------------------------------------------------------------------
 // RankSets - Rank the cards that can work in a Set.
 //------------------------------------------------------------------------------
-void KnowledgeBase::RankSets(void)
+void KnowledgeBase::RankSets(PlayerNum p)
 {
     // Make sure that there are still cards to rank.
     if ( currentRank >= 0 )
@@ -828,9 +849,13 @@ void KnowledgeBase::RankSets(void)
             {
                 item = cardStatus[suitRanks[suitIndex]][valueIndex];
 
-                if ( item && item->location == CardArray::CPUHAND )
+                if ( item )
                 {
-                    cardCount++;
+                    if ( (p == PLAYER2 && item->location == CardArray::CPUHAND) ||
+                         (p == PLAYER1 && item->location == CardArray::PLAYERHAND) )
+                    {
+                        cardCount++;
+                    }
                 }
             }
 
@@ -841,12 +866,16 @@ void KnowledgeBase::RankSets(void)
                 {
                     item = cardStatus[suitRanks[suitIndex]][valueIndex];
 
-                    if ( item && item->location == CardArray::CPUHAND )
+                    if ( item )
                     {
-                        if ( item->rank == -1)
+                        if ( (p == PLAYER2 && item->location == CardArray::CPUHAND) ||
+                             (p == PLAYER1 && item->location == CardArray::PLAYERHAND) )
                         {
-                            item->rank               = currentRank;
-                            cardRanks[currentRank--] = item->index;
+                            if ( item->rank == -1)
+                            {
+                                item->rank               = currentRank;
+                                cardRanks[currentRank--] = item->index;
+                            }
                         }
                     }
                 }
@@ -859,7 +888,7 @@ void KnowledgeBase::RankSets(void)
 //------------------------------------------------------------------------------
 // RankSequences - Rank the cards that can work in a Sequence.
 //------------------------------------------------------------------------------
-void KnowledgeBase::RankSequences(void)
+void KnowledgeBase::RankSequences(PlayerNum p)
 {
     // Make sure that there are still cards to rank.
     if ( currentRank >= 0 )
@@ -876,9 +905,13 @@ void KnowledgeBase::RankSequences(void)
             {
                 item = cardStatus[suitRanks[suitIndex]][valueIndex];
 
-                if ( item && item->location == CardArray::CPUHAND )
+                if ( item )
                 {
-                    sequenceCount++;
+                    if ( (p == PLAYER2 && item->location == CardArray::CPUHAND) ||
+                         (p == PLAYER1 && item->location == CardArray::PLAYERHAND) )
+                    {
+                        sequenceCount++;
+                    }
                 }
                 else if ( sequenceCount >= 3 )
                 {
@@ -911,7 +944,7 @@ void KnowledgeBase::RankSequences(void)
 //------------------------------------------------------------------------------
 // FinishRanking - Rank the cards that have yet to be ranked.
 //------------------------------------------------------------------------------
-void KnowledgeBase::FinishRanking(void)
+void KnowledgeBase::FinishRanking(PlayerNum p)
 {
     // Make sure that there are still cards to rank.
     if ( currentRank >= 0 )
@@ -925,11 +958,14 @@ void KnowledgeBase::FinishRanking(void)
             {
                 item = cardStatus[suitRanks[suitIndex]][valueIndex];
 
-                if ( item && item->location == CardArray::CPUHAND &&
-                     item->rank == -1 )
+                if ( item && item->rank == -1 )
                 {
-                    item->rank               = currentRank;
-                    cardRanks[currentRank--] = item->index;
+                    if ( (p == PLAYER2 && item->location == CardArray::CPUHAND) ||
+                         (p == PLAYER1 && item->location == CardArray::PLAYERHAND) )
+                    {
+                        item->rank               = currentRank;
+                        cardRanks[currentRank--] = item->index;
+                    }
                 }
             }
         }

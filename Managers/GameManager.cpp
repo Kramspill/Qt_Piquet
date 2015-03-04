@@ -141,9 +141,9 @@ void GameManager::InitGlobalState(void)
     restarting                             = false;
     player1Wins                            = 0;
     player2Wins                            = 0;
-    numGames                               = 1;
+    numGames                               = 10;
 
-    p1Exchange                             = 0;
+    p1Exchange                             = 1;
     p2Exchange                             = 0;
 }
 
@@ -1070,6 +1070,15 @@ void GameManager::ExecuteSummary(void)
             else if ( scoreManager->GetPlayerScore() < scoreManager->GetCPUScore() )
                 player2Wins++;
 
+            // Write data.
+            std::ofstream myfile;
+            myfile.open("C:\\Users\\Marcus\\Documents\\Uni_Stuff\\Piquet\\example.txt", std::ios::app);
+            if ( myfile.is_open() )
+            {
+                myfile << "P1 wins = " << player1Wins << " P2 wins = " << player2Wins << std::endl;
+                myfile.close();
+            }
+
             numGames--;
             ResetGame(true);
         }
@@ -1079,6 +1088,15 @@ void GameManager::ExecuteSummary(void)
                 player1Wins++;
             else if ( scoreManager->GetPlayerScore() < scoreManager->GetCPUScore() )
                 player2Wins++;
+
+            // Write data.
+            std::ofstream myfile;
+            myfile.open("C:\\Users\\Marcus\\Documents\\Uni_Stuff\\Piquet\\example.txt", std::ios::app);
+            if ( myfile.is_open() )
+            {
+                myfile << "P1 wins = " << player1Wins << " P2 wins = " << player2Wins << std::endl;
+                myfile.close();
+            }
 
             player1->Summary();
             testingAi   = false;
@@ -1091,13 +1109,24 @@ void GameManager::ExecuteSummary(void)
         }
     }
     else
-    {
+    {              
         partieResults->currentDeal++;
 
         // If a user is playing, wait for them to select 'Continue'.
         if ( !dynamic_cast<AI*>(player1) )
         {
             player1->Summary();
+        }
+        else
+        {
+            // Write data.
+            std::ofstream myfile;
+            myfile.open("C:\\Users\\Marcus\\Documents\\Uni_Stuff\\Piquet\\example.txt", std::ios::app);
+            if ( myfile.is_open() )
+            {
+                myfile << scoreManager->GetPlayerScore() << " " << scoreManager->GetCPUScore() << std::endl;
+                myfile.close();
+            }
         }
 
         // Reset the state of the game to the deal phase and switch elder.
@@ -1135,7 +1164,7 @@ void GameManager::TestAi(void)
 
     player1Wins = 0;
     player2Wins = 0;
-    numGames    = 1;
+    numGames    = 10;
 
     emit stateManager->ExitLoop();
 }

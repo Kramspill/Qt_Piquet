@@ -157,15 +157,15 @@ void AI::AnnounceDeclaration(State phase)
     switch ( phase )
     {
         case POINT:
-            knowledgeBase->SelectPoint(cpuHand);
+            knowledgeBase->SelectPoint(cpuHand, playerNumber);
             break;
 
         case SEQUENCE:
-            knowledgeBase->SelectSequence(cpuHand);
+            knowledgeBase->SelectSequence(cpuHand, playerNumber);
             break;
 
         case SET:
-            knowledgeBase->SelectSet(cpuHand);
+            knowledgeBase->SelectSet(cpuHand, playerNumber);
             break;
 
         default:
@@ -276,7 +276,7 @@ void AI::SelectCardsToDiscard(void)
         else if ( p1Exchange == 1 )
             knowledgeBase->SelectMcsExchange(cpuHand, talonSize);
         else
-            knowledgeBase->FlagDispensableCards(cpuHand);
+            knowledgeBase->FlagDispensableCards(cpuHand, playerNumber);
     }
     else
     {
@@ -285,7 +285,7 @@ void AI::SelectCardsToDiscard(void)
         else if ( p2Exchange == 1 )
             knowledgeBase->SelectMcsExchange(cpuHand, talonSize);
         else
-            knowledgeBase->FlagDispensableCards(cpuHand);
+            knowledgeBase->FlagDispensableCards(cpuHand, playerNumber);
     }
 }
 

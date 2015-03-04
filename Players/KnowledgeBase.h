@@ -91,26 +91,26 @@ public:
     void                     UpdateCard(Card::Suit suit, Card::Rank rank,
                                         int index,
                                         CardArray::Type location);
-    void                     FlagDispensableCards(CardArray* cpuHand);
+    void                     FlagDispensableCards(CardArray* cpuHand, PlayerNum p);
     void                     SelectExchanges(CardArray* cpuHand, int talonSize);
     void                     SelectMcsExchange(CardArray* cpuHand, int talonSize);
     void                     SelectTrick(CardArray* cpuHand);
     void                     SelectMMTrick(CardArray* cpuHand, PlayerNum n);
 
-    void                     SelectPoint(CardArray* hand);
-    void                     SelectSequence(CardArray* hand);
-    void                     SelectSet(CardArray* hand);
+    void                     SelectPoint(CardArray* hand, PlayerNum p);
+    void                     SelectSequence(CardArray* hand, PlayerNum p);
+    void                     SelectSet(CardArray* hand, PlayerNum p);
     void                     SetScores(int myScore, int oppScore);
 
     void                     ClearSuit(Card::Suit suit);
 
 private:
-    void                     RankCards(CardArray* cpuHand);
+    void                     RankCards(CardArray* cpuHand, PlayerNum p);
     void                     CalculateSuitValues(CardArray* cpuHand);
-    void                     RankStoppers(void);
-    void                     RankSets(void);
-    void                     RankSequences(void);
-    void                     FinishRanking(void);
+    void                     RankStoppers(PlayerNum p);
+    void                     RankSets(PlayerNum p);
+    void                     RankSequences(PlayerNum p);
+    void                     FinishRanking(PlayerNum p);
     int                      ImpMinimax(Node* n, int depth, bool myMove, PlayerNum p);
     void                     GenerateMoves(Node* parent, PlayerNum p);
     void                     FreeTree(Node* root);
