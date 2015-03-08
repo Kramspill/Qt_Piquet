@@ -510,7 +510,6 @@ void GameManager::ExecuteElderSelect(void)
         delete player1;
         player1 = new AI();
         player1->Initialize(PLAYER1);
-        p1Exchange = 1;
         ConnectPlayer();
     }
     else if ( !testingAi && dynamic_cast<AI*>(player1) )

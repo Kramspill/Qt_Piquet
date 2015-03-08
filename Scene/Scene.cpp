@@ -55,6 +55,7 @@ void Scene::Initialize(void)
     player1Score    = new QTableWidgetItem("0");
     player2Score    = new QTableWidgetItem("0");
     area            = new UIArea();
+    mapper          = new QSignalMapper();
 
     // Set the size and position of the items in the scene.
     float uiLeft = width - (width / 4);
@@ -85,6 +86,34 @@ void Scene::Initialize(void)
     QMenu*   aiMenu     = menuBar->addMenu("AI");
     QAction* tAiAction  = aiMenu->addAction("Test AI");
     connect(tAiAction, SIGNAL(triggered()), this, SIGNAL(TestAi()));
+
+    QMenu*   p1Ai       = aiMenu->addMenu("P1 Ai");
+    QAction* aiAction1  = p1Ai->addAction("Heuristic");
+    QAction* aiAction2  = p1Ai->addAction("MCS");
+    QAction* aiAction3  = p1Ai->addAction("Evaluation");
+
+    mapper->setMapping(aiAction1, 2);
+    mapper->setMapping(aiAction2, 1);
+    mapper->setMapping(aiAction3, 0);
+
+    connect(aiAction1, SIGNAL(triggered()), mapper, SLOT(map()));
+    connect(aiAction2, SIGNAL(triggered()), mapper, SLOT(map()));
+    connect(aiAction3, SIGNAL(triggered()), mapper, SLOT(map()));
+
+    QMenu*   p2Ai       = aiMenu->addMenu("P2 Ai");
+    QAction* aiAction4  = p2Ai->addAction("Heuristic");
+    QAction* aiAction5  = p2Ai->addAction("MCS");
+    QAction* aiAction6  = p2Ai->addAction("Evaluation");
+
+    mapper->setMapping(aiAction4, 5);
+    mapper->setMapping(aiAction5, 4);
+    mapper->setMapping(aiAction6, 3);
+
+    connect(aiAction4, SIGNAL(triggered()), mapper, SLOT(map()));
+    connect(aiAction5, SIGNAL(triggered()), mapper, SLOT(map()));
+    connect(aiAction6, SIGNAL(triggered()), mapper, SLOT(map()));
+
+    connect(mapper,    SIGNAL(mapped(int)), this,   SLOT(SetAi(int)));
 
     // Score display.
     table->setRowCount(7);
@@ -249,6 +278,7 @@ void Scene::Destroy(void)
     delete player2Score;        player2Score    = 0;
     delete area;                area            = 0;
     delete playerTrickArea;     playerTrickArea = 0;
+    delete mapper;              mapper          = 0;
 
     for ( int i = 0; i < 2; i++ )
     {
@@ -867,4 +897,43 @@ void Scene::UpdateScores(int p1Score, int p2Score)
     player2Score->setText(str);
 
     delete[] str;
+}
+
+
+//------------------------------------------------------------------------------
+// SetAi - Set the Ai's for p1 and p2.
+//------------------------------------------------------------------------------
+void Scene::SetAi(int ai)
+{
+    switch ( ai )
+    {
+        case 0:
+            p1Exchange = 0;
+            break;
+
+        case 1:
+            p1Exchange = 1;
+            break;
+
+        case 2:
+            p1Exchange = 2;
+            break;
+
+        case 3:
+            p2Exchange = 0;
+            break;
+
+        case 4:
+            p2Exchange = 1;
+            break;
+
+        case 5:
+            p2Exchange = 2;
+            break;
+
+        default:
+            p1Exchange = 0;
+            p2Exchange = 0;
+            break;
+    }
 }

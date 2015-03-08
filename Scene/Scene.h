@@ -20,6 +20,7 @@
 #include <QHeaderView>
 #include <QMenu>
 #include <QMenuBar>
+#include <QSignalMapper>
 
 
 //------------------------------------------------------------------------------
@@ -73,6 +74,7 @@ public slots:
     void              SetCardsMoveable(bool moveable);
     void              SetValidSelection(bool valid);
     void              UpdateScores(int p1Score, int p2Score);
+    void              SetAi(int ai);
 
 signals:
     void              BeginElderSelect(void);
@@ -105,6 +107,7 @@ private:
     UIArea*           area;
     QMenuBar*         menuBar;
     QRectF*           playerTrickArea;
+    QSignalMapper*    mapper;
     int               xPos;
     int               yPos;
     int               width;
