@@ -147,7 +147,7 @@ void GameManager::InitGlobalState(void)
     numGames                               = 10;
     defaultNumGames                        = 10;
 
-    p1Exchange                             = 1;
+    p1Exchange                             = 0;
     p2Exchange                             = 0;
 }
 
