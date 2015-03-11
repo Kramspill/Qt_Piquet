@@ -1879,12 +1879,6 @@ void KnowledgeBase::Mcs(std::vector<KnowledgeBase::McsElement*> myHand,
                 seenCards[(int)e->suit][(int)(e->rank-7)] = true;
         }
 
-        if ( element )
-        {
-            delete element;
-            element = 0;
-        }
-
         for ( int j = 0; j < 4; j++ )
         {
             for ( int k = 0; k < 8; k++ )
@@ -1975,7 +1969,15 @@ void KnowledgeBase::Mcs(std::vector<KnowledgeBase::McsElement*> myHand,
 
         for ( int j = 1; j <= numCards; j++ )
         {
-            newHand[selectedIndex[j]-5] = possCards[j-1];
+            element                = new McsElement();
+            McsElement* newElement = possCards[j-1];
+
+            element->suit          = newElement->suit;
+            element->rank          = newElement->rank;
+            element->numWins       = newElement->numWins;
+            element->numPlays      = newElement->numPlays;
+            element->numDiscards   = newElement->numDiscards;
+            newHand[selectedIndex[j]-5] = element;
         }
 
         // Now play out the declarations to determine the winner.
@@ -1991,8 +1993,8 @@ void KnowledgeBase::Mcs(std::vector<KnowledgeBase::McsElement*> myHand,
         }
 
         // Free the possible cards vector.
-        newHand.clear();
-        possCards.clear();
+        std::vector<McsElement*>().swap(newHand);
+        std::vector<McsElement*>().swap(possCards);
 
         numSimulations++;
     }
