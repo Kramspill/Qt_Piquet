@@ -1,6 +1,10 @@
 //------------------------------------------------------------------------------
 // Filename: CardManager.cpp
 // Description: Manager for the cards used in this game.
+//
+// Vectorized Playing Cards 1.3- http://code.google.com/p/vectorized-playing-cards/
+// Copyright 2011 - Chris Aguilar
+// Licensed under LGPL 3 - www.gnu.org/copyleft/lesser.html
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
