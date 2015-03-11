@@ -115,6 +115,17 @@ void Scene::Initialize(void)
 
     connect(mapper,    SIGNAL(mapped(int)), this,   SLOT(SetAi(int)));
 
+    // Line edit for num games.
+    QMenu* numGamesMenu    = aiMenu->addMenu("Number of games");
+    lineEdit        = new QLineEdit(numGamesMenu);
+    lineEdit->setValidator(new QIntValidator(1, 100, this));
+    QWidgetAction* wAction = new QWidgetAction(numGamesMenu);
+
+    wAction->setDefaultWidget(lineEdit);
+    numGamesMenu->addAction(wAction);
+
+    connect(lineEdit, SIGNAL(returnPressed()), this, SLOT(SetNumGames()));
+
     // Score display.
     table->setRowCount(7);
     table->setColumnCount(2);
@@ -279,6 +290,7 @@ void Scene::Destroy(void)
     delete area;                area            = 0;
     delete playerTrickArea;     playerTrickArea = 0;
     delete mapper;              mapper          = 0;
+    delete lineEdit;            lineEdit        = 0;
 
     for ( int i = 0; i < 2; i++ )
     {
@@ -936,4 +948,14 @@ void Scene::SetAi(int ai)
             p2Exchange = 0;
             break;
     }
+}
+
+
+//------------------------------------------------------------------------------
+// SetNumGames - Set the default value for number of games (ai tests).
+//------------------------------------------------------------------------------
+void Scene::SetNumGames(void)
+{
+    QString n = lineEdit->text();
+    defaultNumGames = n.toInt();
 }

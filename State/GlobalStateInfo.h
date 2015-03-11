@@ -67,9 +67,12 @@ struct TrickResults
 
 struct SpecialScores
 {
-    bool carteBlancheScored;
-    bool repiqueScored;
-    bool piqueScored;
+    bool      carteBlancheScored;
+    bool      repiqueScored;
+    bool      piqueScored;
+    PlayerNum repiqueWinner;
+    PlayerNum piqueWinner;
+    PlayerNum capotWinner;
 };
 
 struct PartieResults
@@ -96,6 +99,7 @@ extern bool                restarting;
 extern int                 player1Wins;
 extern int                 player2Wins;
 extern int                 numGames;
+extern int                 defaultNumGames;
 extern int                 p1Exchange;
 extern int                 p2Exchange;
 

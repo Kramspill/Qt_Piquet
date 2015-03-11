@@ -301,6 +301,7 @@ void ScoreManager::ScoreDeclaration(State phase, PlayerNum player)
                             if ( declarationResults->pointWinner != PLAYER2 )
                             {
                                 specialScores->repiqueScored = true;
+                                specialScores->repiqueWinner = PLAYER1;
                                 playerScore += 60;
                                 snprintf(str, 20, "PLAYER 1: REPIQUE");
                                 emit UpdateLog(str);
@@ -312,6 +313,7 @@ void ScoreManager::ScoreDeclaration(State phase, PlayerNum player)
                                  declarationResults->sequenceWinner != PLAYER2 )
                             {
                                 specialScores->repiqueScored = true;
+                                specialScores->repiqueWinner = PLAYER1;
                                 playerScore += 60;
                                 snprintf(str, 20, "PLAYER 1: REPIQUE");
                                 emit UpdateLog(str);
@@ -339,6 +341,7 @@ void ScoreManager::ScoreDeclaration(State phase, PlayerNum player)
                             if ( declarationResults->pointWinner != PLAYER1 )
                             {
                                 specialScores->repiqueScored = true;
+                                specialScores->repiqueWinner = PLAYER2;
                                 cpuScore += 60;
                                 snprintf(str, 20, "PLAYER 2: REPIQUE");
                                 emit UpdateLog(str);
@@ -350,6 +353,7 @@ void ScoreManager::ScoreDeclaration(State phase, PlayerNum player)
                                  declarationResults->sequenceWinner != PLAYER1 )
                             {
                                 specialScores->repiqueScored = true;
+                                specialScores->repiqueWinner = PLAYER2;
                                 cpuScore += 60;
                                 snprintf(str, 20, "PLAYER 2: REPIQUE");
                                 emit UpdateLog(str);
@@ -422,6 +426,7 @@ PlayerNum ScoreManager::ScoreTrick(PlayerNum player,
                      declarationResults->setWinner != PLAYER2 )
                 {
                         specialScores->piqueScored = true;
+                        specialScores->piqueWinner = PLAYER1;
                         playerScore += 30;
                         snprintf(str, 20, "PLAYER 1: PIQUE");
                         emit UpdateLog(str);
@@ -441,6 +446,7 @@ PlayerNum ScoreManager::ScoreTrick(PlayerNum player,
                      declarationResults->setWinner != PLAYER1 )
                 {
                         specialScores->piqueScored = true;
+                        specialScores->piqueWinner = PLAYER2;
                         cpuScore += 30;
                         snprintf(str, 20, "PLAYER 2: PIQUE");
                         emit UpdateLog(str);
@@ -465,6 +471,7 @@ PlayerNum ScoreManager::ScoreTrick(PlayerNum player,
             if ( playerScore >= 30 && cpuScore == 0 )
             {
                 specialScores->piqueScored = true;
+                specialScores->piqueWinner = PLAYER1;
                 playerScore += 30;
                 snprintf(str, 20, "PLAYER 1: PIQUE");
                 emit UpdateLog(str);
@@ -472,6 +479,7 @@ PlayerNum ScoreManager::ScoreTrick(PlayerNum player,
             else if ( cpuScore >= 30 && playerScore == 0 )
             {
                 specialScores->piqueScored = true;
+                specialScores->piqueWinner = PLAYER2;
                 cpuScore += 30;
                 snprintf(str, 20, "PLAYER 2: PIQUE");
                 emit UpdateLog(str);
@@ -482,6 +490,7 @@ PlayerNum ScoreManager::ScoreTrick(PlayerNum player,
         {
             if ( trickResults->player2Wins == 0 )
             {
+                specialScores->capotWinner = PLAYER1;
                 snprintf(str, 20, "PLAYER 1: CAPOT");
                 playerScore += 40;
             }
@@ -497,6 +506,7 @@ PlayerNum ScoreManager::ScoreTrick(PlayerNum player,
         {
             if ( trickResults->player1Wins == 0 )
             {
+                specialScores->capotWinner = PLAYER2;
                 snprintf(str, 20, "PLAYER 2: CAPOT");
                 cpuScore += 40;
             }

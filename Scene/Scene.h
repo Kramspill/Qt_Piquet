@@ -21,6 +21,8 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QSignalMapper>
+#include <QLineEdit>
+#include <QWidgetAction>
 
 
 //------------------------------------------------------------------------------
@@ -75,6 +77,7 @@ public slots:
     void              SetValidSelection(bool valid);
     void              UpdateScores(int p1Score, int p2Score);
     void              SetAi(int ai);
+    void              SetNumGames(void);
 
 signals:
     void              BeginElderSelect(void);
@@ -108,6 +111,7 @@ private:
     QMenuBar*         menuBar;
     QRectF*           playerTrickArea;
     QSignalMapper*    mapper;
+    QLineEdit*        lineEdit;
     int               xPos;
     int               yPos;
     int               width;

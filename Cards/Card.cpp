@@ -307,11 +307,6 @@ void Card::Initialize(void)
     connect(inPlayerDiscardsState, SIGNAL(entered()), this, SLOT(FlipCard()));
     connect(inPlayerDiscardsState, SIGNAL(exited()),  this, SLOT(FlipCard()));
 
-    connect(inCpuHandState,     SIGNAL(entered()), this, SLOT(FlipCard()));
-    connect(inCpuHandState,     SIGNAL(exited()),  this, SLOT(FlipCard()));
-    connect(inCpuDiscardsState, SIGNAL(entered()), this, SLOT(FlipCard()));
-    connect(inCpuDiscardsState, SIGNAL(exited()),  this, SLOT(FlipCard()));
-
     // Run the state machine.
     stateMachine->start();
 }

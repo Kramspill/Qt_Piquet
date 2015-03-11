@@ -30,5 +30,6 @@ bool                restarting;
 int                 player1Wins;
 int                 player2Wins;
 int                 numGames;
+int                 defaultNumGames;
 int                 p1Exchange;
 int                 p2Exchange;

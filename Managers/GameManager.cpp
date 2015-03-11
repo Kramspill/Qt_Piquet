@@ -132,6 +132,9 @@ void GameManager::InitGlobalState(void)
     specialScores->carteBlancheScored      = false;
     specialScores->repiqueScored           = false;
     specialScores->piqueScored             = false;
+    specialScores->piqueWinner             = NOPLAYER;
+    specialScores->repiqueWinner           = NOPLAYER;
+    specialScores->capotWinner             = NOPLAYER;
 
     partieResults                          = new PartieResults();
     partieResults->currentDeal             = 0;
@@ -142,6 +145,7 @@ void GameManager::InitGlobalState(void)
     player1Wins                            = 0;
     player2Wins                            = 0;
     numGames                               = 10;
+    defaultNumGames                        = 10;
 
     p1Exchange                             = 1;
     p2Exchange                             = 0;
@@ -378,6 +382,9 @@ void GameManager::ResetGame(bool newGame)
     specialScores->carteBlancheScored      = false;
     specialScores->repiqueScored           = false;
     specialScores->piqueScored             = false;
+    specialScores->piqueWinner             = NOPLAYER;
+    specialScores->repiqueWinner           = NOPLAYER;
+    specialScores->capotWinner             = NOPLAYER;
 
     // Reset managers.
     cardManager->Reset();
@@ -1069,11 +1076,23 @@ void GameManager::ExecuteSummary(void)
             else if ( scoreManager->GetPlayerScore() < scoreManager->GetCPUScore() )
                 player2Wins++;
 
+            scene->SetUI(AITEST);
+
             // Write data.
             std::ofstream myfile;
-            myfile.open("C:\\Users\\Marcus\\Documents\\Uni_Stuff\\Piquet\\example.txt", std::ios::app);
+            myfile.open("C:\\Users\\Marcus\\Documents\\Uni_Stuff\\Piquet\\output.txt", std::ios::app);
             if ( myfile.is_open() )
             {
+                myfile << scoreManager->GetPlayerScore() << " " << scoreManager->GetCPUScore();
+
+                if ( specialScores->repiqueWinner != NOPLAYER )
+                    myfile << " |Repique(" << specialScores->repiqueWinner << ")| ";
+                if ( specialScores->piqueWinner != NOPLAYER )
+                    myfile << " |Pique(" << specialScores->piqueWinner << ")| ";
+                if ( specialScores->capotWinner != NOPLAYER )
+                    myfile << " |The cards(" << specialScores->capotWinner << ")| ";
+
+                myfile << std::endl;
                 myfile << "P1 wins = " << player1Wins << " P2 wins = " << player2Wins << std::endl;
                 myfile.close();
             }
@@ -1088,11 +1107,24 @@ void GameManager::ExecuteSummary(void)
             else if ( scoreManager->GetPlayerScore() < scoreManager->GetCPUScore() )
                 player2Wins++;
 
+            scene->SetUI(AITEST);
+
             // Write data.
             std::ofstream myfile;
-            myfile.open("C:\\Users\\Marcus\\Documents\\Uni_Stuff\\Piquet\\example.txt", std::ios::app);
+            myfile.open("C:\\Users\\Marcus\\Documents\\Uni_Stuff\\Piquet\\output.txt", std::ios::app);
             if ( myfile.is_open() )
             {
+                myfile << scoreManager->GetPlayerScore() << " " << scoreManager->GetCPUScore();
+
+                if ( specialScores->repiqueWinner != NOPLAYER )
+                    myfile << " |Repique(" << specialScores->repiqueWinner << ")| ";
+                if ( specialScores->piqueWinner != NOPLAYER )
+                    myfile << " |Pique(" << specialScores->piqueWinner << ")| ";
+                if ( specialScores->capotWinner != NOPLAYER )
+                    myfile << " |The cards(" << specialScores->capotWinner << ")| ";
+
+                myfile << std::endl;
+
                 myfile << "P1 wins = " << player1Wins << " P2 wins = " << player2Wins << std::endl;
                 myfile.close();
             }
@@ -1103,7 +1135,7 @@ void GameManager::ExecuteSummary(void)
 
             player1Wins = 0;
             player2Wins = 0;
-            numGames    = 10;
+            numGames    = defaultNumGames;
             ResetGame(true);
         }
     }
@@ -1118,12 +1150,28 @@ void GameManager::ExecuteSummary(void)
         }
         else
         {
+            if ( scoreManager->GetPlayerScore() > scoreManager->GetCPUScore() )
+                player1Wins++;
+            else if ( scoreManager->GetPlayerScore() < scoreManager->GetCPUScore() )
+                player2Wins++;
+
+            scene->SetUI(AITEST);
+
             // Write data.
             std::ofstream myfile;
-            myfile.open("C:\\Users\\Marcus\\Documents\\Uni_Stuff\\Piquet\\example.txt", std::ios::app);
+            myfile.open("C:\\Users\\Marcus\\Documents\\Uni_Stuff\\Piquet\\output.txt", std::ios::app);
             if ( myfile.is_open() )
             {
-                myfile << scoreManager->GetPlayerScore() << " " << scoreManager->GetCPUScore() << std::endl;
+                myfile << scoreManager->GetPlayerScore() << " " << scoreManager->GetCPUScore();
+
+                if ( specialScores->repiqueWinner != NOPLAYER )
+                    myfile << " |Repique(" << specialScores->repiqueWinner << ")| ";
+                if ( specialScores->piqueWinner != NOPLAYER )
+                    myfile << " |Pique(" << specialScores->piqueWinner << ")| ";
+                if ( specialScores->capotWinner != NOPLAYER )
+                    myfile << " |The cards(" << specialScores->capotWinner << ")| ";
+
+                myfile << std::endl;
                 myfile.close();
             }
         }
@@ -1147,7 +1195,7 @@ void GameManager::NewGame(void)
 
     player1Wins = 0;
     player2Wins = 0;
-    numGames    = 10;
+    numGames    = defaultNumGames;
 
     emit stateManager->ExitLoop();
 }
@@ -1163,7 +1211,7 @@ void GameManager::TestAi(void)
 
     player1Wins = 0;
     player2Wins = 0;
-    numGames    = 10;
+    numGames    = defaultNumGames;
 
     emit stateManager->ExitLoop();
 }
